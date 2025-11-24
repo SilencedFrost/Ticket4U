@@ -47,7 +47,7 @@ ALTER TABLE IF EXISTS public.users
 
 CREATE TABLE IF NOT EXISTS public.session
 (
-    session_id bigint GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 CACHE 1 ) PRIMARY KEY,
+    session_id uuid PRIMARY KEY,
     user_id uuid NOT NULL,
 	session_hash char(64) NOT NULL,
 	last_accessed timestamptz NOT NULL,

@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -19,9 +21,16 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private long userId;
+    @GeneratedValue(generator = "uuid-v7-generator")
+    // 1. Use @GeneratedValue to link the generator
+    @GenericGenerator(                                // 2. Define the generator settings
+            name = "uuid-v7-generator",
+            // Crucial: Point to the fully qualified class name of your generator
+            strategy = "com.example.config.persistence.UuidV7Generator"
+    )
+    // It's good practice to set the column type explicitly
+    @Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "UUID")
+    private UUID userId;
 
     @Setter
     @Column(name = "email", nullable = false, unique = true, length = 254)

@@ -8,7 +8,6 @@ import com.entity.User;
 import com.exception.SessionNotFoundException;
 import com.exception.UserNotFoundException;
 import com.mapper.SellerMapper;
-import com.mapper.SessionMapper;
 import com.mapper.UserMapper;
 import com.repository.SellerRepository;
 import com.repository.SessionRepository;

@@ -72,7 +72,7 @@ public class UserService {
     public UserResponse create(UserCreateRequest userCreateRequest) {
         Role role = roleRepository.findById(userCreateRequest.roleId()).orElseThrow(() -> new RoleNotFoundException("Role not found: " + userCreateRequest.roleId()));
 
-        User user = userMapper.toEntity(userCreateRequest, hashService);
+        User user = userMapper.toEntity(userCreateRequest);
         user.assignRole(role);
         User savedUser = userRepository.save(user);
 
@@ -87,7 +87,7 @@ public class UserService {
             throw new UserAlreadyExistException("An account with this email already exists.");
         }
 
-        User user = userMapper.toEntity(registerRequest, hashService);
+        User user = userMapper.toEntity(registerRequest);
         Role customerRole = roleRepository.findByRoleName("customer")
                 .orElseThrow(() -> new RoleNotFoundException("'customer' role not found"));
         user.assignRole(customerRole);
@@ -132,7 +132,7 @@ public class UserService {
         User existingUser = userRepository.findById(userUpdateRequest.userId())
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + userUpdateRequest.userId()));
 
-        userMapper.updateUserFromDTO(userUpdateRequest, existingUser, hashService);
+        userMapper.updateUserFromDTO(userUpdateRequest, existingUser);
 
         return userMapper.toDTO(existingUser);
     }

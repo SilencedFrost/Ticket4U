@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS public.session
 	created_at timestamptz NOT NULL,
 	is_active boolean NOT NULL,
 	revoke_reason varchar(128),
-	user_agent text NOT NULL,
+	user_agent text,
 	CONSTRAINT session_fk_user FOREIGN KEY (user_id) 
 		REFERENCES public.users (user_id)
 );

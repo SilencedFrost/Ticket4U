@@ -12,8 +12,11 @@ public record UserCreateRequest(
         @Email(message = "Invalid email format")
         String email,
 
+        Integer roleId,
+
         @NotBlank(message = "Username can't be blank")
         String username,
+
         String firstName,
         String lastName,
         LocalDate birthday,
@@ -24,7 +27,6 @@ public record UserCreateRequest(
 
         @NotBlank(message = "Phone number can't be blank")
         @Pattern(message = "Invalid phone number format", regexp = "^(0\\d{9}|[1-9]\\d{8})$")
-        String phoneNumber,
-        Integer roleId
+        String phoneNumber
 ) {
 }

@@ -6,10 +6,11 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record UserUpdateRequest(
         @NotNull(message = "User Id can't be null for update")
-        Long userId,
+        UUID userId,
 
         @Pattern(regexp = ".*\\S.*", message = "Email can't be blank")
         @Email(message = "Invalid email format")
@@ -33,6 +34,8 @@ public record UserUpdateRequest(
         @Pattern(message = "Invalid phone number format", regexp = "^(0\\d{9}|[1-9]\\d{8})$")
         String phoneNumber,
 
-        Boolean isActive
+        Boolean isActive,
+
+        Boolean isDeleted
 ) {
 }

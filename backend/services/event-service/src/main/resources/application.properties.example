@@ -1,11 +1,11 @@
 # Database Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-User
+spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-Service
 spring.datasource.username=postgres
 spring.datasource.password=your_password
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # Port
-server.port = 8080
+server.port = 8081
 
 # JPA/Hibernate Configuration
 spring.jpa.show-sql=true

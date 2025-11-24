@@ -1,11 +1,11 @@
 # Database Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-User
+spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-Mail
 spring.datasource.username=postgres
 spring.datasource.password=your_password
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # Port
-server.port = 8080
+server.port = 8083
 
 # JPA/Hibernate Configuration
 spring.jpa.show-sql=true
@@ -19,3 +19,11 @@ spring.devtools.livereload.enabled=true
 spring.devtools.restart.poll-interval=2s
 spring.devtools.restart.quiet-period=1s
 spring.devtools.livereload.port=35729
+
+# Mail
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=youremail@fpt.edu.vn
+spring.mail.password=your_app_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true

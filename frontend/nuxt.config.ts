@@ -4,6 +4,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint'],
 
+  vite: {
+    css: {
+        preprocessorOptions: {
+            scss: {
+                quietDeps: true
+            }
+        }
+    }
+  },
+
   css: [
     '~/assets/styles/bootstrap-custom.scss',
     '~/assets/styles/other-custom.css',

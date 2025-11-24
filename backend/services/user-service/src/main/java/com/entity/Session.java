@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 public class Session {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(name = "session_id")
     private long sessionId;
 
@@ -36,23 +37,15 @@ public class Session {
     private OffsetDateTime createdAt;
 
     @Setter
-    @Column(name = "expires_at", nullable = false)
-    private OffsetDateTime expiresAt;
-
-    @Setter
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
-
-    @Setter
-    @Column(name = "revoked_at")
-    private OffsetDateTime revokedAt;
 
     @Setter
     @Column(name = "revoke_reason", length = 128)
     private String revokeReason;
 
     @Setter
-    @Column(name = "user_agent", nullable = false, columnDefinition = "text")
+    @Column(name = "user_agent", columnDefinition = "text")
     private String userAgent;
 
     public void assignUser(User user) {
@@ -70,9 +63,6 @@ public class Session {
     public void prePersist() {
         if (createdAt == null) {
             createdAt = OffsetDateTime.now();
-        }
-        if (expiresAt == null) {
-            expiresAt = createdAt.plusDays(7);
         }
         if (lastAccessed == null) {
             lastAccessed = OffsetDateTime.now();

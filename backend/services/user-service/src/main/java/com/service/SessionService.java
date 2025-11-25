@@ -25,11 +25,7 @@ import java.util.Optional;
 public class SessionService {
     private final TokenGeneratorUtil tokenGeneratorUtil;
     private final SessionRepository sessionRepository;
-    private final SellerRepository sellerRepository;
     private final UserRepository userRepository;
-    private final SessionMapper sessionMapper;
-    private final SellerMapper sellerMapper;
-    private final HashService hashService;
     private final UserMapper userMapper;
 
     @Transactional

@@ -1,0 +1,15 @@
+{
+  "auth": {
+    "login_title": "Login",
+    "login_action": {
+      "_": "Log in",
+      "google": "Log in with Google"
+    },
+    "password": "Password",
+    "create_account": "Create account",
+    "forgot_password": "Forgot password"
+  },
+  "common": {
+    "email": "Email"
+  }
+}

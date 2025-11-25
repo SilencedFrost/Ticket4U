@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS public.users
 (
     id uuid PRIMARY KEY,
     email varchar(254) NOT NULL UNIQUE,
-	role_id int,
-	username varchar(64),
+	role_id int NOT NULL,
+	username varchar(64) NOT NULL,
 	first_name varchar(32),
 	last_name varchar(32),
 	birthday date,

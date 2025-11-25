@@ -22,11 +22,11 @@ public class User {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column(name = "user_id", updatable = false, nullable = false, columnDefinition = "UUID")
-    private UUID userId;
+    @Column(updatable = false, nullable = false)
+    private UUID id;
 
     @Setter
-    @Column(name = "email", nullable = false, unique = true, length = 254)
+    @Column(nullable = false, unique = true, length = 254)
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,43 +34,43 @@ public class User {
     private Role role;
 
     @Setter
-    @Column(name = "username", nullable = false, length = 64)
+    @Column(nullable = false, length = 64)
     private String username;
 
     @Setter
-    @Column(name = "first_name", length = 32)
+    @Column(length = 32)
     private String firstName;
 
     @Setter
-    @Column(name = "last_name", length = 32)
+    @Column(length = 32)
     private String lastName;
 
     @Setter
-    @Column(name = "birthday")
+    @Column
     private LocalDate birthday;
 
     @Setter
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(nullable = false)
     private String passwordHash;
 
     @Setter
-    @Column(name = "is_active", nullable = false, columnDefinition = "boolean")
+    @Column(nullable = false)
     private Boolean isActive = false;
 
     @Setter
-    @Column(name = "deleted", nullable = false, columnDefinition = "boolean")
+    @Column(nullable = false)
     private Boolean isDeleted = false;
 
     @Setter
-    @Column(name = "phone_number", length = 15)
+    @Column(nullable = false, length = 15)
     private String phoneNumber;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(nullable = false)
     private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)

@@ -3,6 +3,7 @@ package com.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,10 +14,11 @@ import java.util.List;
 public class Role {
 
     @Id
-    @Column(name = "role_id", updatable = false, nullable = false)
-    private Integer roleId;
+    @Column(updatable = false, nullable = false)
+    private Integer id;
 
-    @Column(name = "role_name", nullable = false)
+    @Setter
+    @Column(nullable = false)
     private String roleName;
 
     @OneToMany(mappedBy = "role")

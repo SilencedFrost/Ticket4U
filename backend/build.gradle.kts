@@ -56,8 +56,9 @@ subprojects {
         // Commons codec (for SHA256)
         implementation("commons-codec:commons-codec:1.19.0")
 
-        //BCrypt
-        implementation("at.favre.lib:bcrypt:0.10.2")
+        // Nimbus JOSE - JWT
+        implementation("com.nimbusds:nimbus-jose-jwt:10.6")
+
     }
 
     tasks.withType<Test> {

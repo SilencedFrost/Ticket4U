@@ -15,7 +15,7 @@ import com.mapper.UserMapper;
 import com.repository.RoleRepository;
 import com.repository.UserRepository;
 import com.repository.VerificationTokenRepository;
-import com.util.TokenGeneratorUtil;
+import com.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final TokenGeneratorUtil tokenGeneratorUtil;
+    private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
@@ -96,7 +96,7 @@ public class UserService {
 
         user = userRepository.save(user);
 
-        String token = tokenGeneratorUtil.generateToken();
+        String token = tokenUtil.generateToken();
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setTokenHash(hashService.hashOpaqueKey(token));

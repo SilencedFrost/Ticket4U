@@ -6,16 +6,18 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Component
-public class TokenGeneratorUtil {
+public class TokenUtil {
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder().withoutPadding();
+    private static final int DEFAULT_TOKEN_BYTES = 32;
 
     public String generateToken() {
-        byte[] randomBytes = new byte[32];
+        return generateToken(DEFAULT_TOKEN_BYTES);
+    }
+
+    public String generateToken(int tokenBytes) {
+        byte[] randomBytes = new byte[tokenBytes];
         secureRandom.nextBytes(randomBytes);
         return base64Encoder.encodeToString(randomBytes);
-    }
-    public String generateOtp() {
-        return String.format("%06d", secureRandom.nextInt(1_000_000));
     }
 }

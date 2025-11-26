@@ -12,19 +12,21 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import jakarta.annotation.PostConstruct;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.text.ParseException;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-@Service
+@Component
 public class JwtUtil {
 
     @Value("${application.security.jwt.issuer}")
@@ -74,17 +76,9 @@ public class JwtUtil {
         return new SecretKeySpec(SECRET_KEY.getBytes(), JWSAlgorithm.HS256.getName());
     }
 
-    public JwtUtil setExpiration(long minutes) {
-        if (minutes <= 0) {
-            throw new IllegalArgumentException("Expiration time must be positive.");
-        }
-        this.jwtExpirationMinutes = minutes;
-        return this;
-    }
-
-    public String generateToken(String subject, Map<String, Object> claims) throws JOSEException {
+    public String generateToken(String subject, Map<String, Object> claims, long expirationMinutes) throws JOSEException {
         Instant now = Instant.now();
-        Instant expiration = now.plus(jwtExpirationMinutes, ChronoUnit.MINUTES);
+        Instant expiration = now.plus(expirationMinutes, ChronoUnit.MINUTES);
 
         JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
                 .subject(subject)
@@ -114,7 +108,12 @@ public class JwtUtil {
         return signedJWT.serialize();
     }
 
-    public String generateAuthToken(CustomUserDetails userDetails) throws JOSEException {
+    public String generateToken(String subject, Map<String, Object> claims) throws JOSEException {
+        return generateToken(subject, claims, jwtExpirationMinutes);
+    }
+
+    public String generateAuthToken(CustomUserDetails userDetails, boolean rememberMe, String sessionId) throws JOSEException {
+        Map<String, Object> claims = new HashMap<>();
         UUID userId = userDetails.getUserId();
 
         List<String> roles = userDetails.getAuthorities().stream()
@@ -123,7 +122,16 @@ public class JwtUtil {
                 .filter(authority -> authority.startsWith("ROLE_"))
                 .map(authority -> authority.substring("ROLE_".length()))
                 .toList();
-        return generateToken(userId.toString(), Map.of("roles", roles));
+
+        claims.put("roles", roles);
+
+        long expirationMinutes = rememberMe
+                ? this.jwtExpirationMinutes
+                : Duration.ofDays(1).toMinutes();
+
+        if(!rememberMe) claims.put("sid", DigestUtils.sha256Hex(sessionId));
+
+        return generateToken(userId.toString(), claims, expirationMinutes);
     }
 
     private JWTClaimsSet extractValidClaims(String token) {

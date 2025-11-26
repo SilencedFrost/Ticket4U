@@ -12,7 +12,7 @@ import com.mapper.UserMapper;
 import com.repository.SellerRepository;
 import com.repository.SessionRepository;
 import com.repository.UserRepository;
-import com.util.TokenGeneratorUtil;
+import com.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SessionService {
-    private final TokenGeneratorUtil tokenGeneratorUtil;
+    private final TokenUtil tokenUtil;
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -32,7 +32,7 @@ public class SessionService {
     public String createSession(long userId, String userAgent) {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with user Id: " + userId + " not found, skipping session creation"));
 
-        String sessionToken = tokenGeneratorUtil.generateToken();
+        String sessionToken = tokenUtil.generateToken();
 
         Session session = sessionMapper.toEntity(new SessionCreateRequest(userId, sessionToken, userAgent));
         session.assignUser(user);

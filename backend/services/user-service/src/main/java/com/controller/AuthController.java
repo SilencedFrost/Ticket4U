@@ -1,14 +1,14 @@
 package com.controller;
 
+import com.constant.SameSite;
+import com.constant.TokenConstants;
 import com.dto.auth.*;
-import com.dto.user.UserResponse;
-import com.exception.InvalidLoginException;
-import com.service.EmailService;
+import com.entity.CustomUserDetails;
+import com.nimbusds.jose.JOSEException;
 import com.service.SessionService;
-import com.service.UserService;
-import com.util.SessionCookieUtil;
-import com.util.TokenGeneratorUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.util.JwtUtil;
+import com.util.CookieUtil;
+import com.util.TokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -32,6 +30,10 @@ import java.util.Optional;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final TokenUtil tokenUtil;
+    private final SessionService sessionService;
+    private final CookieUtil cookieUtil;
 
     /**
      * POST /api/auth/login
@@ -39,7 +41,12 @@ public class AuthController {
      * @return User
      */
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(
+            @Valid @RequestBody LoginRequest loginRequest,
+            @CookieValue(value = "JSESSIONID") String jsessionid,
+            @RequestHeader(value = "User-Agent") String userAgent
+    ) {
+        // Auth
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.email(),
@@ -47,16 +54,69 @@ public class AuthController {
                 )
         );
 
-        if (loginRequest.rememberMe()) {
-            String ua = userAgent != null ? userAgent : "Unknown";
-            String sessionKey = sessionService.createSession(userResponse.userId(), ua);
-            ResponseCookie sessionCookie = sessionCookieUtil.createSessionCookie(sessionKey);
+        // Put in context
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, sessionCookie.toString())
-                    .body(userResponse);
+        // Retrieve user data
+        Object principal = authentication.getPrincipal();
+        CustomUserDetails authenticatedUser;
+
+        if (principal instanceof CustomUserDetails userDetails) {
+            authenticatedUser = userDetails;
+        } else {
+            throw new IllegalStateException("Authentication principal is not UserDetails.");
         }
 
-        return ResponseEntity.ok().body(userResponse);
+        // TokenConstants & session generation
+        String accessToken;
+
+        // Access token generation
+        try {
+            accessToken = jwtUtil.generateAuthToken(authenticatedUser, loginRequest.rememberMe(), jsessionid);
+        } catch (JOSEException e) {
+            throw new RuntimeException("Token generation failed", e);
+        }
+
+        if(accessToken!= null) {
+            // Start building response
+            ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+
+            // Build access token cookie
+            ResponseCookie at = cookieUtil.builder()
+                    .maxAge(TokenConstants.ACCESS_TOKEN)
+                    .sameSite(SameSite.NONE)
+                    .httpOnly()
+                    .secure()
+                    .build(TokenConstants.ACCESS_TOKEN.getCookieKey(), accessToken);
+
+            // Build a refresh token if yes and add to header, else ignore
+            if(loginRequest.rememberMe()) {
+                String ua = userAgent != null ? userAgent : "Unknown";
+                String refreshToken = tokenUtil.generateToken();
+                sessionService.createSession(authenticatedUser.getUserId(), ua, refreshToken);
+                ResponseCookie rt = cookieUtil.builder()
+                        .maxAge(TokenConstants.REFRESH_TOKEN)
+                        .sameSite(SameSite.NONE)
+                        .httpOnly()
+                        .secure()
+                        .build(TokenConstants.REFRESH_TOKEN.getCookieKey(), refreshToken);
+
+                responseBuilder.header(HttpHeaders.SET_COOKIE, at.toString(), rt.toString());
+            } else {
+                responseBuilder.header(HttpHeaders.SET_COOKIE, at.toString());
+            }
+
+            // Build and return
+            return responseBuilder.body(
+                    new AuthResponse(
+                            authenticatedUser.getUserId(),
+                            authenticatedUser.getRoleId(),
+                            authenticatedUser.getTrueUsername()
+                    )
+            );
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

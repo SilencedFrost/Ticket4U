@@ -1,8 +1,6 @@
 -- Drops
 
-DROP TABLE IF EXISTS public.customer;
 DROP TABLE IF EXISTS public.organizer;
-DROP TABLE IF EXISTS public.admin;
 
 DROP TABLE IF EXISTS public.session;
 DROP TABLE IF EXISTS public.users;
@@ -18,6 +16,24 @@ CREATE TABLE IF NOT EXISTS public.role
 
 ALTER TABLE IF EXISTS public.role
     OWNER to postgres;
+
+-- Data: roles
+-- Basic roles, in a hierachy, can access base page, each having their own features + the lower role's
+-- Can access the homepage, buy tickets, view events
+insert into role(id, role_name) values (0, 'ROLE_CUSTOMER');
+-- Manage an organizer's events, seating charts, ticket prices, etc..
+insert into role(id, role_name) values (1, 'ROLE_EVENT_MANAGER');
+-- Set up payout bank details, manage other event managers within their organization
+insert into role(id, role_name) values (2, 'ROLE_ORGANIZER_ADMIN');
+-- Monitor the system, create new organizer accounts
+insert into role(id, role_name) values (3, 'ROLE_ADMIN');
+-- Omnipotent
+insert into role(id, role_name) values (4, 'ROLE_SYSTEM_ADMIN');
+
+-- Special roles, have different pages and no hierachy
+insert into role(id, role_name) values (10, 'ROLE_GATEKEEPER');
+insert into role(id, role_name) values (11, 'ROLE_SUPPORT_AGENT');
+insert into role(id, role_name) values (12, 'ROLE_FINANCE_MANAGER');
 
 -- Table: users
 
@@ -61,18 +77,6 @@ CREATE TABLE IF NOT EXISTS public.session
 ALTER TABLE IF EXISTS public.session
     OWNER to postgres;
 
--- Table: admin
-
-CREATE TABLE IF NOT EXISTS public.admin
-(
-    id uuid PRIMARY KEY,
-    CONSTRAINT admin_fk_user FOREIGN KEY (id) 
-        REFERENCES public.users (id)
-);
-
-ALTER TABLE IF EXISTS public.admin
-    OWNER to postgres;
-
 -- Table: organizer
 
 CREATE TABLE IF NOT EXISTS public.organizer
@@ -86,16 +90,4 @@ CREATE TABLE IF NOT EXISTS public.organizer
 );
 
 ALTER TABLE IF EXISTS public.organizer
-    OWNER to postgres;
-
--- Table: customer
-
-CREATE TABLE IF NOT EXISTS public.customer
-(
-    id uuid PRIMARY KEY,
-    CONSTRAINT customer_fk_user FOREIGN KEY (id)
-        REFERENCES public.users (id)
-);
-
-ALTER TABLE IF EXISTS public.customer
     OWNER to postgres;

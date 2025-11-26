@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "4.0.0" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
+    id("org.owasp.dependencycheck") version "12.1.9" apply false
 }
 
 group = "org.example"
@@ -15,6 +16,7 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.owasp.dependencycheck")
 
     group = "org.example"
     version = "1.0-SNAPSHOT"

@@ -4,10 +4,16 @@ import com.entity.CustomUserDetails;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.jwk.Curve;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.*;
+import com.nimbusds.jose.util.IOUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
@@ -33,8 +39,14 @@ public class JwtUtil {
     @Value("${application.security.jwt.issuer}")
     private String ISSUER;
 
-    @Value("${application.security.jwt.secret-key}")
-    private String SECRET_KEY;
+    @Value("${application.security.jwt.private-key-path}")
+    private String privateKeyPath;
+
+    @Value("${application.security.jwt.public-key-path}")
+    private String publicKeyPath;
+
+    @Value("${application.security.jwt.key-id}")
+    private String keyId;
 
     @Value("${application.security.jwt.expiration-minutes}")
     private long jwtExpirationMinutes;
@@ -51,30 +63,50 @@ public class JwtUtil {
     }
 
     @PostConstruct
-    public void init() {
-        JWKSource<SecurityContext> jwkSource = new ImmutableSecret<>(getSigningKey());
+    public void init() throws Exception{
+        ECKey publicKey = loadPublicKey();
+
+        JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(
+                new JWKSet(publicKey)
+        );
 
         JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(
-                JWSAlgorithm.HS256,
+                JWSAlgorithm.ES256,
                 jwkSource
         );
 
         this.jwtProcessor = new DefaultJWTProcessor<>();
-
         this.jwtProcessor.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(JOSEObjectType.JWT));
-
         this.jwtProcessor.setJWSKeySelector(jwsKeySelector);
 
         this.jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier<>(
                 new JWTClaimsSet.Builder()
-                        .issuer(ISSUER)
+                        .issuer(this.ISSUER)
                         .build(),
                 new HashSet<>(List.of("exp", "iat"))
         ));
     }
 
-    private SecretKeySpec getSigningKey() {
-        return new SecretKeySpec(SECRET_KEY.getBytes(), JWSAlgorithm.HS256.getName());
+    private ECKey loadPrivateKey() throws Exception {
+        String privateKeyPEM = IOUtils.readInputStreamToString(
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(privateKeyPath))
+        );
+        ECKey parsedKey = ECKey.parseFromPEMEncodedObjects(privateKeyPEM).toECKey();
+
+        return new ECKey.Builder(parsedKey)
+                .keyID(keyId)
+                .build();
+    }
+
+    private ECKey loadPublicKey() throws Exception {
+        String publicKeyPEM = IOUtils.readInputStreamToString(
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(publicKeyPath))
+        );
+        ECKey parsedKey = ECKey.parseFromPEMEncodedObjects(publicKeyPEM).toECKey();
+
+        return new ECKey.Builder(parsedKey)
+                .keyID(keyId)
+                .build();
     }
 
     public String generateToken(String subject, Map<String, Object> claims, long expirationMinutes) throws JOSEException {
@@ -83,7 +115,7 @@ public class JwtUtil {
 
         JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
                 .subject(subject)
-                .issuer(ISSUER)
+                .issuer(this.ISSUER)
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(expiration))
                 .jwtID(UUID.randomUUID().toString());
@@ -96,15 +128,20 @@ public class JwtUtil {
 
         JWTClaimsSet claimsSet = claimsBuilder.build();
 
-        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.HS256)
-                .keyID(UUID.randomUUID().toString())
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
+                .keyID(this.keyId)
                 .type(JOSEObjectType.JWT)
                 .build();
 
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
 
-        JWSSigner signer = new MACSigner(getSigningKey());
-        signedJWT.sign(signer);
+        try {
+            ECKey privateKey = loadPrivateKey();
+            JWSSigner signer = new ECDSASigner(privateKey);
+            signedJWT.sign(signer);
+        } catch (Exception e) {
+            throw new JOSEException("Error signing JWT with EC key", e);
+        }
 
         return signedJWT.serialize();
     }

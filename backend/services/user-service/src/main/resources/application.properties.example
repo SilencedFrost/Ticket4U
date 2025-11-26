@@ -21,6 +21,8 @@ spring.devtools.restart.quiet-period=1s
 spring.devtools.livereload.port=35729
 
 # JWT
-application.security.jwt.secret-key=
+application.security.jwt.private-key-path=keys/ec-private.pem
+application.security.jwt.public-key-path=keys/ec-public.pem
+application.security.jwt.key-id=auth-key-es256
 application.security.jwt.expiration-minutes=15
 application.security.jwt.issuer=ticket4u

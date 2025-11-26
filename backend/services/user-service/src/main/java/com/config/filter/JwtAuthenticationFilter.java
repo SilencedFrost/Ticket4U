@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             // Extract the username using the Nimbus-based utility
-            userEmail = jwtUtil.extractUsername(jwt);
+            userEmail = jwtUtil.extractUserId(jwt);
         } catch (ParseException | JOSEException e) {
             // Handle parsing or signature verification failure (e.g., malformed token, invalid signature)
             System.err.println("JWT processing error: " + e.getMessage());

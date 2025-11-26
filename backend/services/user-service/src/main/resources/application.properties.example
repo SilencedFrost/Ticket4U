@@ -23,3 +23,4 @@ spring.devtools.livereload.port=35729
 # JWT
 application.security.jwt.secret-key=
 application.security.jwt.expiration-minutes=15
+application.security.jwt.issuer=ticket4u

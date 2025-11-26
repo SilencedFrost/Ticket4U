@@ -20,20 +20,20 @@ ALTER TABLE IF EXISTS public.role
 -- Data: roles
 -- Basic roles, in a hierachy, can access base page, each having their own features + the lower role's
 -- Can access the homepage, buy tickets, view events
-insert into role(id, role_name) values (0, 'ROLE_CUSTOMER');
+insert into public.role(id, role_name) values (0, 'ROLE_CUSTOMER');
 -- Manage an organizer's events, seating charts, ticket prices, etc..
-insert into role(id, role_name) values (1, 'ROLE_EVENT_MANAGER');
+insert into public.role(id, role_name) values (1, 'ROLE_EVENT_MANAGER');
 -- Set up payout bank details, manage other event managers within their organization
-insert into role(id, role_name) values (2, 'ROLE_ORGANIZER_ADMIN');
+insert into public.role(id, role_name) values (2, 'ROLE_ORGANIZER_ADMIN');
 -- Monitor the system, create new organizer accounts
-insert into role(id, role_name) values (3, 'ROLE_ADMIN');
+insert into public.role(id, role_name) values (3, 'ROLE_ADMIN');
 -- Omnipotent
-insert into role(id, role_name) values (4, 'ROLE_SYSTEM_ADMIN');
+insert into public.role(id, role_name) values (4, 'ROLE_SYSTEM_ADMIN');
 
 -- Special roles, have different pages and no hierachy
-insert into role(id, role_name) values (10, 'ROLE_GATEKEEPER');
-insert into role(id, role_name) values (11, 'ROLE_SUPPORT_AGENT');
-insert into role(id, role_name) values (12, 'ROLE_FINANCE_MANAGER');
+insert into public.role(id, role_name) values (10, 'ROLE_GATEKEEPER');
+insert into public.role(id, role_name) values (11, 'ROLE_SUPPORT_AGENT');
+insert into public.role(id, role_name) values (12, 'ROLE_FINANCE_MANAGER');
 
 -- Table: users
 

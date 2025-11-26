@@ -73,7 +73,7 @@ public class AuthService {
             // Build access token cookie
             ResponseCookie at = cookieUtil.builder()
                     // Enum value for normal access tokens, 1 day for non-remember tokens
-                    .maxAge(rememberMe? TokenConstants.ACCESS_TOKEN.getTtl() : Duration.ofDays(1))
+                    .maxAge(rememberMe? TokenConstants.ACCESS_TOKEN.getTtl().toSeconds() : -1)
                     .sameSite(SameSite.NONE)
                     .httpOnly()
                     .secure()

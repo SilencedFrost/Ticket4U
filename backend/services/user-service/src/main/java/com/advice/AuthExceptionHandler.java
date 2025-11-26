@@ -1,6 +1,5 @@
 package com.advice;
 
-import com.exception.InvalidLoginException;
 import com.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

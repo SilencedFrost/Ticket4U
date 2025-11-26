@@ -68,7 +68,6 @@ CREATE TABLE IF NOT EXISTS public.session
 	session_hash char(64) NOT NULL,
 	updated_at timestamptz NOT NULL,
 	created_at timestamptz NOT NULL,
-	is_active boolean NOT NULL,
 	user_agent text,
 	CONSTRAINT session_fk_user FOREIGN KEY (user_id) 
 		REFERENCES public.users (id)

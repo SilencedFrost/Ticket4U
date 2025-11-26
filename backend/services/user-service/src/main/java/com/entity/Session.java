@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -15,10 +16,15 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class Session {
 
+    public Session(User user, String sessionHash, String userAgent) {
+        this.assignUser(user);
+        this.sessionHash = sessionHash;
+        this.userAgent = userAgent;
+    }
+
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column
-    private long id;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
@@ -35,10 +41,6 @@ public class Session {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
-
-    @Setter
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
 
     @Setter
     @Column(name = "user_agent", columnDefinition = "text")

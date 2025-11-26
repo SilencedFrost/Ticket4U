@@ -1,32 +1,25 @@
 package com.config.filter;
 
-import com.nimbusds.jose.JOSEException;
-import com.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
+    /*
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
-    }
+    } */
 
     @Override
     protected void doFilterInternal(
@@ -34,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        /*
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         String userEmail = null;
@@ -76,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.err.println("JWT validation error: " + e.getMessage());
             }
         }
-
+    */
         filterChain.doFilter(request, response);
     }
 }

@@ -46,7 +46,6 @@ public class User {
     private String lastName;
 
     @Setter
-    @Column
     private LocalDate birthday;
 
     @Setter

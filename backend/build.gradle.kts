@@ -59,6 +59,8 @@ subprojects {
         // Nimbus JOSE - JWT
         implementation("com.nimbusds:nimbus-jose-jwt:10.6")
 
+        //Caffeine cache
+        implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
     }
 
     tasks.withType<Test> {

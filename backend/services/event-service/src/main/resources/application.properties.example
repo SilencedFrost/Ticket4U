@@ -1,11 +1,11 @@
 # Database Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-User
+spring.datasource.url=jdbc:postgresql://localhost:5432/Ticket4U-Service
 spring.datasource.username=postgres
 spring.datasource.password=your_password
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # Port
-server.port = 8080
+server.port = 8081
 
 # JPA/Hibernate Configuration
 spring.jpa.show-sql=true
@@ -19,12 +19,3 @@ spring.devtools.livereload.enabled=true
 spring.devtools.restart.poll-interval=2s
 spring.devtools.restart.quiet-period=1s
 spring.devtools.livereload.port=35729
-
-# JWT
-application.security.jwt.private-key-path=keys/ec-private.pem
-application.security.jwt.public-key-path=keys/ec-public.pem
-application.security.jwt.key-id=auth-key-es256
-application.security.jwt.issuer=ticket4u
-
-# Logging
-logging.level.root=INFO

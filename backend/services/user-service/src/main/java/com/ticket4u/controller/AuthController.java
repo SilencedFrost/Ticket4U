@@ -48,7 +48,7 @@ public class AuthController {
         LoginResult loginResult = authService.login(loginRequest, oldRefreshToken, userAgent);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.accessTokenCookie())
+                .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
                 .body(loginResult.authResponse());
     }
 }

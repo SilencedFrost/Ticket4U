@@ -1,7 +1,8 @@
 plugins {
     id("java")
-    id("org.springframework.boot") version "3.5.7" apply false
+    id("org.springframework.boot") version "4.0.0" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
+    id("org.owasp.dependencycheck") version "12.1.9" apply false
 }
 
 group = "org.example"
@@ -15,6 +16,7 @@ subprojects {
     apply(plugin = "java")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.owasp.dependencycheck")
 
     group = "org.example"
     version = "1.0-SNAPSHOT"
@@ -28,7 +30,6 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
         implementation("org.springframework.boot:spring-boot-starter-validation")
-        implementation("org.springframework.boot:spring-boot-starter-mail")
         implementation("org.springframework.boot:spring-boot-starter-security")
 
         // Spring dev tools
@@ -57,8 +58,14 @@ subprojects {
         // Commons codec (for SHA256)
         implementation("commons-codec:commons-codec:1.19.0")
 
-        //BCrypt
-        implementation("at.favre.lib:bcrypt:0.10.2")
+        // Nimbus JOSE - JWT
+        implementation("com.nimbusds:nimbus-jose-jwt:10.6")
+
+        // Caffeine cache
+        implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
+
+        // Bouncy Castle Java APIs, for pem key parsing
+        implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
     }
 
     tasks.withType<Test> {

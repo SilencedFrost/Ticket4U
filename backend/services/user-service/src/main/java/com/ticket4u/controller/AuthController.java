@@ -43,9 +43,10 @@ public class AuthController {
         log.debug("Old refresh token {} present", oldRefreshToken == null ? "not" : "");
 
         String userAgent = request.getHeader(CommonKeys.USER_AGENT.getKey());
-        log.debug("User Agent: {}", userAgent);
+        String ua = userAgent != null? userAgent : "Undefined";
+        log.debug("User Agent: {}", ua);
 
-        LoginResult loginResult = authService.login(loginRequest, oldRefreshToken, userAgent);
+        LoginResult loginResult = authService.login(loginRequest, oldRefreshToken, ua);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())

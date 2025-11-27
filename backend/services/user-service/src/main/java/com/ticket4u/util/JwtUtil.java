@@ -1,7 +1,5 @@
 package com.ticket4u.util;
 
-import com.ticket4u.constant.TokenConstants;
-import com.ticket4u.entity.CustomUserDetails;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.nimbusds.jose.*;
@@ -16,6 +14,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import com.ticket4u.constant.TokenConstants;
+import com.ticket4u.entity.CustomUserDetails;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

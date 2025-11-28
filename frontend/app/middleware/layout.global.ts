@@ -1,5 +1,7 @@
 export default defineNuxtRouteMiddleware((to) => {
-  if (to.path.startsWith('/auth')) {
+  const pathWithoutLocale = to.fullPath.replace(/^\/(en|vi)/, '');
+
+  if (pathWithoutLocale.startsWith('/auth')) {
     setPageLayout('auth');
   } else {
     setPageLayout('default');

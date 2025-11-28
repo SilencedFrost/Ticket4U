@@ -1,0 +1,15 @@
+{
+  "auth": {
+    "login_title": "Đăng nhập",
+    "login_action": {
+      "_": "Đăng nhập",
+      "google": "Đăng nhập với Google"
+    },
+    "password": "Mật khẩu",
+    "create_account": "Tạo tài khoản",
+    "forgot_password": "Quên mật khẩu"
+  },
+  "common": {
+    "email": "Email"
+  }
+}

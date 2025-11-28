@@ -48,6 +48,10 @@ const viewPassword = () => {
           </button>
         </div>
       </div>
+      <div class="form-check mb-2">
+        <input id="rememberMe" type="checkbox" class="form-check-input" />
+        <label for="rememberMe" class="form-check-label">{{ $t('auth.remember_me') }}</label>
+      </div>
       <div class="d-flex flex-column">
         <button class="btn btn-primary text-center mb-2">{{ $t('auth.login_action._') }}</button>
         <button class="btn btn-reactive-gray">

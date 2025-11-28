@@ -7,7 +7,8 @@
     },
     "password": "Password",
     "create_account": "Create account",
-    "forgot_password": "Forgot password"
+    "forgot_password": "Forgot password",
+    "remember_me": "Remember me"
   },
   "common": {
     "email": "Email"

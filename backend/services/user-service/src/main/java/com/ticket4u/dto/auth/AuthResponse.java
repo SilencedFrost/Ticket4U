@@ -5,6 +5,7 @@ import java.util.UUID;
 public record AuthResponse(
         UUID userId,
         Integer roleId,
-        String username
+        String username,
+        String email
 ) {
 }

@@ -94,7 +94,9 @@ public class AuthService {
                     new AuthResponse(
                             authenticatedUser.getUserId(),
                             authenticatedUser.getRoleId(),
-                            authenticatedUser.getTrueUsername()
+                            authenticatedUser.getTrueUsername(),
+                            // Email is mapped to Spring's username field
+                            authenticatedUser.getUsername()
                     ),
                     at.toString(),
                     rt.toString()

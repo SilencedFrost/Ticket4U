@@ -10,8 +10,14 @@ export const useUserStore = defineStore('user', () => {
 
   const isLoggedIn = computed(() => user.value.roleId < 0);
 
-  async function login() {
-
+  async function login(email: string, password: string) {
+      user.value = await $fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
+      method: 'POST',
+      body: {
+        email: email,
+        password: password
+      }
+    })
   }
 
   async function logout() {

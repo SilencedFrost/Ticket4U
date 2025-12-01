@@ -29,13 +29,16 @@ server:
 
 
 application:
-  # JWT
   security:
+    # JWT
     jwt:
       private-key-path: keys/ec-private.pem
       public-key-path: keys/ec-public.pem
       key-id: auth-key-es256
       issuer: ticket4u
+    # CORS
+    cors:
+      allowed-origins: ${FRONTEND_URL}
 
 # Logging
 logging:

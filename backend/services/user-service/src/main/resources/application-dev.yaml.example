@@ -2,3 +2,9 @@
 spring:
   datasource:
     password: YOUR_PASSWORD_HERE
+
+application:
+  security:
+    # Cors
+    cors:
+      allowed-origins: http://localhost:3000

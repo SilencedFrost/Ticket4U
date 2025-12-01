@@ -8,7 +8,13 @@
     "password": "Password",
     "create_account": "Create account",
     "forgot_password": "Forgot password",
-    "remember_me": "Remember me"
+    "remember_me": "Remember me",
+    "error": {
+      "unauthorized": "Invalid login information",
+      "unknown": "Unknown error, please contact system admin",
+      "network": "Network error, please check your connection"
+    }
+    
   },
   "common": {
     "email": "Email"

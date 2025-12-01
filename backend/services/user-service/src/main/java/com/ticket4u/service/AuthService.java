@@ -26,7 +26,6 @@ public class AuthService {
 
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
-    private final CookieUtil cookieUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
 

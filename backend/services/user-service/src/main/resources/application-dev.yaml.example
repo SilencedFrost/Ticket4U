@@ -7,7 +7,7 @@ application:
   security:
     # Cors
     cors:
-      allowed-origins: http://localhost:3000
+      allowed-origins: https://localhost:3000
 
 server:
   ssl:

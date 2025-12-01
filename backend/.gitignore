@@ -42,13 +42,12 @@ bin/
 .DS_Store
 
 ### Custom ###
-*.pem
+**/*.pem
 **/.idea/
 
 ### AI ###
 **/AGENTS.md
 
 ### Environment secrets ###
-
 **/application-*.yaml
 **/application-*.yml

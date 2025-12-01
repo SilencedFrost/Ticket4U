@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
   i18n: {
     locales: [
@@ -20,6 +20,19 @@ export default defineNuxtConfig({
                 quietDeps: true
             }
         }
+    }
+  },
+
+  runtimeConfig: {
+    public: {
+      authUrl: process.env.NUXT_PUBLIC_AUTH_URL || 'https://localhost:8080/api/v1/auth'
+    }
+  },
+
+  devServer: {
+    https: {
+      key: './keys/localhost+2-key.pem',
+      cert: './keys/localhost+2.pem'
     }
   },
 

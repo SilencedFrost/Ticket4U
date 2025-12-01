@@ -1,6 +1,7 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', () => {
+  const config = useRuntimeConfig()
   const user = ref<User>({
     id: '',
     roleId: -1,
@@ -11,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => user.value.roleId < 0);
 
   async function login(email: string, password: string, rememberMe: boolean) {
-      user.value = await $fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
+      user.value = await $fetch(`${config.public.authUrl}/login`, {
       credentials: 'include',
       method: 'POST',
       body: {

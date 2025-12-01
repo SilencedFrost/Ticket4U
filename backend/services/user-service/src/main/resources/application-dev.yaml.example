@@ -8,3 +8,8 @@ application:
     # Cors
     cors:
       allowed-origins: http://localhost:3000
+
+server:
+  ssl:
+    certificate: classpath:keys/localhost+2.pem
+    certificate-private-key: classpath:keys/localhost+2-key.pem

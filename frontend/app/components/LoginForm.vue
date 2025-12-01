@@ -4,7 +4,7 @@ import type { FetchError } from 'ofetch';
 
 const loading = ref<boolean>(false);
 const useUser = useUserStore();
-const error = ref<string>();
+const error = reactive({ email: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
 const formData = reactive({
   email: '',
@@ -14,21 +14,28 @@ const formData = reactive({
 
 async function login() {
   loading.value = true;
-  error.value = '';
+  Object.assign(error, { email: '', password: '', generic: '' });
   try {
     await useUser.login(formData.email, formData.password, formData.rememberMe);
   } catch (err) {
     const fetchError = err as FetchError;
     console.log(fetchError);
     if (!fetchError.statusCode) {
-      error.value = 'auth.error.network';
+      error.generic = 'auth.error.network';
       return;
     }
 
-    if (fetchError.statusCode === 401) {
-      error.value = 'auth.error.unauthorized';
-    } else {
-      error.value = 'auth.error.unknown';
+    switch (fetchError.statusCode) {
+      case 400:
+        error.email = fetchError.data?.email || '';
+        error.password = fetchError.data?.password || '';
+        break;
+      case 401:
+        error.generic = 'auth.error.unauthorized';
+        break;
+      default:
+        error.generic = 'auth.error.unknown';
+        break;
     }
   } finally {
     loading.value = false;
@@ -48,7 +55,7 @@ function viewPassword() {
   <div class="card bg-reactive-secondary p-3 form-width">
     <h3 class="text-center text-reactive-primary">{{ $t('auth.login_title') }}:</h3>
     <hr class="my-2" />
-    <form action="#">
+    <form novalidate>
       <div class="mb-2">
         <label for="email" class="form-label text-reactive-primary"
           >{{ $t('common.email') }}:</label
@@ -57,8 +64,14 @@ function viewPassword() {
           id="email"
           v-model="formData.email"
           type="email"
-          class="form-control bg-reactive-primary text-reactive-primary"
+          :class="[
+            'form-control',
+            'bg-reactive-primary',
+            'text-reactive-primary',
+            { 'is-invalid': error.email },
+          ]"
         />
+        <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
       </div>
       <div class="mb-2">
         <label for="password" class="form-label text-reactive-primary"
@@ -69,9 +82,13 @@ function viewPassword() {
             id="password"
             v-model="formData.password"
             :type="isViewingPassword ? 'text' : 'password'"
-            class="form-control bg-reactive-primary text-reactive-primary"
+            :class="[
+              'form-control',
+              'bg-reactive-primary',
+              'text-reactive-primary',
+              { 'is-invalid': error.password },
+            ]"
           />
-
           <button
             class="btn btn-outline-secondary bg-reactive-primary"
             type="button"
@@ -80,6 +97,7 @@ function viewPassword() {
           >
             <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
           </button>
+          <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>
         </div>
       </div>
       <div class="form-check mb-2">
@@ -91,6 +109,7 @@ function viewPassword() {
         />
         <label for="rememberMe" class="form-check-label">{{ $t('auth.remember_me') }}</label>
       </div>
+      <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
       <div class="d-flex flex-column">
         <button
           class="btn btn-primary text-center mb-2"

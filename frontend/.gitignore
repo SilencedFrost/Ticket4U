@@ -21,8 +21,3 @@ logs
 
 # AI
  **/AGENTS.md
-
-# Local env files
-.env
-.env.*
-!.env.example

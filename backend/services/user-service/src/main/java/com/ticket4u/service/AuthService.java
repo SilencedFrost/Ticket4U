@@ -26,7 +26,6 @@ public class AuthService {
 
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
-    private final CookieUtil cookieUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
 
@@ -94,7 +93,9 @@ public class AuthService {
                     new AuthResponse(
                             authenticatedUser.getUserId(),
                             authenticatedUser.getRoleId(),
-                            authenticatedUser.getTrueUsername()
+                            authenticatedUser.getTrueUsername(),
+                            // Email is mapped to Spring's username field
+                            authenticatedUser.getUsername()
                     ),
                     at.toString(),
                     rt.toString()

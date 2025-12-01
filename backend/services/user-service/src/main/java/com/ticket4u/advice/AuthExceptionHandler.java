@@ -1,8 +1,9 @@
 package com.ticket4u.advice;
 
-import com.ticket4u.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -10,18 +11,15 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class AuthExceptionHandler {
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<Map<String, String>> handleUserAlreadyExist(UserAlreadyExistException ex) {
-        Map<String, String> error = Map.of("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)  // 401
+                .body(Map.of("message", "Invalid credentials"));
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalState(IllegalStateException e) {
-        Map<String, String> error = Map.of("error", e.getMessage());
-        if (e.getMessage().contains("Account is not activated")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<?> handleDisabled(DisabledException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)  // 403
+                .body(Map.of("message", "Account disabled"));
     }
 }

@@ -7,7 +7,21 @@
     },
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
-    "forgot_password": "Quên mật khẩu"
+    "forgot_password": "Quên mật khẩu",
+    "remember_me": "Duy trì đăng nhập",
+    "error": {
+      "unauthorized": "Thông tin không đúng",
+      "unknown": "Lỗi không biết, hãy liên hệ system admin",
+      "network": "Lỗi kết nối, kiểm tra kết nối của bạn",
+      "format": {
+        "password": "Mật khẩu phải có một ký tự viết thường, một ký tự viết hoa, một ký tự đặc biệt, và dài 8-32 ký tự",
+        "email": "Định dạng email không hợp lệ"
+      },
+      "blank": {
+        "password": "Password không được để trống",
+        "email": "Email không được để trống"
+      }
+    }
   },
   "common": {
     "email": "Email"

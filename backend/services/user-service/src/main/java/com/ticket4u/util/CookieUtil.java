@@ -15,7 +15,8 @@ public class CookieUtil {
         return ResponseCookie.from(key, value)
                 .sameSite(SameSite.NONE.getScheme())
                 .httpOnly(true)
-                .secure(true);
+                .secure(true)
+                .path("/");
     }
 
     public Optional<String> getCookie(Cookie[] cookies, String key) {

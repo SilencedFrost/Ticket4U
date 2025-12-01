@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record LoginRequest(
-        @NotBlank(message = "Email can't be blank")
-        @Email(message = "Invalid email format")
+        @NotBlank(message = "auth.error.blank.email")
+        @Email(message = "auth.error.format.email")
         String email,
 
-        @NotBlank(message = "Password can't be blank")
-        @Pattern(message = "Password must contain one: lowercase letter, uppercase letter, special char (!@#$%^&*_-), and be 8-32 chars long", regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$")
+        @NotBlank(message = "auth.error.blank.password")
+        @Pattern(message = "auth.error.format.password", regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$")
         String password,
 
         @NotNull(message = "Remember me can't be null")

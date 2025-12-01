@@ -3,10 +3,8 @@ package com.ticket4u.service;
 import com.ticket4u.entity.Session;
 import com.ticket4u.entity.User;
 import com.ticket4u.exception.UserNotFoundException;
-import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.SessionRepository;
 import com.ticket4u.repository.UserRepository;
-import com.ticket4u.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,10 +19,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SessionService {
-    private final TokenUtil tokenUtil;
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Duration ttl) {

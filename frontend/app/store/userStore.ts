@@ -10,12 +10,13 @@ export const useUserStore = defineStore('user', () => {
 
   const isLoggedIn = computed(() => user.value.roleId < 0);
 
-  async function login(email: string, password: string) {
+  async function login(email: string, password: string, rememberMe: boolean) {
       user.value = await $fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
       method: 'POST',
       body: {
         email: email,
-        password: password
+        password: password,
+        rememberMe: rememberMe
       }
     })
   }

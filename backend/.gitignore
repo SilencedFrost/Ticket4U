@@ -43,8 +43,12 @@ bin/
 
 ### Custom ###
 *.pem
-services/**/application.properties
 **/.idea/
 
 ### AI ###
- **/AGENTS.md
+**/AGENTS.md
+
+### Environment secrets ###
+
+**/application-*.yaml
+**/application-*.yml

@@ -1,0 +1,4 @@
+# Database Configuration
+spring:
+  datasource:
+    password: YOUR_PASSWORD_HERE

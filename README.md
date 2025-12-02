@@ -23,9 +23,9 @@
 <img src="https://img.shields.io/badge/Vue.js-4FC08D.svg?style=default&logo=vuedotjs&logoColor=white" alt="Vue.js">
 <img src="https://img.shields.io/badge/Nuxt-002E3B?logo=nuxt&logoColor=#00DC82" alt="Nuxt">
 <img src="https://img.shields.io/badge/Postgres-%23316192.svg?logo=postgresql&logoColor=white" alt="PostgreSQL">
+<br>
 <img src="https://img.shields.io/badge/JUnit5-C21325?logo=junit5&logoColor=fff" alt="JUnit">
 <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?logo=springsecurity&logoColor=fff" alt="Spring Security">
-<br>
 <img src="https://img.shields.io/badge/Org-77AA99.svg?style=default&logo=Org&logoColor=white" alt="Org">
 <img src="https://img.shields.io/badge/Gradle-02303A.svg?style=default&logo=Gradle&logoColor=white" alt="Gradle">
 <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white" alt="Java">
@@ -33,17 +33,18 @@
 <img src="https://img.shields.io/badge/bat-31369E.svg?style=default&logo=bat&logoColor=white" alt="bat">
 <img src="https://img.shields.io/badge/ESLint-4B32C3.svg?style=default&logo=ESLint&logoColor=white" alt="ESLint">
 <img src="https://img.shields.io/badge/Kotlin-7F52FF.svg?style=default&logo=Kotlin&logoColor=white" alt="Kotlin">
+<br>
 <img src="https://img.shields.io/badge/Bootstrap-7952B3.svg?style=default&logo=Bootstrap&logoColor=white" alt="Bootstrap">
 <img src="https://img.shields.io/badge/Redis-%23DD0031.svg?logo=redis&logoColor=white" alt="Redis">
 <img src="https://img.shields.io/badge/nginx-009639?logo=nginx&logoColor=fff" alt="Nginx">
 <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=fff" alt="Spring Boot">
 <img src="https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff" alt="CSS">
-<img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff" alt="Git">
-<br>
 <img src="https://img.shields.io/badge/Sass-CC6699.svg?style=default&logo=Sass&logoColor=white" alt="Sass">
 <img src="https://img.shields.io/badge/YAML-CB171E.svg?style=default&logo=YAML&logoColor=white" alt="YAML">
 <img src="https://img.shields.io/badge/Hibernate-59666C?logo=hibernate&logoColor=fff" alt="Hibernate">
 <img src="https://img.shields.io/badge/Vercel-%23000000.svg?logo=vercel&logoColor=white" alt="Vercel">
+<br>
+<img src="https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff" alt="Git">
 <img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?logo=intellij-idea&logoColor=white" alt="IntelliJ IDEA">
 <img src="https://custom-icon-badges.demolab.com/badge/VSCode-0078d7.svg?logo=vsc&logoColor=white" alt="VSCode">
 <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white" alt="MongoDB">

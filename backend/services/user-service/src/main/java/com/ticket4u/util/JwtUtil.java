@@ -178,6 +178,15 @@ public class JwtUtil {
         }
     }
 
+    public boolean validate(String token) {
+        try {
+            jwtProcessor.process(token, null);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public <T> T extractClaim(String token, Function<JWTClaimsSet, T> claimsResolver) {
         final JWTClaimsSet claims = extractValidClaims(token);
         return claimsResolver.apply(claims);

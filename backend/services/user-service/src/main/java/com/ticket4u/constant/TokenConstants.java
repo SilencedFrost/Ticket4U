@@ -6,14 +6,16 @@ import java.time.Duration;
 
 @Getter
 public enum TokenConstants {
-    REFRESH_TOKEN("rt", Duration.ofDays(90)),
-    ACCESS_TOKEN("at", Duration.ofMinutes(15));
+    REFRESH_TOKEN("rt", Duration.ofDays(60), Duration.ofDays(7)),
+    ACCESS_TOKEN("at", Duration.ofMinutes(15), null);
 
     private final String cookieKey;
-    private final Duration ttl;
+    private final Duration absoluteTTL;
+    private final Duration rollingTTL;
 
-    private TokenConstants(String cookieKey, Duration ttl) {
+    private TokenConstants(String cookieKey, Duration absoluteTTL, Duration rollingTTL) {
         this.cookieKey = cookieKey;
-        this.ttl = ttl;
+        this.absoluteTTL = absoluteTTL;
+        this.rollingTTL = rollingTTL;
     }
 }

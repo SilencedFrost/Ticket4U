@@ -156,7 +156,7 @@ public class JwtUtil {
 
         Map<String, Object> claims = Map.of("roles", roles);
 
-        long ttl = TokenConstants.ACCESS_TOKEN.getTtl().toSeconds();
+        long ttl = TokenConstants.ACCESS_TOKEN.getAbsoluteTTL().toSeconds();
 
         return generateToken(userId.toString(), claims, ttl);
     }

@@ -28,6 +28,9 @@ public class Session {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
+    @Version
+    private Long version;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;

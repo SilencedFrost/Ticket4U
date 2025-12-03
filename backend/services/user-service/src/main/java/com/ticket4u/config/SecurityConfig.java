@@ -25,6 +25,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -39,8 +41,6 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new DaoUserDetailsService();
     }
-
-    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(

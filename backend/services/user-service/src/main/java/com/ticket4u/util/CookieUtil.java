@@ -19,26 +19,36 @@ public class CookieUtil {
                 .path("/");
     }
 
-    public Optional<String> getCookie(Cookie[] cookies, String key) {
+    public Optional<String> getCookieBody(Cookie[] cookies, String key) {
+        return this.getCookie(cookies, key).map(Cookie::getValue);
+    }
+
+    public Optional<Cookie> getCookie(Cookie[] cookies, String key) {
         if (cookies == null) return Optional.empty();
 
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(key))
-                .findFirst()
-                .map(Cookie::getValue);
+                .findFirst();
     }
 
     public ResponseCookie createDeleteCookie(String cookieName) {
         return ResponseCookie.from(cookieName, "")
                 .maxAge(0)
                 .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite(SameSite.NONE.getScheme())
                 .build();
     }
 
     public ResponseCookie createDeleteCookie(Cookie oldCookie) {
         return ResponseCookie.from(oldCookie.getName(), "")
                 .maxAge(0)
-                .path(oldCookie.getPath())
+                .path(oldCookie.getPath() != null ? oldCookie.getPath() : "/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite(SameSite.NONE.getScheme())
                 .build();
     }
+
 }

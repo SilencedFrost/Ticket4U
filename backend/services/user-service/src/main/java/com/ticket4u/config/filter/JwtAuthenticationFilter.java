@@ -1,7 +1,9 @@
 package com.ticket4u.config.filter;
 
 import com.ticket4u.constant.TokenConstants;
+import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.entity.CustomUserDetails;
+import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -11,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +32,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
@@ -41,9 +45,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null) {
             // Get access token
             String accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
+            String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
 
-            // If token is there and valid
-            if(accessToken != null && jwtUtil.validate(accessToken)) {
+            boolean isAccessTokenValid = accessToken != null && jwtUtil.validate(accessToken);
+
+            // If access token is not there, or invalid, but refresh token is there
+            if(!isAccessTokenValid && refreshToken != null) {
+                try {
+                    RefreshResult refreshResult = authService.refresh(refreshToken);
+
+                    response.addHeader(HttpHeaders.SET_COOKIE, refreshResult.accessTokenCookie());
+                    response.addHeader(HttpHeaders.SET_COOKIE, refreshResult.refreshTokenCookie());
+
+                    if(refreshResult.accessToken() != null) {
+                        accessToken = refreshResult.accessToken();
+                        isAccessTokenValid = jwtUtil.validate(accessToken);
+                    }
+                } catch (Exception e) {
+                    log.debug("Failed to refresh token, user will remain unauthenticated", e);
+                    accessToken = null;
+                }
+            }
+
+            // If access token is there and valid (original or refreshed)
+            if(isAccessTokenValid) {
                 try {
                     UUID userId = UUID.fromString(jwtUtil.extractSubject(accessToken));
 
@@ -74,9 +99,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 } catch (Exception e) {
                     log.info("Failed to process valid Access Token claims: ", e);
                 }
-            } else {
-                String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
-                // TODO: add token refresh code, remember to lock
             }
         }
 

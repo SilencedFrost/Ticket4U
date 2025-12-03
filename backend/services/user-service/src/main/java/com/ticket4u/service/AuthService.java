@@ -5,10 +5,12 @@ import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.AuthResponse;
 import com.ticket4u.dto.auth.LoginRequest;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.TokenUtil;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
@@ -28,6 +30,7 @@ public class AuthService {
     private final TokenUtil tokenUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
+    private final CookieUtil cookieUtil;
 
     public LoginResult login(
             String email,
@@ -115,5 +118,25 @@ public class AuthService {
                 loginRequest.rememberMe(),
                 oldRefreshToken,
                 userAgent);
+    }
+
+    public LogoutResult logout(String accessToken, String refreshToken, Cookie accessTokenCookie, Cookie refreshTokenCookie ) {
+        // if access token null, ignore
+        // generate delete at and rt cookies with cookie util to match all attributes
+        ResponseCookie atDeleteCookie = accessTokenCookie != null ? cookieUtil.createDeleteCookie(accessTokenCookie) : cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey());
+        ResponseCookie rtDeleteCookie = accessTokenCookie != null ? cookieUtil.createDeleteCookie(refreshTokenCookie) : cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey());
+        // call session service invalidate, if succeed, return, else throw an error
+        if (refreshToken != null && refreshToken.isBlank()) {
+            log.debug("Refresh token is blank");
+            try {
+                sessionService.invalidate(refreshToken);
+                log.info("Session has been invalidated successfully");
+            } catch (Exception e) {
+                log.error("Session has been invalidated failed", e);
+                // Trigger rollback
+                throw new RuntimeException("Session has been invalidated failed", e);
+            }
+        }
+        return new LogoutResult(atDeleteCookie.toString(), rtDeleteCookie.toString());
     }
 }

@@ -13,6 +13,7 @@ import org.mapstruct.*;
 public interface UserMapper {
 
     @Mapping(target = "roleId", source = "role.id")
+    @Mapping(target = "role", source = "role.roleName")
     UserResponse toDTO(User user);
 
     @Mapping(target = "passwordHash", source = "password", qualifiedByName = "hashPassword")

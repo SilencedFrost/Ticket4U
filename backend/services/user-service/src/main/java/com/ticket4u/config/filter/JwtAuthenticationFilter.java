@@ -32,7 +32,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthService authService;
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
@@ -43,32 +42,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         if(SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null) {
-            // Get access token
-            String accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
-            String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
 
-            boolean isAccessTokenValid = accessToken != null && jwtUtil.validate(accessToken);
+            String accessToken = (String) request.getAttribute("newAccessToken");
 
-            // If access token is not there, or invalid, but refresh token is there
-            if(!isAccessTokenValid && refreshToken != null) {
-                try {
-                    RefreshResult refreshResult = authService.refresh(refreshToken);
-
-                    response.addHeader(HttpHeaders.SET_COOKIE, refreshResult.accessTokenCookie());
-                    response.addHeader(HttpHeaders.SET_COOKIE, refreshResult.refreshTokenCookie());
-
-                    if(refreshResult.accessToken() != null) {
-                        accessToken = refreshResult.accessToken();
-                        isAccessTokenValid = jwtUtil.validate(accessToken);
-                    }
-                } catch (Exception e) {
-                    log.debug("Failed to refresh token, user will remain unauthenticated", e);
-                    accessToken = null;
-                }
+            if (accessToken == null) {
+                accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
             }
 
             // If access token is there and valid (original or refreshed)
-            if(isAccessTokenValid) {
+            if(accessToken != null && jwtUtil.validate(accessToken)) {
                 try {
                     UUID userId = UUID.fromString(jwtUtil.extractSubject(accessToken));
 

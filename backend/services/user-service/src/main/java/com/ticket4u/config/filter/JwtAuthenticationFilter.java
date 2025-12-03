@@ -1,25 +1,36 @@
 package com.ticket4u.config.filter;
 
+import com.ticket4u.constant.TokenConstants;
+import com.ticket4u.entity.CustomUserDetails;
+import com.ticket4u.util.CookieUtil;
+import com.ticket4u.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    /*
-    private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-    } */
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(
@@ -27,50 +38,48 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        /*
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        String userEmail = null;
+        if(SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null) {
+            // Get access token
+            String accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+            // If token is there and valid
+            if(accessToken != null && jwtUtil.validate(accessToken)) {
+                try {
+                    UUID userId = UUID.fromString(jwtUtil.extractSubject(accessToken));
 
-        jwt = authHeader.substring(7);
+                    Collection<? extends GrantedAuthority> authorities = List.of();
 
-        try {
-            // Extract the username using the Nimbus-based utility
-            userEmail = jwtUtil.extractUserId(jwt);
-        } catch (ParseException | JOSEException e) {
-            // Handle parsing or signature verification failure (e.g., malformed token, invalid signature)
-            System.err.println("JWT processing error: " + e.getMessage());
-            filterChain.doFilter(request, response);
-            return;
-        }
+                    // Extract and convert roles to Spring Security Authorities
+                    List<String> roles = jwtUtil.extractClaim(accessToken, claims -> {
+                        try {
+                            return claims.getStringListClaim("roles");
+                        } catch (ParseException e) {
+                            return List.of();
+                        }
+                    });
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                    if(!roles.isEmpty()) {
+                        authorities = roles.stream()
+                                .map(role -> "ROLE_" + role.toUpperCase())
+                                .map(SimpleGrantedAuthority::new)
+                                .toList();
+                    }
 
-            try {
-                // Validate the token (signature and expiration)
-                if (jwtUtil.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    // Construct CustomUserDetails, put it in Security Context
+                    CustomUserDetails user = new CustomUserDetails(authorities, userId);
+
+                    var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } catch (Exception e) {
+                    log.info("Failed to process valid Access Token claims: ", e);
                 }
-            } catch (ParseException | JOSEException e) {
-                // Handle error during validation (should be caught above, but good practice)
-                System.err.println("JWT validation error: " + e.getMessage());
+            } else {
+                String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
+                // TODO: add token refresh code, remember to lock
             }
         }
-    */
+
         filterChain.doFilter(request, response);
     }
 }

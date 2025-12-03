@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue';
 import type { FetchError } from 'ofetch';
 
 const loading = ref<boolean>(false);
+const logoutLoading = ref<boolean>(false);
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
@@ -41,7 +42,17 @@ async function login() {
     loading.value = false;
   }
 }
-
+async function logout() {
+  logoutLoading.value = true;
+  try {
+    await useUser.logout();
+  } catch (err) {
+    console.error('Logout failed:', err);
+    error.generic = 'auth.error.logout_failed';
+  } finally {
+    logoutLoading.value = false;
+  }
+}
 function viewPassword() {
   isViewingPassword.value = true;
 
@@ -133,6 +144,19 @@ function viewPassword() {
       <a href="" class="text-decoration-none text-reactive-secondary">{{
         $t('auth.forgot_password')
       }}</a>
+      <div v-if="useUser.isLoggedIn" class="mb-3">
+      <button
+        class="btn btn-danger w-100"
+        :disabled="logoutLoading"
+        @click="logout"
+      >
+        <span v-if="logoutLoading" class="spinner-border spinner-border-sm me-2" />
+        Logout
+      </button>
+      <div v-if="error.generic" class="invalid-feedback d-block mt-2">{{ $t(error.generic) }}</div>
     </div>
+    </div>
+    <!-- Logout button for testing -->
+    
   </div>
 </template>

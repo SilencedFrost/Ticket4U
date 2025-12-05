@@ -156,7 +156,7 @@ public class JwtUtil {
 
         Map<String, Object> claims = Map.of("roles", roles);
 
-        long ttl = TokenConstants.ACCESS_TOKEN.getTtl().toSeconds();
+        long ttl = TokenConstants.ACCESS_TOKEN.getAbsoluteTTL().toSeconds();
 
         return generateToken(userId.toString(), claims, ttl);
     }
@@ -175,6 +175,15 @@ public class JwtUtil {
             throw new RuntimeException("JWT validation failed: " + e.getMessage(), e);
         } catch (ParseException | JOSEException e) {
             throw new RuntimeException("JWT parsing failed: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean validate(String token) {
+        try {
+            jwtProcessor.process(token, null);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

@@ -19,4 +19,12 @@ public class CustomUserDetails extends User {
         this.roleId = roleId;
         this.trueUsername = trueUsername;
     }
+
+    // For JWT creation
+    public CustomUserDetails(Collection<? extends  GrantedAuthority> authorities, UUID userId) {
+        super("jwt-user", null, authorities);
+        this.userId = userId;
+        this.roleId = -1;
+        this.trueUsername = "jwt-user";
+    }
 }

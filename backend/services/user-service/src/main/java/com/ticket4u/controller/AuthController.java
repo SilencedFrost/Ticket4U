@@ -63,18 +63,16 @@ public class AuthController {
         Cookie oldRefreshTokenCookie = cookieUtil.getCookie(cookies, TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
         Cookie oldAccessTokenCookie = cookieUtil.getCookie(cookies, TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
 
-        log.debug("Old refresh token {} present", oldRefreshTokenCookie == null ? "not" : "");
-        log.debug("Old access token {} present", oldAccessTokenCookie == null ? "not" : "");
         // Get token values for section invalidation
         String oldRefreshTokenValue = oldRefreshTokenCookie != null ? oldRefreshTokenCookie.getValue() : null;
         String oldAccessTokenValue = oldAccessTokenCookie != null ? oldAccessTokenCookie.getValue() : null;
 
         try {
             // Pass old at and rt into authService.logout, get back the at and rt delete cookie
-            LogoutResult logoutResult = authService.logout(oldAccessTokenValue, oldRefreshTokenValue, oldAccessTokenCookie, oldRefreshTokenCookie);
+            LogoutResult logoutResult = authService.logout(oldAccessTokenCookie, oldRefreshTokenCookie);
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, logoutResult.accessTokenCookie(), logoutResult.refreshTokenCookie()).build();
         } catch (Exception e) {
-            log.error("Login request failed", e);
+            log.error("Logout failed", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

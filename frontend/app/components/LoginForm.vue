@@ -11,7 +11,6 @@ const formData = reactive({
   password: '',
   rememberMe: false,
 });
-
 async function login() {
   loading.value = true;
   Object.assign(error, { email: '', password: '', generic: '' });
@@ -132,8 +131,6 @@ function viewPassword() {
       <a href="" class="text-decoration-none text-reactive-secondary">{{
         $t('auth.forgot_password')
       }}</a>
-    </div>
-    <!-- Logout button for testing -->
-    
+    </div>  
   </div>
 </template>

@@ -65,10 +65,6 @@ public class AuthController {
         Cookie oldRefreshTokenCookie = cookieUtil.getCookie(cookies, TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
         Cookie oldAccessTokenCookie = cookieUtil.getCookie(cookies, TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
 
-        // Get token values for section invalidation
-        String oldRefreshTokenValue = oldRefreshTokenCookie != null ? oldRefreshTokenCookie.getValue() : null;
-        String oldAccessTokenValue = oldAccessTokenCookie != null ? oldAccessTokenCookie.getValue() : null;
-
         try {
             // Pass old at and rt into authService.logout, get back the at and rt delete cookie
             LogoutResult logoutResult = authService.logout(oldAccessTokenCookie, oldRefreshTokenCookie);

@@ -35,9 +35,6 @@ public class CookieUtil {
         return ResponseCookie.from(cookieName, "")
                 .maxAge(0)
                 .path("/")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite(SameSite.NONE.getScheme())
                 .build();
     }
 
@@ -45,9 +42,6 @@ public class CookieUtil {
         return ResponseCookie.from(oldCookie.getName(), "")
                 .maxAge(0)
                 .path(oldCookie.getPath() != null ? oldCookie.getPath() : "/")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite(SameSite.NONE.getScheme())
                 .build();
     }
 

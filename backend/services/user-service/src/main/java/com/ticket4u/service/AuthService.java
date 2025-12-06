@@ -26,7 +26,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,7 +41,6 @@ public class AuthService {
     private final TokenUtil tokenUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
-    private final CookieUtil cookieUtil;
 
     @Transactional
     public LoginResult login(
@@ -170,11 +168,6 @@ public class AuthService {
     }
     @Transactional
     public LogoutResult logout(Cookie accessTokenCookie, Cookie refreshTokenCookie) {
-        // if access token null, ignore
-        if (accessTokenCookie == null) {
-            log.error("Access token cookie is null, ignoring logout request ");
-            return new LogoutResult("", "");
-        }
         // generate delete at and rt cookies with cookie util to match all attributes
         ResponseCookie atDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey());
         ResponseCookie rtDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey());
@@ -190,9 +183,9 @@ public class AuthService {
                 log.info("Session has been invalidated successfully");
             } catch (Exception e) {
                 log.error("Invalidate session failed", e);
-                // trigger rollback
-                throw new RuntimeException("Logout failed: Could not invalidate session", e);
             }
+        } else {
+            log.debug("No refresh token to invalidate");
         }
         return new LogoutResult(atDeleteCookie.toString(), rtDeleteCookie.toString());
     }

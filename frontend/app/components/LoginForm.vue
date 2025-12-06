@@ -11,6 +11,7 @@ const formData = reactive({
   password: '',
   rememberMe: false,
 });
+
 async function login() {
   loading.value = true;
   Object.assign(error, { email: '', password: '', generic: '' });
@@ -40,6 +41,7 @@ async function login() {
     loading.value = false;
   }
 }
+
 function viewPassword() {
   isViewingPassword.value = true;
 

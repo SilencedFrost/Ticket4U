@@ -5,6 +5,7 @@ import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.AuthResponse;
 import com.ticket4u.dto.auth.LoginRequest;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshCreationResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.dto.user.UserResponse;
@@ -13,6 +14,7 @@ import com.ticket4u.exception.TokenCreationException;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.TokenUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -163,5 +165,26 @@ public class AuthService {
                 null,
                 cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey()).toString()
         );
+    }
+    @Transactional
+    public LogoutResult logout(String refreshToken) {
+        // generate delete at and rt cookies with cookie util to match all attributes
+        ResponseCookie atDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey());
+        ResponseCookie rtDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey());
+
+        // call session service invalidate, if succeed, return, else throw an error
+        if (refreshToken != null && refreshToken.isBlank()) {
+            log.debug("accessTokenCookie is blank");
+            try {
+                sessionService.invalidate(refreshToken);
+                log.info("Session has been invalidated");
+            } catch (Exception e) {
+                log.error("Invalidate session failed", e);
+            }
+        } else {
+            log.debug("No refresh token to invalidate");
+        }
+
+        return new LogoutResult(atDeleteCookie.toString(), rtDeleteCookie.toString());
     }
 }

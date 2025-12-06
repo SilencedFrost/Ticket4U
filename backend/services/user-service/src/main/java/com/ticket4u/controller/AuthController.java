@@ -5,14 +5,17 @@ import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.AuthResponse;
 import com.ticket4u.dto.auth.LoginRequest;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,5 +56,22 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
                 .body(loginResult.authResponse());
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        // Get old cookies
+        String oldRefreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
+        String oldAccessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
+
+        try {
+            // Pass old at and rt into authService.logout, get back the at and rt delete cookie
+            LogoutResult logoutResult = authService.logout(oldRefreshToken);
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, logoutResult.accessTokenCookie(), logoutResult.refreshTokenCookie()).build();
+
+        } catch (Exception e) {
+            log.error("Logout failed", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        }
     }
 }

@@ -52,7 +52,7 @@ function viewPassword() {
 </script>
 
 <template>
-  <div class="card bg-reactive-secondary p-3 form-width">
+  <div class="form-width">
     <h3 class="text-center text-reactive-primary">{{ $t('auth.login_title') }}:</h3>
     <hr class="my-2" />
     <form novalidate>

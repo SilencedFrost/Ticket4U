@@ -25,5 +25,9 @@
   },
   "common": {
     "email": "Email"
+  },
+  "brand": {
+    "name": "Ticket4U",
+    "motto": "Nền tảng bán vé ưu tiên khách hàng"
   }
 }

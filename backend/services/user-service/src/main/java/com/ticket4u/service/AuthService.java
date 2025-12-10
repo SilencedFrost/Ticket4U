@@ -1,7 +1,6 @@
 package com.ticket4u.service;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.Option;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.AuthResponse;
 import com.ticket4u.dto.auth.LoginRequest;

@@ -1,9 +1,7 @@
 package com.ticket4u.config.filter;
 
 import com.ticket4u.constant.TokenConstants;
-import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.entity.CustomUserDetails;
-import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -13,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

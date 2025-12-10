@@ -2,7 +2,6 @@ package com.ticket4u.config.filter;
 
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.internal.RefreshResult;
-import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
@@ -14,19 +13,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Component

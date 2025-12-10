@@ -7,10 +7,8 @@ import com.ticket4u.entity.User;
 import com.ticket4u.exception.ConcurrentRequestException;
 import com.ticket4u.exception.SessionExpiredException;
 import com.ticket4u.exception.SessionNotFoundException;
-import com.ticket4u.exception.UserNotFoundException;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.SessionRepository;
-import com.ticket4u.repository.UserRepository;
 import com.ticket4u.util.TokenUtil;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 

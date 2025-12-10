@@ -33,9 +33,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final CookieUtil cookieUtil;
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
+    private final CookieUtil cookieUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
 
@@ -45,7 +45,7 @@ public class AuthService {
             String oldRefreshToken,
             String userAgent
     ) {
-        // Auth to get CustomUserDetails, will fail here if invalid credentials were provided
+        // Get CustomUserDetails, will fail here if invalid credentials were provided
         Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
 
         // Retrieve authenticated user data

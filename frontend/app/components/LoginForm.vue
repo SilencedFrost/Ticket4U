@@ -57,7 +57,7 @@ function viewPassword() {
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
-        <label for="email" class="form-label text-reactive-primary"
+        <label for="email" class="form-label text-reactive-primary user-select-none"
           >{{ $t('common.email') }}:</label
         >
         <input
@@ -74,7 +74,7 @@ function viewPassword() {
         <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
       </div>
       <div class="mb-2">
-        <label for="password" class="form-label text-reactive-primary"
+        <label for="password" class="form-label text-reactive-primary user-select-none"
           >{{ $t('auth.password') }}:</label
         >
         <div class="input-group">
@@ -107,7 +107,9 @@ function viewPassword() {
           type="checkbox"
           class="form-check-input"
         />
-        <label for="rememberMe" class="form-check-label">{{ $t('auth.remember_me') }}</label>
+        <label for="rememberMe" class="form-check-label text-reactive-primary user-select-none">{{
+          $t('auth.remember_me')
+        }}</label>
       </div>
       <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
       <div class="d-flex flex-column">
@@ -116,6 +118,7 @@ function viewPassword() {
           :disabled="loading"
           @click.prevent.stop="login()"
         >
+          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
           {{ $t('auth.login_action._') }}
         </button>
         <button class="btn btn-reactive-gray">

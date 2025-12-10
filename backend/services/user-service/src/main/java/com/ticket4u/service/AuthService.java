@@ -69,7 +69,7 @@ public class AuthService {
         String rt = createRefreshTokenCookie(refreshToken, loginRequest.rememberMe());
 
         // Create session object
-        sessionService.createSession(authenticatedUser.getUserId(), userAgent, refreshToken, parseRefreshTokenTTL(loginRequest.rememberMe()));
+        sessionService.createSession(authenticatedUser.getUserId(), userAgent, refreshToken, loginRequest.rememberMe());
 
         if(oldRefreshToken != null) {
             log.debug("Invalidating session token : {}", oldRefreshToken);

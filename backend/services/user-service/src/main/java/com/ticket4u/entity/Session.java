@@ -1,5 +1,6 @@
 package com.ticket4u.entity;
 
+import com.ticket4u.constant.TokenConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -17,11 +19,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Session {
 
-    public Session(User user, String sessionHash, String userAgent, OffsetDateTime expiryDate) {
+    public Session(User user, String sessionHash, String userAgent, Boolean persistent) {
         this.assignUser(user);
         this.sessionHash = sessionHash;
         this.userAgent = userAgent;
-        this.expiresAt = expiryDate;
+        this.persistent = persistent;
+        this.expiresAt = OffsetDateTime.now().plus(persistent? TokenConstants.REFRESH_TOKEN.getRollingTTL() : Duration.ofDays(1));
     }
 
     @Id
@@ -31,6 +34,8 @@ public class Session {
 
     @Version
     private Long version;
+
+    private Boolean persistent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)

@@ -35,7 +35,7 @@ public class SessionService {
 
 
     @Transactional
-    public void createSession(UUID userId, String userAgent, String sessionToken, Duration ttl) {
+    public void createSession(UUID userId, String userAgent, String sessionToken, Boolean persistent) {
         // Validation
         String normalizedUserAgent = normalizeUserAgent(userAgent);
         validateSessionToken(sessionToken);
@@ -44,7 +44,7 @@ public class SessionService {
         User user = userService.findEntityByIdOrThrow(userId);
 
         // Session creation
-        Session session = new Session(user, DigestUtils.sha256Hex(sessionToken) , normalizedUserAgent, OffsetDateTime.now().plus(ttl));
+        Session session = new Session(user, DigestUtils.sha256Hex(sessionToken) , normalizedUserAgent, persistent);
         sessionRepository.save(session);
     }
 
@@ -104,12 +104,16 @@ public class SessionService {
     }
 
     private OffsetDateTime calculateNewExpiration(Session session) {
-        OffsetDateTime absoluteExp = session.getCreatedAt()
-                .plus(TokenConstants.REFRESH_TOKEN.getAbsoluteTTL());
-        OffsetDateTime rollingExp = OffsetDateTime.now()
-                .plus(TokenConstants.REFRESH_TOKEN.getRollingTTL());
+        if(session.getPersistent()) {
+            OffsetDateTime absoluteExp = session.getCreatedAt()
+                    .plus(TokenConstants.REFRESH_TOKEN.getAbsoluteTTL());
+            OffsetDateTime rollingExp = OffsetDateTime.now()
+                    .plus(TokenConstants.REFRESH_TOKEN.getRollingTTL());
 
-        // Use the earlier of the two
-        return absoluteExp.isBefore(rollingExp) ? absoluteExp : rollingExp;
+            // Use the earlier of the two
+            return absoluteExp.isBefore(rollingExp) ? absoluteExp : rollingExp;
+        } else {
+            return session.getExpiresAt();
+        }
     }
 }

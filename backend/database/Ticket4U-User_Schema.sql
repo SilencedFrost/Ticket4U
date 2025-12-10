@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS public.session
 (
     id uuid PRIMARY KEY,
 	version bigint NOT NULL,
+	persistent boolean NOT NULL,
     user_id uuid NOT NULL,
 	session_hash char(64) NOT NULL,
 	updated_at timestamptz NOT NULL,

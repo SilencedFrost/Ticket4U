@@ -1,5 +1,6 @@
 package com.ticket4u.service;
 
+import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.internal.RefreshCreationResult;
 import com.ticket4u.entity.Session;
 import com.ticket4u.entity.User;
@@ -52,7 +53,7 @@ public class SessionServiceTest {
         UUID userId = UUID.randomUUID();
         String userAgent = "Mozilla/5.0";
         String sessionToken = "test-session-token";
-        Duration ttl = Duration.ofDays(7);
+        Boolean persistent = false;
 
         User mockUser = new User();
         mockUser.setId(userId);
@@ -60,7 +61,7 @@ public class SessionServiceTest {
         when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
 
         // Act
-        sessionService.createSession(userId, userAgent, sessionToken, ttl);
+        sessionService.createSession(userId, userAgent, sessionToken, persistent);
 
         // Assert
         verify(userService).findEntityByIdOrThrow(userId);
@@ -72,13 +73,12 @@ public class SessionServiceTest {
         // Arrange
         UUID userId = UUID.randomUUID();
         String sessionToken = "test-session-token";
-        Duration ttl = Duration.ofDays(7);
 
         User mockUser = new User();
         when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
 
         // Act
-        sessionService.createSession(userId, null, sessionToken, ttl);
+        sessionService.createSession(userId, null, sessionToken, false);
 
         // Assert
         verify(sessionRepository).save(argThat(session ->
@@ -93,7 +93,7 @@ public class SessionServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            sessionService.createSession(userId, "userAgent", null, Duration.ofDays(7));
+            sessionService.createSession(userId, "userAgent", null, false);
         });
 
         verify(sessionRepository, never()).save(any());
@@ -106,10 +106,87 @@ public class SessionServiceTest {
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            sessionService.createSession(userId, "userAgent", "   ", Duration.ofDays(7));
+            sessionService.createSession(userId, "userAgent", "   ", false);
         });
 
         verify(sessionRepository, never()).save(any());
+    }
+
+    @Test
+    void createSession_ShouldCreateShortSession_WhenPersistentFalse() {
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        String userAgent = "Mozilla/5.0";
+        String sessionToken = "test-session-token";
+
+        User mockUser = new User();
+        mockUser.setId(userId);
+
+        when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
+
+        // Act
+        sessionService.createSession(userId, userAgent, sessionToken, false);
+
+        // Assert
+        verify(userService).findEntityByIdOrThrow(userId);
+        verify(sessionRepository).save(argThat(session -> {
+            // Verify it's a non-persistent session
+            assertFalse(session.getPersistent());
+
+            // Verify expiration is approximately 1 day from now
+            OffsetDateTime expectedExpiration = OffsetDateTime.now().plusDays(1);
+            OffsetDateTime actualExpiration = session.getExpiresAt();
+
+            // Allow 5 second tolerance for test execution time
+            long secondsDifference = Math.abs(
+                    java.time.Duration.between(expectedExpiration, actualExpiration).getSeconds()
+            );
+            assertTrue(secondsDifference < 5,
+                    "Expiration should be ~1 day from now, but difference was " + secondsDifference + " seconds");
+
+            // Verify other fields
+            assertEquals(DigestUtils.sha256Hex(sessionToken), session.getSessionHash());
+            assertEquals(userAgent, session.getUserAgent());
+            assertEquals(mockUser, session.getUser());
+
+            return true;
+        }));
+    }
+
+    @Test
+    void createSession_ShouldCreateLongSession_WhenPersistentTrue() {
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        String userAgent = "Mozilla/5.0";
+        String sessionToken = "test-session-token";
+
+        User mockUser = new User();
+        mockUser.setId(userId);
+
+        when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
+
+        // Act
+        sessionService.createSession(userId, userAgent, sessionToken, true);
+
+        // Assert
+        verify(sessionRepository).save(argThat(session -> {
+            // Verify it's a persistent session
+            assertTrue(session.getPersistent());
+
+            // Verify expiration is approximately 7 days from now (rolling TTL)
+            OffsetDateTime expectedExpiration = OffsetDateTime.now()
+                    .plus(TokenConstants.REFRESH_TOKEN.getRollingTTL());
+            OffsetDateTime actualExpiration = session.getExpiresAt();
+
+            // Allow 5 second tolerance
+            long secondsDifference = Math.abs(
+                    java.time.Duration.between(expectedExpiration, actualExpiration).getSeconds()
+            );
+            assertTrue(secondsDifference < 5,
+                    "Expiration should be ~7 days from now, but difference was " + secondsDifference + " seconds");
+
+            return true;
+        }));
     }
 
     // Invalidate tests
@@ -164,6 +241,7 @@ public class SessionServiceTest {
         mockSession.setSessionHash(oldHash);
         mockSession.setCreatedAt(OffsetDateTime.now().minusDays(1));
         mockSession.setExpiresAt(OffsetDateTime.now().plusDays(6));
+        mockSession.setPersistent(true);
 
         when(sessionRepository.findBySessionHash(oldHash)).thenReturn(Optional.of(mockSession));
         when(tokenUtil.generateToken()).thenReturn(newRefreshToken);
@@ -223,6 +301,7 @@ public class SessionServiceTest {
         Session mockSession = new Session();
         mockSession.setCreatedAt(OffsetDateTime.now().minusDays(1));
         mockSession.setExpiresAt(OffsetDateTime.now().plusDays(6));
+        mockSession.setPersistent(true);
 
         when(sessionRepository.findBySessionHash(hash)).thenReturn(Optional.of(mockSession));
         when(tokenUtil.generateToken()).thenReturn("new-token");

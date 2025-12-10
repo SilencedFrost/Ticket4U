@@ -16,7 +16,7 @@ import com.ticket4u.util.TokenUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,9 +34,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final CookieUtil cookieUtil;
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
+    private final CookieUtil cookieUtil;
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
 
@@ -46,7 +46,7 @@ public class AuthService {
             String oldRefreshToken,
             String userAgent
     ) {
-        // Auth to get CustomUserDetails, will fail here if invalid credentials were provided
+        // Get CustomUserDetails, will fail here if invalid credentials were provided
         Authentication authentication = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
 
         // Retrieve authenticated user data
@@ -61,22 +61,28 @@ public class AuthService {
 
         log.info("Authentication for user {} successful", authenticatedUser.getTrueUsername());
 
-        Optional<String> at = createAccessTokenCookie(createAccessToken(authenticatedUser));
+        // Create access token
+        Optional<String> accessToken = createAccessToken(authenticatedUser);
 
-        if(at.isEmpty()) throw new TokenCreationException("Access token is null");
+        if(accessToken.isEmpty()) {
+            throw new TokenCreationException("Failed to create access token");
+        }
+
+        String at = createAccessTokenCookie(accessToken.get());
 
         String refreshToken = tokenUtil.generateToken();
-
         String rt = createRefreshTokenCookie(refreshToken, loginRequest.rememberMe());
 
         // Create session object
-        sessionService.createSession(authenticatedUser.getUserId(), userAgent, refreshToken, parseRefreshTokenTTL(loginRequest.rememberMe()));
+        sessionService.createSession(authenticatedUser.getUserId(), userAgent, refreshToken, loginRequest.rememberMe());
 
         if(oldRefreshToken != null) {
-            log.debug("Invalidating session token : {}", oldRefreshToken);
-            sessionService.invalidate(oldRefreshToken);
-        } else {
-            log.debug("Old refresh token not found, skipping invalidation");
+            try {
+                log.debug("Invalidating session token with hash: {}", DigestUtils.sha256Hex(oldRefreshToken));
+                sessionService.invalidate(oldRefreshToken);
+            } catch (Exception e) {
+                log.warn("Failed to invalidate old refresh token, continuing anyway", e);
+            }
         }
 
         return new LoginResult(
@@ -87,7 +93,7 @@ public class AuthService {
                         // Email is mapped to Spring's username field
                         authenticatedUser.getUsername()
                 ),
-                at.get(),
+                at,
                 rt
         );
     }
@@ -95,35 +101,42 @@ public class AuthService {
     @Transactional
     public RefreshResult refresh(String refreshToken) {
         RefreshCreationResult refreshCreationResult = sessionService.refresh(refreshToken);
-
         UserResponse userResponse = refreshCreationResult.userResponse();
 
-        String accessToken = createAccessToken(userResponse);
-        Optional<String> accessTokenCookie = createAccessTokenCookie(accessToken);
+        if (userResponse == null) {
+            log.error("Refresh returned null user response");
+            sessionService.invalidate(refreshToken);
+            return this.createDeleteCookiesResult();
+        }
 
-        if(accessTokenCookie.isEmpty()) {
+        Optional<String> accessToken = createAccessToken(userResponse);
+
+        if(accessToken.isEmpty()) {
             log.error("Failed to create access token during refresh for user {}", userResponse.id());
             sessionService.invalidate(refreshToken);
             return this.createDeleteCookiesResult();
-        } else {
-            return new RefreshResult(
-                    accessTokenCookie.get(),
-                    accessToken,
-                    refreshCreationResult.refreshToken()
-            );
         }
+
+        String accessTokenCookie = createAccessTokenCookie(accessToken.get());
+
+        return new RefreshResult(
+                accessTokenCookie,
+                accessToken.get(),
+                refreshCreationResult.refreshToken()
+        );
     }
 
-    private String createAccessToken(CustomUserDetails userDetails) {
+    private Optional<String> createAccessToken(CustomUserDetails userDetails) {
         try {
-            return jwtUtil.generateAuthToken(userDetails);
+            String token = jwtUtil.generateAuthToken(userDetails);
+            return token != null ? Optional.of(token) : Optional.empty();
         } catch (JOSEException e) {
-            throw new TokenCreationException("Token generation failed");
+            log.error("Token generation failed", e);
+            return Optional.empty();
         }
-
     }
 
-    private String createAccessToken(UserResponse userResponse) {
+    private Optional<String> createAccessToken(UserResponse userResponse) {
         return createAccessToken(new CustomUserDetails(
                 userResponse.email(),
                 null,
@@ -134,12 +147,15 @@ public class AuthService {
         ));
     }
 
-    private Optional<String> createAccessTokenCookie(String accessToken) {
+    private String createAccessTokenCookie(String accessToken) {
+        if(accessToken.isEmpty()) {
+            throw new TokenCreationException("Access token is empty");
+        }
         // Build access token cookie
         ResponseCookie at = CookieUtil.secureBuilder(TokenConstants.ACCESS_TOKEN.getCookieKey(), accessToken)
                 .maxAge(TokenConstants.ACCESS_TOKEN.getAbsoluteTTL())
                 .build();
-        return Optional.of(at.toString());
+        return at.toString();
     }
 
     private static String createRefreshTokenCookie(String refreshToken, boolean rememberMe) {

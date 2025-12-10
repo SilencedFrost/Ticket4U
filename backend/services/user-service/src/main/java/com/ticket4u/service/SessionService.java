@@ -27,31 +27,42 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SessionService {
+
+    private final UserService userService;
+    private final TokenUtil tokenUtil;
     private final UserMapper userMapper;
     private final SessionRepository sessionRepository;
-    private final UserRepository userRepository;
-    private final TokenUtil tokenUtil;
+
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Duration ttl) {
-        userAgent = userAgent == null? "Unknown" : userAgent;
-        if(sessionToken == null || sessionToken.isBlank()) throw new IllegalArgumentException("Session token cannot be null or blank");
+        // Validation
+        String normalizedUserAgent = normalizeUserAgent(userAgent);
+        validateSessionToken(sessionToken);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with user Id: " + userId + " not found, skipping session creation"));
+        // Getting user
+        User user = userService.findEntityByIdOrThrow(userId);
 
-        Session session = new Session(user, DigestUtils.sha256Hex(sessionToken) , userAgent, OffsetDateTime.now().plus(ttl));
-
+        // Session creation
+        Session session = new Session(user, DigestUtils.sha256Hex(sessionToken) , normalizedUserAgent, OffsetDateTime.now().plus(ttl));
         sessionRepository.save(session);
     }
 
     @Transactional
     public void invalidate(String refreshToken) {
-        if(refreshToken == null || refreshToken.isBlank()) throw new IllegalArgumentException("Refresh token cannot be null or blank");
+        // Validation
+        validateSessionToken(refreshToken);
+
+        // Session invalidation
         sessionRepository.deleteBySessionHash(DigestUtils.sha256Hex(refreshToken));
     }
 
     @Transactional
     public RefreshCreationResult refresh(String refreshToken) {
+        // Validation
+        validateSessionToken(refreshToken);
+
+        // Session refresh
         try {
             Session session = sessionRepository.findBySessionHash(DigestUtils.sha256Hex(refreshToken))
                     .orElseThrow(() -> new SessionNotFoundException("Session not found"));
@@ -62,11 +73,9 @@ public class SessionService {
             }
 
             String newRefreshToken = tokenUtil.generateToken();
-            session.setSessionHash(DigestUtils.sha256Hex(newRefreshToken));
 
-            OffsetDateTime absoluteExp = session.getCreatedAt().plus(TokenConstants.REFRESH_TOKEN.getAbsoluteTTL());
-            OffsetDateTime rollingExp = OffsetDateTime.now().plus(TokenConstants.REFRESH_TOKEN.getRollingTTL());
-            session.setExpiresAt(absoluteExp.isBefore(rollingExp) ? absoluteExp : rollingExp);
+            session.setSessionHash(DigestUtils.sha256Hex(newRefreshToken));
+            session.setExpiresAt(calculateNewExpiration(session));
 
             sessionRepository.save(session);
 
@@ -82,5 +91,25 @@ public class SessionService {
         int deleted = sessionRepository.deleteByExpiresAtBefore(now);
         log.info("Deleted {} expired sessions", deleted);
         return deleted;
+    }
+
+    private String normalizeUserAgent(String userAgent) {
+        return userAgent == null ? "Unknown" : userAgent;
+    }
+
+    private void validateSessionToken(String sessionToken) {
+        if(sessionToken == null || sessionToken.isBlank()) {
+            throw new IllegalArgumentException("Session token cannot be null or blank");
+        }
+    }
+
+    private OffsetDateTime calculateNewExpiration(Session session) {
+        OffsetDateTime absoluteExp = session.getCreatedAt()
+                .plus(TokenConstants.REFRESH_TOKEN.getAbsoluteTTL());
+        OffsetDateTime rollingExp = OffsetDateTime.now()
+                .plus(TokenConstants.REFRESH_TOKEN.getRollingTTL());
+
+        // Use the earlier of the two
+        return absoluteExp.isBefore(rollingExp) ? absoluteExp : rollingExp;
     }
 }

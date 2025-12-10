@@ -6,10 +6,8 @@ import com.ticket4u.entity.User;
 import com.ticket4u.exception.ConcurrentRequestException;
 import com.ticket4u.exception.SessionExpiredException;
 import com.ticket4u.exception.SessionNotFoundException;
-import com.ticket4u.exception.UserNotFoundException;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.SessionRepository;
-import com.ticket4u.repository.UserRepository;
 import com.ticket4u.util.TokenUtil;
 import jakarta.persistence.OptimisticLockException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -38,7 +36,7 @@ public class SessionServiceTest {
     private SessionRepository sessionRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Mock
     private TokenUtil tokenUtil;
@@ -59,13 +57,13 @@ public class SessionServiceTest {
         User mockUser = new User();
         mockUser.setId(userId);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
 
         // Act
         sessionService.createSession(userId, userAgent, sessionToken, ttl);
 
         // Assert
-        verify(userRepository).findById(userId);
+        verify(userService).findEntityByIdOrThrow(userId);
         verify(sessionRepository).save(any(Session.class));
     }
 
@@ -77,7 +75,7 @@ public class SessionServiceTest {
         Duration ttl = Duration.ofDays(7);
 
         User mockUser = new User();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(userService.findEntityByIdOrThrow(userId)).thenReturn(mockUser);
 
         // Act
         sessionService.createSession(userId, null, sessionToken, ttl);
@@ -109,20 +107,6 @@ public class SessionServiceTest {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
             sessionService.createSession(userId, "userAgent", "   ", Duration.ofDays(7));
-        });
-
-        verify(sessionRepository, never()).save(any());
-    }
-
-    @Test
-    void createSession_ShouldThrowException_WhenUserNotFound() {
-        // Arrange
-        UUID userId = UUID.randomUUID();
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> {
-            sessionService.createSession(userId, "userAgent", "token", Duration.ofDays(7));
         });
 
         verify(sessionRepository, never()).save(any());

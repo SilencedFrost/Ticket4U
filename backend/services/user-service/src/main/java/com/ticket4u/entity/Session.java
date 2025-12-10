@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "session", schema = "public")
 @NoArgsConstructor
@@ -35,11 +36,9 @@ public class Session {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Setter
     @Column(nullable = false, updatable = false, length = 64, columnDefinition = "char(64)")
     private String sessionHash;
 
-    @Setter
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
@@ -47,11 +46,9 @@ public class Session {
     @Column(nullable = false)
     private OffsetDateTime createdAt;
 
-    @Setter
     @Column(nullable = false)
     private OffsetDateTime expiresAt;
 
-    @Setter
     @Column(columnDefinition = "text")
     private String userAgent;
 

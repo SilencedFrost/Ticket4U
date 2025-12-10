@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -34,6 +35,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+
+        // Skip filter for public endpoints
+        if (pathMatcher.match("/api/*/public/**", path)) {
+            return true;
+        }
+
+        // Skip filter for login endpoint
+        if (pathMatcher.match("/api/*/auth/login", path)) {
+            return true;
+        }
+
+        // Skip filter for logout endpoint
+        return pathMatcher.match("/api/*/auth/logout", path);
+    }
 
     @Override
     protected void doFilterInternal(

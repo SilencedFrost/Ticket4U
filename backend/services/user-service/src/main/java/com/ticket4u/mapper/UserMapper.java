@@ -13,12 +13,17 @@ import org.mapstruct.*;
 public interface UserMapper {
 
     @Mapping(target = "roleId", source = "role.id")
+    @Mapping(target = "role", source = "role.roleName")
     UserResponse toDTO(User user);
 
     @Mapping(target = "passwordHash", source = "password", qualifiedByName = "hashPassword")
     @Mapping(target = "isActive", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "sessions", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(UserCreateRequest userCreateRequest);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -28,5 +33,8 @@ public interface UserMapper {
     @Mapping(target = "isActive", ignore = true)
     @Mapping(target = "isDeleted", ignore = true)
     @Mapping(target = "phoneNumber", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     void updateUserFromDTO(UserUpdateRequest dto, @MappingTarget User entity);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "users", schema = "public")
 @NoArgsConstructor
@@ -25,7 +26,6 @@ public class User {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Setter
     @Column(nullable = false, unique = true, length = 254)
     private String email;
 
@@ -33,34 +33,26 @@ public class User {
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @Setter
     @Column(nullable = false, length = 64)
     private String username;
 
-    @Setter
     @Column(length = 32)
     private String firstName;
 
-    @Setter
     @Column(length = 32)
     private String lastName;
 
-    @Setter
     private LocalDate birthday;
 
-    @Setter
     @Column(nullable = false)
     private String passwordHash;
 
-    @Setter
     @Column(nullable = false)
     private Boolean isActive = false;
 
-    @Setter
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
-    @Setter
     @Column(nullable = false, length = 15)
     private String phoneNumber;
 

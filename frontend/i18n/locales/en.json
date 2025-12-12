@@ -7,9 +7,28 @@
     },
     "password": "Password",
     "create_account": "Create account",
-    "forgot_password": "Forgot password"
+    "forgot_password": "Forgot password",
+    "remember_me": "Remember me",
+    "error": {
+      "unauthorized": "Invalid login information",
+      "unknown": "Unknown error, please contact system admin",
+      "network": "Network error, please check your connection",
+      "format": {
+        "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
+        "email": "Invalid email format"
+      },
+      "blank": {
+        "password": "Password can't be blank",
+        "email": "Email can't be blank"
+      }
+    }
+    
   },
   "common": {
     "email": "Email"
+  },
+  "brand": {
+    "name": "Ticket4U",
+    "motto": "Customer-first ticketing platform"
   }
 }

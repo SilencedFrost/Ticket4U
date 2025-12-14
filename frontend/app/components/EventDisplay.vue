@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-
-// Interface for Event data
-interface Event {
-  id: number;
-  image: string;
-  title: string;
-  price: string;
-  date: string;
-}
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 
 // Props
 interface Props {
-  events?: Event[];
+  events?: EventData[];
   searchQuery?: string;
   dateRange?: string;
 }
@@ -24,7 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 // Sample event data - replace with actual API data
-const sampleEvents: Event[] = [
+const sampleEvents: EventData[] = [
   {
     id: 1,
     image: 'https://www.figma.com/api/mcp/asset/edb2cfba-4691-409f-8f0a-65a097f02bf2',
@@ -185,6 +176,28 @@ const startDate = ref<string>('');
 const endDate = ref<string>('');
 const selectedPreset = ref<string>('');
 
+// Main filter state
+const selectedLocation = ref<string>('');
+const isFreeEvent = ref(false);
+const selectedCategories = ref<string[]>([]);
+
+// Location options
+const locations = [
+  { label: 'Toàn quốc', value: '' },
+  { label: 'Hồ Chí Minh', value: 'hcm' },
+  { label: 'Hà Nội', value: 'hanoi' },
+  { label: 'Đà Lạt', value: 'dalat' },
+  { label: 'Vị trí khác', value: 'other' },
+];
+
+// Category options
+const categories = [
+  { label: 'Nhạc sống', value: 'music' },
+  { label: 'Sân khấu & Nghệ thuật', value: 'theatersandart' },
+  { label: 'Thể Thao', value: 'sport' },
+  { label: 'Khác', value: 'others' },
+];
+
 // Date presets
 const datePresets = [
   { label: 'Tất cả các ngày', value: 'all' },
@@ -209,6 +222,10 @@ const toggleDateFilter = () => {
 
 const toggleMainFilter = () => {
   showMainFilter.value = !showMainFilter.value;
+  // Force DOM update to calculate position
+  nextTick(() => {
+    adjustPopupPosition();
+  });
 };
 
 // Date preset handlers
@@ -276,6 +293,32 @@ const resetDateFilter = () => {
   selectedPreset.value = '';
 };
 
+// Main filter handlers
+const toggleCategory = (categoryValue: string) => {
+  const index = selectedCategories.value.indexOf(categoryValue);
+  if (index > -1) {
+    selectedCategories.value.splice(index, 1);
+  } else {
+    selectedCategories.value.push(categoryValue);
+  }
+};
+
+const applyMainFilter = () => {
+  showMainFilter.value = false;
+  // Apply filters logic here
+  console.log('Apply filters:', {
+    location: selectedLocation.value,
+    isFree: isFreeEvent.value,
+    categories: selectedCategories.value,
+  });
+};
+
+const resetMainFilter = () => {
+  selectedLocation.value = '';
+  isFreeEvent.value = false;
+  selectedCategories.value = [];
+};
+
 // Event click handler
 const handleEventClick = (eventId: number) => {
   // Navigate to event detail page
@@ -286,47 +329,116 @@ const handleEventClick = (eventId: number) => {
 // Close popup when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
-  if (showDateFilter.value && !target.closest('.date-filter-popup') && !target.closest('.btn-filter-date')) {
+  if (showDateFilter.value && !target.closest('.dropdown-popup-dark') && !target.closest('.btn-filter-primary')) {
     showDateFilter.value = false;
   }
-  if (showMainFilter.value && !target.closest('.main-filter-popup') && !target.closest('.btn-filter')) {
+  if (showMainFilter.value && !target.closest('.dropdown-popup-dark') && !target.closest('.btn-filter-secondary')) {
     showMainFilter.value = false;
   }
 };
 
+// Adjust popup position for mobile
+const adjustPopupPosition = () => {
+  if (!isMobile.value || !showMainFilter.value) return;
+
+  const button = document.querySelector('.btn-filter-secondary') as HTMLElement;
+  const popup = document.querySelector('.dropdown-popup-dark') as HTMLElement;
+
+  if (!button || !popup) return;
+
+  const buttonRect = button.getBoundingClientRect();
+  const popupRect = popup.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+
+  // Calculate available space
+  const spaceBelow = viewportHeight - buttonRect.bottom;
+  const spaceAbove = buttonRect.top;
+  const spaceRight = viewportWidth - buttonRect.left;
+  const spaceLeft = buttonRect.left;
+
+  // Reset styles
+  mainFilterPopupStyle.value = {};
+
+  // If not enough space below, position above the button
+  if (spaceBelow < popupRect.height && spaceAbove > popupRect.height) {
+    mainFilterPopupStyle.value = {
+      top: 'auto',
+      bottom: 'calc(100% + 8px)',
+      left: '0',
+      right: 'auto',
+      transform: 'none',
+      maxHeight: `${spaceAbove - 16}px`,
+      overflowY: 'auto'
+    };
+  } else {
+    // Position below with constrained width
+    const maxWidth = Math.min(spaceRight, viewportWidth - 32); // Leave some margin
+    mainFilterPopupStyle.value = {
+      top: 'calc(100% + 8px)',
+      bottom: 'auto',
+      left: '0',
+      right: 'auto',
+      transform: 'none',
+      maxWidth: `${maxWidth}px`,
+      maxHeight: `${spaceBelow - 16}px`,
+      overflowY: 'auto'
+    };
+  }
+};
+
+// Mobile detection
+const isMobile = ref(false);
+
+// Popup positioning
+const mainFilterPopupStyle = ref({});
+
+const updateMobileState = () => {
+  isMobile.value = window.innerWidth < 768;
+  if (showMainFilter.value) {
+    nextTick(() => adjustPopupPosition());
+  }
+};
+
 onMounted(() => {
+  updateMobileState();
+  window.addEventListener('resize', updateMobileState);
   document.addEventListener('click', handleClickOutside);
 });
 
 onUnmounted(() => {
+  window.removeEventListener('resize', updateMobileState);
   document.removeEventListener('click', handleClickOutside);
 });
 </script>
 
 <template>
-  <div class="event-display" style="background-color: #111111">
+  <div class="event-display bg-reactive-primary" style="min-height: 100vh">
     <div class="container-xxl py-5">
       <!-- Header section with filters -->
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-normal mb-0" style="font-size: 20px">
+        <h2 class="text-primary fw-normal mb-0 d-none d-md-block" style="font-size: 20px">
           Kết quả tìm kiếm
         </h2>
 
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-2 gap-md-3">
           <!-- Date Range Filter Button -->
           <div class="position-relative">
             <button
-              class="btn btn-filter-date d-flex align-items-center gap-2"
+              class="btn btn-filter-primary d-flex align-items-center gap-2"
+              style="min-width: 120px; font-size: 14px"
+              :style="{ 'min-width': isMobile ? '120px' : '336px' }"
               @click="toggleDateFilter"
             >
-              <i class="bi bi-calendar-event"></i>
-              <span>{{ formatDateRange() }}</span>
+              <i class="bi bi-calendar-event fs-5"></i>
+              <span class="d-none d-sm-inline">{{ formatDateRange() }}</span>
+              <span class="d-sm-none">Ngày</span>
               <i class="bi bi-chevron-down ms-auto"></i>
             </button>
 
             <!-- Date Range Picker Popup -->
-            <div v-if="showDateFilter" class="date-filter-popup">
-              <div class="date-filter-content">
+            <div v-if="showDateFilter" class="dropdown-popup-dark" style="min-width: 600px">
+              <div class="p-4">
                 <!-- Preset Options -->
                 <div class="preset-options">
                   <button
@@ -373,14 +485,86 @@ onUnmounted(() => {
           </div>
 
           <!-- Main Filter Button -->
-          <button
-            class="btn btn-filter d-flex align-items-center gap-2"
-            @click="toggleMainFilter"
-          >
-            <i class="bi bi-funnel"></i>
-            <span>Bộ lọc</span>
-            <i class="bi bi-chevron-down ms-auto"></i>
-          </button>
+          <div class="position-relative">
+            <button
+              class="btn btn-filter-secondary d-flex align-items-center gap-2"
+              style="min-width: 100px; font-size: 14px"
+              :style="{ 'min-width': isMobile ? '100px' : '140px' }"
+              @click="toggleMainFilter"
+            >
+              <i class="bi bi-funnel fs-5"></i>
+              <span class="d-none d-sm-inline">Bộ lọc</span>
+              <span class="d-sm-none">Lọc</span>
+              <i class="bi bi-chevron-down ms-auto"></i>
+            </button>
+
+            <!-- Main Filter Popup -->
+            <div v-if="showMainFilter" class="dropdown-popup-dark" style="min-width: 350px" :style="mainFilterPopupStyle">
+              <div class="p-4">
+                <!-- Location Filter -->
+                <div class="mb-3">
+                  <h6 class="fw-bold text-reactive-primary mb-3" style="font-size: 14px">Vị trí</h6>
+                  <div class="filter-radio-group">
+                    <label
+                      v-for="location in locations"
+                      :key="location.value"
+                      class="filter-radio-label"
+                    >
+                      <input
+                        v-model="selectedLocation"
+                        type="radio"
+                        :value="location.value"
+                        class="filter-radio-input"
+                      />
+                      <span class="filter-radio-custom"></span>
+                      <span class="filter-radio-text">{{ location.label }}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <!-- Price Filter -->
+                <div class="mb-3">
+                  <h6 class="fw-bold text-reactive-primary mb-3" style="font-size: 14px">Giá tiền</h6>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-reactive-primary" style="font-size: 14px">Miễn phí</span>
+                    <label class="filter-switch">
+                      <input v-model="isFreeEvent" type="checkbox" />
+                      <span class="filter-switch-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <!-- Category Filter -->
+                <div class="mb-3">
+                  <h6 class="fw-bold text-reactive-primary mb-3" style="font-size: 14px">Thể loại</h6>
+                  <div class="filter-tags">
+                    <button
+                      v-for="category in categories"
+                      :key="category.value"
+                      :class="['filter-tag', { active: selectedCategories.includes(category.value) }]"
+                      @click="toggleCategory(category.value)"
+                    >
+                      {{ category.label }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="filter-actions">
+                  <button class="btn btn-reset" @click="resetMainFilter">
+                    Thiết lập lại
+                  </button>
+                  <button class="btn btn-apply" @click="applyMainFilter">
+                    Áp dụng
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -392,31 +576,30 @@ onUnmounted(() => {
           class="col-6 col-md-4 col-lg-3"
         >
           <div
-            class="event-card"
+            class="card-interactive"
             role="button"
             tabindex="0"
             @click="handleEventClick(event.id)"
             @keypress.enter="handleEventClick(event.id)"
           >
             <!-- Event Image -->
-            <div class="event-card-image mb-3">
+            <div class="event-card-img mb-3">
               <img
                 :src="event.image"
                 :alt="event.title"
-                class="w-100 h-100 object-fit-cover"
                 loading="lazy"
               />
             </div>
 
             <!-- Event Info -->
-            <div class="event-card-content">
-              <h3 class="event-card-title text-white fw-bold mb-2">
+            <div>
+              <h3 class="fw-bold mb-2 text-reactive-primary text-ellipsis-2" style="font-size: 20px; min-height: 52px">
                 {{ event.title }}
               </h3>
-              <p class="event-card-price text-primary fw-bold mb-1">
+              <p class="text-primary fw-bold mb-1" style="font-size: 16px">
                 {{ event.price }}
               </p>
-              <p class="event-card-date text-white mb-0 d-flex align-items-center gap-1">
+              <p class="text-reactive-secondary mb-0 d-flex align-items-center gap-1" style="font-size: 16px">
                 <i class="bi bi-calendar-event"></i>
                 <span>{{ event.date }}</span>
               </p>
@@ -430,198 +613,16 @@ onUnmounted(() => {
         v-if="displayEvents.length === 0"
         class="text-center py-5"
       >
-        <p class="text-white-50 mb-0">Không tìm thấy sự kiện nào</p>
+        <p class="text-reactive-secondary mb-0">Không tìm thấy sự kiện nào</p>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.event-display {
-  min-height: 100vh;
-}
+/* Component-specific styles that can't be replaced with utilities */
 
-// Filter Buttons
-.btn-filter-date {
-  background-color: rgba(7, 179, 223, 0.8);
-  border: none;
-  border-radius: 30px;
-  color: white;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 8px 24px;
-  min-width: 336px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: rgba(7, 179, 223, 1);
-    color: white;
-  }
-
-  &:active,
-  &:focus {
-    background-color: rgba(7, 179, 223, 1);
-    color: white;
-    box-shadow: 0 0 0 0.25rem rgba(7, 179, 223, 0.25);
-  }
-
-  i {
-    font-size: 20px;
-  }
-}
-
-.btn-filter {
-  background-color: rgba(255, 255, 255, 0.3);
-  border: none;
-  border-radius: 30px;
-  color: white;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 8px 24px;
-  min-width: 140px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    color: white;
-  }
-
-  &:active,
-  &:focus {
-    background-color: rgba(255, 255, 255, 0.4);
-    color: white;
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
-  }
-
-  i {
-    font-size: 20px;
-  }
-}
-
-// Event Card Styles
-.event-card {
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-
-    .event-card-image img {
-      transform: scale(1.05);
-    }
-  }
-
-  &:focus {
-    outline: 2px solid #07b3df;
-    outline-offset: 4px;
-    border-radius: 20px;
-  }
-}
-
-.event-card-image {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: var(--bg-reactive-secondary);
-  position: relative;
-
-  img {
-    transition: transform 0.3s ease;
-    object-position: center;
-  }
-}
-
-.event-card-content {
-  padding: 0;
-}
-
-.event-card-title {
-  font-size: 20px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: 52px;
-
-  // Responsive font sizes
-  @media (max-width: 991.98px) {
-    font-size: 18px;
-    min-height: 47px;
-  }
-
-  @media (max-width: 767.98px) {
-    font-size: 16px;
-    min-height: 42px;
-  }
-}
-
-.event-card-price {
-  font-size: 16px;
-  color: #07b3df;
-
-  @media (max-width: 767.98px) {
-    font-size: 14px;
-  }
-}
-
-.event-card-date {
-  font-size: 16px;
-  font-weight: normal;
-
-  i {
-    font-size: 16px;
-  }
-
-  @media (max-width: 767.98px) {
-    font-size: 14px;
-
-    i {
-      font-size: 14px;
-    }
-  }
-}
-
-// Grid spacing adjustments
-.row.g-3 {
-  @media (min-width: 768px) {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 1.5rem;
-  }
-}
-
-.row.g-md-4 {
-  @media (min-width: 768px) {
-    --bs-gutter-x: 2rem;
-    --bs-gutter-y: 2rem;
-  }
-}
-
-// Date Filter Popup
-.date-filter-popup {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background-color: #181818;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 0;
-  min-width: 600px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-
-  @media (max-width: 767.98px) {
-    min-width: 90vw;
-    right: -20px;
-  }
-}
-
-.date-filter-content {
-  padding: 1.5rem;
-}
-
+// Preset options layout - specific to date picker
 .preset-options {
   display: flex;
   flex-wrap: wrap;
@@ -634,7 +635,7 @@ onUnmounted(() => {
 .preset-btn {
   background: transparent;
   border: none;
-  color: white;
+  color: var(--text-reactive-primary);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
@@ -642,7 +643,7 @@ onUnmounted(() => {
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-reactive-secondary);
   }
 
   &.active {
@@ -651,6 +652,7 @@ onUnmounted(() => {
   }
 }
 
+// Date pickers layout
 .date-pickers {
   display: flex;
   gap: 1rem;
@@ -666,22 +668,21 @@ onUnmounted(() => {
 
   label {
     display: block;
-    color: white;
+    color: var(--text-reactive-primary);
     font-size: 14px;
     margin-bottom: 0.5rem;
   }
 
   input[type='date'] {
     width: 100%;
-    background-color: #111111;
-    border: 1px solid #333;
-    color: white;
+    background-color: var(--bg-reactive-primary);
+    border: 1px solid var(--bg-reactive-gray);
+    color: var(--text-reactive-primary);
     padding: 0.5rem;
     border-radius: 8px;
     font-size: 14px;
 
     &::-webkit-calendar-picker-indicator {
-      filter: invert(1);
       cursor: pointer;
     }
 
@@ -693,6 +694,11 @@ onUnmounted(() => {
   }
 }
 
+[data-bs-theme='dark'] .date-input-group input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+// Date filter action buttons
 .date-filter-actions {
   display: flex;
   gap: 1rem;
@@ -710,11 +716,11 @@ onUnmounted(() => {
 
   .btn-reset {
     background-color: transparent;
-    border: 1px solid #333;
-    color: white;
+    border: 1px solid var(--bg-reactive-gray);
+    color: var(--text-reactive-primary);
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: var(--bg-reactive-secondary);
     }
   }
 
@@ -725,6 +731,222 @@ onUnmounted(() => {
     &:hover {
       background-color: #0599bf;
     }
+  }
+}
+
+// Filter divider
+.filter-divider {
+  border-top: 1px dashed var(--bg-reactive-gray);
+  margin: 1rem 0;
+}
+
+// Radio button group
+.filter-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-radio-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter-radio-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--bg-reactive-gray);
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #07b3df;
+    transition: transform 0.2s ease;
+  }
+}
+
+.filter-radio-input:checked + .filter-radio-custom {
+  border-color: #07b3df;
+
+  &::after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.filter-radio-text {
+  color: var(--text-reactive-primary);
+  font-size: 14px;
+}
+
+// Toggle switch
+.filter-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.filter-switch-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-reactive-gray);
+  border-radius: 24px;
+  transition: all 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+}
+
+.filter-switch input:checked + .filter-switch-slider {
+  background-color: #07b3df;
+
+  &::before {
+    transform: translateX(20px);
+  }
+}
+
+// Category tags
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-tag {
+  background-color: transparent;
+  border: 1px solid var(--bg-reactive-gray);
+  color: var(--text-reactive-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--bg-reactive-secondary);
+  }
+
+  &.active {
+    background-color: #07b3df;
+    border-color: #07b3df;
+    color: white;
+  }
+}
+
+// Filter actions
+.filter-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+
+  .btn {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset {
+    background-color: transparent;
+    border: 1px solid var(--bg-reactive-gray);
+    color: var(--text-reactive-primary);
+
+    &:hover {
+      background-color: var(--bg-reactive-secondary);
+    }
+  }
+
+  .btn-apply {
+    background-color: #07b3df;
+    color: white;
+
+    &:hover {
+      background-color: #0599bf;
+    }
+  }
+}
+
+// Responsive adjustments for popup width
+@media (max-width: 767.98px) {
+  .dropdown-popup-dark {
+    min-width: 70vw !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+  }
+  
+  // Responsive filter buttons
+  .btn-filter-primary,
+  .btn-filter-secondary {
+    font-size: 14px !important;
+    padding: 0.5rem 0.75rem !important;
+    
+    .bi {
+      font-size: 16px !important;
+    }
+  }
+}
+
+// Responsive font sizes for event cards
+@media (max-width: 991.98px) {
+  .text-ellipsis-2 {
+    font-size: 18px !important;
+    min-height: 47px !important;
+  }
+  
+  h3 + p {
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .text-ellipsis-2 {
+    font-size: 16px !important;
+    min-height: 42px !important;
+  }
+  
+  h3 + p {
+    font-size: 14px !important;
   }
 }
 </style>

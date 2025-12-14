@@ -3,38 +3,43 @@
     <!-- New Event Carousel -->
     <section class="new-event-section py-5">
       <div class="container-xxl">
-        <div class="position-relative">
+        <div 
+          class="position-relative"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="() => handleTouchEnd('new')"
+        >
           <div class="row g-3">
-            <div class="col-md-6">
-              <div class="event-card-large rounded-4 position-relative overflow-hidden">
+            <div class="col-12 col-md-6">
+              <div class="event-card-large rounded-4 position-relative overflow-hidden aspect-banner-lg">
                 <img :src="newEvents[currentNewEvent]?.image || ''" alt="" class="w-100 h-100">
                 <button class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2">Xem chi tiết</button>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="event-card-large rounded-4 position-relative overflow-hidden">
+            <div class="col-12 col-md-6 d-none d-md-block">
+              <div class="event-card-large rounded-4 position-relative overflow-hidden aspect-banner-lg">
                 <img :src="newEvents[(currentNewEvent + 1) % newEvents.length]?.image || ''" alt="" class="w-100 h-100">
                 <button class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2">Xem chi tiết</button>
               </div>
             </div>
           </div>
           
-          <!-- Navigation buttons -->
-          <button class="btn btn-dark carousel-btn carousel-btn-prev" @click="prevNewEvent">
+          <!-- Navigation buttons - hidden on mobile -->
+          <button v-if="!isMobile" class="carousel-nav-btn prev" @click="prevNewEvent">
             &lt;
           </button>
-          <button class="btn btn-dark carousel-btn carousel-btn-next" @click="nextNewEvent">
+          <button v-if="!isMobile" class="carousel-nav-btn next" @click="nextNewEvent">
             &gt;
           </button>
           
           <!-- Dots indicator -->
-          <div class="carousel-dots">
-            <span 
-              v-for="(_, index) in Math.ceil(newEvents.length / 2)" 
+          <div class="carousel-indicators-dots">
+            <button
+              v-for="(_, index) in Math.ceil(newEvents.length / (isMobile ? 1 : 2))" 
               :key="index"
-              :class="{ active: index === Math.floor(currentNewEvent / 2) }"
-              @click="currentNewEvent = index * 2"
-            ></span>
+              :class="['dot', { active: index === Math.floor(currentNewEvent / (isMobile ? 1 : 2)) }]"
+              @click="currentNewEvent = index * (isMobile ? 1 : 2)"
+            ></button>
           </div>
         </div>
       </div>
@@ -43,13 +48,18 @@
     <!-- Special Events -->
     <section class="special-event-section py-5">
       <div class="container-xxl">
-        <h2 class="section-title text-white fw-bold mb-4">Sự kiện đặc biệt</h2>
-        <div class="position-relative">
+        <h2 class="section-title text-reactive-primary fw-bold mb-4">Sự kiện đặc biệt</h2>
+        <div 
+          class="position-relative"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="() => handleTouchEnd('special')"
+        >
           <div class="row g-3">
             <div 
               v-for="(event, index) in getVisibleSpecialEvents()" 
               :key="index"
-              class="col-md-3"
+              class="col-12 col-md-3"
             >
               <div class="event-card rounded-4 overflow-hidden">
                 <img :src="event.image" alt="" class="w-100 h-100 object-fit-cover">
@@ -57,10 +67,11 @@
             </div>
           </div>
           
-          <button class="btn btn-dark carousel-btn carousel-btn-prev" @click="prevSpecialEvent">
+          <!-- Navigation buttons - hidden on mobile -->
+          <button v-if="!isMobile" class="carousel-nav-btn prev" @click="prevSpecialEvent">
             &lt;
           </button>
-          <button class="btn btn-dark carousel-btn carousel-btn-next" @click="nextSpecialEvent">
+          <button v-if="!isMobile" class="carousel-nav-btn next" @click="nextSpecialEvent">
             &gt;
           </button>
         </div>
@@ -70,13 +81,18 @@
     <!-- Trendy Events -->
     <section class="trendy-event-section py-5">
       <div class="container-xxl">
-        <h2 class="section-title text-white fw-bold mb-4">Sự kiện xu hướng</h2>
-        <div class="position-relative">
+        <h2 class="section-title text-reactive-primary fw-bold mb-4">Sự kiện xu hướng</h2>
+        <div 
+          class="position-relative"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="() => handleTouchEnd('trendy')"
+        >
           <div class="row g-4">
             <div 
               v-for="(event, index) in getVisibleTrendyEvents()" 
               :key="index"
-              class="col-md-4"
+              class="col-12 col-md-4"
             >
               <div class="trendy-event-wrapper d-flex align-items-end">
                 <div class="trendy-badge" v-html="event.badge"></div>
@@ -87,10 +103,11 @@
             </div>
           </div>
           
-          <button class="btn btn-dark carousel-btn carousel-btn-prev" @click="prevTrendyEvent">
+          <!-- Navigation buttons - hidden on mobile -->
+          <button v-if="!isMobile" class="carousel-nav-btn prev" @click="prevTrendyEvent">
             &lt;
           </button>
-          <button class="btn btn-dark carousel-btn carousel-btn-next" @click="nextTrendyEvent">
+          <button v-if="!isMobile" class="carousel-nav-btn next" @click="nextTrendyEvent">
             &gt;
           </button>
         </div>
@@ -100,29 +117,35 @@
     <!-- Suggest Events -->
     <section class="suggest-event-section py-5">
       <div class="container-xxl">
-        <h2 class="section-title text-white fw-bold mb-4">Dành cho bạn</h2>
-        <div class="position-relative">
+        <h2 class="section-title text-reactive-primary fw-bold mb-4">Dành cho bạn</h2>
+        <div 
+          class="position-relative"
+          @touchstart="handleTouchStart"
+          @touchmove="handleTouchMove"
+          @touchend="() => handleTouchEnd('suggest')"
+        >
           <div class="row g-3">
             <div 
               v-for="(event, index) in getVisibleSuggestEvents()" 
               :key="index"
-              class="col-md-3"
+              class="col-12 col-md-3"
             >
               <div class="suggest-card">
-                <div class="suggest-card-image rounded-3 overflow-hidden mb-3">
-                  <img :src="event.image" alt="" class="w-100 h-100 object-fit-cover">
+                <div class="event-card-img mb-3">
+                  <img :src="event.image" alt="">
                 </div>
-                <h3 class="suggest-card-title text-white fw-bold mb-2">{{ event.title }}</h3>
-                <p class="suggest-card-price mb-1" style="color: #07b3df; font-weight: 500;">{{ event.price }}</p>
-                <p class="suggest-card-date text-white-50">{{ event.date }}</p>
+                <h3 class="fs-5 text-reactive-primary fw-bold mb-2 text-ellipsis-2" style="min-height: 2.6em">{{ event.title }}</h3>
+                <p class="text-primary fw-medium mb-1">{{ event.price }}</p>
+                <p class="suggest-card-date text-reactive-secondary">{{ event.date }}</p>
               </div>
             </div>
           </div>
           
-          <button class="btn btn-dark carousel-btn carousel-btn-prev" @click="prevSuggestEvent">
+          <!-- Navigation buttons - hidden on mobile -->
+          <button v-if="!isMobile" class="carousel-nav-btn prev" @click="prevSuggestEvent">
             &lt;
           </button>
-          <button class="btn btn-dark carousel-btn carousel-btn-next" @click="nextSuggestEvent">
+          <button v-if="!isMobile" class="carousel-nav-btn next" @click="nextSuggestEvent">
             &gt;
           </button>
         </div>
@@ -133,22 +156,22 @@
     <section class="music-event-section py-5">
       <div class="container-xxl">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="section-title text-white fw-bold mb-0">Nhạc sống</h2>
-          <NuxtLink to="/event/display" class="text-white text-decoration-none" style="font-weight: 200;">Xem thêm &gt;</NuxtLink>
+          <h2 class="section-title text-reactive-primary fw-bold mb-0">Nhạc sống</h2>
+          <NuxtLink to="/event/display" class="text-reactive-primary text-decoration-none fw-light">Xem thêm &gt;</NuxtLink>
         </div>
         <div class="row g-3">
           <div 
             v-for="(event, index) in musicEvents.slice(0, 4)" 
             :key="index"
-            class="col-md-3"
+            class="col-6 col-md-3"
           >
             <div class="suggest-card">
-              <div class="suggest-card-image rounded-3 overflow-hidden mb-3">
-                <img :src="event.image" alt="" class="w-100 h-100 object-fit-cover">
+              <div class="event-card-img mb-3">
+                <img :src="event.image" alt="">
               </div>
-              <h3 class="suggest-card-title text-white fw-bold mb-2">{{ event.title }}</h3>
-              <p class="suggest-card-price mb-1" style="color: #07b3df; font-weight: 500;">{{ event.price }}</p>
-              <p class="suggest-card-date text-white-50">{{ event.date }}</p>
+              <h3 class="fs-5 text-reactive-primary fw-bold mb-2 text-ellipsis-2" style="min-height: 2.6em">{{ event.title }}</h3>
+              <p class="text-primary fw-medium mb-1">{{ event.price }}</p>
+              <p class="suggest-card-date text-reactive-secondary">{{ event.date }}</p>
             </div>
           </div>
         </div>
@@ -159,22 +182,22 @@
     <section class="art-event-section py-5">
       <div class="container-xxl">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="section-title text-white fw-bold mb-0">Sân khấu và nghệ thuật</h2>
-          <NuxtLink to="/event/display" class="text-white text-decoration-none" style="font-weight: 200;">Xem thêm &gt;</NuxtLink>
+          <h2 class="section-title text-reactive-primary fw-bold mb-0">Sân khấu và nghệ thuật</h2>
+          <NuxtLink to="/event/display" class="text-reactive-primary text-decoration-none fw-light">Xem thêm &gt;</NuxtLink>
         </div>
         <div class="row g-3">
           <div 
             v-for="(event, index) in artEvents.slice(0, 4)" 
             :key="index"
-            class="col-md-3"
+            class="col-6 col-md-3"
           >
             <div class="suggest-card">
-              <div class="suggest-card-image rounded-3 overflow-hidden mb-3">
-                <img :src="event.image" alt="" class="w-100 h-100 object-fit-cover">
+              <div class="event-card-img mb-3">
+                <img :src="event.image" alt="">
               </div>
-              <h3 class="suggest-card-title text-white fw-bold mb-2">{{ event.title }}</h3>
-              <p class="suggest-card-price mb-1" style="color: #07b3df; font-weight: 500;">{{ event.price }}</p>
-              <p class="suggest-card-date text-white-50">{{ event.date }}</p>
+              <h3 class="fs-5 text-reactive-primary fw-bold mb-2 text-ellipsis-2" style="min-height: 2.6em">{{ event.title }}</h3>
+              <p class="text-primary fw-medium mb-1">{{ event.price }}</p>
+              <p class="suggest-card-date text-reactive-secondary">{{ event.date }}</p>
             </div>
           </div>
         </div>
@@ -185,22 +208,22 @@
     <section class="other-event-section py-5">
       <div class="container-xxl">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="section-title text-white fw-bold mb-0">Thể loại khác</h2>
-          <NuxtLink to="/event/display" class="text-white text-decoration-none" style="font-weight: 200;">Xem thêm &gt;</NuxtLink>
+          <h2 class="section-title text-reactive-primary fw-bold mb-0">Thể loại khác</h2>
+          <NuxtLink to="/event/display" class="text-reactive-primary text-decoration-none fw-light">Xem thêm &gt;</NuxtLink>
         </div>
         <div class="row g-3">
           <div 
             v-for="(event, index) in otherEvents.slice(0, 4)" 
             :key="index"
-            class="col-md-3"
+            class="col-6 col-md-3"
           >
             <div class="suggest-card">
-              <div class="suggest-card-image rounded-3 overflow-hidden mb-3">
-                <img :src="event.image" alt="" class="w-100 h-100 object-fit-cover">
+              <div class="event-card-img mb-3">
+                <img :src="event.image" alt="">
               </div>
-              <h3 class="suggest-card-title text-white fw-bold mb-2">{{ event.title }}</h3>
-              <p class="suggest-card-price mb-1" style="color: #07b3df; font-weight: 500;">{{ event.price }}</p>
-              <p class="suggest-card-date text-white-50">{{ event.date }}</p>
+              <h3 class="fs-5 text-reactive-primary fw-bold mb-2 text-ellipsis-2" style="min-height: 2.6em">{{ event.title }}</h3>
+              <p class="text-primary fw-medium mb-1">{{ event.price }}</p>
+              <p class="suggest-card-date text-reactive-secondary">{{ event.date }}</p>
             </div>
           </div>
         </div>
@@ -210,12 +233,12 @@
     <!-- Nice Places -->
     <section class="nice-place-section py-5">
       <div class="container-xxl">
-        <h2 class="section-title text-white fw-bold mb-4">Điểm đến thú vị</h2>
+        <h2 class="section-title text-reactive-primary fw-bold mb-4">Điểm đến thú vị</h2>
         <div class="row g-3">
           <div 
             v-for="(place, index) in nicePlaces" 
             :key="index"
-            class="col-md-3"
+            class="col-6 col-md-3"
           >
             <div class="place-card rounded-4 overflow-hidden position-relative">
               <img :src="place.image" alt="" class="w-100 h-100 object-fit-cover">
@@ -231,7 +254,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 // Type definitions
 interface NewEvent {
@@ -258,6 +281,86 @@ interface NicePlace {
   image: string
   name: string
 }
+
+// Reactive viewport width
+const isMobile = ref(false)
+
+// Touch handling for swipe gestures
+const touchStartX = ref(0)
+const touchEndX = ref(0)
+const minSwipeDistance = 50
+
+// Update viewport width on resize
+const updateViewport = () => {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < 768
+  }
+}
+
+// Touch event handlers for swipe
+const handleTouchStart = (e: TouchEvent) => {
+  if (e.touches && e.touches[0]) {
+    touchStartX.value = e.touches[0].clientX
+  }
+}
+
+const handleTouchMove = (e: TouchEvent) => {
+  if (e.touches && e.touches[0]) {
+    touchEndX.value = e.touches[0].clientX
+  }
+}
+
+const handleTouchEnd = (carouselType: string) => {
+  const distance = touchStartX.value - touchEndX.value
+  const isLeftSwipe = distance > minSwipeDistance
+  const isRightSwipe = distance < -minSwipeDistance
+
+  if (isLeftSwipe) {
+    // Swipe left - next event
+    switch (carouselType) {
+      case 'new':
+        nextNewEvent()
+        break
+      case 'special':
+        nextSpecialEvent()
+        break
+      case 'trendy':
+        nextTrendyEvent()
+        break
+      case 'suggest':
+        nextSuggestEvent()
+        break
+    }
+  } else if (isRightSwipe) {
+    // Swipe right - previous event
+    switch (carouselType) {
+      case 'new':
+        prevNewEvent()
+        break
+      case 'special':
+        prevSpecialEvent()
+        break
+      case 'trendy':
+        prevTrendyEvent()
+        break
+      case 'suggest':
+        prevSuggestEvent()
+        break
+    }
+  }
+}
+
+// Setup resize listener
+onMounted(() => {
+  updateViewport()
+  window.addEventListener('resize', updateViewport)
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateViewport)
+  }
+})
 
 // New Events data
 const newEvents = ref<NewEvent[]>([
@@ -408,13 +511,15 @@ const currentSuggestEvent = ref(0)
 
 // Navigation functions
 const nextNewEvent = () => {
-  currentNewEvent.value = (currentNewEvent.value + 2) % newEvents.value.length
+  const step = isMobile.value ? 1 : 2
+  currentNewEvent.value = (currentNewEvent.value + step) % newEvents.value.length
 }
 
 const prevNewEvent = () => {
-  currentNewEvent.value = currentNewEvent.value - 2 < 0 
-    ? newEvents.value.length - 2 
-    : currentNewEvent.value - 2
+  const step = isMobile.value ? 1 : 2
+  currentNewEvent.value = currentNewEvent.value - step < 0 
+    ? newEvents.value.length - step 
+    : currentNewEvent.value - step
 }
 
 const nextSpecialEvent = () => {
@@ -477,16 +582,9 @@ const getVisibleSuggestEvents = (): SuggestEvent[] => {
 </script>
 
 <style scoped>
-.homepage {
-  min-height: 100vh;
-  background-color: #111111;
-}
+/* Component-specific styles that can't be replaced with utilities */
 
-.section-title {
-  font-size: 1.5rem;
-}
-
-/* Event Cards */
+/* Large event card for homepage banner */
 .event-card-large {
   width: 100%;
   aspect-ratio: 807 / 460;
@@ -501,11 +599,12 @@ const getVisibleSuggestEvents = (): SuggestEvent[] => {
   object-position: center;
 }
 
+/* Special event card - fixed height for homepage layout */
 .event-card {
   height: 483px;
 }
 
-/* Trendy Event Section */
+/* Trendy event section - custom layout with badge */
 .trendy-event-wrapper {
   display: flex;
   align-items: flex-start;
@@ -533,32 +632,7 @@ const getVisibleSuggestEvents = (): SuggestEvent[] => {
   position: relative;
 }
 
-.suggest-card-image {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  height: auto;
-}
-
-.suggest-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.suggest-card-title {
-  font-size: 1.25rem;
-  line-height: 1.3;
-  min-height: 2.6em;
-}
-
-.suggest-card-price {
-  font-size: 1rem;
-}
-
-.suggest-card-date {
-  font-size: 1rem;
-}
-
+/* Place card - fixed height with gradient overlay */
 .place-card {
   height: 470px;
   position: relative;
@@ -568,61 +642,20 @@ const getVisibleSuggestEvents = (): SuggestEvent[] => {
   background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
 }
 
-/* Carousel Controls */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 70px;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 10;
-  transition: background-color 0.3s;
-}
+/* Responsive carousel visibility */
+@media (max-width: 767.98px) {
+  /* Show only 1 event in carousels on mobile */
+  .special-event-section .row > div:not(:first-child),
+  .trendy-event-section .row > div:not(:first-child),
+  .suggest-event-section .row > div:not(:first-child) {
+    display: none;
+  }
 
-.carousel-btn:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.carousel-btn-prev {
-  left: 0;
-}
-
-.carousel-btn-next {
-  right: 0;
-}
-
-/* Carousel Dots */
-.carousel-dots {
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 10;
-}
-
-.carousel-dots span {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.carousel-dots span.active {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.carousel-dots span:hover {
-  background-color: rgba(255, 255, 255, 0.6);
+  /* Ensure carousel navigation buttons are visible */
+  .carousel-nav-btn {
+    width: 36px;
+    height: 60px;
+    font-size: 1.25rem;
+  }
 }
 </style>

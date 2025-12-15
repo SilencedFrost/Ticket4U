@@ -1,4 +1,4 @@
-rootProject.name = "ticket-4u-services"
+rootProject.name = "ticket-4u-services-blocking"
 
 // Define the directory where your service subprojects live using the projectDir property
 val servicesDir = settings.rootDir.resolve("services")

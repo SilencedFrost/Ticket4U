@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import { formatDate } from '@vueuse/core';
 import { ref } from 'vue';
-import Header from './Header.vue';
-import Footer from './Footer.vue';
-
 const imgTest2 = 'https://salt.tkbcdn.com/ts/ds/00/6c/a8/6f638ec63c1be2aa163fdda0d3e07106.jpg';
 const imgEventThumb = 'https://ticketgo.vn/photos/3447/Th%C3%A1ng%2010%20-%202025/69367859ab0f9.jpg';
 const imgOrganizerLogo = 'https://salt.tkbcdn.com/ts/ds/be/d4/a4/e6c34b2216009af82feba5f9bca782ad.jpg';
@@ -30,10 +26,13 @@ const expandAbout = ref(false);
 
 const eventData = {
   title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
-  date: 'Chủ Nhật, 03/01/2026',
+  date: '2025-02-20',
   time: '20:00 - 22:30',
   venue: 'Nhà Hát Hồ Gươm',
-  address: '40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội',
+  address: {
+    vi: '40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội',
+    en: '40 Hang Bai St, Cua Nam Ward, Hoan Kiem Dist, Hanoi City'
+  },
   startPrice: '1.550.000 đ',
   svipPrice: '6.650.000 đ',
   svipBenefits:
@@ -43,34 +42,22 @@ const eventData = {
     description:
       'Live Concert nghệ thuật kết hợp giữa âm nhạc hiện đại và dàn nhạc semi-classical tinh tế, được sản xuất bởi Absolute Media.',
   },
-  schedule: [
-    { time: '19:30', title: 'Cửa ngõ', desc: 'Mở cửa' },
-    { time: '20:00', title: 'Buổi diễn', desc: 'Bắt đầu' },
-    { time: '21:30', title: 'Giải lao', desc: '15 phút' },
-    { time: '21:45', title: 'Phần 2', desc: 'Tiếp tục' },
-    { time: '22:30', title: 'Kết thúc', desc: 'Hết buổi' },
-  ],
-  seatTypes: [
-    { name: 'SVIP', price: '6.650.000', available: 45 },
-    { name: 'VIP', price: '4.400.000', available: 120 },
-    { name: 'A', price: '2.200.000', available: 200 },
-    { name: 'B', price: '1.550.000', available: 300 },
-  ],
   relatedEvents: [
-    { id: 1, image: imgEvent1, title: 'Nhà Hát Kịch IDECAF: Tám Cám Đại Chiến', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 2, image: imgEvent2, title: 'Event 2', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 3, image: imgEvent3, title: 'Event 3', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 4, image: imgEvent4, title: 'Event 4', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 5, image: imgEvent1, title: 'Event 5', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 6, image: imgEvent2, title: 'Event 6', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 7, image: imgEvent3, title: 'Event 7', date: '03 tháng 01, 2026', price: '270.000' },
-    { id: 8, image: imgEvent4, title: 'Event 8', date: '03 tháng 01, 2026', price: '270.000' },
+    { id: 1, image: imgEvent1, title: 'Nhà Hát Kịch IDECAF: Tám Cám Đại Chiến', date: '2026-01-03', price: '270.000' },
+    { id: 2, image: imgEvent2, title: 'Event 2', date: '2026-01-03', price: '270.000' },
+    { id: 3, image: imgEvent3, title: 'Event 3', date: '2026-01-03', price: '270.000' },
+    { id: 4, image: imgEvent4, title: 'Event 4', date: '2026-01-03', price: '270.000' },
+    { id: 5, image: imgEvent1, title: 'Event 5', date: '2026-01-03', price: '270.000' },
+    { id: 6, image: imgEvent2, title: 'Event 6', date: '2026-01-03', price: '270.000' },
+    { id: 7, image: imgEvent3, title: 'Event 7', date: '2026-01-03', price: '270.000' },
+    { id: 8, image: imgEvent4, title: 'Event 8', date: '2026-01-03', price: '270.000' },
   ],
 };
 
 const eventSchedule = [
   { 
-    date: '17.07.2026', 
+    date: '2025-02-20', 
+    time: '20:00 - 22:30',
     id: 'collapseDate1', 
     seatTypes: [
       { name: 'SVIP', price: '3.000.000', available: 100 },
@@ -78,16 +65,6 @@ const eventSchedule = [
       { name: 'A', price: '1.500.000', available: 200 },
       { name: 'B', price: '1.000.000', available: 300 }
     ]
-  },
-  { 
-    date: '17.08.2026', 
-    id: 'collapseDate2', 
-    seatTypes: [
-      { name: 'SVIP', price: '3.500.000', available: 80 },
-      { name: 'VIP', price: '2.500.000', available: 250 },
-      { name: 'A', price: '1.800.000', available: 180 },
-      { name: 'B', price: '1.200.000', available: 350 }
-    ] 
   }
 ];
 </script>
@@ -111,18 +88,20 @@ const eventSchedule = [
                             </h5>
                             <div class="mb-2" style="font-size: 0.85rem" >
                                 <i class="bi bi-calendar" style="color: #07b3df; margin-right: 0.3rem"></i>
-                                <span style="color: #07b3df; font-weight: 600">{{ eventData.date }}</span>
+                                <span style="color: #07b3df; font-weight: 600">{{ eventData.time }},
+                                  {{ $d(new Date(eventData.date), 'short') }}
+                                </span>
                             </div>
                             <div class="mb-2" style="color: #979797; font-size: 0.85rem">
                                 <i class="bi bi-geo-alt" style="color: #07b3df; margin-right: 0.3rem"></i>
                                 <span style="color: #07b3df; font-weight: 600">{{ eventData.venue }}</span>
-                                <p style="font-size: 0.9rem">40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội</p>
+                                <p style="font-size: 0.9rem">{{ eventData.address[$i18n.locale] }}</p>
                             </div>
                             <div class="mt-auto"> 
                                 <hr class="bg-secondary my-2" />
-                                <p class="text-white fw-semibold mb-1" style="font-size: 0.7rem">Giá từ</p>
+                                <p class="text-white fw-semibold mb-1" style="font-size: 0.7rem">{{ $t('even-detail.price_from') }}</p>
                                 <p class="text-info fw-bold mb-2" style="font-size: 1.1rem">{{ eventData.startPrice }}</p>
-                                <button class="btn btn-info text-white fw-bold w-100 py-1" style="font-size: 0.85rem">Mua vé ngay</button>
+                                <button class="btn btn-info text-white fw-bold w-100 py-1" style="font-size: 0.85rem">{{ $t('even-detail.buy_tickets') }}</button>
                             </div>
                         </div>
                         <img :src="imgTest2" alt="Event Poster" class="w-100 shadow-lg my-dashed-line" style=" object-fit: cover;" />
@@ -142,28 +121,28 @@ const eventSchedule = [
             class="btn btn-link text-white-50 fw-semibold p-0"
             style="font-size: 0.95rem; text-decoration: none"
           >
-            Lịch sự kiện
+            {{ $t('even-detail.schedule_event') }}
           </button>
           <button
             @click="scrollToSection('about-section')"
             class="btn btn-link text-white-50 fw-semibold p-0"
             style="font-size: 0.95rem; text-decoration: none"
           >
-            Về sự kiện
+            {{ $t('even-detail.about_event') }}
           </button>
           <button
             @click="scrollToSection('tickets-section')"
             class="btn btn-link text-white-50 fw-semibold p-0"
             style="font-size: 0.95rem; text-decoration: none"
           >
-            Thông tin vé
+            {{ $t('even-detail.information_tickets') }}
           </button>
           <button
             @click="scrollToSection('organizer-section')"
             class="btn btn-link text-white-50 fw-semibold p-0"
                 style="font-size: 0.95rem; text-decoration: none"
           >
-            Nhà tổ chức
+            {{ $t('even-detail.organizer') }}
           </button>
         </div>
       </div>
@@ -180,7 +159,7 @@ const eventSchedule = [
                 style="position: absolute; top: 1rem; right: 1rem; z-index: 10"
             ></button>
             <div class="location-modal-content">
-                <h6 class="text-white fw-bold mb-4">Nhà Hát Hồ Gươm - 40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội</h6>
+                <h6 class="text-white fw-bold mb-4">{{ eventData.address[$i18n.locale] }}</h6>
                 <img :src="imgEventThumb" alt="Sơ đồ chỗ ngồi" class="location-modal-image" />
             </div>
         </div>
@@ -191,13 +170,13 @@ const eventSchedule = [
             <!-- Schedule Section -->
             <section id="schedule-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
                 <div class="container-xxl">
-                    <h3 class="text-white fw-bold mb-3 mb-md-4" style="font-size: clamp(1rem, 4vw, 1.5rem)">Lịch sự kiện và sơ đồ chỗ ngồi</h3>
+                    <h3 class="text-white fw-bold mb-3 mb-md-4" style="font-size: clamp(1rem, 4vw, 1.5rem)"> {{ $t('even-detail.schedule_location') }}</h3>
                     
                     <!-- Info and Button -->
                     <div class="d-flex flex-column gap-2 mb-3">
                         <h6 class="text-reactive-primary mb-1" style="font-size: clamp(0.9rem, 3vw, 1.1rem)">{{ eventData.title }}</h6>
-                        <p class="text-reactive-secondary mb-2" style="font-size: clamp(0.75rem, 2.5vw, 0.9rem)">40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội</p>
-                        <button class="btn btn-sm btn-outline-info w-auto align-self-start" @click="locationForm = !locationForm">Xem sơ đồ</button>
+                        <p class="text-reactive-secondary mb-2" style="font-size: clamp(0.75rem, 2.5vw, 0.9rem)">{{ eventData.address[$i18n.locale] }}</p>
+                        <button class="btn btn-sm btn-outline-info w-auto align-self-start" @click="locationForm = !locationForm">{{ $t('even-detail.watch_location') }}</button>
                     </div>
                     
                     <!-- Image -->
@@ -207,10 +186,10 @@ const eventSchedule = [
                     <div class="border-bottom my-4"></div>
                     <div class="row w-100">
                         <div class="date col-lg-6">
-                            <p>Chủ Nhật, 03/01/2026</p>
+                            <p>{{ $d(new Date(eventData.date), 'long') }}</p>
                         </div>
                         <div class="time col-lg-6 text-lg-end">
-                            <button class="btn" style="background-color: #07b3df; cursor: pointer; margin-bottom: 0">20:00 - 22:30</button>
+                            <button class="btn" style="background-color: #07b3df; cursor: pointer; margin-bottom: 0">{{ eventData.time }}</button>
                         </div>
                     </div>
                 </div>
@@ -220,7 +199,7 @@ const eventSchedule = [
             <section id="about-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
                 <div class="container-xxl" >
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-white fw-bold" style="font-size: clamp(1.2rem, 4vw, 1.5rem); margin-bottom: 0">Về sự kiện</h3>
+                        <h3 class="text-white fw-bold" style="font-size: clamp(1.2rem, 4vw, 1.5rem); margin-bottom: 0">{{ $t('even-detail.about_event') }}</h3>
                     </div>
                     <div class=" border-dark rounded-3 overflow-hidden mb-4" :style="{'transition': 'max-height 1.5s ease', 'max-height': expandAbout ? '2000px' : '250px', 'height': 'auto' }">
                         <img :src="imgAbout" alt="About" class="card-img-top card"/>
@@ -236,7 +215,7 @@ const eventSchedule = [
                       </div>
                     </div>
                     <button @click="expandAbout = !expandAbout" class="btn btn-sm btn-outline-info fw-bold mx-auto d-block">
-                        {{ expandAbout ? 'Ẩn bớt' : 'Xem thêm' }}
+                        {{ expandAbout ? $t('even-detail.hide_more') : $t('even-detail.watch_more') }}
                     </button>
                 </div>
             </section>
@@ -244,7 +223,7 @@ const eventSchedule = [
             <!-- Tickets Section -->
             <section id="tickets-section" class="section-card card bg-reactive-secondary rounded-5">
                 <div class="px-2 px-md-3">
-                    <h3 class="text-white fw-bold my-3 my-md-5 mx-3 mx-md-5" style="font-size: clamp(1rem, 4vw, 1.5rem)">Thông tin vé</h3>
+                    <h3 class="text-white fw-bold my-3 my-md-5 mx-3 mx-md-5" style="font-size: clamp(1rem, 4vw, 1.5rem)">{{ $t('even-detail.information_tickets') }}</h3>
                     
                     <div v-for="(schedule, dateIdx) in eventSchedule" :key="dateIdx" class="mb-4">
                         
@@ -257,7 +236,7 @@ const eventSchedule = [
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-calendar-event text-info" style="font-size: clamp(0.9rem, 3vw, 1.1rem)"></i>
-                                    <span class="fw-bold" style="font-size: clamp(1rem, 4vw, 1.25rem)">{{ schedule.date }}</span>
+                                    <span class="fw-bold" style="font-size: clamp(1rem, 4vw, 1.25rem)">{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span>
                                 </div>
                                 <i class="bi bi-chevron-down transition-icon" :style="{ transform: expandedTickets[schedule.id] ? 'rotate(180deg)' : 'rotate(0deg)' }"></i>
                             </div>
@@ -281,7 +260,7 @@ const eventSchedule = [
                                             <p class="text-white-50 mb-0" style="font-size: 0.9rem">Còn {{ seat.available }} ghế</p>
                                         </div>
                                         <div class="col-12 col-md-4 text-md-end">
-                                            <button class="btn btn-info fw-bold" style="white-space: nowrap">Mua ngay</button>
+                                            <button class="btn btn-info fw-bold" style="white-space: nowrap">{{ $t('even-detail.buy_tickets') }}</button>
                                         </div>
                                     </div>
                                     <p v-if="seat.name === 'SVIP'" class="text-white-50 mt-3 mb-0" style="font-size: 0.9rem; line-height: 1.6">{{ eventData.svipBenefits }}</p>
@@ -296,7 +275,7 @@ const eventSchedule = [
             <!-- Organizer Section -->
             <section id="organizer-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
                 <div class="container-xxl organizer-card">
-                    <h3 class="text-white fw-bold mb-4" style="font-size: clamp(1.2rem, 4vw, 1.5rem)">Ban tổ chức</h3>
+                    <h3 class="text-white fw-bold mb-4" style="font-size: clamp(1.2rem, 4vw, 1.5rem)">{{ $t('even-detail.organizer') }}</h3>
                     <div class=" border-dark rounded-3">
                         <div class="row g-4 align-items-start">
                             <div class="col-md-4">
@@ -325,7 +304,7 @@ const eventSchedule = [
     <!-- Related Events Section -->
     <section class="py-5">
       <div class="container-xxl">
-        <h2 class="text-white text-center fw-bold mb-5" style="font-size: clamp(1.3rem, 5vw, 1.8rem)">Có thể bạn cũng thích</h2>
+        <h2 class="text-white text-center fw-bold mb-5" style="font-size: clamp(1.3rem, 5vw, 1.8rem)">{{ $t('even-detail.maybe_you_like') }}</h2>
 
         <div class="row g-3 mb-5 d-flex">
           <div v-for="event in eventData.relatedEvents" :key="event.id" class="col-6 col-lg-3">
@@ -334,10 +313,10 @@ const eventSchedule = [
               <div class="related-body">
                 <p class="text-white fw-semibold mb-2" style="font-size: 1.1rem; line-height: 1.3">{{ event.title }}</p>
                 <div style="margin-top: auto !important; ">
-                  <p class="text-info fw-bold mb-0" style="font-size: 1.1rem">Từ {{ event.price }} đ</p>
+                  <p class="text-info fw-bold mb-0" style="font-size: 1.1rem">{{ $t('even-detail.price_from') }} {{ event.price }} đ</p>
                   <div class="d-flex align-items-center gap-2 mb-2">
                     <i class="bi bi-calendar text-info" style="font-size: 0.85rem"></i>
-                    <span class="text-white" style="font-size: 0.85rem">{{ event.date }}</span>
+                    <span class="text-white" style="font-size: 0.85rem">{{ $d(new Date(event.date), 'short') }}</span>
                   </div>
                 </div>
               </div>
@@ -346,7 +325,7 @@ const eventSchedule = [
         </div>
 
         <div class="text-center">
-          <button class="btn btn-info fw-bold px-4 py-2">Xem thêm sự kiện</button>
+          <button class="btn btn-info fw-bold px-4 py-2">{{ $t('even-detail.view_more_events') }}</button>
         </div>
       </div>
     </section>

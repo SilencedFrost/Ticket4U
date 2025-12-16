@@ -1,3 +1,5 @@
+import path from "path/win32";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -10,16 +12,18 @@ export default defineNuxtConfig({
       { code: 'vi', name: 'Tiếng Việt', file: 'vi.json' },
     ],
     defaultLocale: 'en',
-    langDir: 'locales/',
+    langDir: './locales/',
+    strategy: 'prefix_except_default',
+    vueI18n: './i18n.config.ts',
   },
 
   vite: {
     css: {
-        preprocessorOptions: {
-            scss: {
-                quietDeps: true
-            }
+      preprocessorOptions: {
+        scss: {
+          quietDeps: true
         }
+      }
     }
   },
 

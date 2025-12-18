@@ -70,7 +70,7 @@ const eventSchedule = [
 </script>
 
 <template>
-  <div class="bg-reactive-primary event-wrapper" data-bs-theme="light">
+  <div class="bg-reactive-primary event-wrapper" data-bs-theme="dark">
     <Header />
     <!-- Hero Banner with Categories -->
     <section class="hero-section">
@@ -160,7 +160,7 @@ const eventSchedule = [
         </div>
     </div>
 
-    <div class="row content-row m-0">
+    <div class="row content-row m-0 container-xxl mx-auto">
         <div class="col-lg-9">
             <!-- Schedule Section -->
             <section id="schedule-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
@@ -464,7 +464,10 @@ const eventSchedule = [
 }
 
 .section-card {
+  max-width:1000px;
   margin: 1.5rem;
+  margin-left: auto; 
+  margin-right: 0;
 }
 
 /* Schedule section */
@@ -520,6 +523,7 @@ const eventSchedule = [
 
 /* Sidebar */
 .sidebar-img {
+  max-width: 300px;
   width: 92%;
 }
 

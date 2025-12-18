@@ -16,7 +16,7 @@ const selectLanguage = (lang) => {
       <div class="container-xxl d-flex align-items-center gap-3 py-3">
         <!-- Logo -->
         <div class="fw-bold fs-5 text-white flex-shrink-0">
-            <img src="/logo-gray.png" alt="" style="width: 50px"/>
+            <img src="/logo-gray.png" alt="" class="header-logo"/>
         </div>
 
         <!-- Search Bar -->
@@ -29,8 +29,7 @@ const selectLanguage = (lang) => {
             <input
               type="text"
               :placeholder="$t('header.search_placeholder')"
-              class="border-0 bg-transparent flex-grow-1 text-muted small"
-              style="outline: none"
+              class="border-0 bg-transparent flex-grow-1 text-dark small"
             />
           </div>
           <button class="btn btn-outline-light btn-sm rounded-pill d-none d-sm-inline">{{ $t('header.button_create_event') }}</button>
@@ -52,13 +51,13 @@ const selectLanguage = (lang) => {
                 v-if="selectedLang === 'vi'"
                 src="../assets/img/vn.svg" 
                 alt="VN" 
-                style="width: 20px; height: 20px"
+                class="flag-img"
               />
               <img 
                 v-else
                 src="../assets/img/en.svg" 
                 alt="EN" 
-                style="width: 20px; height: 20px"
+                class="flag-img"
               />
               <i 
                 class="bi text-white" 
@@ -69,27 +68,20 @@ const selectLanguage = (lang) => {
             <!-- Dropdown Menu -->
             <div 
               v-if="showLangDropdown"
-              class="position-absolute top-100 end-0 bg-white rounded-3 shadow mt-2"
-              style="min-width: 160px; z-index: 1000"
+              class="position-absolute top-100 end-0 bg-white rounded-3 shadow mt-2 lang-dropdown"
             >
               <button 
                 @click="selectLanguage('vi')"
-                class="w-100 text-start d-flex align-items-center gap-2 border-0 bg-white px-3 py-2"
-                style="cursor: pointer; transition: background-color 0.2s"
-                @mouseenter="$event.target.style.backgroundColor = '#f8f9fa'"
-                @mouseleave="$event.target.style.backgroundColor = 'white'"
+                class="w-100 text-start d-flex align-items-center gap-2 border-0 bg-white px-3 py-2 lang-dropdown-item"
               >
-                <img src="../assets/img/vn.svg" alt="VN" style="width: 24px; height: 20px" />
+                <img src="../assets/img/vn.svg" alt="VN" class="flag-dropdown-img" />
                 <span class="small text-dark">Tiếng Việt</span>
               </button>
               <button 
                 @click="selectLanguage('en')"
-                class="w-100 text-start d-flex align-items-center gap-2 border-0 bg-white px-3 py-2 rounded-bottom"
-                style="cursor: pointer; transition: background-color 0.2s"
-                @mouseenter="$event.target.style.backgroundColor = '#f8f9fa'"
-                @mouseleave="$event.target.style.backgroundColor = 'white'"
+                class="w-100 text-start d-flex align-items-center gap-2 border-0 bg-white px-3 py-2 rounded-bottom lang-dropdown-item"
               >
-                <img src="../assets/img/en.svg" alt="EN" style="width: 24px; height: 20px" />
+                <img src="../assets/img/en.svg" alt="EN" class="flag-dropdown-img" />
                 <span class="small text-dark">English</span>
               </button>
             </div>
@@ -100,23 +92,60 @@ const selectLanguage = (lang) => {
       <!-- Categories Navigation -->
       <nav class="overflow-x-auto bg-reactive-primary py-3">
         <div class="container-xxl d-flex gap-3 flex-wrap">
-          <span class="text-reactive-primary fw-semibold text-nowrap small" style="cursor: pointer">{{ $t('header.categories.live_music') }}</span>
-          <span class="text-reactive-primary fw-semibold text-nowrap small" style="cursor: pointer">{{ $t('header.categories.theater_art') }}</span>
-          <span class="text-reactive-primary fw-semibold text-nowrap small" style="cursor: pointer">{{ $t('header.categories.sports') }}</span>
-          <span class="text-reactive-primary fw-semibold text-nowrap small" style="cursor: pointer">{{ $t('header.categories.others') }}</span>
+          <span class="text-reactive-primary fw-semibold text-nowrap small category-link">{{ $t('header.categories.live_music') }}</span>
+          <span class="text-reactive-primary fw-semibold text-nowrap small category-link">{{ $t('header.categories.theater_art') }}</span>
+          <span class="text-reactive-primary fw-semibold text-nowrap small category-link">{{ $t('header.categories.sports') }}</span>
+          <span class="text-reactive-primary fw-semibold text-nowrap small category-link">{{ $t('header.categories.others') }}</span>
         </div>
       </nav>
     </header>
 </template>
 
 <style scoped>
+/* Heder container */
 .header-container {
   z-index: 100;
   top: 0;
 }
 
+/* Logo */
+.header-logo {
+  width: 50px;
+}
+
+/* Search */
 .header-search-container {
   min-width: 0;
   max-width: 700px;
+}
+
+/* Language Dropdown */
+.flag-img {
+  width: 20px;
+  height: 20px;
+}
+
+.lang-dropdown {
+  min-width: 160px;
+  z-index: 1000;
+}
+
+.lang-dropdown-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.lang-dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.flag-dropdown-img {
+  width: 24px;
+  height: 20px;
+}
+
+/* Categories */
+.category-link {
+  cursor: pointer;
 }
 </style>

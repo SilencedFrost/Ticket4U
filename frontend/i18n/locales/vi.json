@@ -65,13 +65,14 @@
     "buy_tickets": "Mua vé ngay",
     "schedule_event": "Lịch trình sự kiện",
     "about_event": "Về sự kiện",
+    "seat_left": "ghế trống",
     "information_tickets": "Thông tin vé",
     "organizer": "Ban tổ chức",
     "maybe_you_like": "Bạn có thể thích",
     "view_more_events": "Xem thêm sự kiện",
     "schedule_location": "Lịch trình & sơ đồ chỗ ngồi",
     "watch_location": "Xem sơ đồ",
-    "watch_more": "Xem thêm",
-    "hide_more": "Ẩn bớt"
+    "see_more": "Xem thêm",
+    "see_less": "Ẩn bớt"
   }
 }

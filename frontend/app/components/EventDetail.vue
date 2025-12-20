@@ -21,14 +21,16 @@ const toggleTicketDate = (scheduleId: string) => {
   expandedTickets.value[scheduleId] = !expandedTickets.value[scheduleId];
 };
 
-const locationForm= ref(false);
 const expandAbout = ref(false);
 
 const eventData = {
   title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
   date: '2025-02-20',
   time: '20:00 - 22:30',
-  venue: 'Nhà Hát Hồ Gươm',
+  venue: {
+      vi: 'Nhà hát Hồ Gươm',
+      en: 'Ho Guom Opera'
+    },
   address: {
     vi: '40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội',
     en: '40 Hang Bai St, Cua Nam Ward, Hoan Kiem Dist, Hanoi City'
@@ -72,17 +74,19 @@ const eventSchedule = [
 <template>
   <div class="bg-reactive-primary min-vh-100 overflow-x-hidden mw-100" >
     <!-- Hero Banner with Categories -->
-    <section class="pt-4 position-relative overflow-hidden min-vh-50 ">
-      <div class="position-absolute top-0 start-0 end-0 h-100 hero-bg" :style="{ backgroundImage: `url(${imgTest2})` }"></div>
+    <section class="pt-4 position-relative overflow-hidden min-vh-50">
+      <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
+        <img :src="imgTest2" class="w-100 h-100 object-fit-cover hero-bg-blur">
+      </div>
       <div class="position-relative z-1">
         <!-- Event Info and Poster Container -->
         <div class="container-xxl pb-4">
             <div class="g-3 align-items-start hero-grid">
                 <!-- Event Card -->
-                <div class="col-12">
-                    <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark rounded-5 shadow-lg mx-auto overflow-hidden hero-card">
-                        <div class="card-body p-4 d-flex flex-column flex-shrink-0 order-2 order-md-1 hero-body">
-                            <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
+                <div class="col-12 h-auto">
+                  <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark rounded-5 shadow-lg mx-auto overflow-hidden">
+                      <div class="card-body p-4 d-flex flex-column order-2 order-md-1 col-12 col-md-3">
+                           <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
                                 {{ eventData.title }}
                             </h5>
                             <div class="mb-2 small">
@@ -93,18 +97,18 @@ const eventSchedule = [
                             </div>
                             <div class="mb-2 text-secondary small">
                                 <i class="bi bi-geo-alt text-primary me-1"></i>
-                                <span class="text-primary fw-semibold">{{ eventData.venue }}</span>
+                                <span class="text-primary fw-semibold">{{ eventData.venue[$i18n.locale] }}</span>
                                 <p class="mb-0 small">{{ eventData.address[$i18n.locale] }}</p>
                             </div>
                             <div class="mt-auto"> 
                                 <hr class="bg-secondary my-2" />
                                 <p class="text-reactive-primary fw-semibold mb-1 text-xs">{{ $t('even-detail.price_from') }}</p>
                                 <p class="text-info fw-bold mb-2 fs-6">{{ eventData.startPrice }}</p>
-                                <button class="btn btn-info text-reactive-primary fw-bold w-100 py-1 small">{{ $t('even-detail.buy_tickets') }}</button>
+                                <button class="btn btn-info text-reactive-primary fw-bold w-100  py-1 small">{{ $t('even-detail.buy_tickets') }}</button>
                             </div>
-                        </div>
-                        <img :src="imgTest2" alt="Event Poster" class="w-100 shadow-lg my-dashed-line object-fit-cover order-1 order-md-2" />
-                    </div>
+                      </div>
+                      <img :src="imgTest2" class="order-1 order-md-2 col-12 col-md-9 object-fit-cover shadow-lg my-dashed-line" />
+                  </div>
                 </div>
             </div>
         </div>
@@ -143,26 +147,10 @@ const eventSchedule = [
       </div>
     </div>
 
-    <!-- Location Modal Overlay -->
-    <div v-if="locationForm" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center modal-backdrop-custom" style="z-index: 9999;" @click="locationForm = false">
-        <div class="w-100 position-relative overflow-y-auto bg-reactive-primary rounded-4 p-4 modal-wrapper" @click.stop>
-            <button 
-                @click="locationForm = false"
-                type="button" 
-                class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3"
-                aria-label="Close"
-            ></button>
-            <div class="d-flex flex-column align-items-center text-center">
-                <h6 class="text-reactive-primary fw-bold mb-4">{{ eventData.address[$i18n.locale] }}</h6>
-                <img :src="imgEventThumb" alt="Sơ đồ chỗ ngồi" class="w-100 h-auto rounded-2 border modal-image" />
-            </div>
-        </div>
-    </div>
-
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
         <div class="col-lg-9">
             <!-- Schedule Section -->
-            <section id="schedule-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
+            <section id="schedule-section" class="p-3 p-md-4 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl">
                     <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 h4"> {{ $t('even-detail.schedule_location') }}</h3>
                     
@@ -170,12 +158,11 @@ const eventSchedule = [
                     <div class="d-flex flex-column gap-2 mb-3">
                         <h6 class="text-reactive-primary mb-1">{{ eventData.title }}</h6>
                         <p class="text-reactive-secondary mb-2 small">{{ eventData.address[$i18n.locale] }}</p>
-                        <button class="btn btn-sm btn-outline-info w-auto align-self-start" @click="locationForm = !locationForm">{{ $t('even-detail.watch_location') }}</button>
                     </div>
                     
                     <!-- Image -->
                     <div class="mb-4">
-                        <img :src="imgEventThumb" alt="" class="w-100 rounded-3 object-fit-cover schedule-img" />
+                        <img :src="imgEventThumb" alt="" class="w-auto rounded-3 object-fit-cover img-fluid mh-100" />
                     </div>
                     <div class="border-bottom my-4"></div>
                     <div class="row w-100">
@@ -190,7 +177,7 @@ const eventSchedule = [
             </section>
 
             <!-- About Section -->
-            <section id="about-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
+            <section id="about-section" class="p-3 p-md-4 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="text-reactive-primary fw-bold mb-0 h4">{{ $t('even-detail.about_event') }}</h3>
@@ -209,63 +196,64 @@ const eventSchedule = [
                         </div>
                     </div>
                     <button @click="expandAbout = !expandAbout" class="btn btn-sm btn-outline-info fw-bold mx-auto d-block">
-                        {{ expandAbout ? $t('even-detail.hide_more') : $t('even-detail.watch_more') }}
+                        {{ expandAbout ? $t('even-detail.see_less') : $t('even-detail.see_more') }}
                     </button>
                 </div>
             </section>
 
             <!-- Tickets Section -->
             <section id="tickets-section" class="card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
-                <div class="px-2 px-md-3">
-                    <h3 class="text-reactive-primary fw-bold my-3 my-md-5 mx-3 mx-md-5 h4">{{ $t('even-detail.information_tickets') }}</h3>
+                <div class="p-3 p-md-4">
+                    <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 h4">{{ $t('even-detail.information_tickets') }}</h3>
                     
-                    <div v-for="(schedule, dateIdx) in eventSchedule" :key="dateIdx" class="mb-4">
-                        
-                        <button 
-                            @click="toggleTicketDate(schedule.id)"
-                            class="btn w-100 text-start text-reactive-primary p-3 p-md-4 rounded-3 bg-reactive-secondary border" 
-                            type="button"
-                        >
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-calendar-event text-info ticket-icon"></i>
-                                    <span class="fw-bold ticket-date">{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span>
+                    <div v-for="(schedule, dateIdx) in eventSchedule" :key="dateIdx" class="mb-3">
+                        <div class="card bg-reactive-primary border-0 rounded-3 shadow-sm mb-3">
+                            <button 
+                                @click="toggleTicketDate(schedule.id)"
+                                class="btn w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-0 bg-transparent gap-3" 
+                                type="button"
+                            >
+                                <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 flex-grow-1">
+                                    <i class="bi bi-calendar-event text-info fs-5"></i>
+                                    <span class="text-reactive-primary fw-semibold small">{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span>
                                 </div>
-                                <i class="bi bi-chevron-down" :class="{'rotate-180': expandedTickets[schedule.id]}"></i>
-                            </div>
-                        </button>
+                                <div class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto">
+                                    <button class="btn bg-primary fw-bold px-3 px-md-4 py-2 rounded-3 small">{{ $t('even-detail.buy_tickets') }}</button>
+                                    <i class="bi fs-4 text-reactive-primary flex-shrink-0" :class="expandedTickets[schedule.id] ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                                </div>
+                            </button>
+                        </div>
 
-                        <div v-if="expandedTickets[schedule.id]">
-                            <div class="card card-body p-0 rounded-3">
-
+                        <div v-if="expandedTickets[schedule.id]" class="mt-3">
+                            <h5 class="text-reactive-primary fw-bold mb-3 ms-2 small">{{ $t('even-detail.information_tickets') }}</h5>
+                            
+                            <div class="d-flex flex-column gap-2 gap-md-3">
                                 <div v-for="(seat, seatIdx) in schedule.seatTypes" :key="seatIdx" 
-                                    class="p-3 p-md-5 bg-reactive-secondary" 
-                                    :class="seatIdx !== schedule.seatTypes.length - 1 ? 'border-bottom' : ''"
+                                    class="card bg-reactive-primary border-0 rounded-3 shadow-sm overflow-hidden"
                                 >
-                                    <div class="row g-3 align-items-start px-1">
-                                        <div class="col-12 col-md-8">
-                                            <div class="d-flex align-items-center gap-2 mb-2">
-                                                <i class="bi bi-tag-fill text-info fs-5"></i>
-                                                <span class="text-reactive-primary fw-bold fs-6">{{ seat.name }}</span>
+                                    <div class="card-body p-3 p-md-4">
+                                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0">
+                                            <div class="flex-grow-1">
+                                                <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2">{{ seat.name }}</h6>
+                                                <p class="text-reactive-primary-50 mb-0 small"> {{ seat.available }} {{ $t('even-detail.seat_left') }}</p>
                                             </div>
-                                            <p class="text-info fw-bold mb-2 fs-6">{{ seat.price }} đ / vé</p>
-                                            <p class="text-reactive-primary-50 mb-0 small">Còn {{ seat.available }} ghế</p>
+                                            <div class="text-start text-md-end">
+                                                <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }} đ</p>
+                                            </div>
                                         </div>
-                                        <div class="col-12 col-md-4 text-md-end">
-                                            <button class="btn btn-info fw-bold text-nowrap">{{ $t('even-detail.buy_tickets') }}</button>
+                                        <div v-if="seat.name === 'SVIP'" class="mt-2 mt-md-3 pt-2 pt-md-3 border-top border-secondary">
+                                            <p class="text-reactive-primary-50 mb-0 small">{{ eventData.svipBenefits }}</p>
                                         </div>
                                     </div>
-                                    <p v-if="seat.name === 'SVIP'" class="text-reactive-primary-50 mt-3 mb-0 small lh-base">{{ eventData.svipBenefits }}</p>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </section>
 
             <!-- Organizer Section -->
-            <section id="organizer-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
+            <section id="organizer-section" class="p-3 p-md-4 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl organizer-card">
                     <h3 class="text-reactive-primary fw-bold mb-4 h4">{{ $t('even-detail.organizer') }}</h3>
                     <div class="border-dark rounded-3">
@@ -286,7 +274,7 @@ const eventSchedule = [
                 </div>
             </section>
         </div>
-        <div class="col-lg-3 mt-4 d-none d-lg-block px-2 ">
+        <div class="col-lg-3 mt-3 d-none d-lg-block px-2 ">
             <img :src="imgSidebar" alt="" class="rounded-5 img-fluid object-fit-cover"/>
         </div>
     </div>
@@ -299,7 +287,7 @@ const eventSchedule = [
 
         <div class="row g-3 mb-5 d-flex">
           <div v-for="event in eventData.relatedEvents" :key="event.id" class="col-6 col-lg-3">
-            <div class="card bg-reactive-secondary rounded-2 h-100 overflow-hidden">
+            <div class="card bg-reactive-secondary rounded-3 h-100 overflow-hidden">
               <img :src="event.image" alt="Event" class="card-img-top object-fit-cover h-auto" />
               <div class="d-flex flex-column p-3">
                 <p class="text-reactive-primary fw-semibold mb-2 fs-6 lh-sm">{{ event.title }}</p>
@@ -325,22 +313,8 @@ const eventSchedule = [
 </template>
 
 <style scoped>
-.hero-bg {
-  background-size: cover;
-  background-position: center;
+.hero-bg-blur {
   filter: blur(8px);
-}
-
-.hero-card {
-  height: 500px;
-}
-
-.hero-body {
-  width: 25%;
-}
-
-.schedule-img {
-  max-height: 200px;
 }
 
 .my-dashed-line {
@@ -354,62 +328,16 @@ const eventSchedule = [
   ) 50;
 }
 
-.modal-backdrop-custom {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(2px);
-  animation: fadeIn 0.3s;
-}
-
-.modal-wrapper {
-  border: 2px solid #07b3df;
-  max-width: 800px;
-  max-height: 85vh;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-  animation: slideUp 0.3s;
-}
-
 .about-expandable {
   max-height: 250px;
-  transition: max-height 1.5s;
+  transition: max-height 2.0s;
 }
 
 .about-expandable.expanded {
   max-height: 5000px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 768px) {
-  .hero-card {
-    height: auto !important;
-  }
-
-  .hero-body {
-    width: 100% !important;
-  }
-
-  .hero-card img {
-    max-height: 450px;
-  }
-
   .my-dashed-line {
     border-left: none !important;
     border-bottom: 2px solid transparent;

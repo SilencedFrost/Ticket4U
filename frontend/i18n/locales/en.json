@@ -64,14 +64,15 @@
     "price_from": "From",
     "buy_tickets": "Buy Tickets Now",
     "schedule_event": "Event Schedule",
-    "about_event": "About the Event",
+    "about_event": "About the event",
     "information_tickets": "Ticket Information",
+    "seat_left": "available",
     "organizer": "Organizer",
     "maybe_you_like": "You May Also Like",
     "view_more_events": "View More Events",
     "schedule_location": "Event Schedule & Location",
     "watch_location": "Watch Location",
-    "watch_more": "Watch More",
-    "hide_more": "Hide More"
+    "see_more": "See More",
+    "see_less": "See Less"
   }
 }

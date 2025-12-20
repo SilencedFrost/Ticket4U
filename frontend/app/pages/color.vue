@@ -8,22 +8,22 @@ const nextTheme = computed(() => (currentTheme.value === 'light' ? 'dark' : 'lig
 </script>
 
 <template>
-  <div class="container-fluid d-flex flex-column vh-100 p-2 reactive-bg-primary">
+  <div class="container-fluid d-flex flex-column vh-100 p-2 bg-reactive-primary">
     <button class="btn btn-secondary d-flex align-items-center mb-2" @click="toggleTheme">
       Switch to {{ nextTheme }} Mode
     </button>
-    <div class="card reactive-bg-secondary p-2 mb-2">
-      <h4 class="reactive-text-primary mb-0">Header thẻ</h4>
-      <div class="reactive-text-secondary text-small">subtitle thẻ</div>
-      <hr class="m-0 my-2 p-0 reactive-text-secondary" />
-      <div class="reactive-text-primary">Đây là chữ màu trắng</div>
+    <div class="card bg-reactive-secondary p-2 mb-2">
+      <h4 class="text-reactive-primary mb-0">Header thẻ</h4>
+      <div class="text-reactive-secondary text-small">subtitle thẻ</div>
+      <hr class="m-0 my-2 p-0 text-reactive-secondary" />
+      <div class="text-reactive-primary">Đây là chữ màu trắng</div>
       <div class="text-primary">Đây là chữ màu primary</div>
-      <div class="reactive-text-secondary">Đây là chữ màu secondary</div>
+      <div class="text-reactive-secondary">Đây là chữ màu secondary</div>
     </div>
     <div class="mb-2">
-      <div class="reactive-text-primary">Đây là chữ màu trắng</div>
+      <div class="text-reactive-primary">Đây là chữ màu trắng</div>
       <div class="text-primary">Đây là chữ màu primary</div>
-      <div class="reactive-text-secondary">Đây là chữ màu secondary</div>
+      <div class="text-reactive-secondary">Đây là chữ màu secondary</div>
     </div>
     <div class="d-flex flex-column">
       <button class="btn btn-primary mb-2">Đây là nút màu primary</button>
@@ -31,9 +31,8 @@ const nextTheme = computed(() => (currentTheme.value === 'light' ? 'dark' : 'lig
       <button class="btn btn-danger mb-2">Đây là nút màu danger</button>
       <button class="btn btn-success mb-2">Đây là nút màu success</button>
       <button class="btn btn-warning mb-2">Đây là nút màu warning</button>
-      <button class="btn btn-info mb-2">Đây là nút màu info</button>
     </div>
-    <div class="card bg-primary p-2 border-0" style="--bs-bg-opacity: 0.3">
+    <div class="card card-info p-2 border-0">
       <a href="#"> Đây là thẻ a, chứa url </a>
     </div>
   </div>

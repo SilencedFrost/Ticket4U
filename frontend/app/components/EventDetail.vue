@@ -70,19 +70,18 @@ const eventSchedule = [
 </script>
 
 <template>
-  <div class="bg-reactive-primary event-wrapper" data-bs-theme="dark">
-    <Header />
+  <div class="bg-reactive-primary min-vh-100 overflow-x-hidden mw-100" >
     <!-- Hero Banner with Categories -->
-    <section class="hero-section">
-      <div class="hero-bg-blur" :style="{ backgroundImage: `url(${imgTest2})` }"></div>
+    <section class="pt-4 position-relative overflow-hidden min-vh-50 ">
+      <div class="position-absolute top-0 start-0 end-0 h-100 hero-bg" :style="{ backgroundImage: `url(${imgTest2})` }"></div>
       <div class="position-relative z-1">
         <!-- Event Info and Poster Container -->
         <div class="container-xxl pb-4">
             <div class="g-3 align-items-start hero-grid">
                 <!-- Event Card -->
                 <div class="col-12">
-                    <div class="card d-flex flex-row bg-reactive-secondary border-dark rounded-5 shadow-lg hero-card mx-auto overflow-hidden hero-card-max-width">
-                        <div class="card-body p-3 p-md-4 d-flex flex-column hero-card-body">
+                    <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark rounded-5 shadow-lg mx-auto overflow-hidden hero-card">
+                        <div class="card-body p-4 d-flex flex-column flex-shrink-0 order-2 order-md-1 hero-body">
                             <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
                                 {{ eventData.title }}
                             </h5>
@@ -104,7 +103,7 @@ const eventSchedule = [
                                 <button class="btn btn-info text-reactive-primary fw-bold w-100 py-1 small">{{ $t('even-detail.buy_tickets') }}</button>
                             </div>
                         </div>
-                        <img :src="imgTest2" alt="Event Poster" class="w-100 shadow-lg my-dashed-line img-cover" />
+                        <img :src="imgTest2" alt="Event Poster" class="w-100 shadow-lg my-dashed-line object-fit-cover order-1 order-md-2" />
                     </div>
                 </div>
             </div>
@@ -113,30 +112,30 @@ const eventSchedule = [
     </section>
 
     <!-- Navigation Tabs with Scroll Links -->
-    <div class="bg-reactive-primary border-bottom nav-tabs-container overflow-x-auto">
+    <div class="bg-reactive-primary border-bottom border-dark overflow-x-auto mx-4 sticky-top nav-sticky">
       <div class="container-xxl">
-        <div class="d-flex gap-3 gap-md-4 nav-tabs-wrapper py-3">
+        <div class="d-flex gap-3 gap-md-4 flex-wrap py-3 nav-tabs-wrapper">
           <button
             @click="scrollToSection('schedule-section')"
-            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none nav-tab-btn"
+            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           >
             {{ $t('even-detail.schedule_event') }}
           </button>
           <button
             @click="scrollToSection('about-section')"
-            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none nav-tab-btn"
+            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           >
             {{ $t('even-detail.about_event') }}
           </button>
           <button
             @click="scrollToSection('tickets-section')"
-            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none nav-tab-btn"
+            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           >
             {{ $t('even-detail.information_tickets') }}
           </button>
           <button
             @click="scrollToSection('organizer-section')"
-            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none nav-tab-btn"
+            class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           >
             {{ $t('even-detail.organizer') }}
           </button>
@@ -145,38 +144,38 @@ const eventSchedule = [
     </div>
 
     <!-- Location Modal Overlay -->
-    <div v-if="locationForm" class="modal-backdrop-custom" @click="locationForm = false">
-        <div class="location-modal-wrapper bg-reactive-primary" @click.stop>
+    <div v-if="locationForm" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center modal-backdrop-custom" style="z-index: 9999;" @click="locationForm = false">
+        <div class="w-100 position-relative overflow-y-auto bg-reactive-primary rounded-4 p-4 modal-wrapper" @click.stop>
             <button 
                 @click="locationForm = false"
                 type="button" 
-                class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-10"
+                class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3"
                 aria-label="Close"
             ></button>
-            <div class="location-modal-content">
+            <div class="d-flex flex-column align-items-center text-center">
                 <h6 class="text-reactive-primary fw-bold mb-4">{{ eventData.address[$i18n.locale] }}</h6>
-                <img :src="imgEventThumb" alt="Sơ đồ chỗ ngồi" class="location-modal-image" />
+                <img :src="imgEventThumb" alt="Sơ đồ chỗ ngồi" class="w-100 h-auto rounded-2 border modal-image" />
             </div>
         </div>
     </div>
 
-    <div class="row content-row m-0 container-xxl mx-auto">
+    <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
         <div class="col-lg-9">
             <!-- Schedule Section -->
-            <section id="schedule-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
+            <section id="schedule-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl">
-                    <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 section-title"> {{ $t('even-detail.schedule_location') }}</h3>
+                    <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 h4"> {{ $t('even-detail.schedule_location') }}</h3>
                     
                     <!-- Info and Button -->
                     <div class="d-flex flex-column gap-2 mb-3">
-                        <h6 class="text-reactive-primary mb-1 schedule-title">{{ eventData.title }}</h6>
-                        <p class="text-reactive-secondary mb-2 schedule-address">{{ eventData.address[$i18n.locale] }}</p>
+                        <h6 class="text-reactive-primary mb-1">{{ eventData.title }}</h6>
+                        <p class="text-reactive-secondary mb-2 small">{{ eventData.address[$i18n.locale] }}</p>
                         <button class="btn btn-sm btn-outline-info w-auto align-self-start" @click="locationForm = !locationForm">{{ $t('even-detail.watch_location') }}</button>
                     </div>
                     
                     <!-- Image -->
                     <div class="mb-4">
-                        <img :src="imgEventThumb" alt="" class="w-100 rounded-3 img-cover schedule-img" />
+                        <img :src="imgEventThumb" alt="" class="w-100 rounded-3 object-fit-cover schedule-img" />
                     </div>
                     <div class="border-bottom my-4"></div>
                     <div class="row w-100">
@@ -191,22 +190,22 @@ const eventSchedule = [
             </section>
 
             <!-- About Section -->
-            <section id="about-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
+            <section id="about-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-reactive-primary fw-bold mb-0 section-title-alt">{{ $t('even-detail.about_event') }}</h3>
+                        <h3 class="text-reactive-primary fw-bold mb-0 h4">{{ $t('even-detail.about_event') }}</h3>
                     </div>
                     <div class="border-dark rounded-3 overflow-hidden mb-4 about-expandable" :class="{'expanded': expandAbout}">
                         <img :src="imgAbout" alt="About" class="card-img-top card"/>
                         <div class="bg-reactive-secondary p-3 p-md-4">
-                            <h5 class="fw-bold mb-3 about-subtitle">1. Giới thiệu chung</h5>
-                            <p class="text-reactive-primary-50 about-text">Thông tin giới thiệu về sự kiện sẽ được hiển thị tại đây với chi tiết đầy đủ về chương trình và các điểm nổi bật</p>
+                            <h5 class="fw-bold mb-3">1. Giới thiệu chung</h5>
+                            <p class="text-reactive-primary-50">Thông tin giới thiệu về sự kiện sẽ được hiển thị tại đây với chi tiết đầy đủ về chương trình và các điểm nổi bật</p>
                         
-                            <h5 class="fw-bold mb-3 about-subtitle">2. Chi tiết sự kiện</h5>
-                            <p class="text-reactive-primary-50 about-text">Chi tiết sự kiện sẽ được hiển thị tại đây bao gồm thông tin về các nghệ sĩ, danh sách chương trình</p>
+                            <h5 class="fw-bold mb-3">2. Chi tiết sự kiện</h5>
+                            <p class="text-reactive-primary-50">Chi tiết sự kiện sẽ được hiển thị tại đây bao gồm thông tin về các nghệ sĩ, danh sách chương trình</p>
                         
-                            <h5 class="fw-bold mb-3 about-subtitle">3. Điều Khoản & Điều kiện</h5>
-                            <p class="text-reactive-primary-50 about-text">Điều khoản sẽ được hiển thị tại đây cho khách hàng tham khảo trước khi mua vé</p>
+                            <h5 class="fw-bold mb-3">3. Điều Khoản & Điều kiện</h5>
+                            <p class="text-reactive-primary-50">Điều khoản sẽ được hiển thị tại đây cho khách hàng tham khảo trước khi mua vé</p>
                         </div>
                     </div>
                     <button @click="expandAbout = !expandAbout" class="btn btn-sm btn-outline-info fw-bold mx-auto d-block">
@@ -216,15 +215,15 @@ const eventSchedule = [
             </section>
 
             <!-- Tickets Section -->
-            <section id="tickets-section" class="section-card card bg-reactive-secondary rounded-5">
+            <section id="tickets-section" class="card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="px-2 px-md-3">
-                    <h3 class="text-reactive-primary fw-bold my-3 my-md-5 mx-3 mx-md-5 section-title">{{ $t('even-detail.information_tickets') }}</h3>
+                    <h3 class="text-reactive-primary fw-bold my-3 my-md-5 mx-3 mx-md-5 h4">{{ $t('even-detail.information_tickets') }}</h3>
                     
                     <div v-for="(schedule, dateIdx) in eventSchedule" :key="dateIdx" class="mb-4">
                         
                         <button 
                             @click="toggleTicketDate(schedule.id)"
-                            class="btn w-100 text-start text-reactive-primary p-3 p-md-4 rounded-3 bg-reactive-secondary border cursor-pointer" 
+                            class="btn w-100 text-start text-reactive-primary p-3 p-md-4 rounded-3 bg-reactive-secondary border" 
                             type="button"
                         >
                             <div class="d-flex justify-content-between align-items-center">
@@ -232,7 +231,7 @@ const eventSchedule = [
                                     <i class="bi bi-calendar-event text-info ticket-icon"></i>
                                     <span class="fw-bold ticket-date">{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span>
                                 </div>
-                                <i class="bi bi-chevron-down transition-rotate" :class="{'rotate-180': expandedTickets[schedule.id]}"></i>
+                                <i class="bi bi-chevron-down" :class="{'rotate-180': expandedTickets[schedule.id]}"></i>
                             </div>
                         </button>
 
@@ -266,16 +265,16 @@ const eventSchedule = [
             </section>
 
             <!-- Organizer Section -->
-            <section id="organizer-section" class="section-card p-5 card bg-reactive-secondary rounded-5">
+            <section id="organizer-section" class="p-3 p-md-5 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
                 <div class="container-xxl organizer-card">
-                    <h3 class="text-reactive-primary fw-bold mb-4 section-title-alt">{{ $t('even-detail.organizer') }}</h3>
+                    <h3 class="text-reactive-primary fw-bold mb-4 h4">{{ $t('even-detail.organizer') }}</h3>
                     <div class="border-dark rounded-3">
                         <div class="row g-4 align-items-start">
                             <div class="col-md-4">
                                 <img
                                 :src="imgOrganizerLogo"
                                 alt="Organizer"
-                                class="img-fluid rounded-2 ratio ratio-1x1 img-cover"
+                                class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
                                 />
                             </div>
                             <div class="col-md-8">
@@ -287,8 +286,8 @@ const eventSchedule = [
                 </div>
             </section>
         </div>
-        <div class="col-lg-3 mt-4 sidebar-container d-none d-lg-block">
-            <img :src="imgSidebar" alt="" class="rounded-5 sidebar-img">
+        <div class="col-lg-3 mt-4 d-none d-lg-block px-2 ">
+            <img :src="imgSidebar" alt="" class="rounded-5 img-fluid object-fit-cover"/>
         </div>
     </div>
     
@@ -300,9 +299,9 @@ const eventSchedule = [
 
         <div class="row g-3 mb-5 d-flex">
           <div v-for="event in eventData.relatedEvents" :key="event.id" class="col-6 col-lg-3">
-            <div class="card bg-reactive-secondary rounded-2 h-100 overflow-hidden cursor-pointer card-hover">
-              <img :src="event.image" alt="Event" class="card-img-top related-img" />
-              <div class="related-body">
+            <div class="card bg-reactive-secondary rounded-2 h-100 overflow-hidden">
+              <img :src="event.image" alt="Event" class="card-img-top object-fit-cover h-auto" />
+              <div class="d-flex flex-column p-3">
                 <p class="text-reactive-primary fw-semibold mb-2 fs-6 lh-sm">{{ event.title }}</p>
                 <div class="mt-auto">
                   <p class="text-info fw-bold mb-0 fs-6">{{ $t('even-detail.price_from') }} {{ event.price }} đ</p>
@@ -326,240 +325,65 @@ const eventSchedule = [
 </template>
 
 <style scoped>
-/* Layout % wrapper */
-.event-wrapper {
-  min-height: 100vh;
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-
-/* Hero section*/
-.hero-section {
-  padding-top: 1.5rem;
-  min-height: 450px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-bg-blur {
+.hero-bg {
   background-size: cover;
   background-position: center;
   filter: blur(8px);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  z-index: 0;
 }
 
 .hero-card {
   height: 500px;
 }
 
-.hero-card-body {
-  width: 30%;
-  flex-shrink: 0;
-}
-
-.hero-card-max-width {
-  max-width: 1250px;
-}
-
-.my-dashed-line {
-  border-left: 2px solid transparent; 
-  border-image: repeating-linear-gradient(
-    to bottom, 
-    #5E5E5E, 
-    20px, 
-    transparent 20px, 
-    transparent 40px
-  ) 50; 
-}
-
-/* Navigation tabs */
-.nav-tabs-container {
-  top: 50px;
-  border-color: #333 !important;
-  z-index: 50;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-  overflow-x: visible;
-}
-
-.nav-tab-btn {
-  font-size: 0.95rem;
-}
-
-.nav-tabs-wrapper {
-  flex-wrap: wrap;
-}
-
-/* Location modal */
-.modal-backdrop-custom {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: fadeIn 0.3s ease-in-out;
-  backdrop-filter: blur(2px);
-}
-
-.location-modal-wrapper {
-  border: 2px solid #07b3df;
-  border-radius: 1rem;
-  padding: 2rem;
-  max-width: 800px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
-  position: relative;
-  animation: slideUp 0.3s ease-out;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-}
-
-.location-modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.location-modal-image {
-  width: 100%;
-  max-width: 1000px;
-  height: auto;
-  border-radius: 0.5rem;
-  object-fit: cover;
-  border: 1px solid #374155;
-  transition: transform 0.3s ease;
-}
-
-.location-modal-image:hover {
-  transform: scale(1.05);
-}
-
-.btn-close-white {
-  filter: brightness(0) invert(1);
-  transition: opacity 0.2s ease;
-}
-
-.btn-close-white:hover {
-  opacity: 0.7;
-}
-
-/* Section titles */
-.section-title {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-}
-
-.section-title-alt {
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
-}
-
-.section-card {
-  max-width:1000px;
-  margin: 1.5rem;
-  margin-left: auto; 
-  margin-right: 0;
-}
-
-/* Schedule section */
-.schedule-title {
-  font-size: clamp(0.9rem, 3vw, 1.1rem);
-}
-
-.schedule-address {
-  font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+.hero-body {
+  width: 25%;
 }
 
 .schedule-img {
   max-height: 200px;
 }
 
-/* About section */
+.my-dashed-line {
+  border-left: 2px solid transparent;
+  border-image: repeating-linear-gradient(
+    to bottom,
+    #5E5E5E,
+    20px,
+    transparent 20px,
+    transparent 40px
+  ) 50;
+}
+
+.modal-backdrop-custom {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s;
+}
+
+.modal-wrapper {
+  border: 2px solid #07b3df;
+  max-width: 800px;
+  max-height: 85vh;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+  animation: slideUp 0.3s;
+}
+
 .about-expandable {
-  transition: max-height 1.5s ease;
   max-height: 250px;
-  height: auto;
+  transition: max-height 1.5s;
 }
 
 .about-expandable.expanded {
   max-height: 5000px;
 }
 
-.about-subtitle {
-  font-size: clamp(0.95rem, 3vw, 1.25rem);
-}
-
-.about-text {
-  line-height: 1.6;
-  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-}
-
-/* Tickets section */
-.seat-item {
-  background-color: #1e1e1e;
-  border-color: #333 !important;
-}
-
-/* Related events section */
-.related-body {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-}
-
-.related-img {
-  height: 180px;
-  object-fit: cover;
-}
-
-/* Sidebar */
-.sidebar-img {
-  max-width: 300px;
-  width: 92%;
-}
-
-/* Utility classes */
-.z-1 {
-  z-index: 1;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.text-xs {
-  font-size: 0.7rem;
-}
-
-.img-cover {
-  object-fit: cover;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.transition-rotate {
-  transition: transform 0.3s ease;
-}
-
-.card-hover {
-  transition: transform 0.5s ease;
-}
-
-/* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -573,120 +397,41 @@ const eventSchedule = [
   }
 }
 
-/* Responsive - tablet */
-@media (max-width: 1024px) {
-  .content-row {
-    flex-direction: column;
-    margin: 0 !important;
-  }
-}
-
-/* Responsive - mobile */
 @media (max-width: 768px) {
-  .event-detail {
-    font-size: 0.9rem;
-  }
-  
   .hero-card {
-    flex-direction: column !important;
     height: auto !important;
-    min-height: 400px;
   }
-  
-  .hero-card-body {
+
+  .hero-body {
     width: 100% !important;
-    min-height: 200px;
-    order: 2 !important;
   }
-  
+
   .hero-card img {
-    order: 1 !important;
-    max-height: 300px;
-    width: 100% !important;
+    max-height: 450px;
   }
-  
+
   .my-dashed-line {
     border-left: none !important;
     border-bottom: 2px solid transparent;
     border-image: repeating-linear-gradient(
-      to right, 
-      #5E5E5E, 
-      20px, 
-      transparent 20px, 
+      to right,
+      #5E5E5E,
+      20px,
+      transparent 20px,
       transparent 40px
     ) 50;
   }
-  
-  .nav-tabs-container {
-    margin-left: 0.5rem !important;
-    margin-right: 0.5rem !important;
-    -webkit-overflow-scrolling: touch;
+
+  .nav-sticky {
     scrollbar-width: none;
   }
-  
-  .nav-tabs-container::-webkit-scrollbar {
+
+  .nav-sticky::-webkit-scrollbar {
     display: none;
   }
-  
+
   .nav-tabs-wrapper {
-    flex-wrap: nowrap !important;
     min-width: max-content;
-  }
-  
-  .nav-tabs-wrapper button {
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  
-  .section-card {
-    margin: 0.9rem 0.5rem !important;
-    padding: 1rem !important;
-  }
-  
-  .content-row {
-    margin: 0 !important;
-  }
-  
-  .sidebar-container {
-    padding: 0 0.5rem;
-  }
-  
-  .sidebar-img {
-    width: 50%;
-  }
-  
-  .container-xxl {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
-  }
-
-  .organizer-card img{
-    width: 50% !important;
-  }
-  
-  .related-info img{
-    height: 120px !important;
-  }
-
-  .related-body{
-    flex-direction: column !important;
-    padding: 0.35rem !important;
-  }
-  
-  .related-body p{
-    font-size: 0.75rem !important;
-    padding: none !important;
-  }
-
-  .related-body div {
-    margin-bottom: 0rem !important;
-  }
-}
-
-/* Responsive - desktop */
-@media (min-width: 768px) {
-  .hero-grid {
-    grid-template-columns: 1fr 300px !important;
   }
 }
 </style>

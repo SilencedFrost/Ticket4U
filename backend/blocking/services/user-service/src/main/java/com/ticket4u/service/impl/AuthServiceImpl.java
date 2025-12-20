@@ -3,6 +3,7 @@ package com.ticket4u.service.impl;
 import com.nimbusds.jose.JOSEException;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.GoogleUserInfo;
+import com.ticket4u.dto.auth.GoogleIdToken;
 import com.ticket4u.dto.auth.LoginRequest;
 import com.ticket4u.dto.auth.RegisterRequest;
 import com.ticket4u.dto.auth.RegisterResponse;
@@ -17,14 +18,15 @@ import com.ticket4u.entity.Role;
 import com.ticket4u.exception.EmailAlreadyExistException;
 import com.ticket4u.exception.PhoneNumberAlreadyExistException;
 import com.ticket4u.exception.TokenCreationException;
+import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.service.SessionService;
 import com.ticket4u.util.CookieUtil;
-import com.ticket4u.util.EmailUtil;
 import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.PhoneNumberUtil;
 import com.ticket4u.util.TokenUtil;
+import com.ticket4u.validation.GoogleTokenValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +36,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -54,7 +54,8 @@ public class AuthServiceImpl implements AuthService {
     private final SessionService sessionService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final GoogleTokenValidator googleTokenValidator;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -146,39 +147,6 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    @Override
-    @Transactional
-    public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
-        log.debug("Register request received for email: {}", request.email());
-
-        if (userRepository.existsByEmailIgnoreCase(request.email())) {
-            log.warn("Registration failed: email already exists - {}", request.email());
-            throw new EmailAlreadyExistException("Email already registered: " + request.email());
-        }
-
-        if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
-            String normalizedPhone = PhoneNumberUtil.normalize(request.phoneNumber());
-            if (userRepository.existsByPhoneNumber(normalizedPhone)) {
-                log.warn("Registration failed: phone number already exists - {}", request.phoneNumber());
-                throw new PhoneNumberAlreadyExistException("Phone number already registered");
-            }
-        }
-
-        User user = createUserFromEmailRegistration(request);
-
-        User savedUser = userRepository.save(user);
-        log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
-
-        // TODO: Send verification email
-        log.debug("Email verification token should be sent to: {}", savedUser.getEmail());
-
-        return new RegisterResponse(
-                savedUser.getId(),
-                savedUser.getEmail(),
-                "Registration successful. Please check your email for verification link."
-        );
-    }
-
     // Helper methods
     private Optional<String> createAccessToken(CustomUserDetails userDetails) {
         try {
@@ -225,55 +193,7 @@ public class AuthServiceImpl implements AuthService {
         return rtBuilder.maxAge(ttl).build().toString();
     }
 
-    private User createUserFromEmailRegistration(RegisterRequest request) {
-        User user = new User();
-        user.setEmail(request.email().toLowerCase());
-        user.setPasswordHash(passwordEncoder.encode(request.password()));
-        user.setIsActive(false);
-        user.setIsDeleted(false);
 
-        String username = EmailUtil.extractUsername(request.email());
-        user.setUsername(username);
-
-        if (request.fullName() != null && !request.fullName().isBlank()) {
-            String[] names = splitFullName(request.fullName());
-            user.setFirstName(names[0]);
-            user.setLastName(names[1]);
-        }
-
-        if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
-            user.setPhoneNumber(PhoneNumberUtil.normalize(request.phoneNumber()));
-        }
-
-        Role userRole = new Role();
-        userRole.setId(0);
-        user.assignRole(userRole);
-
-        return user;
-    }
-
-    private User createUserFromGoogleRegistration(GoogleUserInfo userInfo) {
-        User user = new User();
-        user.setEmail(userInfo.email().toLowerCase());
-        user.setPasswordHash(passwordEncoder.encode(UUID.randomUUID().toString()));
-        user.setIsActive(true);
-        user.setIsDeleted(false);
-
-        String username = EmailUtil.extractUsername(userInfo.email());
-        user.setUsername(username);
-
-        if (userInfo.name() != null && !userInfo.name().isBlank()) {
-            String[] names = splitFullName(userInfo.name());
-            user.setFirstName(names[0]);
-            user.setLastName(names[1]);
-        }
-
-        Role userRole = new Role();
-        userRole.setId(0);
-        user.assignRole(userRole);
-
-        return user;
-    }
 
     private String[] splitFullName(String fullName) {
         if (fullName == null || fullName.isBlank()) {
@@ -287,23 +207,44 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public RegisterResponse registerWithGoogle(GoogleUserInfo userInfo) {
-        log.debug("Google register request received for email: {}", userInfo.email());
+    public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
+        if (userRepository.existsByEmailIgnoreCase(request.email())) {
+            throw new EmailAlreadyExistException("Email already registered: " + request.email());
+        }
+
+        if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
+            String normalizedPhone = PhoneNumberUtil.normalize(request.phoneNumber());
+            if (userRepository.existsByPhoneNumber(normalizedPhone)) {
+                throw new PhoneNumberAlreadyExistException("Phone number already registered");
+            }
+        }
+
+        User user = userMapper.toEntityFromRegister(request);
+        user.assignRole(new Role() {{ setId(0); }});
+        User savedUser = userRepository.save(user);
+
+        // TODO: Send verification email
+
+        log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
+        return userMapper.toRegisterResponse(savedUser, "Registration successful. Please check your email for verification link.");
+    }
+
+
+    @Override
+    @Transactional
+    public RegisterResponse registerWithGoogle(String idTokenValue) {
+        GoogleIdToken idToken = new GoogleIdToken(idTokenValue);
+        GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
 
         if (userRepository.existsByEmailIgnoreCase(userInfo.email())) {
-            log.warn("Registration failed: email already exists - {}", userInfo.email());
             throw new EmailAlreadyExistException("Email already registered: " + userInfo.email());
         }
 
-        User user = createUserFromGoogleRegistration(userInfo);
-
+        User user = userMapper.toEntityFromGoogle(userInfo);
+        user.assignRole(new Role() {{ setId(0); }});
         User savedUser = userRepository.save(user);
         log.info("User registered via Google successfully: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
 
-        return new RegisterResponse(
-                savedUser.getId(),
-                savedUser.getEmail(),
-                "Registration successful via Google. Your account is ready to use."
-        );
+        return userMapper.toRegisterResponse(savedUser, "Registration successful via Google. Your account is ready to use.");
     }
 }

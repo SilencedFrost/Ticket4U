@@ -6,7 +6,6 @@ import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
-import com.ticket4u.validation.GoogleTokenValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ public class AuthController {
 
     private final CookieUtil cookieUtil;
     private final AuthService authService;
-    private final GoogleTokenValidator googleTokenValidator;
 
     /**
      * POST /api/auth/login
@@ -54,34 +52,18 @@ public class AuthController {
     /**
      * POST /api/v1/auth/register
      * Register new user with email and password
-     * @return RegisterResponse
      */
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(
-            @Valid @RequestBody RegisterRequest registerRequest
-    ) {
-        log.debug("Register request received for email: {}", registerRequest.email());
-        RegisterResponse response = authService.registerWithEmail(registerRequest);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerWithEmail(request));
     }
 
     /**
      * POST /api/v1/auth/register/google
      * Register new user with Google OAuth2
-     * @return RegisterResponse
      */
     @PostMapping("/register/google")
-    public ResponseEntity<RegisterResponse> registerWithGoogle(
-            @Valid @RequestBody OAuth2RegisterRequest oAuth2RegisterRequest
-    ) {
-        log.debug("Google register roAquest received");
-        
-        // Verify token and extract user info
-        GoogleIdToken idToken = new GoogleIdToken(oAuth2RegisterRequest.idToken());
-        GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
-        
-        // Register with verified user info
-        RegisterResponse response = authService.registerWithGoogle(userInfo);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<RegisterResponse> registerWithGoogle(@Valid @RequestBody OAuth2RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerWithGoogle(request.idToken()));
     }
 }

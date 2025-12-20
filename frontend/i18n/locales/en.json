@@ -1,8 +1,8 @@
 {
   "auth": {
-    "login_title": "Login",
-    "login_action": {
-      "_": "Log in",
+    "login": {
+      "title": "Login",
+      "action": "Log in",
       "google": "Log in with Google"
     },
     "password": "Password",
@@ -21,8 +21,11 @@
         "password": "Password can't be blank",
         "email": "Email can't be blank"
       }
+    },
+    "logout": {
+      "title": "Logout",
+      "action": "Log out"
     }
-    
   },
   "common": {
     "email": "Email"
@@ -30,5 +33,12 @@
   "brand": {
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
+  },
+  "placeholder": {
+    "search": "Search events, artists..."
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode"
   }
 }

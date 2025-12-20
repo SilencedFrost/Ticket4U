@@ -53,7 +53,7 @@ function viewPassword() {
 
 <template>
   <div class="form-width">
-    <h3 class="text-center text-reactive-primary">{{ $t('auth.login_title') }}:</h3>
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}:</h3>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
@@ -119,11 +119,11 @@ function viewPassword() {
           @click.prevent.stop="login()"
         >
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
-          {{ $t('auth.login_action._') }}
+          {{ $t('auth.login.action') }}
         </button>
         <button class="btn btn-reactive-gray">
           <i class="bi bi-google me-2" />
-          <span>{{ $t('auth.login_action.google') }}</span>
+          <span>{{ $t('auth.login.google') }}</span>
         </button>
       </div>
     </form>

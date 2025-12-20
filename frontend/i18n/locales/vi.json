@@ -1,9 +1,9 @@
 {
   "auth": {
-    "login_title": "Đăng nhập",
-    "login_action": {
-      "_": "Đăng nhập",
-      "google": "Đăng nhập với Google"
+    "login": {
+      "title": "Đăng nhập",
+      "action": "Đăng nhập",
+      "google": "Đăng nhập với google"
     },
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
@@ -21,6 +21,10 @@
         "password": "Password không được để trống",
         "email": "Email không được để trống"
       }
+    },
+    "logout": {
+      "title": "Đăng xuất",
+      "action": "Đăng xuất"
     }
   },
   "common": {
@@ -29,5 +33,12 @@
   "brand": {
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
+  },
+  "placeholder" : {
+    "search": "Tìm kiếm sự kiện, nghệ sĩ..."
+  },
+  "theme": {
+    "light": "Chế độ sáng",
+    "dark": "Chế độ tối"
   }
 }

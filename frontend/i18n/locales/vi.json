@@ -30,37 +30,7 @@
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
-  "header": {
-    "search_placeholder": "Bạn muốn tìm kiếm gì hôm nay?",
-    "button_create_event": "Tạo sự kiện",
-    "button_sign_in": "Đăng nhập",
-    "button_sign_up": "Đăng ký",
-    "categories": {
-      "live_music": "Nhạc sống",
-      "theater_art": "Sân khấu & Nghệ thuật",
-      "sports": "Thể Thao",
-      "others": "Khác"
-    }
-  },
-  "footer": {
-    "hotline": "Liên hệ",
-    "hotline_hours": "Thứ 2 - Chủ Nhật (8:00 - 22:00)",
-    "head_office": "Văn phòng chính",
-    "address": "Tầng 12, Tòa nhà Viettel, 285 Cách Mạng Tháng Tám, Phường Hòa Hưng, TP. Hồ Chí Minh",
-    "customer_service": "Dành cho khách hàng",
-    "terms": "Điều khoản dịch vụ",
-    "organize_service": "Dành cho ban tổ chức",
-    "create_event": "Tạo sự kiện",
-    "about_us": "Về chúng tôi",
-    "code_of_conduct": "Quy chế hoạt động",
-    "privacy_policy": "Chính sách bảo mật",
-    "payment_security": "Chính sách bảo mật",
-    "dispute_resolution": "Cơ chế giải quyết tranh chấp",
-    "return_policy": "Chính sách hoàn trả",
-    "shipping_terms": "Điều khoản vận chuyển",
-    "payment_methods": "Phương thức thanh toán"
-  },
-  "even-detail": {
+  "event-detail": {
     "price_from": "Giá từ",
     "buy_tickets": "Mua vé ngay",
     "schedule_event": "Lịch trình sự kiện",

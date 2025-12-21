@@ -30,7 +30,9 @@
   },
   "common": {
     "email": "Email",
-    "settings": "Settings"
+    "settings": "Settings",
+    "ticket": "Ticket",
+    "tickets": "Tickets"
   },
   "brand": {
     "name": "Ticket4U",

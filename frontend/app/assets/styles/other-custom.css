@@ -35,8 +35,9 @@ img {
   border-bottom-color: var(--bs-primary);
 }
 
-/* Menu items */
+/* Menu, nav items */
 
+.nav-item,
 [class^='menu-item-'] {
   display: flex;
   user-select: none;
@@ -94,6 +95,24 @@ img {
   border-right-color: var(--bs-primary);
 }
 
+.nav-item {
+  height: 100%;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-item > * {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex: 1;
+  width: 100%;
+}
+
+.nav-item:hover {
+  background-color: var(--bg-reactive-secondary);
+  border-bottom-color: var(--bs-primary);
+}
+
 /* Scrollbars */
 
 ::-webkit-scrollbar {
@@ -117,7 +136,6 @@ img {
   background-clip: padding-box;
 }
 
-/* Firefox */
 html {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;

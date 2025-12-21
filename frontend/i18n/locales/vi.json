@@ -30,7 +30,9 @@
   },
   "common": {
     "email": "Email",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "ticket": "Vé",
+    "tickets": "Vé"
   },
   "brand": {
     "name": "Ticket4U",

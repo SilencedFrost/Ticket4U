@@ -4,7 +4,7 @@ import NavBar from '~/components/navigation/NavBar.vue';
 
 <template>
   <div class="layout-container">
-    <header class="sticky-top" style="z-index: 9999">
+    <header class="sticky-top z-3">
       <nav-bar />
     </header>
     <main class="main-content">

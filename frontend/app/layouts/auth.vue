@@ -64,7 +64,7 @@ const verticalImageCount = computed<number>(() =>
         </div>
       </template>
     </client-only>
-    <div class="row g-0 p-0 flex-fill" style="z-index: 1">
+    <div class="row g-0 p-0 flex-fill z-1">
       <div class="col-lg-6 col-12">
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="d-lg-none d-block card p-3 bg-reactive-primary border">

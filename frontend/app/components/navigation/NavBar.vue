@@ -69,13 +69,13 @@ onClickOutside(menuContainer, () => {
             v-if="useUser.isLoggedIn === true"
             class="d-flex text-clickable me-2 pe-2 border-end border-2"
           >
-            <span class="d-none d-sm-flex me-2">{{ $t('common.tickets') }}</span>
             <i class="bi bi-ticket" />
+            <span class="d-none d-sm-flex ms-2">{{ $t('common.tickets') }}</span>
           </div>
           <!-- Language switching -->
           <div class="d-none d-md-flex text-clickable me-2 pe-2 border-end border-2">
-            <span class="me-2">{{ locale.toUpperCase() }}</span>
             <i class="bi bi-globe2" />
+            <span class="ms-2">{{ locale.toUpperCase() }}</span>
           </div>
           <!-- Account button -->
           <div class="d-none d-md-flex">

@@ -25,10 +25,12 @@
     "logout": {
       "title": "Đăng xuất",
       "action": "Đăng xuất"
-    }
+    },
+    "register": "Đăng ký"
   },
   "common": {
-    "email": "Email"
+    "email": "Email",
+    "settings": "Cài đặt"
   },
   "brand": {
     "name": "Ticket4U",

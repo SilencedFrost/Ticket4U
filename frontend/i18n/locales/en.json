@@ -25,10 +25,12 @@
     "logout": {
       "title": "Logout",
       "action": "Log out"
-    }
+    },
+    "register": "Register"
   },
   "common": {
-    "email": "Email"
+    "email": "Email",
+    "settings": "Settings"
   },
   "brand": {
     "name": "Ticket4U",

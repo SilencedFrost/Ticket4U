@@ -1,8 +1,6 @@
 package com.ticket4u.advice;
 
-import com.ticket4u.exception.EmailAlreadyExistException;
 import com.ticket4u.exception.InvalidGoogleTokenException;
-import com.ticket4u.exception.PhoneNumberAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,18 +22,6 @@ public class AuthExceptionHandler {
     public ResponseEntity<?> handleDisabled(DisabledException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)  // 403
                 .body(Map.of("message", "Account disabled"));
-    }
-
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    public ResponseEntity<?> handleEmailAlreadyExist(EmailAlreadyExistException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)  // 409
-                .body(Map.of("message", e.getMessage()));
-    }
-
-    @ExceptionHandler(PhoneNumberAlreadyExistException.class)
-    public ResponseEntity<?> handlePhoneNumberAlreadyExist(PhoneNumberAlreadyExistException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)  // 409
-                .body(Map.of("message", e.getMessage()));
     }
 
     @ExceptionHandler(InvalidGoogleTokenException.class)

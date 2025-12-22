@@ -209,13 +209,21 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
         if (userRepository.existsByEmailIgnoreCase(request.email())) {
-            throw new EmailAlreadyExistException("Email already registered: " + request.email());
+            return new RegisterResponse(
+                null,
+                request.email(),
+                "Please check your email to activate your account"
+            );
         }
 
         if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
             String normalizedPhone = PhoneNumberUtil.normalize(request.phoneNumber());
             if (userRepository.existsByPhoneNumber(normalizedPhone)) {
-                throw new PhoneNumberAlreadyExistException("Phone number already registered");
+                return new RegisterResponse(
+                    null,
+                    request.email(),
+                    "Please check your email to activate your account"
+                );
             }
         }
 
@@ -226,7 +234,7 @@ public class AuthServiceImpl implements AuthService {
         // TODO: Send verification email
 
         log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
-        return userMapper.toRegisterResponse(savedUser, "Registration successful. Please check your email for verification link.");
+        return userMapper.toRegisterResponse(savedUser, "Please check your email to activate your account");
     }
 
 
@@ -237,7 +245,12 @@ public class AuthServiceImpl implements AuthService {
         GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
 
         if (userRepository.existsByEmailIgnoreCase(userInfo.email())) {
-            throw new EmailAlreadyExistException("Email already registered: " + userInfo.email());
+            log.warn("Google registration attempt with existing email: {}", userInfo.email());
+            return new RegisterResponse(
+                null,
+                userInfo.email(),
+                "Your account has been processed. Please try logging in."
+            );
         }
 
         User user = userMapper.toEntityFromGoogle(userInfo);
@@ -245,6 +258,6 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
         log.info("User registered via Google successfully: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
 
-        return userMapper.toRegisterResponse(savedUser, "Registration successful via Google. Your account is ready to use.");
+        return userMapper.toRegisterResponse(savedUser, "Your account has been processed. Please try logging in.");
     }
 }

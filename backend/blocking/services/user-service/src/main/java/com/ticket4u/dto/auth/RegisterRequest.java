@@ -1,6 +1,7 @@
 package com.ticket4u.dto.auth;
 
 import com.ticket4u.validation.ValidPhoneNumber;
+import com.ticket4u.validation.ValidationPatterns;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -12,7 +13,7 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "auth.error.blank.password")
-        @Pattern(message = "auth.error.format.password", regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$")
+        @Pattern(message = "auth.error.format.password", regexp = ValidationPatterns.PASSWORD)
         String password,
 
         @ValidPhoneNumber(message = "auth.error.format.phone")

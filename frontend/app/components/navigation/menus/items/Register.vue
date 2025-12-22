@@ -1,3 +1,3 @@
 <template>
-  <nuxt-link to="/auth/register">{{ $t('auth.register') }}</nuxt-link>
+  <nuxt-link-locale to="/auth/register">{{ $t('auth.register') }}</nuxt-link-locale>
 </template>

@@ -5,15 +5,7 @@ import BurgerDropDown from './menus/BurgerDropDown.vue';
 import LanguageSwitcher from './menus/LanguageSwitcher.vue';
 
 const { locale } = useI18n();
-const menuList = reactive({
-  none: null,
-  account: AccountDropDown,
-  burger: BurgerDropDown,
-  language: LanguageSwitcher,
-});
-const specialPositions = ref<Array<keyof typeof menuList>>(['account', 'language']);
-const currentMenuKey = ref<keyof typeof menuList>('none');
-const currentMenu = ref<Component | null>(null);
+const currentMenuKey = ref<string>('none');
 const searchInput = ref<HTMLInputElement | null>(null);
 const menuContainer = ref<HTMLElement | null>(null);
 const useUser = useUserStore();
@@ -28,12 +20,9 @@ function clearSearch() {
   }
 }
 
-function toggleMenu(menuKey?: keyof typeof menuList) {
+function toggleMenu(menuKey?: string) {
   const targetKey = menuKey || 'none';
   currentMenuKey.value = currentMenuKey.value === targetKey ? 'none' : targetKey;
-  currentMenu.value = specialPositions.value.includes(currentMenuKey.value)
-    ? null
-    : menuList[currentMenuKey.value];
 }
 
 onClickOutside(menuContainer, () => {
@@ -104,14 +93,24 @@ onClickOutside(menuContainer, () => {
             </div>
           </div>
           <!-- Burger button -->
-          <div class="d-flex d-md-none me-3">
+          <div class="d-flex d-md-none ms-2 pe-3">
             <i class="bi bi-list text-clickable" @click="toggleMenu('burger')" />
           </div>
         </div>
       </div>
     </nav>
-    <div v-if="currentMenu" class="position-absolute w-100 d-flex">
-      <component :is="currentMenu" />
+    <div
+      :class="[
+        'position-absolute',
+        'w-100',
+        'dropdown-content',
+        { open: currentMenuKey === 'burger' },
+      ]"
+    >
+      <burger-drop-down
+        :parent-menu-open="currentMenuKey === 'burger'"
+        @switched-lang="toggleMenu()"
+      />
     </div>
   </div>
 </template>
@@ -121,17 +120,17 @@ onClickOutside(menuContainer, () => {
   display: flex;
   align-items: center;
   padding: 0.75rem;
-}
 
-.nav-container > * {
-  height: 40px;
-  align-items: center;
+  > * {
+    height: 40px;
+    align-items: center;
+  }
 }
 
 .search-field {
   background-color: transparent;
   width: 35vw;
-  min-width: 180px;
+  min-width: 190px;
   font-size: 15px;
 }
 

@@ -6,12 +6,47 @@ import ChangeTheme from './items/ChangeTheme.vue';
 import Settings from './items/Settings.vue';
 import { useTheme } from '#imports';
 
+const emit = defineEmits(['switchedLang']);
+
+const props = defineProps<{
+  parentMenuOpen: boolean;
+}>();
+
+const { locale, locales, setLocale } = useI18n();
 const { nextTheme } = useTheme();
 const useUser = useUserStore();
+const switchLang = ref<boolean>(false);
+
+watch(
+  () => props.parentMenuOpen,
+  (newValue) => {
+    if (newValue === false) {
+      switchLang.value = false;
+    }
+  },
+);
 </script>
 
 <template>
-  <div class="d-flex flex-column bg-reactive-primary flex-fill">
+  <div class="d-flex flex-column bg-reactive-primary flex-fill shadow-sm">
+    <!-- Lang switch button -->
+    <div class="menu-item-left" @click="switchLang = !switchLang">
+      <i class="bi bi-globe2" />
+      <span style="width: 20px">{{ locale.toUpperCase() }}</span>
+    </div>
+    <!-- Lang switch menu -->
+    <div :class="['w-100', 'dropdown-content', { open: switchLang }]">
+      <div class="ms-2" @click="emit('switchedLang')">
+        <div
+          v-for="item in locales"
+          :key="item.code"
+          class="menu-item"
+          @click="setLocale(item.code)"
+        >
+          {{ item.code.toUpperCase() }}
+        </div>
+      </div>
+    </div>
     <div v-if="!useUser.isLoggedIn">
       <div class="menu-item-left"><i class="bi bi-box-arrow-in-left" /><log-in /></div>
       <div class="menu-item-left"><i class="bi bi-person-plus-fill" /><register /></div>

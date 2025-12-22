@@ -1,9 +1,10 @@
 <script setup lang="ts">
 const useUser = useUserStore();
+const localePath = useLocalePath();
 
 function handleLogout() {
   useUser.logout();
-  navigateTo('/auth/login');
+  navigateTo(localePath('/auth/login'));
 }
 </script>
 <template>

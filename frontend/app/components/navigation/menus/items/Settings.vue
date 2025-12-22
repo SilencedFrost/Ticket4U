@@ -1,3 +1,3 @@
 <template>
-  <nuxt-link to="/">{{ $t('common.settings') }}</nuxt-link>
+  <nuxt-link-locale to="/">{{ $t('common.settings') }}</nuxt-link-locale>
 </template>

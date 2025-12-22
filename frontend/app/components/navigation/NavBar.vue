@@ -2,7 +2,7 @@
 import { onClickOutside } from '@vueuse/core';
 import AccountDropDown from './menus/AccountDropDown.vue';
 import BurgerDropDown from './menus/BurgerDropDown.vue';
-import LanguageSwitcher from './menus/LanguageSwitcher.vue';
+import LanguageSwitcherDropDown from './menus/LanguageSwitcherDropDown.vue';
 
 const { locale } = useI18n();
 const currentMenuKey = ref<string>('none');
@@ -75,11 +75,12 @@ onClickOutside(menuContainer, () => {
                 <i class="bi bi-globe2" />
                 <span class="ms-2" style="width: 20px">{{ locale.toUpperCase() }}</span>
               </div>
+              <!-- Language drop down -->
               <div
                 v-if="currentMenuKey === 'language'"
                 class="position-absolute top-100 start-50 translate-middle-x mt-3"
               >
-                <language-switcher @click="toggleMenu()" />
+                <language-switcher-drop-down @click="toggleMenu()" />
               </div>
             </div>
           </div>
@@ -87,6 +88,7 @@ onClickOutside(menuContainer, () => {
           <div class="d-none d-md-flex ms-2 pe-3 position-relative">
             <div class="d-flex flex-column">
               <i class="bi bi-person-circle text-clickable" @click="toggleMenu('account')" />
+              <!-- Account drop down -->
               <div v-if="currentMenuKey === 'account'" class="position-absolute top-100 end-0 mt-3">
                 <account-drop-down />
               </div>
@@ -99,6 +101,7 @@ onClickOutside(menuContainer, () => {
         </div>
       </div>
     </nav>
+    <!-- Burger collapsible menu -->
     <div
       :class="[
         'position-absolute',
@@ -134,6 +137,7 @@ onClickOutside(menuContainer, () => {
   font-size: 15px;
 }
 
+/* Icon size */
 .bi {
   display: flex;
   font-size: 25px;

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useTheme } from '~/composables/useTheme';
+import { useTheme } from '#imports';
 
 const { currentTheme, toggleTheme } = useTheme();
 
@@ -8,7 +7,7 @@ const nextTheme = computed(() => (currentTheme.value === 'light' ? 'dark' : 'lig
 </script>
 
 <template>
-  <div class="container-fluid d-flex flex-column vh-100 p-2 bg-reactive-primary">
+  <div class="container-fluid d-flex flex-column p-2 bg-reactive-primary">
     <button class="btn btn-secondary d-flex align-items-center mb-2" @click="toggleTheme">
       Switch to {{ nextTheme }} Mode
     </button>

@@ -31,7 +31,7 @@ onClickOutside(menuContainer, () => {
 </script>
 <template>
   <div ref="menuContainer">
-    <nav class="bg-reactive-primary shadow-sm">
+    <nav class="bg-reactive-primary shadow-sm" @click="toggleMenu()">
       <div class="container-fluid p-0 position-relative d-flex">
         <!-- Logo -->
         <div class="nav-container">
@@ -71,7 +71,7 @@ onClickOutside(menuContainer, () => {
           <!-- Language switching -->
           <div class="d-none d-md-flex ms-2 pe-2 border-end border-2 position-relative">
             <div class="d-flex flex-column">
-              <div class="d-flex text-clickable" @click="toggleMenu('language')">
+              <div class="d-flex text-clickable" @click.stop="toggleMenu('language')">
                 <i class="bi bi-globe2" />
                 <span class="ms-2" style="width: 20px">{{ locale.toUpperCase() }}</span>
               </div>
@@ -87,7 +87,7 @@ onClickOutside(menuContainer, () => {
           <!-- Account button -->
           <div class="d-none d-md-flex ms-2 pe-3 position-relative">
             <div class="d-flex flex-column">
-              <i class="bi bi-person-circle text-clickable" @click="toggleMenu('account')" />
+              <i class="bi bi-person-circle text-clickable" @click.stop="toggleMenu('account')" />
               <!-- Account drop down -->
               <div v-if="currentMenuKey === 'account'" class="position-absolute top-100 end-0 mt-3">
                 <account-drop-down />
@@ -96,7 +96,7 @@ onClickOutside(menuContainer, () => {
           </div>
           <!-- Burger button -->
           <div class="d-flex d-md-none ms-2 pe-3">
-            <i class="bi bi-list text-clickable" @click="toggleMenu('burger')" />
+            <i class="bi bi-list text-clickable" @click.stop="toggleMenu('burger')" />
           </div>
         </div>
       </div>

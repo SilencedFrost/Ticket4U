@@ -212,7 +212,7 @@ public class AuthServiceImpl implements AuthService {
             return new RegisterResponse(
                 null,
                 request.email(),
-                "Please check your email to activate your account"
+                "user.registration.check_email"
             );
         }
 
@@ -222,7 +222,7 @@ public class AuthServiceImpl implements AuthService {
                 return new RegisterResponse(
                     null,
                     request.email(),
-                    "Please check your email to activate your account"
+                   "user.registration.check_email"
                 );
             }
         }
@@ -234,7 +234,7 @@ public class AuthServiceImpl implements AuthService {
         // TODO: Send verification email
 
         log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
-        return userMapper.toRegisterResponse(savedUser, "Please check your email to activate your account");
+        return userMapper.toRegisterResponse(savedUser, "user.registration.check_email");
     }
 
 
@@ -249,7 +249,7 @@ public class AuthServiceImpl implements AuthService {
             return new RegisterResponse(
                 null,
                 userInfo.email(),
-                "Your account has been processed. Please try logging in."
+                "auth.login.try_login"
             );
         }
 
@@ -258,6 +258,6 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
         log.info("User registered via Google successfully: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
 
-        return userMapper.toRegisterResponse(savedUser, "Your account has been processed. Please try logging in.");
+        return userMapper.toRegisterResponse(savedUser, "auth.login.try_login");
     }
 }

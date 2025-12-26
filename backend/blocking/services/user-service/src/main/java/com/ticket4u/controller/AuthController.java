@@ -2,8 +2,7 @@ package com.ticket4u.controller;
 
 import com.ticket4u.constant.CommonKeys;
 import com.ticket4u.constant.TokenConstants;
-import com.ticket4u.dto.auth.AuthResponse;
-import com.ticket4u.dto.auth.LoginRequest;
+import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
@@ -13,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -51,5 +47,23 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
                 .body(loginResult.authResponse());
+    }
+
+    /**
+     * POST /api/v1/auth/register
+     * Register new user with email and password
+     */
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerWithEmail(request));
+    }
+
+    /**
+     * POST /api/v1/auth/register/google
+     * Register new user with Google OAuth2
+     */
+    @PostMapping("/register/google")
+    public ResponseEntity<RegisterResponse> registerWithGoogle(@Valid @RequestBody OAuth2RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerWithGoogle(request.idToken()));
     }
 }

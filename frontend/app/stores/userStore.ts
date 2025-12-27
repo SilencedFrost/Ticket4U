@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', () => {
     email: ''
   });
 
-  const isLoggedIn = computed(() => user.value.roleId < 0);
+  const isLoggedIn = computed(() => user.value.roleId >= 0);
 
   async function login(email: string, password: string, rememberMe: boolean) {
       user.value = await $fetch(`${config.public.authUrl}/login`, {

@@ -30,36 +30,6 @@
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
   },
-  "header": {
-    "search_placeholder": "What are you looking for today?",
-    "button_create_event": "Create Event",
-    "button_sign_in": "Sign In",
-    "button_sign_up": "Sign Up",
-    "categories": {
-      "live_music": "Live Music",
-      "theater_art": "Theater & Arts",
-      "sports": "Sports",
-      "others": "Others"
-    }
-  },
-  "footer": {
-    "hotline": "Contact",
-    "hotline_hours": "Monday - Sunday (8:00 AM - 10:00 PM)",
-    "head_office": "Head Office",
-    "address": "12th Floor, Viettel Building, 285 Cach Mang Thang Tam, Hoa Hung Ward, Ho Chi Minh City",
-    "customer_service": "For Customers",
-    "terms": "Terms of Service",
-    "organize_service": "For Organizers",
-    "create_event": "Create Event",
-    "about_us": "About Us",
-    "code_of_conduct": "Code of Conduct",
-    "privacy_policy": "Privacy Policy",
-    "payment_security": "Payment Security",
-    "dispute_resolution": "Dispute Resolution",
-    "return_policy": "Return Policy",
-    "shipping_terms": "Shipping Terms",
-    "payment_methods": "Payment Methods"
-  },
   "event-detail": {
     "price_from": "From",
     "buy_tickets": "Buy Tickets Now",

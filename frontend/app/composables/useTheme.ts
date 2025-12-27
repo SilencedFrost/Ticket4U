@@ -1,20 +1,26 @@
-import { ref, watch } from 'vue';
-import { useCookie, useHead } from '#app';
-
 const THEME_COOKIE_KEY = 'user-theme-preference';
-
 type Theme = 'light' | 'dark';
 
 export function useTheme() {
-  const themeCookie = useCookie<Theme>(THEME_COOKIE_KEY, {
+  const themeCookie = useCookie<Theme | null>(THEME_COOKIE_KEY, {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: 'lax',
     path: '/',
   });
 
-  const initialTheme: Theme = themeCookie.value === 'dark' ? 'dark' : 'light';
+  const currentTheme = useState<Theme>('app-theme', () => {
+    return themeCookie.value === 'dark' ? 'dark' : 'light';
+  });
 
-  const currentTheme = ref<Theme>(initialTheme);
+  // Roll forward expiry by creating a fresh useCookie instance
+  if (themeCookie.value) {
+    const currentValue = themeCookie.value;
+    // Force a new Set-Cookie by reassigning with fresh options
+    themeCookie.value = null;
+    nextTick(() => {
+      themeCookie.value = currentValue;
+    });
+  }
 
   useHead({
     htmlAttrs: {
@@ -24,7 +30,6 @@ export function useTheme() {
 
   watch(currentTheme, (newTheme) => {
     themeCookie.value = newTheme;
-
     if (import.meta.client) {
       document.documentElement.setAttribute('data-bs-theme', newTheme);
     }
@@ -34,8 +39,11 @@ export function useTheme() {
     currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   };
 
+  const nextTheme = computed(() => (currentTheme.value === 'light' ? 'dark' : 'light'));
+
   return {
     currentTheme,
     toggleTheme,
+    nextTheme,
   };
 }

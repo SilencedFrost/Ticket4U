@@ -52,12 +52,12 @@ function viewPassword() {
 </script>
 
 <template>
-  <div class="card bg-reactive-secondary p-3 form-width">
-    <h3 class="text-center text-reactive-primary">{{ $t('auth.login_title') }}:</h3>
+  <div class="form-width">
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}:</h3>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
-        <label for="email" class="form-label text-reactive-primary"
+        <label for="email" class="form-label text-reactive-primary user-select-none"
           >{{ $t('common.email') }}:</label
         >
         <input
@@ -74,7 +74,7 @@ function viewPassword() {
         <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
       </div>
       <div class="mb-2">
-        <label for="password" class="form-label text-reactive-primary"
+        <label for="password" class="form-label text-reactive-primary user-select-none"
           >{{ $t('auth.password') }}:</label
         >
         <div class="input-group">
@@ -107,7 +107,9 @@ function viewPassword() {
           type="checkbox"
           class="form-check-input"
         />
-        <label for="rememberMe" class="form-check-label">{{ $t('auth.remember_me') }}</label>
+        <label for="rememberMe" class="form-check-label text-reactive-primary user-select-none">{{
+          $t('auth.remember_me')
+        }}</label>
       </div>
       <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
       <div class="d-flex flex-column">
@@ -116,11 +118,12 @@ function viewPassword() {
           :disabled="loading"
           @click.prevent.stop="login()"
         >
-          {{ $t('auth.login_action._') }}
+          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
+          {{ $t('auth.login.action') }}
         </button>
         <button class="btn btn-reactive-gray">
           <i class="bi bi-google me-2" />
-          <span>{{ $t('auth.login_action.google') }}</span>
+          <span>{{ $t('auth.login.google') }}</span>
         </button>
       </div>
     </form>

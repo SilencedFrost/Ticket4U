@@ -64,8 +64,32 @@ const verticalImageCount = computed<number>(() =>
         </div>
       </template>
     </client-only>
-    <div class="d-flex flex-fill justify-content-center align-items-center">
-      <nuxt-page />
+    <div class="row g-0 p-0 flex-fill z-1">
+      <div class="col-lg-6 col-12">
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="d-lg-none d-block card p-3 bg-reactive-primary border">
+            <nuxt-page />
+          </div>
+          <div
+            class="justify-content-center align-items-center d-none d-lg-flex flex-fill h-100 flex-column"
+            style="
+              background: radial-gradient(
+                circle,
+                rgb(from var(--bg-reactive-primary) r g b / 0.7) 20%,
+                transparent 100%
+              );
+            "
+          >
+            <h1 class="text-reactive-primary fw-bold">{{ $t('brand.name') }}</h1>
+            {{ $t('brand.motto') }}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block border-start">
+        <div class="d-flex justify-content-center align-items-center h-100 bg-reactive-primary">
+          <nuxt-page />
+        </div>
+      </div>
     </div>
   </div>
 </template>

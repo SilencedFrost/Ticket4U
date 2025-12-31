@@ -16,7 +16,7 @@ const emit = defineEmits(['buyClick']);
         <div class="container-xxl pb-4">
             <div class="g-3 align-items-start hero-grid">
                 <div class="col-12 h-auto">
-                  <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark rounded-5 shadow-lg mx-auto overflow-hidden">
+                  <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark shadow-lg mx-auto overflow-hidden">
                       <div class="card-body p-4 d-flex flex-column order-2 order-md-1 col-12 col-md-3">
                            <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
                                 {{ eventData.title }}
@@ -40,6 +40,7 @@ const emit = defineEmits(['buyClick']);
                             </div>
                       </div>
                       <img :src="heroImage" class="order-1 order-md-2 col-12 col-md-9 object-fit-cover shadow-lg my-dashed-line" />
+                      
                   </div>
                 </div>
             </div>
@@ -62,5 +63,11 @@ const emit = defineEmits(['buyClick']);
     transparent 20px,
     transparent 40px
   ) 50;
+}
+
+@media (max-width: 768px) {
+  .my-dashed-line {
+    border-left: none;
+  }
 }
 </style>

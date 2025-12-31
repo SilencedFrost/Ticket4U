@@ -6,7 +6,7 @@
 </script>
 
 <template>
-    <div class="bg-reactive-primary border-bottom border-dark overflow-x-auto mx-4 sticky-top nav-sticky">
+    <div class="bg-reactive-primary border-bottom border-dark overflow-x-auto mx-4 z-2 nav-sticky">
       <div class="container-xxl">
         <div class="d-flex gap-3 gap-md-4 flex-wrap py-3 nav-tabs-wrapper">
           <button

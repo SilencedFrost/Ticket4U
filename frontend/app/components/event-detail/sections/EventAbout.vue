@@ -6,7 +6,7 @@ defineProps<{
 const expandAbout = ref(false);
 </script>
 <template>
-    <section id="about-section" class="p-3 p-md-4 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
+    <section id="about-section" class="p-3 p-md-4 card bg-reactive-secondary  m-3 mx-auto mw-100">
         <div class="container-xxl">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="text-reactive-primary fw-bold mb-0 h4">{{ $t('event-detail.about_event') }}</h3>

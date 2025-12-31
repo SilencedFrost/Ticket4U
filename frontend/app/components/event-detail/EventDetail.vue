@@ -67,7 +67,7 @@ const eventSchedule = [
 </script>
 
 <template>
-  <div class="bg-reactive-primary min-vh-100 overflow-x-hidden mw-100" >
+  <div class="h-auto bg-reactive-primary overflow-x-hidden mw-100" >
     <EventHero :eventData="eventData" :heroImage="imgTest2" />
     <EventNav />
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">

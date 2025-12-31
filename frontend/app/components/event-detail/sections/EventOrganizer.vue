@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-    <section id="organizer-section" class="p-3 p-md-4 card bg-reactive-secondary rounded-5 m-3 mx-auto mw-100">
+    <section id="organizer-section" class="p-3 p-md-4 card bg-reactive-secondary m-3 mx-auto mw-100">
         <div class="container-xxl organizer-card">
             <h3 class="text-reactive-primary fw-bold mb-4 h4">{{ $t('event-detail.organizer') }}</h3>
             <div class="border-dark rounded-3">

@@ -3,11 +3,11 @@ import NavBar from '~/components/navigation/NavBar.vue';
 </script>
 
 <template>
-  <div class="layout-container">
+  <div class="d-flex flex-column overflow-hidden">
     <header class="sticky-top z-3">
       <nav-bar />
     </header>
-    <div class="main-content">
+    <div class="overflow-auto">
       <main>
         <nuxt-page />
       </main>
@@ -15,18 +15,3 @@ import NavBar from '~/components/navigation/NavBar.vue';
     </div>
   </div>
 </template>
-
-<style scoped>
-.layout-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.main-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-</style>

@@ -16,7 +16,7 @@ const emit = defineEmits(['buyClick']);
         <div class="container-xxl pb-4">
             <div class="g-3 align-items-start hero-grid">
                 <div class="col-12 h-auto">
-                  <div class="card d-flex flex-column flex-md-row bg-reactive-secondary border-dark shadow-lg mx-auto overflow-hidden">
+                  <div class="card d-flex flex-column flex-md-row bg-reactive-secondary shadow-lg mx-auto overflow-hidden">
                       <div class="card-body p-4 d-flex flex-column order-2 order-md-1 col-12 col-md-3">
                            <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
                                 {{ eventData.title }}
@@ -36,7 +36,7 @@ const emit = defineEmits(['buyClick']);
                                 <hr class="bg-secondary my-2" />
                                 <p class="text-reactive-primary fw-semibold mb-1 text-xs">{{ $t('event-detail.price_from') }}</p>
                                 <p class="text-info fw-bold mb-2 fs-6">{{ eventData.startPrice }}</p>
-                                <button @click="emit('buyClick')" class="btn btn-info text-reactive-primary fw-bold w-100  py-1 small">{{ $t('event-detail.buy_tickets') }}</button>
+                                <button @click="emit('buyClick')" class="btn btn-info text-reactive-primary fw-bold w-100 py-1 small">{{ $t('event-detail.buy_tickets') }}</button>
                             </div>
                       </div>
                       <img :src="heroImage" class="order-1 order-md-2 col-12 col-md-9 object-fit-cover shadow-lg my-dashed-line" />

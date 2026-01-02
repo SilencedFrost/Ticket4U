@@ -7,10 +7,12 @@ import NavBar from '~/components/navigation/NavBar.vue';
     <header class="sticky-top z-3">
       <nav-bar />
     </header>
-    <main class="main-content">
-      <nuxt-page />
-    </main>
-    <footer>footer</footer>
+    <div class="main-content">
+      <main>
+        <nuxt-page />
+      </main>
+      <footer>footer</footer>
+    </div>
   </div>
 </template>
 

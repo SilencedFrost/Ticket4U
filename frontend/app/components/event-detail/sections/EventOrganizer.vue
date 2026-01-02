@@ -1,29 +1,29 @@
 <script setup lang="ts">
 defineProps<{
-  eventData: any,
-  organizerImage: string
+  eventData: any;
+  organizerImage: string;
 }>();
 </script>
 
 <template>
-    <section id="organizer-section" class="p-3 p-md-4 card bg-reactive-secondary m-3 mx-auto mw-100">
-        <div class="container-xxl organizer-card">
-            <h3 class="text-reactive-primary fw-bold mb-4 h4">{{ $t('event-detail.organizer') }}</h3>
-            <div class="border-dark rounded-3">
-                <div class="row g-4 align-items-start">
-                    <div class="col-md-4">
-                        <img
-                        :src="organizerImage"
-                        alt="Organizer"
-                        class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
-                        />
-                    </div>
-                    <div class="col-md-8">
-                        <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.organizer.name }}</h4>
-                        <p class="text-reactive-primary-50 lh-lg small">{{ eventData.organizer.description }}</p>
-                    </div>
-                </div>
-            </div>
+  <section id="organizer-section" class="p-3 p-md-4 card bg-reactive-secondary m-3 mx-auto mw-100">
+    <div class="container-xxl organizer-card">
+      <h3 class="text-reactive-primary fw-bold mb-4 h4">{{ $t('event-detail.organizer') }}</h3>
+      <div class="row g-4 align-items-start">
+        <div class="col-md-4">
+          <img
+            :src="organizerImage"
+            alt="Organizer"
+            class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
+          />
         </div>
-    </section>
+        <div class="col-md-8">
+          <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.organizer.name }}</h4>
+          <p class="text-reactive-primary-50 lh-lg small">
+            {{ eventData.organizer.description }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>

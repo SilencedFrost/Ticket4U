@@ -19,23 +19,23 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          quietDeps: true
-        }
-      }
-    }
+          quietDeps: true,
+        },
+      },
+    },
   },
 
   runtimeConfig: {
     public: {
-      authUrl: process.env.NUXT_PUBLIC_AUTH_URL || 'https://localhost:8080/api/v1/auth'
-    }
+      authUrl: process.env.NUXT_PUBLIC_AUTH_URL || 'https://localhost:8080/api/v1/auth',
+    },
   },
 
   devServer: {
     https: {
       key: './keys/localhost+2-key.pem',
-      cert: './keys/localhost+2.pem'
-    }
+      cert: './keys/localhost+2.pem',
+    },
   },
 
   css: [

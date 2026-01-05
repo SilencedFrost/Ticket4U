@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '../types'
+import type { Event } from '~/types/home'
 import EventCarousel from './EventCarousel.vue'
 import EventCard from './EventCard.vue'
 

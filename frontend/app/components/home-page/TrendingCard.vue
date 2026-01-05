@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TrendBadgeOne, TrendBadgeTwo, TrendBadgeThree } from '~/components/icons'
-import type { TrendingEvent } from '../types'
+import type { TrendingEvent } from '~/types/home'
 
 interface Props {
   event: TrendingEvent

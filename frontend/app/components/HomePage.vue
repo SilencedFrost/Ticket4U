@@ -71,12 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import FeaturedCarousel from '~/features/home/components/FeaturedCarousel.vue'
-import EventCarousel from '~/features/home/components/EventCarousel.vue'
-import SpecialEventCard from '~/features/home/components/SpecialEventCard.vue'
-import TrendingCard from '~/features/home/components/TrendingCard.vue'
-import EventSection from '~/features/home/components/EventSection.vue'
-import PlaceCard from '~/features/home/components/PlaceCard.vue'
+import FeaturedCarousel from './home-page/FeaturedCarousel.vue'
+import EventCarousel from './home-page/EventCarousel.vue'
+import SpecialEventCard from './home-page/SpecialEventCard.vue'
+import TrendingCard from './home-page/TrendingCard.vue'
+import EventSection from './home-page/EventSection.vue'
+import PlaceCard from './home-page/PlaceCard.vue'
 
 import {
   featuredEvents,
@@ -85,7 +85,7 @@ import {
   suggestedEvents,
   musicEvents,
   places,
-} from '~/features/home/data/events'
+} from '~/data/events'
 </script>
 
 <style scoped>

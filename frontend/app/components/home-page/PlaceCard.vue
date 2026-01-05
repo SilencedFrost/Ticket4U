@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Place } from '../types'
+import type { Place } from '~/types/home'
 
 interface Props {
   place: Place

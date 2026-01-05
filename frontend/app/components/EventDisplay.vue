@@ -51,13 +51,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import DateRangeFilter from '~/features/event-display/components/DateRangeFilter.vue'
-import MainFilter from '~/features/event-display/components/MainFilter.vue'
-import EventGrid from '~/features/event-display/components/EventGrid.vue'
-import { useDateRange } from '~/features/event-display/composables/useDateRange'
-import { useEventFilter } from '~/features/event-display/composables/useEventFilter'
-import { locations, categories, datePresets } from '~/features/event-display/data/filters'
-import type { Event } from '~/features/home/types'
+import DateRangeFilter from './event-display/DateRangeFilter.vue'
+import MainFilter from './event-display/MainFilter.vue'
+import EventGrid from './event-display/EventGrid.vue'
+import { useDateRange } from '~/composables/useDateRange'
+import { useEventFilter } from '~/composables/useEventFilter'
+import { locations, categories, datePresets } from '~/data/filters'
+import type { Event } from '~/types/home'
 
 interface Props {
   events?: Event[]

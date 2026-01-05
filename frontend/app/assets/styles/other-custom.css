@@ -99,8 +99,6 @@ img {
 .menu-item-right {
   text-align: right;
   border-right: 3px solid transparent;
-  border-right: 3px solid transparent;
-
   > i.bi {
     margin-left: 0.5rem;
   }

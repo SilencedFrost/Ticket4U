@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LocationOption, CategoryOption } from '../types'
+import type { LocationOption, CategoryOption } from '~/types/event-display'
 
 interface Props {
   show: boolean

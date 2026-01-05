@@ -1,4 +1,4 @@
-import type { LocationOption, CategoryOption, DatePreset } from '../types'
+import type { LocationOption, CategoryOption, DatePreset } from '../types/event-display'
 
 export const locations: LocationOption[] = [
   { label: 'Toàn quốc', value: '' },

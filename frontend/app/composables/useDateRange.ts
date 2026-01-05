@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import type { Event } from '../types'
+import type { Event } from '../types/event-display'
 
 export function useDateRange() {
   const startDate = ref<string>('')

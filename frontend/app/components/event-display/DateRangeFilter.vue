@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DatePreset } from '../types'
+import type { DatePreset } from '~/types/event-display'
 
 interface Props {
   show: boolean

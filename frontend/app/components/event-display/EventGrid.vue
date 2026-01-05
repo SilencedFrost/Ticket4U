@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '../types'
+import type { Event } from '~/types/event-display'
 
 interface Props {
   events: Event[]

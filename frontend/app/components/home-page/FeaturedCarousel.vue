@@ -1,22 +1,33 @@
 <template>
   <section 
-    class="position-relative"
+    class="mb-5 position-relative"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove"
     @touchend="handleTouchEnd"
   >
     <div class="row g-3">
       <div
-        v-for="item in visibleItems"
-        :key="item.id"
-        :class="colClass"
+        v-for="(event, idx) in visibleSlides"
+        :key="event.id"
+        :class="isMobile ? 'col-12' : 'col-md-6'"
       >
-        <slot :item="item" />
+        <div class="event-card-large position-relative rounded-4 overflow-hidden">
+          <img
+            :src="event.imageUrl"
+            :alt="event.title"
+            class="w-100 h-100 object-fit-cover"
+          />
+          <button
+            class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2"
+          >
+            Xem chi tiết
+          </button>
+        </div>
       </div>
     </div>
 
     <button
-      v-if="canGoPrev && !isMobile"
+      v-if="totalSlides > 1 && !isMobile"
       class="carousel-nav-btn prev"
       @click="goPrev"
       aria-label="Previous"
@@ -25,7 +36,7 @@
     </button>
 
     <button
-      v-if="canGoNext && !isMobile"
+      v-if="totalSlides > 1 && !isMobile"
       class="carousel-nav-btn next"
       @click="goNext"
       aria-label="Next"
@@ -33,54 +44,45 @@
       &gt;
     </button>
 
-    <div
-      v-if="showDots"
-      class="carousel-indicators-dots"
-    >
+    <div v-if="totalSlides > 1" class="carousel-indicators-dots">
       <button
-        v-for="(_, index) in totalPages"
+        v-for="(_, index) in totalSlides"
         :key="index"
         class="dot"
-        :class="{ active: currentIndex === index }"
-        @click="goToPage(index)"
-        :aria-label="`Go to page ${index + 1}`"
+        :class="{ active: currentSlide === index }"
+        @click="goToSlide(index)"
+        :aria-label="`Go to slide ${index + 1}`"
       />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useCarousel } from '../composables/useCarousel'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import type { Event } from '~/types/home'
 
 interface Props {
-  items: any[]
-  itemsPerPage?: number
-  colClass?: string
-  showDots?: boolean
+  events: Event[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  itemsPerPage: 4,
-  colClass: 'col-lg-3 col-md-4 col-sm-6',
-  showDots: false,
-})
-
+const props = defineProps<Props>()
+const currentSlide = ref(0)
 const isMobile = ref(false)
+
 const touchStartX = ref(0)
 const touchEndX = ref(0)
 const minSwipeDistance = 50
 
-const {
-  currentIndex,
-  totalPages,
-  canGoPrev,
-  canGoNext,
-  visibleItems,
-  goNext,
-  goPrev,
-  goToPage,
-} = useCarousel(props.items, props.itemsPerPage)
+const itemsPerSlide = computed(() => isMobile.value ? 1 : 2)
+
+const totalSlides = computed(() =>
+  Math.ceil(props.events.length / itemsPerSlide.value)
+)
+
+const visibleSlides = computed(() => {
+  const start = currentSlide.value * itemsPerSlide.value
+  return props.events.slice(start, start + itemsPerSlide.value)
+})
 
 const updateViewport = () => {
   if (typeof window !== 'undefined') {
@@ -105,11 +107,29 @@ const handleTouchEnd = () => {
   const isLeftSwipe = distance > minSwipeDistance
   const isRightSwipe = distance < -minSwipeDistance
 
-  if (isLeftSwipe && canGoNext.value) {
+  if (isLeftSwipe) {
     goNext()
-  } else if (isRightSwipe && canGoPrev.value) {
+  } else if (isRightSwipe) {
     goPrev()
   }
+}
+
+const goPrev = () => {
+  currentSlide.value =
+    currentSlide.value === 0
+      ? totalSlides.value - 1
+      : currentSlide.value - 1
+}
+
+const goNext = () => {
+  currentSlide.value =
+    currentSlide.value === totalSlides.value - 1
+      ? 0
+      : currentSlide.value + 1
+}
+
+const goToSlide = (index: number) => {
+  currentSlide.value = index
 }
 
 onMounted(() => {
@@ -127,6 +147,17 @@ onUnmounted(() => {
 <style scoped>
 section {
   position: relative;
+}
+
+.event-card-large {
+  width: 100%;
+  aspect-ratio: 807 / 460;
+}
+
+@media (max-width: 767.98px) {
+  .event-card-large {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .carousel-nav-btn {
@@ -160,7 +191,7 @@ section {
 
 .carousel-indicators-dots {
   position: absolute;
-  bottom: 15px;
+  bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -172,7 +203,7 @@ section {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--bg-reactive-gray);
   cursor: pointer;
   transition: background-color 0.3s;
   border: none;
@@ -180,10 +211,10 @@ section {
 }
 
 .carousel-indicators-dots .dot:hover {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--bg-reactive-gray-hover);
 }
 
 .carousel-indicators-dots .dot.active {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: #07B3DF;
 }
 </style>

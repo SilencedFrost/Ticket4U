@@ -57,7 +57,8 @@
     "label": {
       "price_from": "From",
       "available": "available",
-      "organizer": "Organizer"
+      "organizer": "Organizer",
+      "sold_out": "Sold Out"
     },
     "section": {
       "schedule": "Event Schedule",

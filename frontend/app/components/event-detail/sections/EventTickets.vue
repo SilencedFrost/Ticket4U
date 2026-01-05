@@ -73,11 +73,19 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                 >
                   <div class="flex-grow-1">
                     <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2">{{ seat.name }}</h6>
-                    <p class="text-reactive-primary-50 mb-0 small">
+                    <div
+                      v-if="seat.available === 0"
+                      class="badge rounded-pill bg-danger-subtle text-danger fw-bold px-3 py-2"
+                    >
+                      {{ $t('event_detail.label.sold_out') }}
+                    </div>
+                    <p v-else class="text-reactive-primary-50 mb-0 small">
                       {{ seat.available }} {{ $t('event_detail.label.available') }}
                     </p>
                   </div>
-                  <div class="d-flex align-items-center gap-2 text-start text-md-end">
+                  <div
+                    class="d-flex align-items-center gap-2 gap-md-3 text-start text-md-end flex-wrap justify-content-end"
+                  >
                     <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }}</p>
                     <button
                       v-if="
@@ -104,30 +112,35 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                     expandedSeatDetails[`${schedule.id}-${seat.name}`] &&
                     (seat.description || seat.image || (seat.benefits && seat.benefits.length > 0))
                   "
-                  class="mt-2 mt-md-3 pt-2 pt-md-3 border-top row"
+                  class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
-                  <p v-if="seat.description" class="text-reactive-primary-50 mb-2 col-12">
+                  <p v-if="seat.description" class="text-reactive-primary-50 mb-3 small">
                     {{ seat.description }}
                   </p>
-                  <div v-if="seat.image" class="mb-3 col-4">
-                    <img
-                      :src="seat.image"
-                      class="img-fluid rounded object-fit-cover w-100"
-                      style="max-height: 150px"
-                      alt="Ticket thumbnail"
-                    />
-                  </div>
-                  <div v-if="seat.benefits && seat.benefits.length > 0" class="col-6">
-                    <ul class="list-unstyled mb-0">
-                      <li
-                        v-for="(benefit, index) in seat.benefits"
-                        :key="index"
-                        class="text-reactive-primary-50 small mb-1"
-                      >
-                        <i class="bi bi-check-circle-fill text-success me-1" />
-                        {{ benefit }}
-                      </li>
-                    </ul>
+                  <div class="row g-3">
+                    <div v-if="seat.image" class="col-12 col-md-4">
+                      <img
+                        :src="seat.image"
+                        class="img-fluid rounded object-fit-cover w-100"
+                        style="max-height: 150px"
+                        alt="Ticket thumbnail"
+                      />
+                    </div>
+                    <div
+                      v-if="seat.benefits && seat.benefits.length > 0"
+                      :class="seat.image ? 'col-12 col-md-8' : 'col-12'"
+                    >
+                      <ul class="list-unstyled mb-0">
+                        <li
+                          v-for="(benefit, index) in seat.benefits"
+                          :key="index"
+                          class="text-reactive-primary-50 small mb-1"
+                        >
+                          <i class="bi bi-check-circle-fill text-success me-1" />
+                          {{ benefit }}
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>

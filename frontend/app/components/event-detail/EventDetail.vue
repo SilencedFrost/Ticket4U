@@ -7,7 +7,7 @@ import EventOrganizer from './sections/EventOrganizer.vue';
 import EventNav from './sections/EventNav.vue';
 import EventRelated from './sections/EventRelated.vue';
 import EventAds from './sections/EventAds.vue';
-import type { Showtime } from '@/types/event-detail';
+import type { Showtime, EventDetail } from '@/types/event-detail';
 
 const imgTest2 = 'https://salt.tkbcdn.com/ts/ds/00/6c/a8/6f638ec63c1be2aa163fdda0d3e07106.jpg';
 const imgEventThumb =
@@ -26,7 +26,7 @@ const imgEvent4 =
 const imgSidebar =
   'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fsalt.tkbcdn.com%2Fts%2Fds%2Fab%2Fdf%2F5c%2F6da51dd7722a871f5cf65ca2f0e3e08e.jpg&w=3840&q=75';
 
-const eventData = {
+const eventData: EventDetail = {
   title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
   date: '2025-02-20',
   time: '20:00 - 22:30',
@@ -91,7 +91,7 @@ const showtimes: Showtime[] = [
       {
         name: 'Vé Tiết Kiệm',
         price: '300.000 đ',
-        available: 10,
+        available: 0,
         description: 'Vé ngồi khu vực cánh gà, tầm nhìn bao quát.',
         image: 'https://salt.tkbcdn.com/ts/ds/c8/14/ee/4e882acd2e9f1d8a4e03380751f772ba.jpg',
         benefits: [

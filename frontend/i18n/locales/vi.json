@@ -57,7 +57,8 @@
     "label": {
       "price_from": "Giá từ",
       "available": "còn lại",
-      "organizer": "Ban tổ chức"
+      "organizer": "Ban tổ chức",
+      "sold_out": "Hết vé"
     },
     "section": {
       "schedule": "Lịch trình sự kiện",

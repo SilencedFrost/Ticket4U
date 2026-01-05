@@ -32,7 +32,15 @@
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
-    "tickets": "Tickets"
+    "tickets": "Tickets",
+    "see": {
+      "more": "See More",
+      "less": "See Less"
+    },
+    "action": {
+      "buy": "Buy Tickets Now",
+      "view": "View"
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -45,19 +53,17 @@
     "light": "Light mode",
     "dark": "Dark mode"
   },
-  "event-detail": {
-    "price_from": "From",
-    "buy_tickets": "Buy Tickets Now",
-    "schedule_event": "Event Schedule",
-    "about_event": "About the event",
-    "information_tickets": "Ticket Information",
-    "seat_left": "available",
-    "organizer": "Organizer",
-    "maybe_you_like": "You May Also Like",
-    "view_more_events": "View More Events",
-    "schedule_location": "Event Schedule & Location",
-    "watch_location": "Watch Location",
-    "see_more": "See More",
-    "see_less": "See Less"
+  "event_detail": {
+    "label": {
+      "price_from": "From",
+      "available": "available",
+      "organizer": "Organizer"
+    },
+    "section": {
+      "schedule": "Event Schedule",
+      "about": "About the event",
+      "ticket_info": "Ticket Information",
+      "related": "You May Also Like"
+    }
   }
 }

@@ -13,25 +13,25 @@ const scrollToSection = (id: string) => {
           class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           @click="scrollToSection('schedule-section')"
         >
-          {{ $t('event-detail.schedule_event') }}
+          {{ $t('event_detail.section.schedule') }}
         </button>
         <button
           class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           @click="scrollToSection('about-section')"
         >
-          {{ $t('event-detail.about_event') }}
+          {{ $t('event_detail.section.about') }}
         </button>
         <button
           class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           @click="scrollToSection('tickets-section')"
         >
-          {{ $t('event-detail.information_tickets') }}
+          {{ $t('event_detail.section.ticket_info') }}
         </button>
         <button
           class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small"
           @click="scrollToSection('organizer-section')"
         >
-          {{ $t('event-detail.organizer') }}
+          {{ $t('event_detail.label.organizer') }}
         </button>
       </div>
     </div>

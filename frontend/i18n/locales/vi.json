@@ -32,7 +32,15 @@
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
-    "tickets": "Vé"
+    "tickets": "Vé",
+    "see": {
+      "more": "Xem thêm",
+      "less": "Ẩn bớt"
+    },
+    "action": {
+      "buy": "Mua vé ngay",
+      "view": "Xem"
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -45,19 +53,17 @@
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
   },
-  "event-detail": {
-    "price_from": "Giá từ",
-    "buy_tickets": "Mua vé ngay",
-    "schedule_event": "Lịch trình sự kiện",
-    "about_event": "Về sự kiện",
-    "seat_left": "ghế trống",
-    "information_tickets": "Thông tin vé",
-    "organizer": "Ban tổ chức",
-    "maybe_you_like": "Bạn có thể thích",
-    "view_more_events": "Xem thêm sự kiện",
-    "schedule_location": "Lịch trình & sơ đồ chỗ ngồi",
-    "watch_location": "Xem sơ đồ",
-    "see_more": "Xem thêm",
-    "see_less": "Ẩn bớt"
+  "event_detail": {
+    "label": {
+      "price_from": "Giá từ",
+      "available": "còn lại",
+      "organizer": "Ban tổ chức"
+    },
+    "section": {
+      "schedule": "Lịch trình sự kiện",
+      "about": "Về sự kiện",
+      "ticket_info": "Thông tin vé",
+      "related": "Bạn có thể thích"
+    }
   }
 }

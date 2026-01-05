@@ -15,9 +15,9 @@ const toggleTicketDate = (scheduleId: string) => {
 
 <template>
   <section id="tickets-section" class="card bg-reactive-secondary m-3 mx-auto mw-100">
-    <div class="p-3 p-md-4">
+    <div class="p-3 p-md-4 mx-3">
       <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 h4">
-        {{ $t('event-detail.information_tickets') }}
+        {{ $t('event_detail.section.ticket_info') }}
       </h3>
 
       <div v-for="(schedule, dateIdx) in showTime" :key="dateIdx" class="mb-3">
@@ -39,7 +39,7 @@ const toggleTicketDate = (scheduleId: string) => {
               class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto"
             >
               <button class="btn btn-primary fw-bold" @click="emit('buyClick')">
-                {{ $t('event-detail.buy_tickets') }}
+                {{ $t('common.action.buy') }}
               </button>
               <i
                 class="bi fs-4 text-reactive-primary flex-shrink-0"
@@ -51,7 +51,7 @@ const toggleTicketDate = (scheduleId: string) => {
 
         <div v-if="expandedTickets[schedule.id]" class="mt-3">
           <h5 class="text-reactive-primary fw-bold mb-3 ms-2 small">
-            {{ $t('event-detail.information_tickets') }}
+            {{ $t('event_detail.section.ticket_info') }}
           </h5>
 
           <div class="d-flex flex-column gap-2 gap-md-3">
@@ -67,7 +67,7 @@ const toggleTicketDate = (scheduleId: string) => {
                   <div class="flex-grow-1">
                     <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2">{{ seat.name }}</h6>
                     <p class="text-reactive-primary-50 mb-0 small">
-                      {{ seat.available }} {{ $t('event-detail.seat_left') }}
+                      {{ seat.available }} {{ $t('event_detail.label.available') }}
                     </p>
                   </div>
                   <div class="text-start text-md-end">

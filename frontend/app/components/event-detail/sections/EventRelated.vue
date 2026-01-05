@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { RelatedEvent } from '@/types/event-detail';
 defineProps<{
-  eventData: any;
+  eventData: RelatedEvent[];
 }>();
 </script>
 
@@ -12,7 +13,7 @@ defineProps<{
       </h2>
 
       <div class="row g-3 mb-5 d-flex">
-        <div v-for="event in eventData.relatedEvents" :key="event.id" class="col-6 col-lg-3">
+        <div v-for="event in eventData" :key="event.id" class="col-6 col-lg-3">
           <div class="card h-100 overflow-hidden">
             <img :src="event.image" alt="Event" class="card-img-top object-fit-cover h-auto" />
             <div class="d-flex flex-column p-3">

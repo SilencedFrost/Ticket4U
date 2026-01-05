@@ -64,7 +64,7 @@ const eventData = {
   ],
 };
 
-const eventSchedule = [
+const showtimes = [
   {
     date: '2025-02-20',
     time: '20:00 - 22:30',
@@ -81,21 +81,31 @@ const eventSchedule = [
 
 <template>
   <div class="h-auto bg-reactive-primary overflow-x-hidden mw-100">
-    <event-hero :event-data="eventData" :hero-image="imgTest2" />
+    <event-hero
+      :title="eventData.title"
+      :date="eventData.date"
+      :time="eventData.time"
+      :venue="eventData.venue"
+      :address="eventData.address"
+      :start-price="eventData.startPrice"
+      :hero-image="imgTest2"
+    />
     <event-nav />
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
       <div class="col-lg-9">
-        <event-schedule :event-data="eventData" :event-thumb-image="imgEventThumb" />
-        <event-about :event-data="eventData" :about-image="imgAbout" />
-        <event-tickets
-          :event-data="eventData"
-          :event-schedule="eventSchedule"
-          :hero-image="imgTest2"
+        <event-schedule
+          :title="eventData.title"
+          :address="eventData.address"
+          :date="eventData.date"
+          :time="eventData.time"
+          :event-thumb-image="imgEventThumb"
         />
-        <event-organizer :event-data="eventData" :organizer-image="imgOrganizerLogo" />
+        <event-about :event-data="eventData" :about-image="imgAbout" />
+        <event-tickets :show-time="showtimes" />
+        <event-organizer :event-data="eventData.organizer" :organizer-image="imgOrganizerLogo" />
       </div>
       <event-ads :side-bar-image="imgSidebar" />
     </div>
-    <event-related :event-data="eventData" />
+    <event-related :event-data="eventData.relatedEvents" />
   </div>
 </template>

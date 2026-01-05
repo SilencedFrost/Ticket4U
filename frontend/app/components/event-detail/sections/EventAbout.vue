@@ -1,6 +1,5 @@
 <script setup lang="ts">
 defineProps<{
-  eventData: any;
   aboutImage: string;
 }>();
 const expandAbout = ref(false);
@@ -35,7 +34,10 @@ const expandAbout = ref(false);
           </p>
         </div>
       </div>
-      <button class="btn btn-outline-primary fw-bold mx-auto" @click="expandAbout = !expandAbout">
+      <button
+        class="btn btn-outline-primary fw-bold mx-auto d-block"
+        @click="expandAbout = !expandAbout"
+      >
         {{ expandAbout ? $t('event-detail.see_less') : $t('event-detail.see_more') }}
       </button>
     </div>

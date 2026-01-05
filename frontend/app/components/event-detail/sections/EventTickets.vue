@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import type { Showtime } from '@/types/event-detail';
 defineProps<{
-  eventData: any;
-  eventSchedule: any;
-  heroImage: string;
+  showTime: Showtime[];
 }>();
 
 const emit = defineEmits(['buyClick']);
@@ -21,8 +20,8 @@ const toggleTicketDate = (scheduleId: string) => {
         {{ $t('event-detail.information_tickets') }}
       </h3>
 
-      <div v-for="(schedule, dateIdx) in eventSchedule" :key="dateIdx" class="mb-3">
-        <div class="card mb-3">
+      <div v-for="(schedule, dateIdx) in showTime" :key="dateIdx" class="mb-3">
+        <div class="bg-reactive-primary rounded mb-3">
           <button
             class="btn w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-0 bg-transparent gap-3"
             type="button"
@@ -59,7 +58,7 @@ const toggleTicketDate = (scheduleId: string) => {
             <div
               v-for="(seat, seatIdx) in schedule.seatTypes"
               :key="seatIdx"
-              class="card overflow-hidden"
+              class="bg-reactive-primary rounded overflow-hidden"
             >
               <div class="card-body p-3 p-md-4">
                 <div
@@ -74,12 +73,6 @@ const toggleTicketDate = (scheduleId: string) => {
                   <div class="text-start text-md-end">
                     <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }} đ</p>
                   </div>
-                </div>
-                <div
-                  v-if="seat.name === 'SVIP'"
-                  class="mt-2 mt-md-3 pt-2 pt-md-3 border-top border-secondary"
-                >
-                  <p class="text-reactive-primary-50 mb-0 small">{{ eventData.svipBenefits }}</p>
                 </div>
               </div>
             </div>

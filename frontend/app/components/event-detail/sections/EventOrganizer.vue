@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { Organizer } from '@/types/event-detail';
 defineProps<{
-  eventData: any;
+  eventData: Organizer;
   organizerImage: string;
 }>();
 </script>
@@ -18,9 +19,9 @@ defineProps<{
           />
         </div>
         <div class="col-md-8">
-          <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.organizer.name }}</h4>
+          <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.name }}</h4>
           <p class="text-reactive-primary-50 lh-lg small">
-            {{ eventData.organizer.description }}
+            {{ eventData.description }}
           </p>
         </div>
       </div>

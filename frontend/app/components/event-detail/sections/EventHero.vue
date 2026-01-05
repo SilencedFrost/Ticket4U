@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import type { LocalizedContent } from '@/types/event-detail';
 defineProps<{
-  eventData: any;
+  title: string;
+  time: string;
+  date: string;
+  venue: LocalizedContent;
+  address: LocalizedContent;
+  startPrice: string;
   heroImage: string;
 }>();
 
@@ -19,26 +25,26 @@ const emit = defineEmits(['buyClick']);
             <div class="card d-flex flex-column flex-md-row shadow-lg mx-auto overflow-hidden">
               <div class="card-body p-4 d-flex flex-column order-2 order-md-1 col-12 col-md-3">
                 <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
-                  {{ eventData.title }}
+                  {{ title }}
                 </h5>
                 <div class="mb-2 small">
                   <i class="bi bi-calendar-event text-reactive-primary me-1" />
                   <span class="text-primary fw-semibold"
-                    >{{ eventData.time }},
-                    {{ $d(new Date(eventData.date), 'short') }}
+                    >{{ time }},
+                    {{ $d(new Date(date), 'short') }}
                   </span>
                 </div>
                 <div class="mb-2 text-reactive-secondary small">
                   <i class="bi bi-geo-alt-fill text-primary me-1" />
-                  <span class="text-primary fw-semibold">{{ eventData.venue[$i18n.locale] }}</span>
-                  <p class="mb-0 small">{{ eventData.address[$i18n.locale] }}</p>
+                  <span class="text-primary fw-semibold">{{ venue[$i18n.locale] }}</span>
+                  <p class="mb-0 small">{{ address[$i18n.locale] }}</p>
                 </div>
                 <div class="mt-auto">
                   <hr class="bg-reactive-secondary my-2" />
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
                     {{ $t('event-detail.price_from') }}
                   </p>
-                  <p class="text-primary fw-bold mb-2 fs-6">{{ eventData.startPrice }}</p>
+                  <p class="text-primary fw-bold mb-2 fs-3">{{ startPrice }}</p>
                   <button
                     class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"
                     @click="emit('buyClick')"

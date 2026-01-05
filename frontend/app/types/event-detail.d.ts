@@ -20,6 +20,9 @@ interface SeatType {
   name: string;
   price: string;
   available: number;
+  description?: string;
+  image?: string;
+  benefits?: string[];
 }
 
 interface Showtime {

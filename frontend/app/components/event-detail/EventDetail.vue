@@ -7,6 +7,7 @@ import EventOrganizer from './sections/EventOrganizer.vue';
 import EventNav from './sections/EventNav.vue';
 import EventRelated from './sections/EventRelated.vue';
 import EventAds from './sections/EventAds.vue';
+import type { Showtime } from '@/types/event-detail';
 
 const imgTest2 = 'https://salt.tkbcdn.com/ts/ds/00/6c/a8/6f638ec63c1be2aa163fdda0d3e07106.jpg';
 const imgEventThumb =
@@ -64,16 +65,41 @@ const eventData = {
   ],
 };
 
-const showtimes = [
+const showtimes: Showtime[] = [
   {
+    id: 'collapseDate1',
     date: '2025-02-20',
     time: '20:00 - 22:30',
-    id: 'collapseDate1',
     seatTypes: [
-      { name: 'SVIP', price: '3.000.000', available: 100 },
-      { name: 'VIP', price: '2.000.000', available: 150 },
-      { name: 'A', price: '1.500.000', available: 200 },
-      { name: 'B', price: '1.000.000', available: 300 },
+      {
+        name: 'SVIP - Dừa Lòng',
+        price: '3.000.000 đ',
+        available: 100,
+        image: 'https://salt.tkbcdn.com/ts/ds/c8/14/ee/4e882acd2e9f1d8a4e03380751f772ba.jpg',
+        benefits: [
+          'Check-in lối đi riêng',
+          'Tặng bộ quà tặng Exclusive',
+          'Phục vụ đồ uống tại chỗ',
+        ],
+      },
+      {
+        name: 'Vé Phổ Thông (Zone B)',
+        price: '500.000 đ',
+        available: 300,
+        description: 'Vé ngồi khu vực cánh gà, tầm nhìn bao quát.',
+      },
+      {
+        name: 'Vé Tiết Kiệm',
+        price: '300.000 đ',
+        available: 10,
+        description: 'Vé ngồi khu vực cánh gà, tầm nhìn bao quát.',
+        image: 'https://salt.tkbcdn.com/ts/ds/c8/14/ee/4e882acd2e9f1d8a4e03380751f772ba.jpg',
+        benefits: [
+          'Check-in lối đi riêng',
+          'Tặng bộ quà tặng Exclusive',
+          'Phục vụ đồ uống tại chỗ',
+        ],
+      },
     ],
   },
 ];

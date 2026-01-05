@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Showtime } from '@/types/event-detail';
+
 defineProps<{
   showTime: Showtime[];
 }>();
@@ -7,9 +8,15 @@ defineProps<{
 const emit = defineEmits(['buyClick']);
 
 const expandedTickets = ref<{ [key: string]: boolean }>({});
+const expandedSeatDetails = ref<{ [key: string]: boolean }>({});
 
 const toggleTicketDate = (scheduleId: string) => {
   expandedTickets.value[scheduleId] = !expandedTickets.value[scheduleId];
+};
+
+const toggleSeatDetail = (scheduleId: string, seatName: string) => {
+  const key = `${scheduleId}-${seatName}`;
+  expandedSeatDetails.value[key] = !expandedSeatDetails.value[key];
 };
 </script>
 
@@ -38,11 +45,11 @@ const toggleTicketDate = (scheduleId: string) => {
             <div
               class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto"
             >
-              <button class="btn btn-primary fw-bold" @click="emit('buyClick')">
+              <button class="btn btn-primary fw-bold" @click.stop="emit('buyClick')">
                 {{ $t('common.action.buy') }}
               </button>
               <i
-                class="bi fs-4 text-reactive-primary flex-shrink-0"
+                class="bi btn-link fs-4 text-reactive-primary flex-shrink-0"
                 :class="expandedTickets[schedule.id] ? 'bi-chevron-up' : 'bi-chevron-down'"
               />
             </div>
@@ -70,8 +77,57 @@ const toggleTicketDate = (scheduleId: string) => {
                       {{ seat.available }} {{ $t('event_detail.label.available') }}
                     </p>
                   </div>
-                  <div class="text-start text-md-end">
-                    <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }} đ</p>
+                  <div class="d-flex align-items-center gap-2 text-start text-md-end">
+                    <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }}</p>
+                    <button
+                      v-if="
+                        seat.description ||
+                        seat.image ||
+                        (seat.benefits && seat.benefits.length > 0)
+                      "
+                      class="btn btn-link text-reactive-primary p-0"
+                      @click="toggleSeatDetail(schedule.id, seat.name)"
+                    >
+                      <i
+                        class="bi fs-5"
+                        :class="
+                          expandedSeatDetails[`${schedule.id}-${seat.name}`]
+                            ? 'bi-chevron-up'
+                            : 'bi-chevron-down'
+                        "
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  v-if="
+                    expandedSeatDetails[`${schedule.id}-${seat.name}`] &&
+                    (seat.description || seat.image || (seat.benefits && seat.benefits.length > 0))
+                  "
+                  class="mt-2 mt-md-3 pt-2 pt-md-3 border-top row"
+                >
+                  <p v-if="seat.description" class="text-reactive-primary-50 mb-2 col-12">
+                    {{ seat.description }}
+                  </p>
+                  <div v-if="seat.image" class="mb-3 col-4">
+                    <img
+                      :src="seat.image"
+                      class="img-fluid rounded object-fit-cover w-100"
+                      style="max-height: 150px"
+                      alt="Ticket thumbnail"
+                    />
+                  </div>
+                  <div v-if="seat.benefits && seat.benefits.length > 0" class="col-6">
+                    <ul class="list-unstyled mb-0">
+                      <li
+                        v-for="(benefit, index) in seat.benefits"
+                        :key="index"
+                        class="text-reactive-primary-50 small mb-1"
+                      >
+                        <i class="bi bi-check-circle-fill text-success me-1" />
+                        {{ benefit }}
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>

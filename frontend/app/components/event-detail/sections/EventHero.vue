@@ -6,7 +6,7 @@ defineProps<{
   date: string;
   venue: LocalizedContent;
   address: LocalizedContent;
-  startPrice: string;
+  minPrice: string;
   heroImage: string;
 }>();
 
@@ -22,8 +22,8 @@ const emit = defineEmits(['buyClick']);
       <div class="container-xxl pb-4">
         <div class="g-3 align-items-start hero-grid">
           <div class="col-12 h-auto">
-            <div class="card d-flex flex-column flex-md-row shadow-lg mx-auto overflow-hidden">
-              <div class="card-body p-4 d-flex flex-column order-2 order-md-1 col-12 col-md-3">
+            <div class="card d-flex flex-column flex-lg-row shadow-lg mx-auto overflow-hidden">
+              <div class="card-body p-4 d-flex flex-column order-2 order-lg-1 col-12 col-lg-3">
                 <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
                   {{ title }}
                 </h5>
@@ -44,7 +44,7 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
                     {{ $t('event_detail.label.price_from') }}
                   </p>
-                  <p class="text-primary fw-bold mb-2 fs-3">{{ startPrice }}</p>
+                  <p class="text-primary fw-bold mb-2 fs-3">{{ minPrice }}</p>
                   <button
                     class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"
                     @click="emit('buyClick')"
@@ -55,7 +55,7 @@ const emit = defineEmits(['buyClick']);
               </div>
               <img
                 :src="heroImage"
-                class="order-1 order-md-2 col-12 col-md-9 object-fit-cover shadow-lg my-dashed-line"
+                class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
               />
             </div>
           </div>
@@ -82,7 +82,7 @@ const emit = defineEmits(['buyClick']);
     50;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .my-dashed-line {
     border-left: none;
   }

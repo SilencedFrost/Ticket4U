@@ -38,14 +38,19 @@ const eventData: EventDetail = {
     vi: '40 Hàng Bài, Phường Cửa Nam, Quận Hoàn Kiếm, Thành Phố Hà Nội',
     en: '40 Hang Bai St, Cua Nam Ward, Hoan Kiem Dist, Hanoi City',
   },
-  startPrice: '1.550.000 đ',
-  svipPrice: '6.650.000 đ',
-  svipBenefits:
-    'Quyền lợi đi kèm độc quyền cực kỳ hấp dẫn: Postcard thông điệp từ Nghệ sĩ. Ảnh check-in cá nhân. Card Nghệ sĩ có chữ ký. Móc khoa độc quyền. Soundcheck. Bàn đón tiếp và check-in riêng. Lối vào riêng. Tiệc chờ riêng tư cùng rượu vang và đồ ăn nhẹ. Vé cứng thiết kế đặc biệt. Poster chữ ký tay.',
+  minPrice: '1.550.000 đ',
+  maxPrice: '6.650.000 đ',
+  images: {
+    hero: imgTest2,
+    location: imgEventThumb,
+    about: imgAbout,
+    sidebar: imgSidebar,
+  },
   organizer: {
     name: 'Absolute Media',
     description:
       'Live Concert nghệ thuật kết hợp giữa âm nhạc hiện đại và dàn nhạc semi-classical tinh tế, được sản xuất bởi Absolute Media.',
+    logo: imgOrganizerLogo,
   },
   relatedEvents: [
     {
@@ -113,8 +118,8 @@ const showtimes: Showtime[] = [
       :time="eventData.time"
       :venue="eventData.venue"
       :address="eventData.address"
-      :start-price="eventData.startPrice"
-      :hero-image="imgTest2"
+      :min-price="eventData.minPrice"
+      :hero-image="eventData.images.hero"
     />
     <event-nav />
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
@@ -124,13 +129,13 @@ const showtimes: Showtime[] = [
           :address="eventData.address"
           :date="eventData.date"
           :time="eventData.time"
-          :event-thumb-image="imgEventThumb"
+          :event-thumb-image="eventData.images.location"
         />
-        <event-about :event-data="eventData" :about-image="imgAbout" />
+        <event-about :about-image="eventData.images.about" />
         <event-tickets :show-time="showtimes" />
         <event-organizer :event-data="eventData.organizer" :organizer-image="imgOrganizerLogo" />
       </div>
-      <event-ads :side-bar-image="imgSidebar" />
+      <event-ads :side-bar-image="eventData.images.sidebar" />
     </div>
     <event-related :event-data="eventData.relatedEvents" />
   </div>

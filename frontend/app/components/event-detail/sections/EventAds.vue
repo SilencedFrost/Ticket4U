@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  sideBarImage: string;
+  sideBarImage?: string;
 }>();
 </script>
 

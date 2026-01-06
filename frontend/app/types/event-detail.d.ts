@@ -6,6 +6,7 @@ interface LocalizedContent {
 interface Organizer {
   name: string;
   description: string;
+  logo: string;
 }
 
 interface RelatedEvent {
@@ -32,15 +33,22 @@ interface Showtime {
   seatTypes: SeatType[];
 }
 
+export interface EventImages {
+  hero: string;
+  location: string;
+  about: string;
+  sidebar?: string;
+}
+
 interface EventDetail {
   title: string;
   date: string;
   time: string;
   venue: LocalizedContent;
   address: LocalizedContent;
-  startPrice: string;
-  svipPrice: string;
-  svipBenefits: string;
+  minPrice: string;
+  maxPrice: string;
+  images: EventImages;
   organizer: Organizer;
   relatedEvents: RelatedEvent[];
 }

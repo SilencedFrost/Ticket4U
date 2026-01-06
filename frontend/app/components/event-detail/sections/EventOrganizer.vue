@@ -2,7 +2,6 @@
 import type { Organizer } from '@/types/event-detail';
 defineProps<{
   eventData: Organizer;
-  organizerImage: string;
 }>();
 </script>
 
@@ -15,14 +14,14 @@ defineProps<{
       <div class="row g-4 align-items-start">
         <div class="col-md-4">
           <img
-            :src="organizerImage"
+            :src="eventData.logo"
             alt="Organizer"
             class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
           />
         </div>
         <div class="col-md-8">
           <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.name }}</h4>
-          <p class="text-reactive-primary-50 lh-lg small">
+          <p class="text-reactive-primary lh-lg medium">
             {{ eventData.description }}
           </p>
         </div>

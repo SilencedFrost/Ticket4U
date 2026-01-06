@@ -79,7 +79,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                     >
                       {{ $t('event_detail.label.sold_out') }}
                     </div>
-                    <p v-else class="text-reactive-primary-50 mb-0 small">
+                    <p v-else class="text-reactive-primary mb-0 small">
                       {{ seat.available }} {{ $t('event_detail.label.available') }}
                     </p>
                   </div>
@@ -114,7 +114,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                   "
                   class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
-                  <p v-if="seat.description" class="text-reactive-primary-50 mb-3 small">
+                  <p v-if="seat.description" class="text-reactive-primary mb-3 small">
                     {{ seat.description }}
                   </p>
                   <div class="row g-3">
@@ -134,7 +134,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                         <li
                           v-for="(benefit, index) in seat.benefits"
                           :key="index"
-                          class="text-reactive-primary-50 small mb-1"
+                          class="text-reactive-primary small mb-1"
                         >
                           <i class="bi bi-check-circle-fill text-success me-1" />
                           {{ benefit }}

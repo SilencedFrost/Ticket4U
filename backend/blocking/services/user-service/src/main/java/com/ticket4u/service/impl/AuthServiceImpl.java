@@ -9,6 +9,7 @@ import com.ticket4u.dto.auth.RegisterRequest;
 import com.ticket4u.dto.auth.RegisterResponse;
 import com.ticket4u.dto.auth.AuthResponse;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshCreationResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.dto.user.UserResponse;
@@ -117,6 +118,30 @@ public class AuthServiceImpl implements AuthService {
                 rt
         );
     }
+
+    @Transactional
+    public LogoutResult logout(String refreshToken) {
+        // Generate delete at and rt cookies with cookie util to match all attributes
+        ResponseCookie atDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey());
+        ResponseCookie rtDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey());
+
+        // Call session service invalidate if refresh token exists
+        if (refreshToken != null && !refreshToken.isBlank()) { 
+            log.debug("Invalidating refresh token session");
+            try {
+                sessionService.invalidate(refreshToken);
+                log.info("Session has been invalidated successfully");
+            } catch (Exception e) {
+                log.error("Invalidate session failed", e);
+            }
+        } else {
+            log.debug("No refresh token to invalidate");
+        }
+
+        return new LogoutResult(atDeleteCookie.toString(), rtDeleteCookie.toString());
+    }
+
+
 
     @Override
     @Transactional

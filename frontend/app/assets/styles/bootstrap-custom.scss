@@ -70,10 +70,9 @@ $font-family-base: 'Open Sans', sans-serif;
 
 .card {
   border: none;
+  background-color: var(--bg-reactive-secondary);
 }
 
 .card-info {
   background-color: rgba($primary, 0.3);
 }
-
-

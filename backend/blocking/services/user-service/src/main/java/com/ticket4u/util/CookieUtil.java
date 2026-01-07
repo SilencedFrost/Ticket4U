@@ -41,4 +41,11 @@ public class CookieUtil {
                 .path(oldCookie.getPath())
                 .build();
     }
+
+    public ResponseCookie createClearCookie(String oldCookie) {
+        return ResponseCookie.from(oldCookie, "")
+                .maxAge(0)
+                .path("/")
+                .build();
+    }
 }

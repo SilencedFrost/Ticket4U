@@ -65,8 +65,14 @@ public class AuthController {
 
         } catch (Exception e) {
             log.error("Logout failed", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
+            // Still return 200 OK with cookies that clear the tokens
+            String clearAccessToken = cookieUtil.createClearCookie(TokenConstants.ACCESS_TOKEN.getCookieKey()).toString();
+            String clearRefreshToken = cookieUtil.createClearCookie(TokenConstants.REFRESH_TOKEN.getCookieKey()).toString();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, clearAccessToken, clearRefreshToken)
+                    .build();
         }
     }
 

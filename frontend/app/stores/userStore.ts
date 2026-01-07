@@ -24,6 +24,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function logout() {
+    try {
       await $fetch(`${config.public.authUrl}/logout`, { 
         credentials: 'include', 
         method: 'POST' 
@@ -35,7 +36,17 @@ export const useUserStore = defineStore('user', () => {
         username: '',
         email: ''
       };
-  }
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still clear user data even if API fails
+      user.value = {
+        id: '',
+        roleId: -1,
+        username: '',
+        email: ''
+      };
+    }
+  } 
   
   return {
     user: readonly(user),

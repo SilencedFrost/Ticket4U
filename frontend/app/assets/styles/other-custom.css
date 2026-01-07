@@ -53,6 +53,7 @@ img {
   padding: 0.5rem;
   border: none;
   outline: none;
+  background-color: var(--bg-reactive-primary);
 
   transition:
     border-color 0.3s ease,

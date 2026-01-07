@@ -1,10 +1,10 @@
-export {}
+export {};
 
 declare global {
   interface User {
-    id: string
-    roleId: number
-    username: string
-    email: string
+    id: string;
+    roleId: number;
+    username: string;
+    email: string;
   }
 }

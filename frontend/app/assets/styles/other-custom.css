@@ -1,7 +1,9 @@
 /* Theme switch */
 
 * {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Generic */
@@ -52,7 +54,9 @@ img {
   border: none;
   outline: none;
 
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 
   &:hover {
     background-color: var(--bg-reactive-secondary);
@@ -162,7 +166,7 @@ html {
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.3s ease;
   > div {
-  overflow: hidden;
+    overflow: hidden;
   }
 
   &.open {

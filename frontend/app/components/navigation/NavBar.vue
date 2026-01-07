@@ -28,6 +28,7 @@ function toggleMenu(menuKey?: string) {
 onClickOutside(menuContainer, () => {
   toggleMenu();
 });
+const localePath = useLocalePath();
 </script>
 <template>
   <div ref="menuContainer">
@@ -35,7 +36,7 @@ onClickOutside(menuContainer, () => {
       <div class="container-fluid p-0 position-relative d-flex">
         <!-- Logo -->
         <div class="nav-container">
-          <nuxt-link-locale to="/">
+          <nuxt-link-locale :to="localePath('/')">
             <img src="/logo-primary.png" class="h-100" />
           </nuxt-link-locale>
         </div>

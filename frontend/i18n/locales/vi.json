@@ -32,17 +32,39 @@
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
-    "tickets": "Vé"
+    "tickets": "Vé",
+    "see": {
+      "more": "Xem thêm",
+      "less": "Ẩn bớt"
+    },
+    "action": {
+      "buy": "Mua vé ngay",
+      "view": "Xem"
+    }
   },
   "brand": {
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
-  "placeholder" : {
+  "placeholder": {
     "search": "Tìm kiếm sự kiện, nghệ sĩ..."
   },
   "theme": {
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
+  },
+  "event_detail": {
+    "label": {
+      "price_from": "Giá từ",
+      "available": "còn lại",
+      "organizer": "Ban tổ chức",
+      "sold_out": "Hết vé"
+    },
+    "section": {
+      "schedule": "Lịch trình sự kiện",
+      "about": "Về sự kiện",
+      "ticket_info": "Thông tin vé",
+      "related": "Bạn có thể thích"
+    }
   }
 }

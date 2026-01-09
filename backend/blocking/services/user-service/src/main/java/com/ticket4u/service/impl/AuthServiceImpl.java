@@ -121,22 +121,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public LogoutResult logout(String refreshToken) {
-        // Generate delete at and rt cookies with cookie util to match all attributes
+        // Validate refresh token exists
+        if (refreshToken == null || refreshToken.isBlank()) {
+            log.warn("No refresh token provided for logout");
+            throw new IllegalArgumentException("No refresh token provided");
+        }
+        log.debug("Invalidating refresh token session");
+        sessionService.invalidate(refreshToken);
+        log.info("Session has been invalidated successfully");
+
+        // Create delete cookies after successful invalidation
         ResponseCookie atDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey());
         ResponseCookie rtDeleteCookie = cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey());
-
-        // Call session service invalidate if refresh token exists
-        if (refreshToken != null && !refreshToken.isBlank()) { 
-            log.debug("Invalidating refresh token session");
-            try {
-                sessionService.invalidate(refreshToken);
-                log.info("Session has been invalidated successfully");
-            } catch (Exception e) {
-                log.error("Invalidate session failed", e);
-            }
-        } else {
-            log.debug("No refresh token to invalidate");
-        }
 
         return new LogoutResult(atDeleteCookie.toString(), rtDeleteCookie.toString());
     }

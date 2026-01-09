@@ -54,25 +54,17 @@ public class AuthController {
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        // Get old cookies
         String oldRefreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
-        String oldAccessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
-
         try {
-            // Pass old at and rt into authService.logout, get back the at and rt delete cookie
             LogoutResult logoutResult = authService.logout(oldRefreshToken);
+            // Send delete cookies if logout succeeded
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, logoutResult.accessTokenCookie(), logoutResult.refreshTokenCookie()).build();
 
         } catch (Exception e) {
-            log.error("Logout failed", e);
-
-            // Still return 200 OK with cookies that clear the tokens
-            String clearAccessToken = cookieUtil.createClearCookie(TokenConstants.ACCESS_TOKEN.getCookieKey()).toString();
-            String clearRefreshToken = cookieUtil.createClearCookie(TokenConstants.REFRESH_TOKEN.getCookieKey()).toString();
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, clearAccessToken, clearRefreshToken)
-                    .build();
+            log.error("Logout failed - session not invalidated", e);
+            // Return error so frontend keeps user logged in
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Logout failed. Please try again.");
         }
     }
 

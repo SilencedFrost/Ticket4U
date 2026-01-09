@@ -29,7 +29,6 @@ export const useUserStore = defineStore('user', () => {
         credentials: 'include', 
         method: 'POST' 
       });
-      
       user.value = {
         id: '',
         roleId: -1,
@@ -38,14 +37,7 @@ export const useUserStore = defineStore('user', () => {
       };
     } catch (error) {
       console.error('Logout failed:', error);
-      // Still clear user data even if API fails
-      user.value = {
-        id: '',
-        roleId: -1,
-        username: '',
-        email: ''
-      };
-    }
+    } 
   } 
   
   return {

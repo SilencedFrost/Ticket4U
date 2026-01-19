@@ -28,7 +28,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
       </h3>
 
       <div v-for="(schedule, dateIdx) in showTime" :key="dateIdx" class="mb-3">
-        <div class="bg-reactive-primary rounded mb-3">
+        <div class="card-border mb-3">
           <button
             class="btn w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-0 bg-transparent gap-3"
             type="button"
@@ -65,9 +65,9 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
             <div
               v-for="(seat, seatIdx) in schedule.seatTypes"
               :key="seatIdx"
-              class="bg-reactive-primary rounded overflow-hidden"
+              class="card-border overflow-hidden"
             >
-              <div class="card-body p-3 p-md-4">
+              <div class="p-3 p-md-4">
                 <div
                   class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0"
                 >

@@ -10,6 +10,8 @@ const searchInput = ref<HTMLInputElement | null>(null);
 const menuContainer = ref<HTMLElement | null>(null);
 const useUser = useUserStore();
 
+const { currentTheme } = useTheme();
+
 function focusSearch() {
   searchInput.value?.focus();
 }
@@ -32,7 +34,10 @@ const localePath = useLocalePath();
 </script>
 <template>
   <div ref="menuContainer">
-    <nav class="bg-reactive-primary shadow-sm" @click="toggleMenu()">
+    <nav
+      :class="['bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
+      @click="toggleMenu()"
+    >
       <div class="container-fluid p-0 position-relative d-flex">
         <!-- Logo -->
         <div class="nav-container">

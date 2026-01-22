@@ -111,7 +111,7 @@ const showtimes: Showtime[] = [
 </script>
 
 <template>
-  <div class="h-auto bg-reactive-primary overflow-x-hidden mw-100">
+  <div class="h-auto overflow-x-hidden mw-100">
     <event-hero
       :title="eventData.title"
       :date="eventData.date"

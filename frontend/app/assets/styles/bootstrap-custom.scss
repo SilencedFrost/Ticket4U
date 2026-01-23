@@ -1,7 +1,9 @@
 @use 'bootstrap/scss/functions' as bs;
-@use 'bootstrap/scss/bootstrap' with ($primary: #07b3df,
-    $danger: #b82d2d,
-    $font-family-base: 'Open Sans' sans-serif);
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: #07b3df,
+  $danger: #b82d2d,
+  $font-family-base: ('Open Sans', sans-serif)
+);
 @use 'bootstrap-icons/font/bootstrap-icons.css';
 
 

@@ -1,0 +1,3 @@
+<template>
+    <event-display/>
+</template>

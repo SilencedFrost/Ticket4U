@@ -27,16 +27,17 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      authUrl: process.env.NUXT_PUBLIC_AUTH_URL || 'https://localhost:8080/api/v1/auth',
+      authUrl: 'https://localhost:8080/api/v1/auth',
     },
   },
 
-  devServer: {
-    https: {
-      key: './keys/localhost+2-key.pem',
-      cert: './keys/localhost+2.pem',
-    },
-  },
+  // ai cần test https thì mở, mở rồi nhớ đóng
+  //   devServer: {
+  //     https: {
+  //       key: './keys/localhost+2-key.pem',
+  //       cert: './keys/localhost+2.pem',
+  //     },
+  //   },
 
   css: ['~/assets/styles/bootstrap-custom.scss', '~/assets/styles/other-custom.css'],
 

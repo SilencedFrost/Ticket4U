@@ -17,6 +17,7 @@ import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.entity.User;
 import com.ticket4u.entity.Role;
 import com.ticket4u.exception.EmailAlreadyExistException;
+import com.ticket4u.exception.LogoutFailedException;
 import com.ticket4u.exception.PhoneNumberAlreadyExistException;
 import com.ticket4u.exception.TokenCreationException;
 import com.ticket4u.mapper.UserMapper;
@@ -124,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
         // Validate refresh token exists
         if (refreshToken == null || refreshToken.isBlank()) {
             log.warn("No refresh token provided for logout");
-            throw new IllegalArgumentException("No refresh token provided");
+            throw new LogoutFailedException("No refresh token provided", "error.logout.invalidation_failed");
         }
         log.debug("Invalidating refresh token session");
         sessionService.invalidate(refreshToken);

@@ -8,7 +8,12 @@ export const useUserStore = defineStore('user', () => {
     username: '',
     email: '',
   });
-
+  const EMPTY_USER = {
+    id: '',
+    roleId: -1,
+    username: '',
+    email: ''
+  };
   const isLoggedIn = computed(() => user.value.roleId >= 0);
 
   async function login(email: string, password: string, rememberMe: boolean) {
@@ -22,21 +27,17 @@ export const useUserStore = defineStore('user', () => {
       },
     });
   }
-
+  
   async function logout() {
     try {
       await $fetch(`${config.public.authUrl}/logout`, { 
         credentials: 'include', 
         method: 'POST' 
       });
-      user.value = {
-        id: '',
-        roleId: -1,
-        username: '',
-        email: ''
-      };
+      Object.assign(user.value, EMPTY_USER);
     } catch (error) {
       console.error('Logout failed:', error);
+      throw error;
     } 
   } 
   

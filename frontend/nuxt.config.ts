@@ -31,13 +31,12 @@ export default defineNuxtConfig({
     },
   },
 
-  // ai cần test https thì mở, mở rồi nhớ đóng
-  //   devServer: {
-  //     https: {
-  //       key: './keys/localhost+2-key.pem',
-  //       cert: './keys/localhost+2.pem',
-  //     },
-  //   },
+  devServer: {
+    https: {
+      key: './keys/localhost+2-key.pem',
+      cert: './keys/localhost+2.pem',
+    },
+  },
 
   css: ['~/assets/styles/bootstrap-custom.scss', '~/assets/styles/other-custom.css'],
 

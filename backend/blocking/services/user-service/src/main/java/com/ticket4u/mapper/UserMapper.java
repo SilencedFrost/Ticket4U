@@ -59,6 +59,7 @@ public abstract class UserMapper {
     @Mapping(target = "sessions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "birthday", ignore = true)
     public abstract User toEntityFromRegister(RegisterRequest request);
 
     @Mapping(target = "email", expression = "java(userInfo.email().toLowerCase())")
@@ -74,6 +75,7 @@ public abstract class UserMapper {
     @Mapping(target = "sessions", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "birthday", ignore = true)
     protected abstract User toEntityFromGoogleBase(GoogleUserInfo userInfo);
 
     public User toEntityFromGoogle(GoogleUserInfo userInfo) {

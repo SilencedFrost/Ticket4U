@@ -41,7 +41,7 @@ public class Session {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Column(nullable = false, updatable = false, length = 64, columnDefinition = "char(64)")
+    @Column(nullable = false, length = 64, columnDefinition = "char(64)")
     private String sessionHash;
 
     @Column(nullable = false)

@@ -139,11 +139,18 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String accessTokenCookie = createAccessTokenCookie(accessToken.get());
+        String refreshTokenCookie = createRefreshTokenCookie(refreshCreationResult.refreshToken(), refreshCreationResult.rememberMe());
 
         return new RefreshResult(
                 accessTokenCookie,
                 accessToken.get(),
-                refreshCreationResult.refreshToken()
+                refreshTokenCookie,
+                new AuthResponse(
+                        userResponse.id(),
+                        userResponse.roleId(),
+                        userResponse.username(),
+                        userResponse.email()
+                )
         );
     }
 
@@ -173,7 +180,8 @@ public class AuthServiceImpl implements AuthService {
         return new RefreshResult(
                 cookieUtil.createDeleteCookie(TokenConstants.ACCESS_TOKEN.getCookieKey()).toString(),
                 null,
-                cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey()).toString()
+                cookieUtil.createDeleteCookie(TokenConstants.REFRESH_TOKEN.getCookieKey()).toString(),
+                null
         );
     }
 

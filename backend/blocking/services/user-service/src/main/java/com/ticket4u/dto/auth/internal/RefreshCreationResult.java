@@ -4,6 +4,7 @@ import com.ticket4u.dto.user.UserResponse;
 
 public record RefreshCreationResult(
         UserResponse userResponse,
-        String refreshToken
+        String refreshToken,
+        boolean rememberMe
 ) {
 }

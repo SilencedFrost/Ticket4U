@@ -76,7 +76,7 @@ public class SessionService {
 
             sessionRepository.save(session);
 
-            return new RefreshCreationResult(userMapper.toDTO(session.getUser()), newRefreshToken);
+            return new RefreshCreationResult(userMapper.toDTO(session.getUser()), newRefreshToken, session.getPersistent());
         } catch (OptimisticLockException e) {
             throw new ConcurrentRequestException("Concurrent session refresh detected, denying request");
         }

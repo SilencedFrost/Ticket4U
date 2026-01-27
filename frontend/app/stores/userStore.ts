@@ -23,12 +23,20 @@ export const useUserStore = defineStore('user', () => {
     });
   }
 
+  async function refresh() {
+    user.value = await $fetch(`${config.public.authUrl}/refresh`, {
+      credentials: 'include',
+      method: 'POST'
+    })
+  }
+
   async function logout() {}
 
   return {
     user: readonly(user),
     isLoggedIn,
     login,
+    refresh,
     logout,
   };
 });

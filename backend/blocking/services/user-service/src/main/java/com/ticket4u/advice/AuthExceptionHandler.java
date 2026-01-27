@@ -1,6 +1,7 @@
 package com.ticket4u.advice;
 
 import com.ticket4u.exception.InvalidGoogleTokenException;
+import com.ticket4u.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,6 +28,12 @@ public class AuthExceptionHandler {
     @ExceptionHandler(InvalidGoogleTokenException.class)
     public ResponseEntity<?> handleInvalidGoogleToken(InvalidGoogleTokenException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)  // 401
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handleUnauthorized(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED) //401
                 .body(Map.of("message", e.getMessage()));
     }
 }

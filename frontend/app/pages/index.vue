@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <h1>Welcome to the homepage</h1>
-        <!-- <AppAlert> This is an auto-imported component </AppAlert> -->
-    </div>
+  <home-page />
 </template>
+
+<script setup lang="ts">
+import HomePage from '@/pages/(home)/components/HomePage.vue';
+</script>

@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS public.order
 (
 	id uuid PRIMARY KEY,
 	user_id uuid NOT NULL,
-	event_id uuid NOT NULL,
 	total_amount decimal(10, 2) NOT NULL,
 	discount_code varchar(50),
 	discount_amount decimal(10, 2),

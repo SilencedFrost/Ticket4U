@@ -29,24 +29,6 @@ CREATE TABLE IF NOT EXISTS public.categories (
 );
 COMMENT ON TABLE public.categories IS 'Thể loại của sự kiện';
 
-CREATE TABLE IF NOT EXISTS public.events (
-	id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
-	name VARCHAR(255),
-	event_type_id INTEGER,
-	category_id INTEGER,
-	venue_id UUID,
-	date DATE,
-	start_time TIME,
-	end_time TIME,
-	status EVENT_ENUM,
-	created_at TIMESTAMP,
-	updated_at TIMESTAMP
-
-	CONSTRAINT event_fk_category FOREIGN KEY (category_id) REFERENCES public.categories(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT event_fk_event_type FOREIGN KEY (event_type_id) REFERENCES public.event_types(id),
-    CONSTRAINT event_fk_venue FOREIGN KEY (venue_id) REFERENCES public.venue(id)
-);
-
 CREATE TABLE IF NOT EXISTS public.event_types (
 	id INTEGER PRIMARY KEY,
 	type_name VARCHAR(255),
@@ -59,6 +41,25 @@ insert into public.event_types (id , type_name) values
 (0, 'ZONE_BASED'),
 (1, 'SEAT_BASED');
 
+CREATE TABLE IF NOT EXISTS public.events (
+	id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
+	name VARCHAR(255),
+	organizer_id UUID, -- references to the table organizers of the users service
+	event_type_id INTEGER,
+	category_id INTEGER,
+	venue_id UUID,
+	date DATE,
+	start_time TIME,
+	end_time TIME,
+	status varchar(50) CHECK(status IN ('PLANNED', 'ONGOING', 'FINISHED', 'CANCELLED')),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+	CONSTRAINT event_fk_category FOREIGN KEY (category_id) REFERENCES public.categories(id) ON UPDATE NO ACTION ON DELETE NO ACTION,
+    CONSTRAINT event_fk_event_type FOREIGN KEY (event_type_id) REFERENCES public.event_types(id),
+    CONSTRAINT event_fk_venue FOREIGN KEY (venue_id) REFERENCES public.venue(id)
+);
+
 CREATE TABLE IF NOT EXISTS public.seats (
 	id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
 	event_id UUID,
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS public.seats (
 	row_name VARCHAR(5),
 	col_name VARCHAR(5),
 	seat_code VARCHAR(5),
-	status STATUS_SEAT_ENUM,
+	status varchar(50) CHECK(status IN ('AVAILABLE', 'BOOKED', 'HOLD')),
 	price DECIMAL(10,2),
 	CONSTRAINT seat_fk_event FOREIGN KEY (event_id) REFERENCES public.events(id)
 	ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -93,7 +94,6 @@ CREATE TABLE IF NOT EXISTS public.venue (
 	ward_id INTEGER,
 	CONSTRAINT venue_fk_address FOREIGN KEY (address_id) REFERENCES public.street_address(id),
 	CONSTRAINT venue_fk_ward FOREIGN KEY (ward_id) REFERENCES public.wards(id),
-	CONSTRAINT venue_fk_city FOREIGN KEY (city_id) REFERENCES public.cities(id) 
 );
 
 CREATE TABLE IF NOT EXISTS public.street_address (

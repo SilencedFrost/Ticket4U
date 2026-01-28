@@ -39,17 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Skip filter for public endpoints
-        if (pathMatcher.match("/api/*/public/**", path)) {
-            return true;
-        }
-
-        // Skip filter for login endpoint
-        if (pathMatcher.match("/api/*/auth/login", path)) {
-            return true;
-        }
-
-        // Skip filter for logout endpoint
-        return pathMatcher.match("/api/*/auth/logout", path);
+        return (pathMatcher.match("/api/*/public/**", path));
     }
 
     @Override

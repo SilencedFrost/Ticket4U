@@ -12,24 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/tickets")
 @RequiredArgsConstructor
 @Slf4j
-public class TicketController {
-
-    //TODO: Check all booked seats
-    @GetMapping
-    public ResponseEntity<?> getBookedSeats() {
-        return null;
-    }
-
-    //TODO: Check seat vacancy
-    @GetMapping("/{seat-id}/event/{event-id}")
-    public ResponseEntity<?> getSeatStatus() {
-        return null;
-    }
-
-    //TODO: Reserve a seat
-    @PostMapping("/reserve")
-    public ResponseEntity<?> reserveSeat() {
-        return null;
-    }
+public class OrderController {
 
 }

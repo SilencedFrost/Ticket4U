@@ -25,6 +25,7 @@ public class Ticket {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
+    @Column(nullable = false)
     private UUID orderId;
 
     @Column(nullable = false)

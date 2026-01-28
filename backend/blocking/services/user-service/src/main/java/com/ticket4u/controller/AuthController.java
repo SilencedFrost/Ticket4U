@@ -4,6 +4,8 @@ import com.ticket4u.constant.CommonKeys;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.RefreshResult;
+import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,9 +26,26 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * POST /api/auth/login
+     * POST /api/v1/auth/refresh
+     * Validate user session via refresh token
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(
+            HttpServletRequest request
+    ) {
+        String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey())
+                .orElseThrow(() -> new UnauthorizedException("No refresh token provided"));
+
+        RefreshResult refreshResult = authService.refresh(refreshToken);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshResult.accessTokenCookie(), refreshResult.refreshTokenCookie())
+                .body(refreshResult.authResponse());
+    }
+
+    /**
+     * POST /api/v1/auth/login
      * Validate user login and return the user DTO
-     * @return User
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(

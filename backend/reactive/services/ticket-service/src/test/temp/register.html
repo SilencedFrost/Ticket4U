@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Register</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<hr>
+<h3>1. Email Register</h3>
+<form onsubmit="registerEmail(event)">
+    <input type="email" id="email" placeholder="Email *" required><br>
+    <input type="password" id="password" placeholder="Password *" required><br>
+    <input type="tel" id="phone" placeholder="Phone"><br>
+    <input type="text" id="name" placeholder="Full Name"><br>
+    <button type="submit">Register</button>
+</form>
+<pre id="result1"></pre>
+
+<hr>
+<h3>2. Google OAuth2 Register</h3>
+<div id="g_id_onload"
+     data-client_id="92326811627-gmb35eoc5kovbc1nk2fvc19n5it63k0i.apps.googleusercontent.com"
+     data-callback="handleGoogleCredential">
+</div>
+<div class="g_id_signin" data-type="standard"></div>
+<pre id="result2"></pre>
+
+<script>
+    const API = 'http://localhost:8080/api/v1/auth';
+
+    async function registerEmail(e) {
+        e.preventDefault();
+        const res = await fetch(`${API}/register`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                email: email.value,
+                password: password.value,
+                phoneNumber: phone.value || null,
+                fullName: name.value || null
+            })
+        });
+        result1.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function handleGoogleCredential(response) {
+        const res = await fetch(`${API}/register/google`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({idToken: response.credential})
+        });
+        result2.textContent = JSON.stringify(await res.json(), null, 2);
+    }
+</script>
+</body>
+</html>

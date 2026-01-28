@@ -1,9 +1,8 @@
 # Database Configuration
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/dbname
-    username: dbname
-    password: pw
+    username: <<Username>>
+    password: <<Password>>
     driver-class-name: org.postgresql.Driver
 
   # Enable DevTools
@@ -22,8 +21,8 @@ spring:
       client:
         registration:
           google:
-            client-id: xxx
-            client-secret: xxx
+            client-id: <<Client ID>>
+            client-secret: <<Client Secret>>
             scope: openid,profile,email
 
 # Port

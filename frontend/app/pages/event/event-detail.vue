@@ -1,3 +1,0 @@
-<template>
-  <event-detail />
-</template>

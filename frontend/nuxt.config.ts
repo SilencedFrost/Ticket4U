@@ -27,7 +27,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      authUrl: process.env.NUXT_PUBLIC_AUTH_URL || 'https://localhost:8080/api/v1/auth',
+      authUrl: 'https://localhost:8080/api/v1/auth',
     },
   },
 
@@ -38,11 +38,16 @@ export default defineNuxtConfig({
     },
   },
 
-  css: [
-    '~/assets/styles/bootstrap-custom.scss',
-    '~/assets/styles/other-custom.css',
-    '@fontsource/open-sans',
-    '@fontsource/open-sans/500.css',
-    '@fontsource/open-sans/700.css',
-  ],
+  css: ['~/assets/styles/bootstrap-custom.scss', '~/assets/styles/other-custom.css'],
+
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&display=swap',
+        },
+      ],
+    },
+  },
 });

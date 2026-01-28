@@ -1,27 +1,23 @@
-@import 'bootstrap/scss/functions';
+@use 'bootstrap/scss/functions' as bs;
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: #07b3df,
+  $danger: #b82d2d,
+  $font-family-base: ('Open Sans', sans-serif)
+);
+@use 'bootstrap-icons/font/bootstrap-icons.css';
 
-// Rewire primary and danger color
-$primary: #07b3df;
-$danger: #b82d2d;
-
-// Use open sans
-$font-family-base: 'Open Sans', sans-serif;
-
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/maps';
-@import 'bootstrap/scss/mixins';
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // Colors for light theme
 :root {
   --bg-reactive-primary: #fcfcfc;
   --bg-reactive-secondary: #ececec;
   --bg-reactive-gray: #c7c7c7;
-  --bg-reactive-gray-hover: #{shade-color(#c7c7c7, 10%)};
-  --bg-reactive-gray-active: #{shade-color(#c7c7c7, 20%)};
+    --bg-reactive-gray-hover: #{bs.shade-color(#c7c7c7, 10%)};
+    --bg-reactive-gray-active: #{bs.shade-color(#c7c7c7, 20%)};
+  --bg-reactive-dark: #252525;
   --text-reactive-primary: #111111;
   --text-reactive-secondary: #6e6e6e;
+  --bs-primary-rgb: 7,179,223;
 }
 
 // Colors for dark theme
@@ -29,8 +25,9 @@ $font-family-base: 'Open Sans', sans-serif;
   --bg-reactive-primary: #111111;
   --bg-reactive-secondary: #181818;
   --bg-reactive-gray: #5e5e5e;
-  --bg-reactive-gray-hover: #{shade-color(#5e5e5e, 10%)};
-  --bg-reactive-gray-active: #{shade-color(#5e5e5e, 20%)};
+    --bg-reactive-gray-hover: #{bs.shade-color(#5e5e5e, 10%)};
+    --bg-reactive-gray-active: #{bs.shade-color(#5e5e5e, 20%)};
+  --bg-reactive-dark: #181818;
   --text-reactive-primary: #fcfcfc;
   --text-reactive-secondary: #979797;
 }
@@ -48,6 +45,10 @@ $font-family-base: 'Open Sans', sans-serif;
 // Reactive to look like light gray on both modes
 .bg-reactive-gray {
   background-color: var(--bg-reactive-gray);
+}
+
+.bg-reactive-dark {
+  background-color: var(--bg-reactive-dark);
 }
 
 // Reactive to look like light gray on both modes
@@ -70,9 +71,19 @@ $font-family-base: 'Open Sans', sans-serif;
 
 .card {
   border: none;
+  background-color: var(--bg-reactive-primary);
+}
+
+.card-border {
+  border-radius: 0.375rem;
+  border: 2px solid rgba(var(--bs-secondary-rgb), 0.2);
+  background-color: none;
+}
+
+[data-bs-theme='dark'] .card {
   background-color: var(--bg-reactive-secondary);
 }
 
 .card-info {
-  background-color: rgba($primary, 0.3);
+background-color: rgba(var(--bs-primary-rgb), 0.3);
 }

@@ -69,13 +69,10 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        log.info("Received logout request");
         String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
-        log.info("Starting logout");
         LogoutResult logoutResult = authService.logout(refreshToken);
 
-        log.info("Logout succeed");
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, logoutResult.accessTokenCookie(), logoutResult.refreshTokenCookie())
                 .build();

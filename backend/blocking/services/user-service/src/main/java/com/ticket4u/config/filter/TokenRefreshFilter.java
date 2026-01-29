@@ -39,13 +39,13 @@ public class TokenRefreshFilter extends OncePerRequestFilter {
             return true;
         }
 
-        // Skip filter for login endpoint
-        if (pathMatcher.match("/api/*/auth/login", path)) {
+        // Skip filter for Jwks endpoint
+        if (pathMatcher.match("**/.well-known/**", path)) {
             return true;
         }
 
-        // Skip filter for logout endpoint
-        return pathMatcher.match("/api/*/auth/logout", path);
+        // Skip filter for auth endpoints
+        return pathMatcher.match("/api/*/auth/**", path);
     }
 
     @Override

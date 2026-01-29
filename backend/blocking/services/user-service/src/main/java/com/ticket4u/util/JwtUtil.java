@@ -102,6 +102,11 @@ public class JwtUtil {
                 .build();
     }
 
+    public JWKSet getPublicJWK() throws Exception {
+        ECKey publicKey = this.loadPublicKey();
+        return new JWKSet(publicKey);
+    }
+
     public String generateToken(String subject, Map<String, Object> claims, long ttl) throws JOSEException {
         Instant now = Instant.now();
         Instant expiration = now.plus(ttl, ChronoUnit.SECONDS);

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.provinces (
 		name_en VARCHAR(50) NOT NULL,
 		PRIMARY KEY (id)
 	);
+
 -- Table: wards
 
 CREATE TABLE IF NOT EXISTS public.wards (
@@ -25,13 +26,15 @@ CREATE TABLE IF NOT EXISTS public.wards (
 		CONSTRAINT ward_fk_province FOREIGN KEY (province_id) REFERENCES public.provinces (id),
 		PRIMARY KEY (id)
 	);
+
 -- Table: venue
 
 CREATE TABLE IF NOT EXISTS public.venue (
 		id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
 		name_vi VARCHAR(50) NOT NULL,
 		name_en VARCHAR(50) NOT NULL,
-		address_line VARCHAR(255) NOT NULL,
+		address_line_vi VARCHAR(255) NOT NULL,
+		address_line_en VARCHAR(255) NOT NULL,
 		ward_id INTEGER,
 		CONSTRAINT venue_fk_ward FOREIGN KEY (ward_id) REFERENCES public.wards (id)
 	);

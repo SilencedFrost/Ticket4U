@@ -16,7 +16,7 @@ public class AuthExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentials(BadCredentialsException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)  // 401
-                .body(Map.of("message", "Invalid credentials"));
+                .body(Map.of("message", "auth.error.unauthorized"));
     }
 
     @ExceptionHandler(DisabledException.class)

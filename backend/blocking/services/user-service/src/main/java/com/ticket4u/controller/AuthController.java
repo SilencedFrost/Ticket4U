@@ -1,13 +1,13 @@
 package com.ticket4u.controller;
 
 import com.ticket4u.constant.CommonKeys;
-import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
+import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
-import com.ticket4u.util.CookieUtil;
+import com.ticket4u.util.CookieExtratorUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
 
-    private final CookieUtil cookieUtil;
+    private final CookieExtratorUtil cookieExtratorUtil;
     private final AuthService authService;
 
     /**
@@ -30,11 +30,10 @@ public class AuthController {
      * Validate user session via refresh token
      */
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(
+    public ResponseEntity<?> refreshToken(
             HttpServletRequest request
     ) {
-        String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey())
-                .orElseThrow(() -> new UnauthorizedException("No refresh token provided"));
+        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
         RefreshResult refreshResult = authService.refresh(refreshToken);
 
@@ -48,18 +47,14 @@ public class AuthController {
      * Validate user login and return the user DTO
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest request
     ) {
-        log.debug("Login request received");
-        // Cookie and header extraction, ready for fresh auth
-        String oldRefreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
-        log.debug("Old refresh token {} present", oldRefreshToken == null ? "not" : "");
+        String oldRefreshToken = cookieExtratorUtil.getRefreshTokenOrGet(request, null);
 
         String userAgent = request.getHeader(CommonKeys.USER_AGENT.getKey());
         String ua = userAgent != null? userAgent : "Undefined";
-        log.debug("User Agent: {}", ua);
 
         LoginResult loginResult = authService.login(loginRequest, oldRefreshToken, ua);
 
@@ -69,11 +64,26 @@ public class AuthController {
     }
 
     /**
+     * POST /api/v1/auth/logout
+     * Validate invalidate user session
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
+
+        LogoutResult logoutResult = authService.logout(refreshToken);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, logoutResult.accessTokenCookie(), logoutResult.refreshTokenCookie())
+                .build();
+    }
+
+    /**
      * POST /api/v1/auth/register
      * Register new user with email and password
      */
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.registerWithEmail(request));
     }
 
@@ -82,7 +92,7 @@ public class AuthController {
      * Register new user with Google OAuth2
      */
     @PostMapping("/register/google")
-    public ResponseEntity<RegisterResponse> registerWithGoogle(@Valid @RequestBody OAuth2RegisterRequest request) {
+    public ResponseEntity<?> registerWithGoogle(@Valid @RequestBody OAuth2RegisterRequest request) {
         return ResponseEntity.ok(authService.registerWithGoogle(request.idToken()));
     }
 }

@@ -26,7 +26,10 @@
       "title": "Logout",
       "action": "Log out"
     },
-    "register": "Register"
+    "register": "Register",
+    "session": {
+      "invalid": "Invalid session"
+    }
   },
   "common": {
     "email": "Email",

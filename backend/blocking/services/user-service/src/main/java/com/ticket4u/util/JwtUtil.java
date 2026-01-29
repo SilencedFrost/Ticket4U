@@ -17,7 +17,6 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.entity.CustomUserDetails;
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-@Slf4j
 @Component
 public class JwtUtil {
 

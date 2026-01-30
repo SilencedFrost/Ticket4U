@@ -26,7 +26,17 @@
       "title": "Đăng xuất",
       "action": "Đăng xuất"
     },
-    "register": "Đăng ký",
+    "register": {
+      "title": "Đăng ký",
+      "action": "Tạo tài khoản",
+      "google": "Đăng ký với Google",
+      "fullName": "Họ và tên",
+      "phone": "Số điện thoại",
+      "hasAccount": "Đã có tài khoản? Đăng nhập",
+      "error": {
+        "exists": "Email đã tồn tại"
+      }
+    },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
     }

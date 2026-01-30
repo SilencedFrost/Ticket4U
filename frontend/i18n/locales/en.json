@@ -26,7 +26,17 @@
       "title": "Logout",
       "action": "Log out"
     },
-    "register": "Register",
+    "register": {
+      "title": "Register",
+      "action": "Create account",
+      "google": "Register with Google",
+      "fullName": "Full name",
+      "phone": "Phone number",
+      "hasAccount": "Already have an account? Log in",
+      "error": {
+        "exists": "Email already exists"
+      }
+    },
     "session": {
       "invalid": "Invalid session"
     }

@@ -60,13 +60,7 @@ const verticalImageCount = computed<number>(() =>
                     <div class="d-lg-none d-block card p-3 bg-reactive-primary border">
                         <nuxt-page />
                     </div>
-                    <div class="justify-content-center align-items-center d-none d-lg-flex flex-fill h-100 flex-column" style="
-              background: radial-gradient(
-                circle,
-                rgb(from var(--bg-reactive-primary) r g b / 0.7) 20%,
-                transparent 100%
-              );
-            ">
+                    <div class="justify-content-center align-items-center d-none d-lg-flex flex-fill h-100 flex-column auth-gradient">
                         <h1 class="text-reactive-primary fw-bold">{{ $t('brand.name') }}</h1>
                         {{ $t('brand.motto') }}
                     </div>
@@ -80,3 +74,11 @@ const verticalImageCount = computed<number>(() =>
         </div>
     </div>
 </template>
+
+<style scoped>
+.auth-gradient {
+    background: radial-gradient(circle,
+            rgb(from var(--bg-reactive-primary) r g b / 0.7) 20%,
+            transparent 100%);
+}
+</style>

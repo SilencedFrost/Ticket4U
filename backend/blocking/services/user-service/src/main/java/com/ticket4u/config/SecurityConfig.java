@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/*/public/**", "/api/*/auth/**").permitAll()
+                        .requestMatchers("/api/*/public/**", "/api/*/auth/**", "/*/.well-known/**", "/.well-known/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

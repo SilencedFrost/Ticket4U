@@ -15,7 +15,8 @@
       "network": "Network error, please check your connection",
       "format": {
         "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
-        "email": "Invalid email format"
+        "email": "Invalid email format",
+        "phone": "Invalid phone number format (0xxxxxxxxx)"
       },
       "blank": {
         "password": "Password can't be blank",
@@ -32,9 +33,14 @@
       "google": "Register with Google",
       "fullName": "Full name",
       "phone": "Phone number",
+      "confirmPassword": "Confirm password",
+      "passwordHint": "8-32 chars, uppercase, lowercase, special char (!{'@'}#$%^&*_-)",
       "hasAccount": "Already have an account? Log in",
+      "success": "Registration successful! Redirecting to login...",
       "error": {
-        "exists": "Email already exists"
+        "exists": "Email already exists",
+        "confirmRequired": "Please confirm your password",
+        "passwordMismatch": "Passwords do not match"
       }
     },
     "session": {

@@ -38,7 +38,6 @@
       "hasAccount": "Đã có tài khoản? Đăng nhập",
       "success": "Đăng ký thành công! Đang chuyển hướng...",
       "error": {
-        "exists": "Email đã tồn tại",
         "confirmRequired": "Vui lòng xác nhận mật khẩu",
         "passwordMismatch": "Mật khẩu không khớp"
       }

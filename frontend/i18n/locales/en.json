@@ -38,7 +38,6 @@
       "hasAccount": "Already have an account? Log in",
       "success": "Registration successful! Redirecting to login...",
       "error": {
-        "exists": "Email already exists",
         "confirmRequired": "Please confirm your password",
         "passwordMismatch": "Passwords do not match"
       }

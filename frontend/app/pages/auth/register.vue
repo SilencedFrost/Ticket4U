@@ -40,10 +40,11 @@ const isFormValid = computed(() => {
         formData.email &&
         formData.password &&
         formData.confirmPassword &&
+        formData.phoneNumber &&
         formData.password === formData.confirmPassword &&
         PASSWORD_REGEX.test(formData.password) &&
         EMAIL_REGEX.test(formData.email) &&
-        (!formData.phoneNumber || PHONE_REGEX.test(formData.phoneNumber))
+        PHONE_REGEX.test(formData.phoneNumber)
     );
 });
 
@@ -75,7 +76,10 @@ function validateForm(): boolean {
         valid = false;
     }
 
-    if (formData.phoneNumber && !PHONE_REGEX.test(formData.phoneNumber)) {
+    if (!formData.phoneNumber) {
+        error.phoneNumber = 'auth.error.blank.phone';
+        valid = false;
+    } else if (!PHONE_REGEX.test(formData.phoneNumber)) {
         error.phoneNumber = 'auth.error.format.phone';
         valid = false;
     }
@@ -96,7 +100,7 @@ async function register() {
                 body: {
                     email: formData.email,
                     password: formData.password,
-                    phoneNumber: formData.phoneNumber || null,
+                    phoneNumber: formData.phoneNumber,
                     fullName: formData.fullName || null,
                 },
             },

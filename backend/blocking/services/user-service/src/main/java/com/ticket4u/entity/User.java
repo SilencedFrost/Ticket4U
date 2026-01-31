@@ -53,8 +53,8 @@ public class User {
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
-    @Column(length = 15)
-    private String phoneNumber;
+    @Column(nullable = false, length = 15)
+    private String phoneNumber = "";
 
     @UpdateTimestamp
     @Column(nullable = false)

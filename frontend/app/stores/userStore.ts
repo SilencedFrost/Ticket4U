@@ -40,10 +40,11 @@ export const useUserStore = defineStore('user', () => {
         credentials: 'include',
         method: 'POST',
       });
+      _user.value = { ...emptyUser };
     } catch {
-      // Ignore logout errors
+      const { $i18n } = useNuxtApp();
+      alert($i18n.t('auth.session.invalid'));
     }
-    _user.value = { ...emptyUser };
   }
 
   return {

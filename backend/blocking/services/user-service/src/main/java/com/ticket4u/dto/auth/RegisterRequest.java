@@ -16,6 +16,7 @@ public record RegisterRequest(
         @Pattern(message = "auth.error.format.password", regexp = ValidationPatterns.PASSWORD)
         String password,
 
+        @NotBlank(message = "auth.error.blank.phone")
         @ValidPhoneNumber(message = "auth.error.format.phone")
         String phoneNumber,
 

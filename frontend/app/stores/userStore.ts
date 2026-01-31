@@ -2,12 +2,15 @@ import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', () => {
   const config = useRuntimeConfig();
-  const user = ref<User>({
+
+  const emptyUser: User = {
     id: '',
     roleId: -1,
     username: '',
     email: '',
-  });
+  }
+
+  const user = ref<User>(emptyUser);
 
   const isLoggedIn = computed(() => user.value.roleId >= 0);
 
@@ -30,7 +33,19 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  async function logout() {}
+  async function logout(
+  ) {
+    try {
+      await await $fetch(`${config.public.authUrl}/logout`, {
+      credentials: 'include',
+      method: 'POST'
+    })
+
+    Object.assign(user.value, emptyUser)
+    } catch {
+      alert($t("auth.session.invalid"))
+    }
+  }
 
   return {
     user: readonly(user),

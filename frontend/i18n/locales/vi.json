@@ -26,7 +26,10 @@
       "title": "Đăng xuất",
       "action": "Đăng xuất"
     },
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "session": {
+      "invalid": "Phiên đăng nhập không hợp lệ"
+    }
   },
   "common": {
     "email": "Email",

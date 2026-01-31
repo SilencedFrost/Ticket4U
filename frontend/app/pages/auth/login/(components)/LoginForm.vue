@@ -2,6 +2,8 @@
 import { ref, reactive } from 'vue';
 import type { FetchError } from 'ofetch';
 
+const localePath = useLocalePath();
+const router = useRouter();
 const loading = ref<boolean>(false);
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
@@ -17,6 +19,8 @@ async function login() {
   Object.assign(error, { email: '', password: '', generic: '' });
   try {
     await useUser.login(formData.email, formData.password, formData.rememberMe);
+
+    router.push(localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
     console.log(fetchError);

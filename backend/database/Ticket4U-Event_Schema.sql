@@ -60,11 +60,26 @@ CREATE TABLE IF NOT EXISTS public.events (
 		status varchar(50) CHECK (
 			status IN ('PLANNED', 'ONGOING', 'FINISHED', 'CANCELLED')
 		),
+		banner_url TEXT,
+		description TEXT,
 		created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 		updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 		CONSTRAINT event_fk_category FOREIGN KEY (category_id) REFERENCES public.categories (id) ON UPDATE NO ACTION ON DELETE NO ACTION,
 		CONSTRAINT event_fk_venue FOREIGN KEY (venue_id) REFERENCES public.venue (id)
 	);
+
+-- Table: event contents
+-- This table holds multilingual content and policies for events
+
+CREATE TABLE IF NOT EXISTS public.event_contents (
+    event_id UUID PRIMARY KEY, 
+    about_vi TEXT,             
+    about_en TEXT,             
+    terms_and_conditions TEXT,
+    policy_refund TEXT,      
+    -- faq JSONB,                -- Lưu dạng JSON cho linh hoạt các câu hỏi thường gặp
+    CONSTRAINT content_fk_event FOREIGN KEY (event_id) REFERENCES public.events (id) ON DELETE CASCADE --when an event is deleted, its content is also removed
+);
 
 -- Table: zones
 

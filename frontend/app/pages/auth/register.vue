@@ -89,17 +89,25 @@ async function register() {
     loading.value = true;
 
     try {
-        await $fetch(`${config.public.authUrl}/register`, {
-            method: 'POST',
-            body: {
-                email: formData.email,
-                password: formData.password,
-                phoneNumber: formData.phoneNumber || null,
-                fullName: formData.fullName || null,
+        const response = await $fetch<{ userId: string | null; message: string }>(
+            `${config.public.authUrl}/register`,
+            {
+                method: 'POST',
+                body: {
+                    email: formData.email,
+                    password: formData.password,
+                    phoneNumber: formData.phoneNumber || null,
+                    fullName: formData.fullName || null,
+                },
             },
-        });
-        registerSuccess.value = true;
-        setTimeout(() => goToLogin(), 2000);
+        );
+
+        if (response.userId) {
+            registerSuccess.value = true;
+            setTimeout(() => goToLogin(), 2000);
+        } else {
+            error.generic = response.message;
+        }
     } catch (err) {
         handleError(err as FetchError);
     } finally {
@@ -129,9 +137,6 @@ function handleError(fetchError: FetchError) {
             error.password = fetchError.data?.password || '';
             error.phoneNumber = fetchError.data?.phoneNumber || '';
             error.fullName = fetchError.data?.fullName || '';
-            break;
-        case 409:
-            error.email = 'auth.register.error.exists';
             break;
         default:
             error.generic = 'auth.error.unknown';
@@ -174,18 +179,12 @@ function goToLogin() {
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
                     {{ $t('common.email') }}:<span class="text-danger">*</span>
                 </label>
-                <input
-                    id="reg-email"
-                    v-model="formData.email"
-                    type="email"
-                    :disabled="loading"
-                    :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.email },
-                    ]"
-                />
+                <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
+                    'form-control',
+                    'bg-reactive-primary',
+                    'text-reactive-primary',
+                    { 'is-invalid': error.email },
+                ]" />
                 <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
             </div>
 
@@ -195,24 +194,13 @@ function goToLogin() {
                     {{ $t('auth.password') }}:<span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
-                    <input
-                        id="reg-password"
-                        v-model="formData.password"
-                        :type="isViewingPassword ? 'text' : 'password'"
-                        :disabled="loading"
-                        :class="[
-                            'form-control',
-                            'bg-reactive-primary',
-                            'text-reactive-primary',
-                            { 'is-invalid': error.password },
-                        ]"
-                    />
-                    <button
-                        class="btn btn-outline-secondary bg-reactive-primary"
-                        type="button"
-                        :disabled="isViewingPassword || loading"
-                        @click="viewPassword"
-                    >
+                    <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
+                        'form-control',
+                        'bg-reactive-primary',
+                        'text-reactive-primary',
+                        { 'is-invalid': error.password },
+                    ]" />
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="isViewingPassword || loading" @click="viewPassword">
                         <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                     <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>
@@ -226,24 +214,13 @@ function goToLogin() {
                     {{ $t('auth.register.confirmPassword') }}:<span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
-                    <input
-                        id="reg-confirm-password"
-                        v-model="formData.confirmPassword"
-                        :type="isViewingConfirmPassword ? 'text' : 'password'"
-                        :disabled="loading"
-                        :class="[
-                            'form-control',
-                            'bg-reactive-primary',
-                            'text-reactive-primary',
-                            { 'is-invalid': error.confirmPassword },
-                        ]"
-                    />
-                    <button
-                        class="btn btn-outline-secondary bg-reactive-primary"
-                        type="button"
-                        :disabled="isViewingConfirmPassword || loading"
-                        @click="viewConfirmPassword"
-                    >
+                    <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
+                        'form-control',
+                        'bg-reactive-primary',
+                        'text-reactive-primary',
+                        { 'is-invalid': error.confirmPassword },
+                    ]" />
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="isViewingConfirmPassword || loading" @click="viewConfirmPassword">
                         <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                     <div v-if="error.confirmPassword" class="invalid-feedback">{{ $t(error.confirmPassword) }}</div>
@@ -255,18 +232,12 @@ function goToLogin() {
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.fullName') }}:
                 </label>
-                <input
-                    id="reg-fullname"
-                    v-model="formData.fullName"
-                    type="text"
-                    :disabled="loading"
-                    :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.fullName },
-                    ]"
-                />
+                <input id="reg-fullname" v-model="formData.fullName" type="text" :disabled="loading" :class="[
+                    'form-control',
+                    'bg-reactive-primary',
+                    'text-reactive-primary',
+                    { 'is-invalid': error.fullName },
+                ]" />
                 <div v-if="error.fullName" class="invalid-feedback">{{ $t(error.fullName) }}</div>
             </div>
 
@@ -275,30 +246,19 @@ function goToLogin() {
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.phone') }}:
                 </label>
-                <input
-                    id="reg-phone"
-                    v-model="formData.phoneNumber"
-                    type="tel"
-                    :disabled="loading"
-                    placeholder="0xxxxxxxxx"
-                    :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.phoneNumber },
-                    ]"
-                />
+                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx" :class="[
+                    'form-control',
+                    'bg-reactive-primary',
+                    'text-reactive-primary',
+                    { 'is-invalid': error.phoneNumber },
+                ]" />
                 <div v-if="error.phoneNumber" class="invalid-feedback">{{ $t(error.phoneNumber) }}</div>
             </div>
 
             <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
 
             <div class="d-flex flex-column">
-                <button
-                    class="btn btn-primary text-center mb-2"
-                    type="submit"
-                    :disabled="loading || !isFormValid"
-                >
+                <button class="btn btn-primary text-center mb-2" type="submit" :disabled="loading || !isFormValid">
                     <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
                     {{ $t('auth.register.action') }}
                 </button>

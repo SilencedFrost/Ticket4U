@@ -248,7 +248,7 @@ function goToLogin() {
             <!-- Phone Number -->
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.phone') }}:
+                    {{ $t('auth.register.phone') }}:<span class="text-danger">*</span>
                 </label>
                 <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx" :class="[
                     'form-control',

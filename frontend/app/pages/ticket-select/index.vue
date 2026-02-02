@@ -1,6 +1,6 @@
 <!-- app/pages/event-payment/index.vue -->
 <template>
-  <div class="container-fluid vh-100 bg-reactive-primary text-reactive-primary">
+  <div class="container-fluid bg-reactive-primary text-reactive-primary" style="height: 95vh;">
     <div class="row h-100 g-0">
       <!-- Left: Seating Map -->
       <div class="col-lg-8 bg-black">
@@ -139,10 +139,10 @@ interface TicketInfo {
 
 const eventDetails = ref<EventDetails>({
   id: '1',
-  title: 'ANH TRAI "SAY HI" 2025 CONCERT - ĐÊM 2',
-  date: '14 Tháng 03, 2026',
-  time: '12:00 - 23:00',
-  venue: 'Sân Vận Động Quốc Gia Mỹ Đình'
+  title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
+  date: 'Feb 20, 2025',
+  time: '20:00 - 22:30',
+  venue: 'Ho Guom Opera'
 })
 
 const ticketInfo = ref<TicketInfo[]>([

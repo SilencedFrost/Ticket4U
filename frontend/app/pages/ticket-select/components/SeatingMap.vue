@@ -54,6 +54,7 @@
           <div class="col-4">
             <div class="p-4 text-center bg-reactive-gray rounded">
               <h6 class="mb-0 text-reactive-secondary">FOH</h6>
+              <small class="text-reactive-secondary">Sound Control</small>
             </div>
           </div>
           <div class="col-4">

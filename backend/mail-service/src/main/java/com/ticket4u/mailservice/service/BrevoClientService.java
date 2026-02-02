@@ -20,19 +20,21 @@ public class BrevoClientService {
 
     public void sendEmail(String to, String subject, String htmlContent, String[] cc, String[] bcc) {
         try {
+            log.debug("Preparing email - To: {}, Subject: {}, CC: {}, BCC: {}", to, subject, cc, bcc);
+            
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(brevoConfig.getFromEmail(), brevoConfig.getFromName());
+            helper.setFrom(brevoConfig.getFrom());
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
 
-            if (cc != null && cc.length > 0) {
-                helper.setCc(cc);
+            if (cc != null && cc.length > 0 && hasValidEmails(cc)) {
+                helper.setCc(filterValidEmails(cc));
             }
-            if (bcc != null && bcc.length > 0) {
-                helper.setBcc(bcc);
+            if (bcc != null && bcc.length > 0 && hasValidEmails(bcc)) {
+                helper.setBcc(filterValidEmails(bcc));
             }
 
             mailSender.send(message);
@@ -45,5 +47,19 @@ public class BrevoClientService {
             log.error("Unexpected error sending email to {}: {}", to, e.getMessage());
             throw new EmailSendException("Unexpected error: " + e.getMessage(), e);
         }
+    }
+
+    private boolean hasValidEmails(String[] emails) {
+        if (emails == null) return false;
+        for (String email : emails) {
+            if (email != null && !email.isBlank()) return true;
+        }
+        return false;
+    }
+
+    private String[] filterValidEmails(String[] emails) {
+        return java.util.Arrays.stream(emails)
+                .filter(e -> e != null && !e.isBlank())
+                .toArray(String[]::new);
     }
 }

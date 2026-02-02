@@ -1,4 +1,4 @@
-package com.ticket4u.exception;
+package com.ticket4u.jwk.exception;
 
 public class JwtProcessingException extends Exception {
     public JwtProcessingException(String message, Throwable cause) {

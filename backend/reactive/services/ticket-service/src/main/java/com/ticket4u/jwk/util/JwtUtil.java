@@ -1,4 +1,4 @@
-package com.ticket4u.util;
+package com.ticket4u.jwk.util;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -11,8 +11,8 @@ import com.nimbusds.jose.proc.*;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import com.ticket4u.exception.JwtProcessingException;
-import com.ticket4u.exception.JwtValidationException;
+import com.ticket4u.jwk.exception.JwtProcessingException;
+import com.ticket4u.jwk.exception.JwtValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

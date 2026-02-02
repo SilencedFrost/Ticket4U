@@ -3,7 +3,7 @@ package com.ticket4u.config.filter;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.util.CookieUtil;
-import com.ticket4u.util.JwtUtil;
+import com.ticket4u.jwk.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

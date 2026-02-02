@@ -18,10 +18,20 @@
         "email": "Invalid email format",
         "phone": "Invalid phone number format (0xxxxxxxxx)"
       },
+      "password": {
+        "tooShort": "Password must be at least 8 characters",
+        "tooLong": "Password must not exceed 32 characters",
+        "noLowercase": "Password must contain at least one lowercase letter",
+        "noUppercase": "Password must contain at least one uppercase letter",
+        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)"
+      },
       "blank": {
         "password": "Password can't be blank",
-        "email": "Email can't be blank"
-      }
+        "email": "Email can't be blank",
+        "phone": "Phone number can't be blank"
+      },
+      "registrationFailed": "Registration failed. Please check your information and try again",
+      "validation": "Invalid data"
     },
     "logout": {
       "title": "Logout",
@@ -44,6 +54,11 @@
     },
     "session": {
       "invalid": "Invalid session"
+    }
+  },
+  "user": {
+    "registration": {
+      "check_email": "Please check your email to verify your account"
     }
   },
   "common": {

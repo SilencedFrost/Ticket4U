@@ -15,7 +15,7 @@ const registerSuccess = ref<boolean>(false);
 
 const error = reactive({
     email: '',
-    password: '',
+    password: [] as string[],
     confirmPassword: '',
     phoneNumber: '',
     fullName: '',
@@ -48,6 +48,58 @@ const isFormValid = computed(() => {
     );
 });
 
+function validatePasswordOnBlur() {
+    error.password = [];
+
+    if (!formData.password) {
+        return;
+    }
+
+    const errors: string[] = [];
+
+    if (formData.password.length < 8) {
+        errors.push('auth.error.password.tooShort');
+    }
+    if (formData.password.length > 32) {
+        errors.push('auth.error.password.tooLong');
+    }
+    if (!/[a-z]/.test(formData.password)) {
+        errors.push('auth.error.password.noLowercase');
+    }
+    if (!/[A-Z]/.test(formData.password)) {
+        errors.push('auth.error.password.noUppercase');
+    }
+    if (!/[!@#$%^&*_-]/.test(formData.password)) {
+        errors.push('auth.error.password.noSpecialChar');
+    }
+
+    error.password = errors;
+}
+
+function validateConfirmPasswordOnBlur() {
+    if (formData.confirmPassword && formData.password !== formData.confirmPassword) {
+        error.confirmPassword = 'auth.register.error.passwordMismatch';
+    } else {
+        error.confirmPassword = '';
+    }
+}
+
+function validateEmailOnBlur() {
+    if (formData.email && !EMAIL_REGEX.test(formData.email)) {
+        error.email = 'auth.error.format.email';
+    } else {
+        error.email = '';
+    }
+}
+
+function validatePhoneOnBlur() {
+    if (formData.phoneNumber && !PHONE_REGEX.test(formData.phoneNumber)) {
+        error.phoneNumber = 'auth.error.format.phone';
+    } else {
+        error.phoneNumber = '';
+    }
+}
+
 function validateForm(): boolean {
     resetErrors();
     let valid = true;
@@ -61,10 +113,10 @@ function validateForm(): boolean {
     }
 
     if (!formData.password) {
-        error.password = 'auth.error.blank.password';
+        error.password = ['auth.error.blank.password'];
         valid = false;
     } else if (!PASSWORD_REGEX.test(formData.password)) {
-        error.password = 'auth.error.format.password';
+        validatePasswordOnBlur();
         valid = false;
     }
 
@@ -108,6 +160,13 @@ async function register() {
 
         if (response.userId) {
             registerSuccess.value = true;
+            Object.assign(formData, {
+                email: '',
+                password: '',
+                confirmPassword: '',
+                phoneNumber: '',
+                fullName: '',
+            });
             setTimeout(() => goToLogin(), 2000);
         } else {
             error.generic = response.message;
@@ -122,7 +181,7 @@ async function register() {
 function resetErrors() {
     Object.assign(error, {
         email: '',
-        password: '',
+        password: [],
         confirmPassword: '',
         phoneNumber: '',
         fullName: '',
@@ -136,29 +195,37 @@ function handleError(fetchError: FetchError) {
         return;
     }
     switch (fetchError.statusCode) {
-        case 400:
-            error.email = fetchError.data?.email || '';
-            error.password = fetchError.data?.password || '';
-            error.phoneNumber = fetchError.data?.phoneNumber || '';
-            error.fullName = fetchError.data?.fullName || '';
+        case 400: {
+            const errorMessage = String(fetchError.data?.message ?? fetchError.data?.error ?? '');
+
+            if (errorMessage.toLowerCase().includes('email') &&
+                (errorMessage.toLowerCase().includes('exists') ||
+                    errorMessage.toLowerCase().includes('already') ||
+                    errorMessage.toLowerCase().includes('taken'))) {
+                error.email = 'auth.error.registrationFailed';
+            } else {
+                error.email = fetchError.data?.email || '';
+                error.password = fetchError.data?.password ? [fetchError.data.password] : [];
+                error.phoneNumber = fetchError.data?.phoneNumber || '';
+                error.fullName = fetchError.data?.fullName || '';
+
+                if (!error.email && error.password.length === 0 && !error.phoneNumber && !error.fullName) {
+                    error.generic = errorMessage || 'auth.error.validation';
+                }
+            }
             break;
+        }
         default:
-            error.generic = 'auth.error.unknown';
+            error.generic = String(fetchError.data?.message || 'auth.error.unknown');
     }
 }
 
 function viewPassword() {
-    isViewingPassword.value = true;
-    setTimeout(() => {
-        isViewingPassword.value = false;
-    }, 500);
+    isViewingPassword.value = !isViewingPassword.value;
 }
 
 function viewConfirmPassword() {
-    isViewingConfirmPassword.value = true;
-    setTimeout(() => {
-        isViewingConfirmPassword.value = false;
-    }, 500);
+    isViewingConfirmPassword.value = !isViewingConfirmPassword.value;
 }
 
 function goToLogin() {
@@ -178,59 +245,6 @@ function goToLogin() {
         </div>
 
         <form v-else novalidate @submit.prevent="register">
-            <!-- Email -->
-            <div class="mb-2">
-                <label for="reg-email" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('common.email') }}:<span class="text-danger">*</span>
-                </label>
-                <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
-                    'form-control',
-                    'bg-reactive-primary',
-                    'text-reactive-primary',
-                    { 'is-invalid': error.email },
-                ]" />
-                <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
-            </div>
-
-            <!-- Password -->
-            <div class="mb-2">
-                <label for="reg-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.password') }}:<span class="text-danger">*</span>
-                </label>
-                <div class="input-group">
-                    <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.password },
-                    ]" />
-                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="isViewingPassword || loading" @click="viewPassword">
-                        <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
-                    </button>
-                    <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>
-                </div>
-                <small class="form-text text-muted">{{ $t('auth.register.passwordHint') }}</small>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mb-2">
-                <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.confirmPassword') }}:<span class="text-danger">*</span>
-                </label>
-                <div class="input-group">
-                    <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.confirmPassword },
-                    ]" />
-                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="isViewingConfirmPassword || loading" @click="viewConfirmPassword">
-                        <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
-                    </button>
-                    <div v-if="error.confirmPassword" class="invalid-feedback">{{ $t(error.confirmPassword) }}</div>
-                </div>
-            </div>
-
             <!-- Full Name -->
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
@@ -245,6 +259,20 @@ function goToLogin() {
                 <div v-if="error.fullName" class="invalid-feedback">{{ $t(error.fullName) }}</div>
             </div>
 
+            <!-- Email -->
+            <div class="mb-2">
+                <label for="reg-email" class="form-label text-reactive-primary user-select-none">
+                    {{ $t('common.email') }}:<span class="text-danger">*</span>
+                </label>
+                <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
+                    'form-control',
+                    'bg-reactive-primary',
+                    'text-reactive-primary',
+                    { 'is-invalid': error.email },
+                ]" @blur="validateEmailOnBlur" />
+                <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
+            </div>
+
             <!-- Phone Number -->
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
@@ -255,8 +283,49 @@ function goToLogin() {
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.phoneNumber },
-                ]" />
+                ]" @blur="validatePhoneOnBlur" />
                 <div v-if="error.phoneNumber" class="invalid-feedback">{{ $t(error.phoneNumber) }}</div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-2">
+                <label for="reg-password" class="form-label text-reactive-primary user-select-none">
+                    {{ $t('auth.password') }}:<span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
+                        'form-control',
+                        'bg-reactive-primary',
+                        'text-reactive-primary',
+                        { 'is-invalid': error.password.length > 0 },
+                    ]" @blur="validatePasswordOnBlur" />
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewPassword">
+                        <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
+                    </button>
+                </div>
+                <ul v-if="error.password.length > 0" class="text-danger small mt-1 mb-0 ps-3">
+                    <li v-for="(err, index) in error.password" :key="index">{{ $t(err) }}</li>
+                </ul>
+                <small class="form-text text-muted">{{ $t('auth.register.passwordHint') }}</small>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-2">
+                <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
+                    {{ $t('auth.register.confirmPassword') }}:<span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
+                        'form-control',
+                        'bg-reactive-primary',
+                        'text-reactive-primary',
+                        { 'is-invalid': error.confirmPassword },
+                    ]" @blur="validateConfirmPasswordOnBlur" />
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewConfirmPassword">
+                        <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
+                    </button>
+                    <div v-if="error.confirmPassword" class="invalid-feedback">{{ $t(error.confirmPassword) }}</div>
+                </div>
             </div>
 
             <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>

@@ -18,10 +18,20 @@
         "email": "Định dạng email không hợp lệ",
         "phone": "Số điện thoại không hợp lệ (0xxxxxxxxx)"
       },
+      "password": {
+        "tooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+        "tooLong": "Mật khẩu không được vượt quá 32 ký tự",
+        "noLowercase": "Mật khẩu phải có ít nhất một chữ thường",
+        "noUppercase": "Mật khẩu phải có ít nhất một chữ hoa",
+        "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)"
+      },
       "blank": {
         "password": "Password không được để trống",
-        "email": "Email không được để trống"
-      }
+        "email": "Email không được để trống",
+        "phone": "Số điện thoại không được để trống"
+      },
+      "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
+      "validation": "Dữ liệu không hợp lệ"
     },
     "logout": {
       "title": "Đăng xuất",
@@ -44,6 +54,11 @@
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
+    }
+  },
+  "user": {
+    "registration": {
+      "check_email": "Vui lòng kiểm tra email để xác thực tài khoản"
     }
   },
   "common": {

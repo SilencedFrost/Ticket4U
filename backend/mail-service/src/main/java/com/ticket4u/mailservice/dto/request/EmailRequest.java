@@ -38,9 +38,9 @@ public class EmailRequest {
     @Schema(description = "true = gửi async (không chờ), false = gửi sync", example = "false")
     private boolean async = false;
 
-    @Schema(description = "CC emails")
+    @Schema(description = "CC emails (tùy chọn)", example = "[]")
     private String[] cc;
 
-    @Schema(description = "BCC emails")
+    @Schema(description = "BCC emails (tùy chọn)", example = "[]")
     private String[] bcc;
 }

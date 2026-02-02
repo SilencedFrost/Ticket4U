@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>OTP Verification</title>
+    <title>Xác thực OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .otp-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            letter-spacing: 8px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- OTP Email Template -->
+    <div class="container">
+        <h2>Xin chào <span th:text="${userName}">User</span>,</h2>
+        <p>Mã xác thực của bạn là:</p>
+        <div class="otp-code" th:text="${otp}">123456</div>
+        <p>Mã này sẽ hết hạn sau <strong th:text="${expireMinutes}">5</strong> phút.</p>
+        <p>Nếu bạn không yêu cầu mã này, vui lòng bỏ qua email này.</p>
+        <div class="footer">
+            <p>&copy; 2026 Ticket4U. All rights reserved.</p>
+        </div>
+    </div>
 </body>
+
 </html>

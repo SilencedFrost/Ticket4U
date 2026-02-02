@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <title>Chào mừng bạn đến Ticket4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Welcome Email Template -->
+    <div class="container">
+        <h1>🎉 Chào mừng <span th:text="${userName}">User</span>!</h1>
+        <p>Cảm ơn bạn đã đăng ký tài khoản tại <strong>Ticket4U</strong>.</p>
+        <p>Bạn đã sẵn sàng khám phá các sự kiện hấp dẫn!</p>
+        <p style="text-align: center; margin: 30px 0;">
+            <a th:href="${loginUrl}" class="btn">Bắt đầu ngay</a>
+        </p>
+        <div class="footer">
+            <p>&copy; 2026 Ticket4U. All rights reserved.</p>
+        </div>
+    </div>
 </body>
+
 </html>

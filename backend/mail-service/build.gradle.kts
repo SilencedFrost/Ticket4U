@@ -31,8 +31,8 @@ dependencies {
 	// Brevo (Sendinblue) SDK
 	implementation("com.sendinblue:sib-api-v3-sdk:6.0.0")
 	
-	// API Documentation - Swagger/OpenAPI
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+	// API Documentation - Swagger/OpenAPI (compatible with Spring Boot 4.x)
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 	
 	// Utilities
 	compileOnly("org.projectlombok:lombok")

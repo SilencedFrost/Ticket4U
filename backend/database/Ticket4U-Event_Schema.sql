@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS public.zone_contents (
     gift_image_url VARCHAR(512), 
     perks JSONB, -- Lưu danh sách ưu đãi dạng [ "Nước uống miễn phí", "Lightstick", "Fansign" ]
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_zone_detail FOREIGN KEY (zone_id) REFERENCES public.zones (id) ON DELETE CASCADE
+    CONSTRAINT zoneContent_fk_zone FOREIGN KEY (zone_id) REFERENCES public.zones (id) ON DELETE CASCADE
 );
 
 -- Table: seats

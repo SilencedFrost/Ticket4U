@@ -15,15 +15,16 @@
       "network": "Lỗi kết nối, kiểm tra kết nối của bạn",
       "format": {
         "password": "Mật khẩu phải có một ký tự viết thường, một ký tự viết hoa, một ký tự đặc biệt, và dài 8-32 ký tự",
-        "email": "Định dạng email không hợp lệ",
-        "phone": "Số điện thoại không hợp lệ (0xxxxxxxxx)"
+        "email": "Chỉ chấp nhận email {'@'}gmail.com",
+        "phone": "Số điện thoại bắt đầu bằng 0 và đủ 10 chữ số"
       },
       "password": {
         "tooShort": "Mật khẩu phải có ít nhất 8 ký tự",
         "tooLong": "Mật khẩu không được vượt quá 32 ký tự",
         "noLowercase": "Mật khẩu phải có ít nhất một chữ thường",
         "noUppercase": "Mật khẩu phải có ít nhất một chữ hoa",
-        "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)"
+        "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)",
+        "noVietnamese": "Mật khẩu không được chứa ký tự tiếng Việt"
       },
       "blank": {
         "password": "Password không được để trống",

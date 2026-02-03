@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import type { FetchError } from 'ofetch';
 
 definePageMeta({
@@ -32,11 +32,21 @@ const formData = reactive({
 
 // Regex từ backend
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$/;
-const PHONE_REGEX = /^(0\d{9}|[1-9]\d{8})$/;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^0\d{9}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+
+// Track touched fields for showing errors
+const touched = reactive({
+    email: false,
+    password: false,
+    confirmPassword: false,
+    phoneNumber: false,
+    fullName: false,
+});
 
 const isFormValid = computed(() => {
     return (
+        formData.fullName &&
         formData.email &&
         formData.password &&
         formData.confirmPassword &&
@@ -48,64 +58,133 @@ const isFormValid = computed(() => {
     );
 });
 
-function validatePasswordOnBlur() {
-    error.password = [];
-
-    if (!formData.password) {
-        return;
+// Mark field as touched on blur and trigger validation
+function onBlur(field: keyof typeof touched) {
+    touched[field] = true;
+    // Trigger validation immediately on blur
+    if (field === 'email') {
+        const val = formData.email;
+        if (!val) {
+            error.email = '';
+        } else if (!EMAIL_REGEX.test(val)) {
+            error.email = 'auth.error.format.email';
+        } else {
+            error.email = '';
+        }
+    } else if (field === 'phoneNumber') {
+        const val = formData.phoneNumber;
+        if (!val) {
+            error.phoneNumber = '';
+        } else if (!PHONE_REGEX.test(val)) {
+            error.phoneNumber = 'auth.error.format.phone';
+        } else {
+            error.phoneNumber = '';
+        }
+    } else if (field === 'password') {
+        const val = formData.password;
+        error.password = [];
+        if (!val) {
+            return;
+        }
+        const errors: string[] = [];
+        if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
+        if (val.length < 8) errors.push('auth.error.password.tooShort');
+        if (val.length > 32) errors.push('auth.error.password.tooLong');
+        if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
+        if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
+        if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
+        error.password = errors;
+    } else if (field === 'confirmPassword') {
+        const val = formData.confirmPassword;
+        if (!val) {
+            error.confirmPassword = 'auth.register.error.confirmRequired';
+        } else if (formData.password !== val) {
+            error.confirmPassword = 'auth.register.error.passwordMismatch';
+        } else {
+            error.confirmPassword = '';
+        }
+    } else if (field === 'fullName') {
+        const val = formData.fullName;
+        if (!val) {
+            error.fullName = '';
+        } else {
+            error.fullName = '';
+        }
     }
-
-    const errors: string[] = [];
-
-    if (formData.password.length < 8) {
-        errors.push('auth.error.password.tooShort');
-    }
-    if (formData.password.length > 32) {
-        errors.push('auth.error.password.tooLong');
-    }
-    if (!/[a-z]/.test(formData.password)) {
-        errors.push('auth.error.password.noLowercase');
-    }
-    if (!/[A-Z]/.test(formData.password)) {
-        errors.push('auth.error.password.noUppercase');
-    }
-    if (!/[!@#$%^&*_-]/.test(formData.password)) {
-        errors.push('auth.error.password.noSpecialChar');
-    }
-
-    error.password = errors;
 }
 
-function validateConfirmPasswordOnBlur() {
-    if (formData.confirmPassword && formData.password !== formData.confirmPassword) {
-        error.confirmPassword = 'auth.register.error.passwordMismatch';
-    } else {
-        error.confirmPassword = '';
-    }
-}
-
-function validateEmailOnBlur() {
-    if (formData.email && !EMAIL_REGEX.test(formData.email)) {
+// Realtime watchers for validation
+watch(() => formData.email, (val) => {
+    if (!touched.email) return;
+    if (!val) {
+        error.email = '';
+    } else if (!EMAIL_REGEX.test(val)) {
         error.email = 'auth.error.format.email';
     } else {
         error.email = '';
     }
-}
+});
 
-function validatePhoneOnBlur() {
-    if (formData.phoneNumber && !PHONE_REGEX.test(formData.phoneNumber)) {
+watch(() => formData.phoneNumber, (val) => {
+    if (!touched.phoneNumber) return;
+    if (!val) {
+        error.phoneNumber = '';
+    } else if (!PHONE_REGEX.test(val)) {
         error.phoneNumber = 'auth.error.format.phone';
     } else {
         error.phoneNumber = '';
     }
-}
+});
+
+watch(() => formData.password, (val) => {
+    if (!touched.password) return;
+    error.password = [];
+    if (!val) {
+        return;
+    }
+    const errors: string[] = [];
+    if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
+    if (val.length < 8) errors.push('auth.error.password.tooShort');
+    if (val.length > 32) errors.push('auth.error.password.tooLong');
+    if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
+    if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
+    if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
+    error.password = errors;
+    // Re-validate confirm password if already touched
+    if (touched.confirmPassword && formData.confirmPassword) {
+        error.confirmPassword = val !== formData.confirmPassword ? 'auth.register.error.passwordMismatch' : '';
+    }
+});
+
+watch(() => formData.confirmPassword, (val) => {
+    if (!touched.confirmPassword) return;
+    if (!val) {
+        error.confirmPassword = 'auth.register.error.confirmRequired';
+    } else if (formData.password !== val) {
+        error.confirmPassword = 'auth.register.error.passwordMismatch';
+    } else {
+        error.confirmPassword = '';
+    }
+});
+
+watch(() => formData.fullName, (val) => {
+    if (!touched.fullName) return;
+    if (!val) {
+        error.fullName = '';
+    } else {
+        error.fullName = '';
+    }
+});
 
 function validateForm(): boolean {
     resetErrors();
     let valid = true;
 
+    if (!formData.fullName) {
+        valid = false;
+    }
+
     if (!formData.email) {
-        error.email = 'auth.error.blank.email';
         valid = false;
     } else if (!EMAIL_REGEX.test(formData.email)) {
         error.email = 'auth.error.format.email';
@@ -113,10 +192,16 @@ function validateForm(): boolean {
     }
 
     if (!formData.password) {
-        error.password = ['auth.error.blank.password'];
         valid = false;
     } else if (!PASSWORD_REGEX.test(formData.password)) {
-        validatePasswordOnBlur();
+        const errors: string[] = [];
+        if (!/^[\x20-\x7E]*$/.test(formData.password)) errors.push('auth.error.password.noVietnamese');
+        if (formData.password.length < 8) errors.push('auth.error.password.tooShort');
+        if (formData.password.length > 32) errors.push('auth.error.password.tooLong');
+        if (!/[a-z]/.test(formData.password)) errors.push('auth.error.password.noLowercase');
+        if (!/[A-Z]/.test(formData.password)) errors.push('auth.error.password.noUppercase');
+        if (!/[!@#$%^&*_-]/.test(formData.password)) errors.push('auth.error.password.noSpecialChar');
+        error.password = errors;
         valid = false;
     }
 
@@ -129,7 +214,6 @@ function validateForm(): boolean {
     }
 
     if (!formData.phoneNumber) {
-        error.phoneNumber = 'auth.error.blank.phone';
         valid = false;
     } else if (!PHONE_REGEX.test(formData.phoneNumber)) {
         error.phoneNumber = 'auth.error.format.phone';
@@ -248,49 +332,49 @@ function goToLogin() {
             <!-- Full Name -->
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.fullName') }}:
+                    {{ $t('auth.register.fullName') }}:<span v-if="!formData.fullName" class="text-danger">*</span>
                 </label>
                 <input id="reg-fullname" v-model="formData.fullName" type="text" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.fullName },
-                ]" />
+                ]" @blur="onBlur('fullName')" />
                 <div v-if="error.fullName" class="invalid-feedback">{{ $t(error.fullName) }}</div>
             </div>
 
             <!-- Email -->
             <div class="mb-2">
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('common.email') }}:<span class="text-danger">*</span>
+                    {{ $t('common.email') }}:<span v-if="!formData.email" class="text-danger">*</span>
                 </label>
                 <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.email },
-                ]" @blur="validateEmailOnBlur" />
+                ]" @blur="onBlur('email')" />
                 <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
             </div>
 
             <!-- Phone Number -->
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.phone') }}:<span class="text-danger">*</span>
+                    {{ $t('auth.register.phone') }}:<span v-if="!formData.phoneNumber" class="text-danger">*</span>
                 </label>
                 <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.phoneNumber },
-                ]" @blur="validatePhoneOnBlur" />
+                ]" @blur="onBlur('phoneNumber')" />
                 <div v-if="error.phoneNumber" class="invalid-feedback">{{ $t(error.phoneNumber) }}</div>
             </div>
 
             <!-- Password -->
             <div class="mb-2">
                 <label for="reg-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.password') }}:<span class="text-danger">*</span>
+                    {{ $t('auth.password') }}:<span v-if="!formData.password" class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                     <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
@@ -298,7 +382,7 @@ function goToLogin() {
                         'bg-reactive-primary',
                         'text-reactive-primary',
                         { 'is-invalid': error.password.length > 0 },
-                    ]" @blur="validatePasswordOnBlur" />
+                    ]" @blur="onBlur('password')" />
                     <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewPassword">
                         <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
@@ -312,7 +396,7 @@ function goToLogin() {
             <!-- Confirm Password -->
             <div class="mb-2">
                 <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.confirmPassword') }}:<span class="text-danger">*</span>
+                    {{ $t('auth.register.confirmPassword') }}:<span v-if="!formData.confirmPassword" class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                     <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
@@ -320,7 +404,7 @@ function goToLogin() {
                         'bg-reactive-primary',
                         'text-reactive-primary',
                         { 'is-invalid': error.confirmPassword },
-                    ]" @blur="validateConfirmPasswordOnBlur" />
+                    ]" @blur="onBlur('confirmPassword')" />
                     <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewConfirmPassword">
                         <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>

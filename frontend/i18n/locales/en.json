@@ -15,15 +15,16 @@
       "network": "Network error, please check your connection",
       "format": {
         "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
-        "email": "Invalid email format",
-        "phone": "Invalid phone number format (0xxxxxxxxx)"
+        "email": "Only {'@'}gmail.com email addresses are accepted",
+        "phone": "Phone number must start with 0 and be exactly 10 digits"
       },
       "password": {
         "tooShort": "Password must be at least 8 characters",
         "tooLong": "Password must not exceed 32 characters",
         "noLowercase": "Password must contain at least one lowercase letter",
         "noUppercase": "Password must contain at least one uppercase letter",
-        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)"
+        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)",
+        "noVietnamese": "Password must not contain Vietnamese characters"
       },
       "blank": {
         "password": "Password can't be blank",

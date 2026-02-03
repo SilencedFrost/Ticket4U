@@ -47,10 +47,7 @@ async function login() {
 }
 
 function viewPassword() {
-    isViewingPassword.value = true;
-    setTimeout(() => {
-        isViewingPassword.value = false;
-    }, 500);
+    isViewingPassword.value = !isViewingPassword.value;
 }
 
 function goToRegister() {
@@ -86,7 +83,7 @@ function goToRegister() {
                         'text-reactive-primary',
                         { 'is-invalid': error.password },
                     ]" />
-                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="isViewingPassword" @click="viewPassword">
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewPassword">
                         <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                     <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>

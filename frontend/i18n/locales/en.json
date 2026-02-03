@@ -26,6 +26,13 @@
         "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)",
         "noVietnamese": "Password must not contain Vietnamese characters"
       },
+      "password": {
+        "tooShort": "Password must be at least 8 characters",
+        "tooLong": "Password must not exceed 32 characters",
+        "noLowercase": "Password must contain at least one lowercase letter",
+        "noUppercase": "Password must contain at least one uppercase letter",
+        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)"
+      },
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",

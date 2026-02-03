@@ -26,6 +26,13 @@
         "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)",
         "noVietnamese": "Mật khẩu không được chứa ký tự tiếng Việt"
       },
+      "password": {
+        "tooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+        "tooLong": "Mật khẩu không được vượt quá 32 ký tự",
+        "noLowercase": "Mật khẩu phải có ít nhất một chữ thường",
+        "noUppercase": "Mật khẩu phải có ít nhất một chữ hoa",
+        "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)"
+      },
       "blank": {
         "password": "Password không được để trống",
         "email": "Email không được để trống",

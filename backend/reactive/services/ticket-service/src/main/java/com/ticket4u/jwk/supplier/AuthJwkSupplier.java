@@ -2,10 +2,12 @@ package com.ticket4u.jwk.supplier;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.ticket4u.jwk.exception.JwkSetRetrievalException;
+import com.ticket4u.jwk.exception.JwkRetrievalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,23 +17,24 @@ import java.net.http.HttpResponse;
 import java.text.ParseException;
 import java.time.Duration;
 
-public class AuthJwkSetSupplier implements JwkSetSupplier {
+@Component
+public class AuthJwkSupplier implements JwkSupplier {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthJwkSetSupplier.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthJwkSupplier.class);
     private static final String CACHE_KEY = "auth-jwkset";
     private static final String JWKS_URL = "https://localhost:8080/auth/.well-known/jwks.json";
-    private static final String IDENTIFIER = "auth-service";
+    public static final String KEY_IDENTIFIER = "auth-key-es256";
 
-    private final Cache<String, JWKSet> cache;
+    private final Cache<String, JWK> cache;
     private final HttpClient httpClient;
     private final String jwksUrl;
     private final String cacheKey;
 
-    public AuthJwkSetSupplier() {
+    public AuthJwkSupplier() {
         this(JWKS_URL, CACHE_KEY);
     }
 
-    public AuthJwkSetSupplier(String jwksUrl, String cacheKey) {
+    public AuthJwkSupplier(String jwksUrl, String cacheKey) {
         this.jwksUrl = jwksUrl;
         this.cacheKey = cacheKey;
         this.cache = Caffeine.newBuilder()
@@ -45,13 +48,13 @@ public class AuthJwkSetSupplier implements JwkSetSupplier {
     }
 
     @Override
-    public JWKSet getJwkSet() throws JwkSetRetrievalException {
+    public JWK getJwk() throws JwkRetrievalException {
         // Try to get from cache
-        JWKSet jwkSet = cache.getIfPresent(cacheKey);
+        JWK jwk = cache.getIfPresent(cacheKey);
 
-        if (jwkSet != null) {
+        if (jwk != null) {
             logger.debug("JWKSet retrieved from cache for key: {}", cacheKey);
-            return jwkSet;
+            return jwk;
         }
 
         // Cache miss - attempt refresh
@@ -59,16 +62,16 @@ public class AuthJwkSetSupplier implements JwkSetSupplier {
         boolean refreshed = refresh();
 
         if (refreshed) {
-            jwkSet = cache.getIfPresent(cacheKey);
-            if (jwkSet != null) {
+            jwk = cache.getIfPresent(cacheKey);
+            if (jwk != null) {
                 logger.info("JWKSet successfully retrieved after refresh for key: {}", cacheKey);
-                return jwkSet;
+                return jwk;
             }
         }
 
         // Still not found after refresh
         logger.error("Failed to retrieve JWKSet after refresh attempt for key: {}", cacheKey);
-        throw new JwkSetRetrievalException("Failed to retrieve JWKSet from " + jwksUrl);
+        throw new JwkRetrievalException("Failed to retrieve JWKSet from " + jwksUrl);
     }
 
     @Override
@@ -87,8 +90,8 @@ public class AuthJwkSetSupplier implements JwkSetSupplier {
 
             if (response.statusCode() == 200) {
                 // Parse the JSON response which contains a single JWK as a JSON object
-                JWKSet jwkSet = JWKSet.parse(response.body());
-                cache.put(cacheKey, jwkSet);
+                JWK jwk = JWKSet.parse(response.body()).getKeyByKeyId(KEY_IDENTIFIER);
+                cache.put(cacheKey, jwk);
                 logger.info("JWKSet successfully fetched and cached with key: {}", cacheKey);
                 return true;
             } else {
@@ -107,10 +110,5 @@ public class AuthJwkSetSupplier implements JwkSetSupplier {
             logger.error("Failed to parse JWKSet response from {}", jwksUrl, e);
             return false;
         }
-    }
-
-    @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
     }
 }

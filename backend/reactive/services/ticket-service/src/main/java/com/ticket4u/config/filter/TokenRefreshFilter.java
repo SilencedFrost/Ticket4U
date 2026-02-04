@@ -1,6 +1,8 @@
 package com.ticket4u.config.filter;
 
+import com.nimbusds.jose.jwk.JWK;
 import com.ticket4u.constant.TokenConstants;
+import com.ticket4u.jwk.supplier.AuthJwkSupplier;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.jwk.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -24,6 +26,7 @@ public class TokenRefreshFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
+    private final AuthJwkSupplier authJwkSupplier;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
@@ -40,12 +43,15 @@ public class TokenRefreshFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null) {
+
+        JWK authJwk = authJwkSupplier.getJwkSafe().orElse(null);
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null && authJwk != null) {
             // Get tokens
             String accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
             String refreshToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey()).orElse(null);
 
-            boolean isAccessTokenValid = accessToken != null && jwtUtil.validate(accessToken);
+            boolean isAccessTokenValid = accessToken != null && jwtUtil.validate(accessToken, authJwk);
 
             // If access token is not there, or invalid, but refresh token is there
             if (!isAccessTokenValid && refreshToken != null) {

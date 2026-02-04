@@ -17,11 +17,13 @@ spring:
 
 # Port
 server:
-  port: 8080
+  port: 8081
   ssl:
     certificate: classpath:keys/localhost+2.pem
     certificate-private-key: classpath:keys/localhost+2-key.pem
 
+application:
+  security:
     # CORS
     cors:
       allowed-origins: https://localhost:3000

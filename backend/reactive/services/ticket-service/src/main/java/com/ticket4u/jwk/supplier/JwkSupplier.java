@@ -1,32 +1,32 @@
 package com.ticket4u.jwk.supplier;
 
-import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.JWK;
 import java.util.Optional;
-import com.ticket4u.jwk.exception.JwkSetRetrievalException;
+import com.ticket4u.jwk.exception.JwkRetrievalException;
 
 /**
  * Interface for supplying JWK Sets dynamically for JWT token verification.
  * Implementations can fetch JWK Sets from other services via internal routes and caffeine caching
  */
-public interface JwkSetSupplier {
+public interface JwkSupplier {
 
     /**
-     * Retrieves the current JWK Set.
+     * Retrieves the current JWK from set key identifier.
      *
      * @return the JWK Set, or empty if unavailable
-     * @throws JwkSetRetrievalException if retrieval fails
+     * @throws JwkRetrievalException if retrieval fails
      */
-    JWKSet getJwkSet() throws JwkSetRetrievalException;
+    JWK getJwk() throws JwkRetrievalException;
 
     /**
-     * Retrieves the current JWK Set as an Optional.
+     * Retrieves the current JWK as an Optional.
      * This method doesn't throw exceptions and returns empty on failure.
      *
      * @return Optional containing the JWK Set if available
      */
-    default Optional<JWKSet> getJwkSetSafe() {
+    default Optional<JWK> getJwkSafe() {
         try {
-            return Optional.ofNullable(getJwkSet());
+            return Optional.ofNullable(getJwk());
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -40,19 +40,11 @@ public interface JwkSetSupplier {
     boolean refresh();
 
     /**
-     * Gets the identifier for this JWK Set supplier (e.g., service name).
-     * Useful when managing multiple suppliers.
-     *
-     * @return identifier string
-     */
-    String getIdentifier();
-
-    /**
      * Checks if the JWK Set is currently cached/available.
      *
      * @return true if JWK Set is available without fetching
      */
     default boolean isAvailable() {
-        return getJwkSetSafe().isPresent();
+        return getJwkSafe().isPresent();
     }
 }

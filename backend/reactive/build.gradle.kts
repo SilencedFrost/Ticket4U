@@ -83,4 +83,8 @@ subprojects {
         sourceResources(sourceSets["main"])
         systemProperty("spring.profiles.active", profile)
     }
+
+    tasks.register("runTicket") {
+        dependsOn(":services:ticket-service:bootRun")
+    }
 }

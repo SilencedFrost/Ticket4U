@@ -36,10 +36,14 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public EmailResponse sendSync(EmailRequest request) {
         String messageId = UUID.randomUUID().toString();
+        long startTime = System.currentTimeMillis();
+        
         TemplateType templateType = TemplateType.fromCode(request.getTemplateCode());
+        log.info("[AUDIT] Email PROCESSING - messageId: {}, template: {}, to: {}", 
+                messageId, templateType.name(), request.getTo());
+        
         String htmlContent = templateProcessor.process(templateType, request.getTemplateData());
 
-        log.info("Sending email sync to: {}", request.getTo());
         brevoClientService.sendEmail(
                 request.getTo(),
                 request.getSubject(),
@@ -48,17 +52,22 @@ public class EmailServiceImpl implements EmailService {
                 request.getBcc()
         );
 
+        long duration = System.currentTimeMillis() - startTime;
+        log.info("[AUDIT] Email SENT - messageId: {}, duration: {}ms", messageId, duration);
         return EmailResponse.sent(messageId);
     }
 
     @Async("emailExecutor")
     @Override
     public void sendAsync(EmailRequest request, String messageId) {
+        long startTime = System.currentTimeMillis();
+        TemplateType templateType = null;
         try {
-            TemplateType templateType = TemplateType.fromCode(request.getTemplateCode());
+            templateType = TemplateType.fromCode(request.getTemplateCode());
+            log.info("[AUDIT] Email ASYNC PROCESSING - messageId: {}, template: {}, to: {}", 
+                    messageId, templateType.name(), request.getTo());
+            
             String htmlContent = templateProcessor.process(templateType, request.getTemplateData());
-
-            log.info("Sending email async [{}] to: {}", messageId, request.getTo());
             brevoClientService.sendEmail(
                     request.getTo(),
                     request.getSubject(),
@@ -66,9 +75,14 @@ public class EmailServiceImpl implements EmailService {
                     request.getCc(),
                     request.getBcc()
             );
-            log.info("Email sent async [{}]", messageId);
+            
+            long duration = System.currentTimeMillis() - startTime;
+            log.info("[AUDIT] Email ASYNC SENT - messageId: {}, duration: {}ms", messageId, duration);
         } catch (Exception e) {
-            log.error("Failed to send async email [{}]: {}", messageId, e.getMessage());
+            long duration = System.currentTimeMillis() - startTime;
+            log.error("[AUDIT] Email ASYNC FAILED - messageId: {}, template: {}, to: {}, duration: {}ms, error: {}", 
+                    messageId, templateType != null ? templateType.name() : "UNKNOWN", 
+                    request.getTo(), duration, e.getMessage());
         }
     }
 }

@@ -65,11 +65,14 @@ public class SecurityConfig {
             }
 
             if (properties.getApiKeys() == null || !properties.getApiKeys().contains(apiKey)) {
-                log.warn("Invalid API Key attempt: {}", maskKey(apiKey));
+                log.warn("[AUDIT] Auth FAILED - Invalid API Key: {}, IP: {}, Path: {}", 
+                        maskKey(apiKey), getClientIp(request), request.getRequestURI());
                 sendError(response, "Invalid API Key");
                 return;
             }
 
+            log.info("[AUDIT] Auth SUCCESS - API Key: {}, IP: {}, Path: {}", 
+                    maskKey(apiKey), getClientIp(request), request.getRequestURI());
             filterChain.doFilter(request, response);
         }
 
@@ -84,6 +87,11 @@ public class SecurityConfig {
         private String maskKey(String key) {
             if (key == null || key.length() < 8) return "***";
             return key.substring(0, 4) + "..." + key.substring(key.length() - 4);
+        }
+
+        private String getClientIp(HttpServletRequest request) {
+            String xff = request.getHeader("X-Forwarded-For");
+            return xff != null ? xff.split(",")[0].trim() : request.getRemoteAddr();
         }
     }
 }

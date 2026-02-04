@@ -1,3 +1,4 @@
+// app/pages/event-payment/data/tickets.ts
 import type { Ticket } from '../types/ticket'
 
 export const ticketData: Ticket[] = [

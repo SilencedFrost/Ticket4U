@@ -1,6 +1,6 @@
 <!-- app/pages/event-payment/index.vue -->
 <template>
-  <div class="container-fluid bg-reactive-primary text-reactive-primary" style="height: 95vh;">
+  <div class="container-fluid bg-reactive-primary text-reactive-primary" style="height: 90vh;">
     <div class="row h-100 g-0">
       <!-- Left: Seating Map -->
       <div class="col-lg-8 bg-black">
@@ -11,7 +11,7 @@
       </div>
 
       <!-- Right: Cart Summary -->
-      <div class="col-lg-4 bg-reactive-secondary p-4 d-flex flex-column">
+      <div class="col-lg-4 bg-reactive-secondary p-4 d-flex flex-column h-100">
         <div class="flex-grow-1 overflow-auto">
           <EventInfo :event="eventDetails" />
 
@@ -50,7 +50,7 @@
           </div>
 
           <!-- Cart -->
-          <div class="mt-4">
+          <div class="mb-4">
             <h5 class="mb-3 text-reactive-primary">Giỏ hàng của bạn</h5>
 
             <div v-if="cart.length === 0" class="text-center py-5 text-reactive-secondary">
@@ -102,14 +102,16 @@
         </div>
 
         <!-- Bottom Button -->
-        <button 
-          class="btn btn-primary w-100 py-3 mt-3 fw-semibold"
-          :disabled="cart.length === 0"
-          @click="proceedToCheckout"
-        >
-          Tiếp tục thanh toán
-          <i class="bi bi-arrow-right ms-2"></i>
-        </button>
+        <div class="pt-3 border-top border-secondary">
+          <button 
+            class="btn btn-primary w-100 py-3 fw-semibold"
+            :disabled="cart.length === 0"
+            @click="proceedToCheckout"
+          >
+            Tiếp tục thanh toán
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -117,7 +119,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { EventDetails } from './types/ticket'
+import { ticketData } from './data/tickets'
+import { eventData } from './data/events'
 import SeatingMap from './components/SeatingMap.vue'
 import EventInfo from './components/EventInfo.vue'
 
@@ -128,57 +131,11 @@ interface CartItem {
   price: number
 }
 
-interface TicketInfo {
-  id: string
-  name: string
-  color: string
-  price: number
-  available: number
-  soldOut: boolean
-}
+// Load event data from data file
+const eventDetails = ref(eventData)
 
-const eventDetails = ref<EventDetails>({
-  id: '1',
-  title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
-  date: 'Feb 20, 2025',
-  time: '20:00 - 22:30',
-  venue: 'Ho Guom Opera'
-})
-
-const ticketInfo = ref<TicketInfo[]>([
-  {
-    id: 'svip',
-    name: 'SVIP - Dừa Lòng',
-    color: '#E53E3E',
-    price: 3000000,
-    available: 100,
-    soldOut: false
-  },
-  {
-    id: 'ga-a',
-    name: 'Vé Phổ Thông - GA A',
-    color: '#06B6D4',
-    price: 500000,
-    available: 150,
-    soldOut: false
-  },
-  {
-    id: 'ga-b',
-    name: 'Vé Phổ Thông - GA B',
-    color: '#22D3EE',
-    price: 500000,
-    available: 150,
-    soldOut: false
-  },
-  {
-    id: 'budget',
-    name: 'Vé Tiết Kiệm',
-    color: '#D69E2E',
-    price: 300000,
-    available: 0,
-    soldOut: true
-  }
-])
+// Load ticket data from data file
+const ticketInfo = ref(ticketData)
 
 const cart = ref<CartItem[]>([])
 

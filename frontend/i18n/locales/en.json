@@ -15,8 +15,8 @@
       "network": "Network error, please check your connection",
       "format": {
         "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
-        "email": "Only {'@'}gmail.com email addresses are accepted",
-        "phone": "Phone number must start with 0 and be exactly 10 digits"
+        "email": "Only Gmail, Outlook, Hotmail, Yahoo, iCloud emails are accepted",
+        "phone": "Valid Vietnamese mobile number (9-10 digits)"
       },
       "password": {
         "tooShort": "Password must be at least 8 characters",

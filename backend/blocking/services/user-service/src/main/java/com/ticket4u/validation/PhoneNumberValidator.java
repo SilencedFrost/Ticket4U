@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
 
-    private static final Pattern VN_MOBILE_PATTERN = Pattern.compile("^(\\+84|84|0)(3|5|7|8|9)\\d{8}$");
+    private static final Pattern VN_MOBILE_PATTERN = Pattern.compile("^(0)?(3|5|7|8|9)\\d{8}$");
     private static final Set<String> VOIP_PREFIXES = Set.of("2", "6");
 
     @Override
@@ -36,13 +36,10 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
     }
 
     private String extractPrefix(String cleaned) {
-        if (cleaned.startsWith("+84")) {
-            return cleaned.substring(3, 4);
-        } else if (cleaned.startsWith("84")) {
-            return cleaned.substring(2, 3);
-        } else if (cleaned.startsWith("0")) {
+        if (cleaned.startsWith("0")) {
             return cleaned.substring(1, 2);
+        } else {
+            return cleaned.substring(0, 1);
         }
-        return "";
     }
 }

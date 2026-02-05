@@ -30,10 +30,10 @@ const formData = reactive({
     fullName: '',
 });
 
-// Regex từ backend
+// Regex validate patterns
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$/;
-const PHONE_REGEX = /^0\d{9}$/;
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@(gmail\.com|outlook\.com|hotmail\.com|live\.com|yahoo\.com|icloud\.com|me\.com)$/;
 
 // Track touched fields for showing errors
 const touched = reactive({
@@ -332,7 +332,7 @@ function goToLogin() {
             <!-- Full Name -->
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.fullName') }}:<span v-if="!formData.fullName" class="text-danger">*</span>
+                    {{ $t('auth.register.fullName') }}<span class="text-danger">*</span>
                 </label>
                 <input id="reg-fullname" v-model="formData.fullName" type="text" :disabled="loading" :class="[
                     'form-control',
@@ -346,7 +346,7 @@ function goToLogin() {
             <!-- Email -->
             <div class="mb-2">
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('common.email') }}:<span v-if="!formData.email" class="text-danger">*</span>
+                    {{ $t('common.email') }}<span class="text-danger">*</span>
                 </label>
                 <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
                     'form-control',
@@ -360,9 +360,9 @@ function goToLogin() {
             <!-- Phone Number -->
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.phone') }}:<span v-if="!formData.phoneNumber" class="text-danger">*</span>
+                    {{ $t('auth.register.phone') }}<span class="text-danger">*</span>
                 </label>
-                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx" :class="[
+                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx hoặc xxxxxxxxx" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
@@ -374,7 +374,7 @@ function goToLogin() {
             <!-- Password -->
             <div class="mb-2">
                 <label for="reg-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.password') }}:<span v-if="!formData.password" class="text-danger">*</span>
+                    {{ $t('auth.password') }}<span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                     <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
@@ -396,7 +396,7 @@ function goToLogin() {
             <!-- Confirm Password -->
             <div class="mb-2">
                 <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.confirmPassword') }}:<span v-if="!formData.confirmPassword" class="text-danger">*</span>
+                    {{ $t('auth.register.confirmPassword') }}<span class="text-danger">*</span>
                 </label>
                 <div class="input-group">
                     <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
@@ -408,8 +408,8 @@ function goToLogin() {
                     <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewConfirmPassword">
                         <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
-                    <div v-if="error.confirmPassword" class="invalid-feedback">{{ $t(error.confirmPassword) }}</div>
                 </div>
+                <div v-if="error.confirmPassword" class="invalid-feedback d-block">{{ $t(error.confirmPassword) }}</div>
             </div>
 
             <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>

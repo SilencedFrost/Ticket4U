@@ -15,8 +15,8 @@
       "network": "Lỗi kết nối, kiểm tra kết nối của bạn",
       "format": {
         "password": "Mật khẩu phải có một ký tự viết thường, một ký tự viết hoa, một ký tự đặc biệt, và dài 8-32 ký tự",
-        "email": "Chỉ chấp nhận email {'@'}gmail.com",
-        "phone": "Số điện thoại bắt đầu bằng 0 và đủ 10 chữ số"
+        "email": "Chỉ chấp nhận email từ Gmail, Outlook, Hotmail, Yahoo, iCloud",
+        "phone": "Số điện thoại di động Việt Nam hợp lệ (9-10 chữ số)"
       },
       "password": {
         "tooShort": "Mật khẩu phải có ít nhất 8 ký tự",

@@ -1,6 +1,6 @@
 package com.ticket4u.mailservice.config;
 
-import com.ticket4u.mailservice.exception.UnauthorizedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticket4u.mailservice.service.AuditService;
 import com.ticket4u.mailservice.util.SecurityUtils;
 import jakarta.servlet.FilterChain;
@@ -14,10 +14,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Configuration
@@ -38,6 +42,7 @@ public class SecurityConfig {
         private static final String API_KEY_HEADER = "X-API-KEY";
         private final ApiKeyProperties properties;
         private final AuditService auditService;
+        private final ObjectMapper objectMapper = new ObjectMapper();
 
         public ApiKeyFilter(ApiKeyProperties properties, AuditService auditService) {
             this.properties = properties;
@@ -63,20 +68,35 @@ public class SecurityConfig {
             String apiKey = request.getHeader(API_KEY_HEADER);
 
             if (apiKey == null || apiKey.isBlank()) {
-                throw UnauthorizedException.missingApiKey();
+                writeErrorResponse(response, HttpStatus.UNAUTHORIZED, "Missing API Key", "MISSING_API_KEY");
+                return;
             }
 
             if (properties.getApiKeys() == null || !properties.getApiKeys().contains(apiKey)) {
                 String clientIp = SecurityUtils.getClientIp(request);
                 log.warn("[AUDIT] Auth FAILED - Invalid API Key: {}, IP: {}, Path: {}", 
                         SecurityUtils.maskApiKey(apiKey), clientIp, request.getRequestURI());
-                throw UnauthorizedException.invalidApiKey();
+                writeErrorResponse(response, HttpStatus.UNAUTHORIZED, "Invalid API Key", "INVALID_API_KEY");
+                return;
             }
 
             String clientIp = SecurityUtils.getClientIp(request);
             log.info("[AUDIT] Auth SUCCESS - API Key: {}, IP: {}, Path: {}", 
                     SecurityUtils.maskApiKey(apiKey), clientIp, request.getRequestURI());
             filterChain.doFilter(request, response);
+        }
+
+        private void writeErrorResponse(HttpServletResponse response, HttpStatus status, 
+                                         String message, String errorType) throws IOException {
+            response.setStatus(status.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("error", "Unauthorized");
+            body.put("message", message);
+            body.put("errorType", errorType);
+
+            objectMapper.writeValue(response.getOutputStream(), body);
         }
     }
 }

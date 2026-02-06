@@ -1,5 +1,8 @@
 package com.ticket4u.mailservice.config;
 
+import com.ticket4u.mailservice.exception.UnauthorizedException;
+import com.ticket4u.mailservice.service.AuditService;
+import com.ticket4u.mailservice.util.SecurityUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,13 +14,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class SecurityConfig {
@@ -26,7 +27,7 @@ public class SecurityConfig {
     @Configuration
     @ConfigurationProperties(prefix = "security")
     public static class ApiKeyProperties {
-        private List<String> apiKeys;
+        private Set<String> apiKeys;
     }
 
     @Slf4j
@@ -36,9 +37,11 @@ public class SecurityConfig {
 
         private static final String API_KEY_HEADER = "X-API-KEY";
         private final ApiKeyProperties properties;
+        private final AuditService auditService;
 
-        public ApiKeyFilter(ApiKeyProperties properties) {
+        public ApiKeyFilter(ApiKeyProperties properties, AuditService auditService) {
             this.properties = properties;
+            this.auditService = auditService;
         }
 
         @Override
@@ -60,38 +63,20 @@ public class SecurityConfig {
             String apiKey = request.getHeader(API_KEY_HEADER);
 
             if (apiKey == null || apiKey.isBlank()) {
-                sendError(response, "Missing API Key");
-                return;
+                throw UnauthorizedException.missingApiKey();
             }
 
             if (properties.getApiKeys() == null || !properties.getApiKeys().contains(apiKey)) {
+                String clientIp = SecurityUtils.getClientIp(request);
                 log.warn("[AUDIT] Auth FAILED - Invalid API Key: {}, IP: {}, Path: {}", 
-                        maskKey(apiKey), getClientIp(request), request.getRequestURI());
-                sendError(response, "Invalid API Key");
-                return;
+                        SecurityUtils.maskApiKey(apiKey), clientIp, request.getRequestURI());
+                throw UnauthorizedException.invalidApiKey();
             }
 
+            String clientIp = SecurityUtils.getClientIp(request);
             log.info("[AUDIT] Auth SUCCESS - API Key: {}, IP: {}, Path: {}", 
-                    maskKey(apiKey), getClientIp(request), request.getRequestURI());
+                    SecurityUtils.maskApiKey(apiKey), clientIp, request.getRequestURI());
             filterChain.doFilter(request, response);
-        }
-
-        private void sendError(HttpServletResponse response, String message) throws IOException {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write(
-                    "{\"error\": \"Unauthorized\", \"message\": \"" + message + "\"}"
-            );
-        }
-
-        private String maskKey(String key) {
-            if (key == null || key.length() < 8) return "***";
-            return key.substring(0, 4) + "..." + key.substring(key.length() - 4);
-        }
-
-        private String getClientIp(HttpServletRequest request) {
-            String xff = request.getHeader("X-Forwarded-For");
-            return xff != null ? xff.split(",")[0].trim() : request.getRemoteAddr();
         }
     }
 }

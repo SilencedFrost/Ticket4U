@@ -1,6 +1,9 @@
 package com.ticket4u.mailservice.filter;
 
 import com.ticket4u.mailservice.config.RateLimitConfig;
+import com.ticket4u.mailservice.exception.RateLimitExceededException;
+import com.ticket4u.mailservice.service.AuditService;
+import com.ticket4u.mailservice.util.SecurityUtils;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;
 import jakarta.servlet.FilterChain;
@@ -11,8 +14,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,12 +21,13 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@Order(2) // Run after ApiKeyFilter
+@Order(2)
 @RequiredArgsConstructor
 public class RateLimitFilter extends OncePerRequestFilter {
 
     private static final String API_KEY_HEADER = "X-API-KEY";
     private final RateLimitConfig rateLimitConfig;
+    private final AuditService auditService;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -58,22 +60,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } else {
             long waitSeconds = probe.getNanosToWaitForRefill() / 1_000_000_000;
-            log.warn("[AUDIT] Rate limit exceeded - API Key: {}..., IP: {}, Wait: {}s",
-                    apiKey.substring(0, Math.min(8, apiKey.length())),
-                    getClientIp(request), waitSeconds);
-
-            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.addHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(waitSeconds));
-            response.getWriter().write(
-                    "{\"error\": \"Too Many Requests\", \"message\": \"Rate limit exceeded. Retry after " 
-                    + waitSeconds + " seconds\"}"
-            );
+            String clientIp = SecurityUtils.getClientIp(request);
+            auditService.logRateLimitExceeded(apiKey, clientIp, waitSeconds);
+            throw new RateLimitExceededException(waitSeconds);
         }
-    }
-
-    private String getClientIp(HttpServletRequest request) {
-        String xff = request.getHeader("X-Forwarded-For");
-        return xff != null ? xff.split(",")[0].trim() : request.getRemoteAddr();
     }
 }

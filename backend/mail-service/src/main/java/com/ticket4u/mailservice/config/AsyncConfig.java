@@ -18,11 +18,13 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(100);
+        executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("email-async-");
-        executor.setRejectedExecutionHandler((r, e) ->
-            log.warn("Email task rejected, queue is full"));
+        executor.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(30);
         executor.initialize();
+        log.info("Email executor initialized - CorePool: 5, MaxPool: 10, Queue: 500, Policy: CallerRunsPolicy");
         return executor;
     }
 }

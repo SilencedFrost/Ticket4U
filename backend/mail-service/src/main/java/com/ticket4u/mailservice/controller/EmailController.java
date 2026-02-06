@@ -4,11 +4,11 @@ import com.ticket4u.mailservice.dto.request.EmailRequest;
 import com.ticket4u.mailservice.dto.response.EmailResponse;
 import com.ticket4u.mailservice.enums.TemplateType;
 import com.ticket4u.mailservice.service.EmailService;
+import com.ticket4u.mailservice.service.AuditService;
 import com.ticket4u.mailservice.health.SmtpHealthIndicator;
 import com.ticket4u.mailservice.health.SmtpHealthIndicator.HealthStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class EmailController {
 
     private final EmailService emailService;
-    private final HttpServletRequest httpRequest;
+    private final AuditService auditService;
     private final SmtpHealthIndicator smtpHealthIndicator;
 
     @PostMapping("/send")
@@ -38,38 +38,10 @@ public class EmailController {
     public ResponseEntity<EmailResponse> sendEmail(
             @Valid @RequestBody EmailRequest request
     ) {
-        logRequest(request);
+        auditService.logEmailRequest(request);
         EmailResponse response = emailService.send(request);
         log.info("[AUDIT] Response: messageId={}, status={}", response.getMessageId(), response.getStatus());
         return ResponseEntity.ok(response);
-    }
-
-    private void logRequest(EmailRequest request) {
-        String clientIp = getClientIp();
-        String userAgent = httpRequest.getHeader("User-Agent");
-        String apiKey = maskApiKey(httpRequest.getHeader("X-API-KEY"));
-        int ccCount = request.getCc() != null ? request.getCc().length : 0;
-        int bccCount = request.getBcc() != null ? request.getBcc().length : 0;
-
-        log.info("[AUDIT] Email request - IP: {}, API-Key: {}, User-Agent: {}, To: {}, Template: {}, Async: {}, CC: {}, BCC: {}",
-                clientIp, apiKey, userAgent, maskEmail(request.getTo()), 
-                request.getTemplateCode(), request.isAsync(), ccCount, bccCount);
-    }
-
-    private String getClientIp() {
-        String xff = httpRequest.getHeader("X-Forwarded-For");
-        return xff != null ? xff.split(",")[0].trim() : httpRequest.getRemoteAddr();
-    }
-
-    private String maskApiKey(String key) {
-        if (key == null || key.length() < 8) return "***";
-        return key.substring(0, 8) + "...";
-    }
-
-    private String maskEmail(String email) {
-        if (email == null || !email.contains("@")) return "***";
-        int atIdx = email.indexOf("@");
-        return email.substring(0, Math.min(3, atIdx)) + "***@" + email.substring(atIdx + 1);
     }
 
     @GetMapping("/templates")

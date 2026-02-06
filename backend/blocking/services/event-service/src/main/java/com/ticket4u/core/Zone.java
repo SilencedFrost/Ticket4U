@@ -28,7 +28,7 @@ public class Zone {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(length = 255)
+    @Column(length = 254)
     private String name;
 
     @Column(name = "is_standing", nullable = false)

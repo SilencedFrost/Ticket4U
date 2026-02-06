@@ -1,1 +1,51 @@
+# Production Configuration Example
+# Copy this file to application-prod.yml and configure environment variables
+
+# Spring Configuration
+spring:
+    mail:
+        host: smtp-relay.brevo.com
+        port: 587
+        username: ${MAIL_USERNAME}
+        password: ${MAIL_PASSWORD}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+                        required: true
+                    connectiontimeout: 5000
+                    timeout: 5000
+                    writetimeout: 5000
+    main:
+        banner-mode: off
+
+# Custom mail settings
+mail:
+    from: ${MAIL_FROM}
+    from-name: ${MAIL_FROM_NAME}
+
+# API Keys
+security:
+    api-keys:
+        - ${API_KEY_USER_SERVICE}
+        - ${API_KEY_EVENT_SERVICE}
+        - ${API_KEY_TICKET_SERVICE}
+
+# Logging
+logging:
+    level:
+        root: WARN
+        com.yourapp: INFO
+        org.springframework: WARN
+        org.hibernate: WARN
+        org.springframework.web: ERROR
+    pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Rate Limiting
+rate-limit:
+    requests-per-minute: 100
+    requests-per-hour: 1000
 

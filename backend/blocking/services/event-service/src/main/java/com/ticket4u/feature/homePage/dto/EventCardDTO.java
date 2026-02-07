@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Data
@@ -29,9 +31,16 @@ public class EventCardDTO {
         this.name = (String) result[1];
         this.bannerUrl = (String) result[2];
         this.addressLine = (String) result[3];
-        this.startDate = (OffsetDateTime) result[4];
-        this.endDate = (OffsetDateTime) result[5];
-        this.minPrice = (BigDecimal) result[6];
+        // Convert Instant to OffsetDateTime
+        this.startDate = result[4] != null ? ((Instant) result[4]).atOffset(ZoneOffset.UTC) : null;
+        this.endDate = result[5] != null ? ((Instant) result[5]).atOffset(ZoneOffset.UTC) : null;
+        Object priceObj = result[6];
+        if (priceObj != null) {
+            // Chuyển đổi an toàn từ Object (của Native Query) sang BigDecimal
+            this.minPrice = new BigDecimal(priceObj.toString());
+        } else {
+            this.minPrice = null;
+        }
     }
 }
 

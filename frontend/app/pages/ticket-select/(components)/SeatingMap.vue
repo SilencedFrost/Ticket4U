@@ -1,6 +1,5 @@
-<!-- app/pages/event-payment/components/SeatingMap.vue -->
 <template>
-  <div class="h-100 d-flex flex-column">
+  <div class="seating-map-wrapper h-100 d-flex flex-column">
     <div class="d-flex justify-content-between align-items-center p-4 bg-reactive-secondary">
       <button 
         class="btn btn-link text-primary text-decoration-none p-0"
@@ -10,136 +9,153 @@
       </button>
       <div class="text-center">
         <h5 class="text-primary mb-0">Chọn khu vực</h5>
-        <small class="text-reactive-secondary">Bấm vào hàng để chọn vé</small>
+        <small class="text-reactive-secondary">Bấm vào khu vực để chọn vé</small>
       </div>
       <div style="width: 80px;"></div>
     </div>
 
-    <div class="flex-grow-1 overflow-auto p-4">
-      <div class="text-center mb-4">
-        <div class="badge bg-warning text-dark px-4 py-2">STAGE</div>
-      </div>
-
-      <div class="mx-auto" style="max-width: 900px;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Tên vé</th>
-              <th>Còn lại</th>
-              <th>Giá</th>
-              <th>Trạng thái</th>
-            </tr>
-          </thead>
+    <div class="flex-grow-1 overflow-auto p-4 d-flex align-items-center justify-content-center">
+      <div style="max-width: 800px; width: 100%;">
+        
+        <!-- Stadium Layout Table -->
+        <table class="table table-bordered text-center mb-0">
           <tbody>
-            <!-- VIP SECTION -->
-            <tr class="table-active">
-              <td colspan="5"><strong>VIP SECTION</strong></td>
-            </tr>
-            <tr 
-              v-for="ticket in svipTickets" 
-              :key="ticket.id"
-              @click="openZoneSelection(ticket)"
-              style="cursor: pointer;"
-            >
-              <td>
-                <div :style="{ backgroundColor: ticket.color, width: '30px', height: '30px' }"></div>
-              </td>
-              <td>{{ ticket.name }}</td>
-              <td>{{ ticket.available }}</td>
-              <td>{{ formatPrice(ticket.price) }}</td>
-              <td>
-                <span v-if="ticket.soldOut" class="badge bg-danger">Sold Out</span>
-                <span v-else class="badge bg-success">Available</span>
+            <!-- Row 1: Stage -->
+            <tr>
+              <td colspan="3" class="py-3 bg-warning text-dark fw-bold">
+                Stage
               </td>
             </tr>
 
-            <!-- ECONOMY SECTION -->
-            <tr class="table-active">
-              <td colspan="5"><strong>ECONOMY SECTION</strong></td>
-            </tr>
-            <tr 
-              v-for="ticket in gaTickets" 
-              :key="ticket.id"
-              @click="openZoneSelection(ticket)"
-              style="cursor: pointer;"
-            >
-              <td>
-                <div :style="{ backgroundColor: ticket.color, width: '30px', height: '30px' }"></div>
-              </td>
-              <td>{{ ticket.name }}</td>
-              <td>{{ ticket.available }}</td>
-              <td>{{ formatPrice(ticket.price) }}</td>
-              <td>
-                <span v-if="ticket.soldOut" class="badge bg-danger">Sold Out</span>
-                <span v-else class="badge bg-success">Available</span>
+            <!-- Row 2: SVIP -->
+            <tr>
+              <td colspan="3" class="p-0">
+                <div 
+                  class="seat-zone p-4"
+                  :style="{ backgroundColor: getSeatColor('svip') }"
+                  @click="handleZoneClick('svip')"
+                >
+                  <strong class="text-white">SVIP</strong>
+                </div>
               </td>
             </tr>
 
-            <!-- BUDGET SECTION -->
-            <tr class="table-active">
-              <td colspan="5"><strong>BUDGET SECTION</strong></td>
-            </tr>
-            <tr 
-              v-for="ticket in budgetTickets" 
-              :key="ticket.id"
-              @click="openZoneSelection(ticket)"
-              style="cursor: pointer;"
-            >
-              <td>
-                <div :style="{ backgroundColor: ticket.color, width: '30px', height: '30px' }"></div>
+            <!-- Row 3: Phổ Thông (Zone A) | FOH | Phổ Thông (Zone B) -->
+            <tr>
+              <td class="p-0" style="width: 40%;">
+                <div 
+                  class="seat-zone p-4"
+                  :style="{ backgroundColor: getSeatColor('ga-a') }"
+                  @click="handleZoneClick('ga-a')"
+                >
+                  <strong class="text-white">Phổ Thông (Zone A)</strong>
+                </div>
               </td>
-              <td>{{ ticket.name }}</td>
-              <td>{{ ticket.available }}</td>
-              <td>{{ formatPrice(ticket.price) }}</td>
-              <td>
-                <span v-if="ticket.soldOut" class="badge bg-danger">Sold Out</span>
-                <span v-else class="badge bg-success">Available</span>
+              <td class="p-0 bg-reactive-gray" style="width: 20%;">
+                <div class="p-4">
+                  <strong class="text-reactive-secondary">FOH</strong>
+                </div>
+              </td>
+              <td class="p-0" style="width: 40%;">
+                <div 
+                  class="seat-zone p-4"
+                  :style="{ backgroundColor: getSeatColor('ga-b') }"
+                  @click="handleZoneClick('ga-b')"
+                >
+                  <strong class="text-white">Phổ Thông (Zone B)</strong>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 4: Vé Tiết Kiệm (Trái) | Empty | Vé Tiết Kiệm (Phải) -->
+            <tr>
+              <td class="p-0">
+                <div 
+                  class="seat-zone p-4 opacity-50"
+                  :style="{ backgroundColor: getSeatColor('budget-left') }"
+                  @click="handleZoneClick('budget-left')"
+                >
+                  <strong class="text-white">Vé Tiết Kiệm (Trái)</strong>
+                  <br>
+                  <small class="badge bg-danger mt-1">Sold Out</small>
+                </div>
+              </td>
+              <td class="p-0 bg-reactive-secondary"></td>
+              <td class="p-0">
+                <div 
+                  class="seat-zone p-4 opacity-50"
+                  :style="{ backgroundColor: getSeatColor('budget-right') }"
+                  @click="handleZoneClick('budget-right')"
+                >
+                  <strong class="text-white">Vé Tiết Kiệm (Phải)</strong>
+                  <br>
+                  <small class="badge bg-danger mt-1">Sold Out</small>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
 
-      <!-- Selection Panel -->
-      <div v-if="selectedZone" class="mt-4 mx-auto" style="max-width: 600px;">
-        <div class="card p-4">
-          <div class="d-flex justify-content-between mb-3">
-            <h5>{{ selectedZone.name }}</h5>
-            <button class="btn-close" @click="closeZoneSelection"></button>
+    <!-- Selection Panel -->
+    <div v-if="selectedZone" class="position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary" style="z-index: 1000;">
+      <div class="container" style="max-width: 600px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="text-reactive-primary mb-1">{{ selectedZone.name }}</h5>
+            <small class="text-reactive-secondary">
+              <i class="bi bi-people me-1"></i>
+              {{ selectedZone.available }} vé còn lại
+            </small>
+          </div>
+          <button 
+            class="btn-close" 
+            @click="closeZoneSelection"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div v-if="selectedZone.soldOut" class="alert alert-danger mb-0">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Khu vực này đã hết vé
+        </div>
+
+        <div v-else class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label text-reactive-primary fw-semibold small">Số lượng</label>
+            <div class="d-flex gap-2">
+              <button class="btn btn-reactive-gray" @click="decreaseQuantity">
+                <i class="bi bi-dash"></i>
+              </button>
+              <input 
+                type="number" 
+                class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
+                v-model.number="quantity" 
+                :max="selectedZone.available" 
+                min="0" 
+              />
+              <button class="btn btn-reactive-gray" @click="increaseQuantity">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
           </div>
 
-          <div v-if="selectedZone.soldOut" class="alert alert-danger">
-            Hết vé
+          <div class="col-md-6">
+            <label class="form-label text-reactive-primary fw-semibold small">Tổng cộng</label>
+            <div class="text-primary fs-4 fw-bold">
+              {{ formatPrice(totalCost) }}
+            </div>
           </div>
 
-          <div v-else>
-            <div class="mb-3">
-              <label>Số lượng</label>
-              <div class="d-flex gap-2">
-                <button class="btn btn-secondary" @click="decreaseQuantity">-</button>
-                <input type="number" class="form-control text-center" v-model.number="quantity" :max="selectedZone.available" min="0" />
-                <button class="btn btn-secondary" @click="increaseQuantity">+</button>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <div class="d-flex justify-content-between">
-                <span>Giá:</span>
-                <span>{{ formatPrice(selectedZone.price) }}</span>
-              </div>
-              <div class="d-flex justify-content-between">
-                <span>Số lượng:</span>
-                <span>{{ quantity }}</span>
-              </div>
-              <div class="d-flex justify-content-between fw-bold">
-                <span>Tổng:</span>
-                <span>{{ formatPrice(totalCost) }}</span>
-              </div>
-            </div>
-
-            <button class="btn btn-primary w-100" @click="addToCart" :disabled="quantity === 0">
-              Thêm vào giỏ
+          <div class="col-12">
+            <button 
+              class="btn btn-primary w-100 py-2 fw-semibold" 
+              @click="addToCart" 
+              :disabled="quantity === 0"
+            >
+              <i class="bi bi-cart-plus me-2"></i>
+              Thêm vào giỏ hàng
             </button>
           </div>
         </div>
@@ -150,8 +166,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { Ticket } from '../types/ticket'
-import { ticketData } from '../data/tickets'
+import type { Ticket } from '../types/ticket.type'
+import { ticketData } from '../data/event-data'
 
 interface Emits {
   (e: 'back'): void
@@ -163,14 +179,22 @@ const emit = defineEmits<Emits>()
 const selectedZone = ref<Ticket | null>(null)
 const quantity = ref(0)
 
-const svipTickets = computed(() => ticketData.filter(t => t.zone === 'SVIP'))
-const gaTickets = computed(() => ticketData.filter(t => t.zone === 'GA'))
-const budgetTickets = computed(() => ticketData.filter(t => t.zone === 'BUDGET'))
-
 const totalCost = computed(() => {
   if (!selectedZone.value) return 0
   return selectedZone.value.price * quantity.value
 })
+
+const getSeatColor = (ticketId: string) => {
+  const ticket = ticketData.find(t => t.id === ticketId)
+  return ticket?.color || '#ccc'
+}
+
+const handleZoneClick = (ticketId: string) => {
+  const ticket = ticketData.find(t => t.id === ticketId)
+  if (ticket) {
+    openZoneSelection(ticket)
+  }
+}
 
 const openZoneSelection = (ticket: Ticket) => {
   selectedZone.value = ticket
@@ -205,3 +229,24 @@ const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
 }
 </script>
+
+<style scoped>
+.seat-zone {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.seat-zone:hover:not(.opacity-50) {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.table-bordered td {
+  border-color: #444 !important;
+}
+</style>

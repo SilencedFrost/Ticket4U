@@ -1,5 +1,5 @@
-// app/pages/event-payment/data/tickets.ts
-import type { Ticket } from '../types/ticket'
+import type { Ticket } from '../types/ticket.type'
+import type { Event } from '../types/event.type'
 
 export const ticketData: Ticket[] = [
   { 
@@ -48,3 +48,11 @@ export const ticketData: Ticket[] = [
     soldOut: true 
   },
 ]
+
+export const eventData: Event = {
+  id: '1',
+  title: 'ANH TRAI "SAY HI" 2025 CONCERT - ĐÊM 2',
+  date: '14 Tháng 03, 2026',
+  time: '12:00 - 23:00',
+  venue: 'Sân Vận Động Quốc Gia Mỹ Đình'
+}

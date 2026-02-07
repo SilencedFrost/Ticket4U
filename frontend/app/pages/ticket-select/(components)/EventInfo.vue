@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4">
+  <div class="event-info-wrapper mb-4">
     <h4 class="mb-3 text-reactive-primary">{{ event.title }}</h4>
     
     <div class="text-reactive-secondary">
@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import type { EventDetails } from '../types/ticket'
+import type { Event } from '../types/event.type'
 
 interface Props {
-  event: EventDetails
+  event: Event
 }
 
 defineProps<Props>()

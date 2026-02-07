@@ -12,11 +12,3 @@ export interface SelectedTicket {
   ticket: Ticket
   quantity: number
 }
-
-export interface EventDetails {
-  id: string
-  title: string
-  date: string
-  time: string
-  venue: string
-}

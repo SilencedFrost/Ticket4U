@@ -28,6 +28,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authUrl: 'https://localhost:8080/api/v1/auth',
+      homeApiUrl: 'https://localhost:8081/api/home',
     },
   },
 

@@ -1,7 +1,7 @@
 # Database Configuration
 spring:
   datasource:
-    url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-User}
+    url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-Event}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver

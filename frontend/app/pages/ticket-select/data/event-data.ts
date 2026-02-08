@@ -51,8 +51,8 @@ export const ticketData: Ticket[] = [
 
 export const eventData: Event = {
   id: '1',
-  title: 'ANH TRAI "SAY HI" 2025 CONCERT - ĐÊM 2',
-  date: '14 Tháng 03, 2026',
-  time: '12:00 - 23:00',
+  title: 'GIAO HƯỞNG MÙA YÊU - LIVE CONCERT ĐẶC BIỆT TẠI NHÀ HÁT HỒ GƯƠM',
+  date: 'Feb 20, 2025',
+  time: '20:00 - 22:30',
   venue: 'Sân Vận Động Quốc Gia Mỹ Đình'
 }

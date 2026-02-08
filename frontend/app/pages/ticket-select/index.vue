@@ -1,5 +1,5 @@
 <template>
-  <div class="event-payment-wrapper container-fluid bg-reactive-primary text-reactive-primary" style="height: 90vh;">
+  <div class="event-payment-wrapper container-fluid bg-reactive-primary text-reactive-primary vh-100">
     <div class="row h-100 g-0">
       <!-- Left: Seating Map -->
       <div class="col-lg-8 bg-black">

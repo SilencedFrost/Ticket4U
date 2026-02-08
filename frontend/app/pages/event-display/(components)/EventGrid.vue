@@ -4,20 +4,20 @@
             <div class="event-card-wrapper cursor-pointer" role="button" tabindex="0" @click="$emit('event-click', event.id)" @keypress.enter="$emit('event-click', event.id)">
                 <!-- Event Image -->
                 <div class="event-card-img rounded-3 overflow-hidden mb-3">
-                    <img :src="event.imageUrl" :alt="event.title" class="w-100 h-100 object-fit-cover" loading="lazy" />
+                    <img :src="event.bannerUrl" :alt="event.name" class="w-100 h-100 object-fit-cover" loading="lazy" />
                 </div>
 
                 <!-- Event Info -->
                 <div>
                     <h3 class="fw-bold mb-2 text-reactive-primary text-ellipsis-2 fs-5">
-                        {{ event.title }}
+                        {{ event.name }}
                     </h3>
                     <p class="text-primary fw-bold mb-1">
-                        {{ formatPrice(event.price) }}
+                        {{ formatPrice(event.minPrice) }}
                     </p>
                     <p class="text-reactive-secondary mb-0 d-flex align-items-center gap-1 small">
                         <i class="bi bi-calendar-event"></i>
-                        <span>{{ event.date }}</span>
+                        <span>{{ formatDate(event.startDate) }}</span>
                     </p>
                 </div>
             </div>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '../types/event-display'
+import type { Event } from '~/pages/(home)/types/home'
 
 interface Props {
     events: Event[]
@@ -44,7 +44,15 @@ defineEmits<{
 }>()
 
 const formatPrice = (price: number): string => {
-    return `Từ ${price.toLocaleString('vi-VN')}đ`
+    return price ? `Từ ${price.toLocaleString('vi-VN')}đ` : 'Chưa cập nhật giá'
+}
+
+const formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate)
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    return `${day} tháng ${month}, ${year}`
 }
 </script>
 

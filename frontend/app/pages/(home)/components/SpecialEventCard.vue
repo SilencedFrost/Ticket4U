@@ -1,16 +1,17 @@
 <template>
   <div class="special-event-card rounded-4 overflow-hidden">
     <img
-      :src="event.imageUrl"
-      :alt="event.title"
+      v-img-fallback="[350, 200]"
+      :src="event.bannerUrl"
+      :alt="event.name"
       class="w-100 h-100 object-fit-cover"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home'
-
+import type { Event } from '~/pages/(home)/types/home'
+const { vFallback: vImgFallback } = useImagePlaceholder();
 interface Props {
   event: Event
 }

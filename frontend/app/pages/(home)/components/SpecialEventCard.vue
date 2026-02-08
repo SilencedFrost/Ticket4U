@@ -1,15 +1,15 @@
 <template>
   <div class="special-event-card rounded-4 overflow-hidden">
     <img
-      :src="event.bannerUrl"
-      :alt="event.name"
+      :src="event.imageUrl"
+      :alt="event.title"
       class="w-100 h-100 object-fit-cover"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/pages/(home)/types/home'
+import type { Event } from '~/types/home'
 
 interface Props {
   event: Event

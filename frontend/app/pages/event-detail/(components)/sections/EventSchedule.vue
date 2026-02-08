@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { LocalizedContent } from '@/pages/event-detail/types/event-detail';
-const { vFallback: vImgFallback } = useImagePlaceholder();
+import type { LocalizedContent } from '@/types/event-detail';
 defineProps<{
   title: string;
   address: LocalizedContent;
@@ -24,7 +23,6 @@ defineProps<{
 
       <div class="mb-4">
         <img
-          v-img-fallback="[900, 1000]"
           :src="eventThumbImage"
           alt=""
           class="w-auto rounded-2 object-fit-cover img-fluid mh-100"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { RelatedEvent } from '@/pages/event-detail/types/event-detail';
-const { vFallback: vImgFallback } = useImagePlaceholder();
+import type { RelatedEvent } from '@/types/event-detail';
 defineProps<{
   eventData: RelatedEvent[];
 }>();
@@ -16,12 +15,7 @@ defineProps<{
       <div class="row g-3 mb-5 d-flex">
         <div v-for="event in eventData" :key="event.id" class="col-6 col-lg-3">
           <div class="card h-100 overflow-hidden">
-            <img
-              v-img-fallback="[400, 220]"
-              alt="Event"
-              :src="event.image"
-              class="card-img-top object-fit-cover h-auto"
-            />
+            <img :src="event.image" alt="Event" class="card-img-top object-fit-cover h-auto" />
             <div class="d-flex flex-column p-3">
               <p class="text-reactive-primary fw-semibold mb-2 fs-6 lh-sm">{{ event.title }}</p>
               <div class="mt-auto">

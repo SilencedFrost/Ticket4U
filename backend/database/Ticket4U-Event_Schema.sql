@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS public.event_contents (
     about_en TEXT,             
     terms_and_conditions TEXT,
     policy_refund TEXT,      
+	seating_plan_image_url TEXT, -- Hình ảnh sơ đồ chỗ ngồi
     -- faq JSONB,                -- Lưu dạng JSON cho linh hoạt các câu hỏi thường gặp
     CONSTRAINT content_fk_event FOREIGN KEY (event_id) REFERENCES public.events (id) ON DELETE CASCADE --when an event is deleted, its content is also removed
 );
@@ -71,7 +72,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
 CREATE TABLE IF NOT EXISTS public.zone_contents (
     zone_id UUID PRIMARY KEY, -- 1-1 với zone 
     description TEXT, -- Mô tả chi tiết hạng vé
-    gift_image_url VARCHAR(512), 
+    gift_image_url VARCHAR(512),
+
     perks JSONB, -- Lưu danh sách ưu đãi dạng [ "Nước uống miễn phí", "Lightstick", "Fansign" ]
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

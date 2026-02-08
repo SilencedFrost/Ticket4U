@@ -34,7 +34,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
                MIN(z.price) as min_price
         FROM events e
-        JOIN zones z ON e.id = z.event_id
+        LEFT JOIN zones z ON e.id = z.event_id
         WHERE e.status IN ('PLANNED', 'ONGOING')
         GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date
         ORDER BY e.created_at DESC
@@ -96,4 +96,66 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         LIMIT 10
         """, nativeQuery = true)
     List<Object[]> findEventsByCategory(@Param("categoryName") String categoryName);
+
+    // Get latest 4 events for a specific category ID
+    @Query(value = """
+        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
+               MIN(z.price) as min_price
+        FROM events e
+        LEFT JOIN zones z ON e.id = z.event_id
+        WHERE e.status IN ('PLANNED', 'ONGOING')
+          AND e.category_id = :categoryId
+        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date
+        ORDER BY e.created_at DESC
+        LIMIT 4
+        """, nativeQuery = true)
+    List<Object[]> findLatestEventsByCategoryId(@Param("categoryId") Integer categoryId);
+
+    // Event Display: Filter events WITHOUT category filter (when showing all categories)
+    @Query(value = """
+        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
+               MIN(z.price) as min_price, c.name as category_name
+        FROM events e
+        LEFT JOIN zones z ON e.id = z.event_id
+        LEFT JOIN categories c ON e.category_id = c.id
+        WHERE e.status IN ('PLANNED', 'ONGOING')
+          AND (:startDate IS NULL OR e.start_date >= TO_TIMESTAMP(:startDate, 'YYYY-MM-DD'))
+          AND (:endDate IS NULL OR e.start_date <= TO_TIMESTAMP(:endDate, 'YYYY-MM-DD') + INTERVAL '1 day')
+          AND (:isFreeOnly IS FALSE OR EXISTS (
+              SELECT 1 FROM zones z2 
+              WHERE z2.event_id = e.id AND (z2.price = 0 OR z2.price IS NULL)
+          ))
+        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, c.name
+        ORDER BY e.start_date ASC
+        """, nativeQuery = true)
+    List<Object[]> findEventsWithoutCategoryFilter(
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
+        @Param("isFreeOnly") Boolean isFreeOnly
+    );
+
+    // Event Display: Filter events WITH category filter (when specific categories selected)
+    @Query(value = """
+        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
+               MIN(z.price) as min_price, c.name as category_name
+        FROM events e
+        LEFT JOIN zones z ON e.id = z.event_id
+        LEFT JOIN categories c ON e.category_id = c.id
+        WHERE e.status IN ('PLANNED', 'ONGOING')
+          AND e.category_id IN (:categoryIds)
+          AND (:startDate IS NULL OR e.start_date >= TO_TIMESTAMP(:startDate, 'YYYY-MM-DD'))
+          AND (:endDate IS NULL OR e.start_date <= TO_TIMESTAMP(:endDate, 'YYYY-MM-DD') + INTERVAL '1 day')
+          AND (:isFreeOnly IS FALSE OR EXISTS (
+              SELECT 1 FROM zones z2 
+              WHERE z2.event_id = e.id AND (z2.price = 0 OR z2.price IS NULL)
+          ))
+        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, c.name
+        ORDER BY e.start_date ASC
+        """, nativeQuery = true)
+    List<Object[]> findEventsWithCategoryFilter(
+        @Param("startDate") String startDate,
+        @Param("endDate") String endDate,
+        @Param("categoryIds") List<Integer> categoryIds,
+        @Param("isFreeOnly") Boolean isFreeOnly
+    );
 }

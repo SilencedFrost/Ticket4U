@@ -14,66 +14,59 @@
                 </div>
             </div>
 
+            <!-- Active Filters Tags -->
+            <div v-if="activeFilters.length > 0" class="active-filters-section mb-4">
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <div
+                        v-for="filter in activeFilters"
+                        :key="filter.key"
+                        class="filter-tag d-flex align-items-center gap-2"
+                    >
+                        <button
+                            type="button"
+                            class="btn-remove-filter"
+                            :aria-label="`Xóa bộ lọc ${filter.label}`"
+                            @click="removeFilter(filter.key, filter.value)"
+                        >
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                        <span class="filter-label">{{ filter.label }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div v-if="loading" class="text-center py-5">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div v-else-if="error" class="alert alert-danger">
+                {{ error }}
+            </div>
+
             <!-- Events Grid -->
-            <EventGrid :events="displayEvents" @event-click="handleEventClick" />
+            <EventGrid v-else :events="events" @event-click="handleEventClick" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
 import DateRangeFilter from './DateRangeFilter.vue'
 import MainFilter from './MainFilter.vue'
 import EventGrid from './EventGrid.vue'
 import { useDateRange } from '../composables/use-date-range'
 import { useEventFilter } from '../composables/use-event-filter'
-import { locations, categories, datePresets } from '../data/filters'
-import type { Event } from '~/pages/home/types/home'
+import { useEventDisplayStore } from '~/stores/eventDisplayStore'
+import { locations, datePresets } from '../data/filters'
 
-interface Props {
-    events?: Event[]
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    events: () => [],
-})
-
-// Sample events data
-const sampleEvents: Event[] = [
-    {
-        id: '1',
-        imageUrl: 'https://www.figma.com/api/mcp/asset/a25dbc73-4601-4464-974d-5b26b1fa53e1',
-        title: 'SOOBIN LIVE CONCERT: ALL-ROUNDER THE FINAL',
-        price: 100000,
-        date: '26 tháng 11,2025',
-    },
-    {
-        id: '2',
-        imageUrl: 'https://www.figma.com/api/mcp/asset/ab959769-fc96-47d3-8f3c-23e614caeba7',
-        title: '[TP.HCM] Những Thành Phố Mơ Màng Year End 2025',
-        price: 900000,
-        date: '31 tháng 12,2025',
-    },
-    {
-        id: '3',
-        imageUrl: 'https://www.figma.com/api/mcp/asset/2591db95-936f-45e0-81fa-914d51f89315',
-        title: 'ANH TRAI "SAY HI" 2025 CONCERT',
-        price: 1040000,
-        date: '25 tháng 11,2025',
-    },
-    {
-        id: '4',
-        imageUrl: 'https://www.figma.com/api/mcp/asset/cc53c02f-5fc1-4d8d-bed6-0e18aae2bd23',
-        title: '[CAT&MOUSE] CA SĨ VICKY NHUNG + CA SĨ PHAN DUY ANH',
-        price: 375000,
-        date: '25 Tháng 11,2025',
-    },
-]
-
-// Duplicate sample events to have more items
-const allSampleEvents = Array.from({ length: 4 }, (_, i) =>
-    sampleEvents.map((e) => ({ ...e, id: e.id + i * sampleEvents.length }))
-).flat()
+// Store
+const eventDisplayStore = useEventDisplayStore()
+const { events, categories, loading, error } = storeToRefs(eventDisplayStore)
 
 // Mobile state
 const isMobile = ref(false)
@@ -85,7 +78,6 @@ const {
     selectedPreset,
     selectPreset,
     formatDateRange,
-    filterEventsByDate,
     reset: resetDateRange,
 } = useDateRange()
 
@@ -96,7 +88,6 @@ const {
     selectedCategories,
     toggleCategory,
     reset: resetEventFilter,
-    apply: applyEventFilter,
 } = useEventFilter()
 
 // Filter visibility
@@ -106,11 +97,127 @@ const showMainFilter = ref(false)
 // Popup style for main filter
 const mainFilterPopupStyle = ref<Record<string, string>>({})
 
-// Computed filtered events
-const displayEvents = computed(() => {
-    const events = props.events.length > 0 ? props.events : allSampleEvents
-    return filterEventsByDate(events)
+// Active filters tracking
+interface ActiveFilter {
+    key: string
+    value: string
+    label: string
+}
+
+const activeFilters = computed<ActiveFilter[]>(() => {
+    const filters: ActiveFilter[] = []
+
+    // Category filters
+    selectedCategories.value.forEach(categoryId => {
+        const category = categories.value.find(cat => String(cat.value) === categoryId)
+        if (category) {
+            filters.push({
+                key: 'category',
+                value: categoryId,
+                label: category.label
+            })
+        }
+    })
+
+    // Date range filter
+    if (startDate.value || endDate.value) {
+        filters.push({
+            key: 'dateRange',
+            value: 'dateRange',
+            label: formatDateRange()
+        })
+    }
+
+    // Free event filter
+    if (isFreeEvent.value) {
+        filters.push({
+            key: 'freeEvent',
+            value: 'freeEvent',
+            label: 'Sự kiện miễn phí'
+        })
+    }
+
+    // Location filter (if implemented)
+    if (selectedLocation.value) {
+        const location = locations.find(loc => loc.value === selectedLocation.value)
+        if (location && location.value !== '') {
+            filters.push({
+                key: 'location',
+                value: selectedLocation.value,
+                label: location.label
+            })
+        }
+    }
+
+    return filters
 })
+
+// Update URL with current filter state
+const updateURLWithFilters = () => {
+    const router = useRouter()
+    const query: Record<string, string> = {}
+
+    // Add categoryIds to URL if any selected
+    if (selectedCategories.value.length > 0) {
+        query.categoryIds = selectedCategories.value.join(',')
+    }
+
+    // Add date range to URL if set
+    if (startDate.value) {
+        query.startDate = startDate.value
+    }
+    if (endDate.value) {
+        query.endDate = endDate.value
+    }
+
+    // Add free event filter to URL if set
+    if (isFreeEvent.value) {
+        query.isFreeOnly = 'true'
+    }
+
+    // Add location to URL if set
+    if (selectedLocation.value) {
+        query.location = selectedLocation.value
+    }
+
+    // Navigate to update URL (replace to avoid adding to history)
+    router.replace({
+        path: '/event-display',
+        query: Object.keys(query).length > 0 ? query : undefined
+    })
+}
+
+// Remove individual filter
+const removeFilter = (key: string, value: string) => {
+    if (key === 'category') {
+        toggleCategory(value)
+    } else if (key === 'dateRange') {
+        resetDateRange()
+    } else if (key === 'freeEvent') {
+        isFreeEvent.value = false
+    } else if (key === 'location') {
+        selectedLocation.value = ''
+    }
+    
+    // Update URL to reflect removed filter
+    updateURLWithFilters()
+    
+    // Fetch events with updated filters
+    fetchWithFilters()
+}
+
+// Fetch events with current filters
+const fetchWithFilters = () => {
+    // Convert selected category strings to integers
+    const categoryIds = selectedCategories.value.map(id => parseInt(id))
+
+    eventDisplayStore.fetchEvents({
+        startDate: startDate.value || null,
+        endDate: endDate.value || null,
+        categoryIds: categoryIds,
+        isFreeOnly: isFreeEvent.value,
+    })
+}
 
 // Toggle handlers
 const toggleDateFilter = () => {
@@ -133,7 +240,8 @@ const resetDateFilter = () => {
 
 const applyDateFilter = () => {
     showDateFilter.value = false
-    console.log('Apply date filter:', startDate.value, endDate.value)
+    updateURLWithFilters()
+    fetchWithFilters()
 }
 
 const resetMainFilter = () => {
@@ -142,14 +250,13 @@ const resetMainFilter = () => {
 
 const applyMainFilter = () => {
     showMainFilter.value = false
-    const filters = applyEventFilter()
-    console.log('Apply filters:', filters)
+    updateURLWithFilters()
+    fetchWithFilters()
 }
 
 // Event click handler
 const handleEventClick = (eventId: string) => {
-    console.log('Navigate to event:', eventId)
-    // navigateTo(`/event/${eventId}`)
+    navigateTo(`/event-detail?id=${eventId}`)
 }
 
 // Close popup when clicking outside
@@ -209,10 +316,29 @@ const updateMobileState = () => {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
     updateMobileState()
     window.addEventListener('resize', updateMobileState)
     document.addEventListener('click', handleClickOutside)
+    
+    // Fetch categories first
+    await eventDisplayStore.fetchCategories()
+    
+    // Check URL query params for pre-filters
+    const route = useRoute()
+    const urlCategoryIds = route.query.categoryIds
+    
+    if (urlCategoryIds) {
+        // Parse categoryIds from URL (can be single value or comma-separated)
+        const categoryIdsArray = Array.isArray(urlCategoryIds) 
+            ? urlCategoryIds.map(id => String(id))
+            : String(urlCategoryIds).split(',').filter(id => id.trim())
+        
+        selectedCategories.value = categoryIdsArray
+    }
+    
+    // Fetch initial data with URL filters applied
+    fetchWithFilters()
 })
 
 onUnmounted(() => {
@@ -220,3 +346,70 @@ onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
 })
 </script>
+
+<style scoped>
+/* Active Filters Section */
+.active-filters-section {
+    padding: 12px 0;
+}
+
+.filter-tag {
+    background-color: var(--bg-reactive-secondary);
+    border: 1px solid var(--border-reactive-gray, #dee2e6);
+    border-radius: 24px;
+    padding: 6px 16px 6px 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    background-color: var(--bg-reactive-gray-hover, #e9ecef);
+}
+
+.btn-remove-filter {
+    background: transparent;
+    border: none;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-reactive-secondary);
+    transition: color 0.2s ease;
+}
+
+.btn-remove-filter:hover {
+    color: var(--text-reactive-primary);
+}
+
+.btn-remove-filter i {
+    font-size: 16px;
+}
+
+.filter-label {
+    color: var(--text-reactive-primary);
+    font-weight: 500;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .filter-tag {
+        font-size: 13px;
+        padding: 5px 12px 5px 5px;
+    }
+    
+    .btn-remove-filter {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .btn-remove-filter i {
+        font-size: 14px;
+    }
+}
+</style>
+

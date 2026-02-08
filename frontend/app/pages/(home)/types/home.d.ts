@@ -19,3 +19,9 @@ export interface Place {
 export interface TrendingEvent extends Event {
   rank: 1 | 2 | 3
 }
+
+export interface CategoryWithEvents {
+  id: number
+  name: string
+  events: Event[]
+}

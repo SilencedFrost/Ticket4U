@@ -19,3 +19,10 @@ export interface PlaceDTO {
   name: string
   imageUrl: string
 }
+
+// Backend response type for categories with events
+export interface CategoryWithEventsDTO {
+  id: number
+  name: string
+  events: EventCardDTO[]
+}

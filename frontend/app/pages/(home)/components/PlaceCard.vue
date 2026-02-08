@@ -1,6 +1,7 @@
 <template>
   <div class="position-relative place-card">
     <img
+      v-img-fallback="[400, 300]"
       :src="place.imageUrl"
       :alt="place.name"
       class="w-100 h-100 object-fit-cover rounded-4"
@@ -15,7 +16,7 @@
 
 <script setup lang="ts">
 import type { Place } from '~/pages/(home)/types/home'
-
+const { vFallback: vImgFallback } = useImagePlaceholder();
 interface Props {
   place: Place
 }

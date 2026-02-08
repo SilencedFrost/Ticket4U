@@ -13,6 +13,7 @@
       >
         <div class="event-card-large position-relative rounded-4 overflow-hidden">
           <img
+            v-img-fallback="[640, 365]"
             :src="event.bannerUrl"
             :alt="event.name"
             class="w-100 h-100 object-fit-cover"
@@ -60,6 +61,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { Event } from '~/pages/(home)/types/home'
+
+const { vFallback: vImgFallback } = useImagePlaceholder();
 
 interface Props {
   events: Event[]

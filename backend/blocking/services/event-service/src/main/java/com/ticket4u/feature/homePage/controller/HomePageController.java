@@ -1,5 +1,7 @@
 package com.ticket4u.feature.homePage.controller;
 
+import com.ticket4u.feature.homePage.dto.CategoryDTO;
+import com.ticket4u.feature.homePage.dto.CategoryWithEventsDTO;
 import com.ticket4u.feature.homePage.dto.EventCardDTO;
 import com.ticket4u.feature.homePage.dto.PlaceDTO;
 import com.ticket4u.feature.homePage.service.HomePageService;
@@ -72,4 +74,31 @@ public class HomePageController {
         List<PlaceDTO> places = homePageService.getPlaces();
         return ResponseEntity.ok(places);
     }
+
+    // GET /api/home/categories - Get all categories with their latest 4 events
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryWithEventsDTO>> getCategoriesWithEvents() {
+        List<CategoryWithEventsDTO> categories = homePageService.getCategoriesWithEvents();
+        return ResponseEntity.ok(categories);
+    }
+
+    // GET /api/home/categories/all - Get all categories for filter dropdown
+    @GetMapping("/categories/all")
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = homePageService.getAllCategories();
+        return ResponseEntity.ok(categories);
+    }
+
+    // GET /api/home/events/filter - Get filtered events for event-display page (supports multiple categories)
+    @GetMapping("/events/filter")
+    public ResponseEntity<List<EventCardDTO>> getFilteredEvents(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) List<Integer> categoryIds,
+            @RequestParam(required = false) Boolean isFreeOnly
+    ) {
+        List<EventCardDTO> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly);
+        return ResponseEntity.ok(events);
+    }
 }
+

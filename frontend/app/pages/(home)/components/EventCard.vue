@@ -2,6 +2,7 @@
   <div class="event-card">
     <div class="event-card-img mb-3 position-relative overflow-hidden rounded-4">
       <img
+        v-img-fallback="[350, 150]"
         :src="event.bannerUrl"
         :alt="event.name"
         class="w-100 h-100 object-fit-cover"
@@ -26,6 +27,8 @@
 
 <script setup lang="ts">
   import type { Event } from '~/pages/(home)/types/home'
+  
+const { vFallback: vImgFallback } = useImagePlaceholder();
 
 interface Props {
   event: Event
@@ -45,7 +48,7 @@ const formatDate = (isoDate: string) => {
   const day = date.getDate()
   const month = date.getMonth() + 1
   const year = date.getFullYear()
-  return `${day}.${month}.${year}`
+  return `${day} tháng ${month}, ${year}` //07 tháng 02, 2026
 }
 </script>
 

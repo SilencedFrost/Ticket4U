@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import type { Event, Place, TrendingEvent } from '~/pages/(home)/types/home'
-import type { PlaceDTO } from '~/pages/(home)/types/api'
+import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home'
+import type { PlaceDTO, CategoryWithEventsDTO } from '~/pages/(home)/types/api'
 
 export const useHomeStore = defineStore('home', () => {
   const config = useRuntimeConfig()
@@ -12,6 +12,7 @@ export const useHomeStore = defineStore('home', () => {
   const suggestedEvents = ref<Event[]>([])
   const musicEvents = ref<Event[]>([])
   const places = ref<Place[]>([])
+  const categories = ref<CategoryWithEvents[]>([])
 
   // Loading states
   const loading = ref({
@@ -21,6 +22,7 @@ export const useHomeStore = defineStore('home', () => {
     suggested: false,
     music: false,
     places: false,
+    categories: false,
   })
 
   // Error states
@@ -31,6 +33,7 @@ export const useHomeStore = defineStore('home', () => {
     suggested: null as string | null,
     music: null as string | null,
     places: null as string | null,
+    categories: null as string | null,
   })
 
   // Actions
@@ -151,6 +154,25 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
+  async function fetchCategories() {
+    loading.value.categories = true
+    errors.value.categories = null
+    try {
+      const data = await $fetch<CategoryWithEventsDTO[]>(
+        `${config.public.homeApiUrl}/categories`,
+        {
+          credentials: 'include',
+        }
+      )
+      categories.value = data
+    } catch (error) {
+      errors.value.categories = 'Failed to load categories'
+      console.error('Error fetching categories:', error)
+    } finally {
+      loading.value.categories = false
+    }
+  }
+
   // Fetch all data at once - runs all API calls in parallel
   async function fetchAllHomeData() {
     await Promise.all([
@@ -160,6 +182,7 @@ export const useHomeStore = defineStore('home', () => {
       fetchSuggestedEvents(),
       fetchMusicEvents(),
       fetchPlaces(),
+      fetchCategories(),
     ])
   }
 
@@ -171,6 +194,7 @@ export const useHomeStore = defineStore('home', () => {
     suggestedEvents,
     musicEvents,
     places,
+    categories,
     loading,
     errors,
     // Actions
@@ -180,6 +204,7 @@ export const useHomeStore = defineStore('home', () => {
     fetchSuggestedEvents,
     fetchMusicEvents,
     fetchPlaces,
+    fetchCategories,
     fetchAllHomeData,
   }
 })

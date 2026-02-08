@@ -64,25 +64,14 @@
                 :events="suggestedEvents"
             />
 
+            <!-- Dynamic category sections -->
             <EventSection
-                v-if="!loading.music && musicEvents.length > 0"
-                title="Nhạc sống"
-                :events="musicEvents"
-                show-view-all
-            />
-
-            <!-- TODO: Backend needs separate endpoints for Theater and Other categories -->
-            <EventSection
-                v-if="!loading.music && musicEvents.length > 0"
-                title="Sân khấu và nghệ thuật"
-                :events="musicEvents"
-                show-view-all
-            />
-
-            <EventSection
-                v-if="!loading.music && musicEvents.length > 0"
-                title="Thể loại khác"
-                :events="musicEvents"
+                v-for="category in categories"
+                :key="category.id"
+                v-show="!loading.categories && category.events.length > 0"
+                :title="category.name"
+                :events="category.events"
+                :category-id="category.id"
                 show-view-all
             />
 
@@ -122,7 +111,7 @@ onMounted(() => {
 })
 
 // Use store state directly (reactive)
-const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, musicEvents, places, loading, errors } =
+const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, musicEvents, places, categories, loading, errors } =
     storeToRefs(homeStore)
 </script>
 

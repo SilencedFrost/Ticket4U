@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "catogories", schema = "public")
+@Table(name = "categories", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {

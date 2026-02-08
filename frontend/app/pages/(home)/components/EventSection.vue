@@ -4,7 +4,7 @@
       <h2 class="text-reactive-primary fs-4 fw-bold mb-0">{{ title }}</h2>
       <NuxtLink
         v-if="showViewAll"
-        to="/event-display/display"
+        to="/event-display"
         class="text-reactive-primary text-decoration-none fw-light"
       >
         Xem thêm &gt;
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home'
+import type { Event } from '~/pages/(home)/types/home'
 import EventCarousel from './EventCarousel.vue'
 import EventCard from './EventCard.vue'
 

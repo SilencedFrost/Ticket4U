@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useTheme } from '~/composables/useTheme';
 
-useUserStore().refresh();
+// TODO: Uncomment when user-service is running on port 8082
+// useUserStore().refresh();
 useTheme();
 </script>
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { LocalizedContent } from '@/pages/event-detail/types/event-detail';
-const { vFallback: vImgFallback } = useImagePlaceholder();
+import type { LocalizedContent } from '@/types/event-detail';
 defineProps<{
   title: string;
   time: string;
@@ -17,11 +16,7 @@ const emit = defineEmits(['buyClick']);
 <template>
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
-      <img
-        v-img-fallback="[1200, 600]"
-        :src="heroImage"
-        class="w-100 h-100 object-fit-cover hero-bg-blur"
-      />
+      <img :src="heroImage" class="w-100 h-100 object-fit-cover hero-bg-blur" />
     </div>
     <div class="position-relative z-1">
       <div class="container-xxl pb-4">
@@ -59,7 +54,6 @@ const emit = defineEmits(['buyClick']);
                 </div>
               </div>
               <img
-                v-img-fallback="[1200, 600]"
                 :src="heroImage"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
               />

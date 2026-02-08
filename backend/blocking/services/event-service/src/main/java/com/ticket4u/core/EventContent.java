@@ -42,4 +42,7 @@ public class EventContent {
 
     @Column(name = "policy_refund", columnDefinition = "TEXT")
     private String policyRefund;
+
+    @Column(name = "seating_plan_image_url", columnDefinition = "TEXT")
+    private String seatingPlanImageUrl;
 }

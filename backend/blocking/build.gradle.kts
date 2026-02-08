@@ -83,4 +83,12 @@ subprojects {
         sourceResources(sourceSets["main"])
         systemProperty("spring.profiles.active", profile)
     }
+
+    tasks.register("runUser") {
+        dependsOn(":services:user-service:bootRun")
+    }
+
+    tasks.register("runEvent") {
+        dependsOn(":services:event-service:bootRun")
+    }
 }

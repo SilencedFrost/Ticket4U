@@ -1,10 +1,13 @@
 export interface Event {
   id: string
-  title: string
-  imageUrl: string
-  price: number
-  date: string
-  location?: string
+  name: string
+  bannerUrl: string
+  addressLine: string
+  startDate: string
+  endDate: string
+  minPrice: number
+  categoryName?: string
+  status?: string
 }
 
 export interface Place {

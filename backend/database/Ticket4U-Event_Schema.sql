@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS public.zones (
 -- This table holds multilingual descriptions for zones
 
 CREATE TABLE IF NOT EXISTS public.zone_contents (
-    id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
-    zone_id UUID UNIQUE, -- 1-1 với zone 
+    zone_id UUID PRIMARY KEY, -- 1-1 với zone 
     description TEXT, -- Mô tả chi tiết hạng vé
     gift_image_url VARCHAR(512), 
     perks JSONB, -- Lưu danh sách ưu đãi dạng [ "Nước uống miễn phí", "Lightstick", "Fansign" ]
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT zoneContent_fk_zone FOREIGN KEY (zone_id) REFERENCES public.zones (id) ON DELETE CASCADE
 );
 

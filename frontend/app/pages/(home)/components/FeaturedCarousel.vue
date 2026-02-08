@@ -13,8 +13,8 @@
       >
         <div class="event-card-large position-relative rounded-4 overflow-hidden">
           <img
-            :src="event.imageUrl"
-            :alt="event.title"
+            :src="event.bannerUrl"
+            :alt="event.name"
             class="w-100 h-100 object-fit-cover"
           />
           <button
@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { Event } from '~/types/home'
+import type { Event } from '~/pages/(home)/types/home'
 
 interface Props {
   events: Event[]

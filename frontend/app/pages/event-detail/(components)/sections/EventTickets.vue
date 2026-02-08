@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Showtime } from '@/pages/event-detail/types/event-detail';
+import type { Showtime } from '@/types/event-detail';
 
 defineProps<{
   showTime: Showtime[];

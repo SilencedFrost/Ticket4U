@@ -16,6 +16,7 @@
       "format": {
         "password": "Mật khẩu phải có một ký tự viết thường, một ký tự viết hoa, một ký tự đặc biệt, và dài 8-32 ký tự",
         "email": "Chỉ chấp nhận email từ Gmail, Outlook, Hotmail, Yahoo, iCloud",
+        "emailInvalid": "Định dạng email không hợp lệ",
         "phone": "Số điện thoại di động Việt Nam hợp lệ (9-10 chữ số)"
       },
       "password": {
@@ -26,17 +27,11 @@
         "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)",
         "noVietnamese": "Mật khẩu không được chứa ký tự tiếng Việt"
       },
-      "password": {
-        "tooShort": "Mật khẩu phải có ít nhất 8 ký tự",
-        "tooLong": "Mật khẩu không được vượt quá 32 ký tự",
-        "noLowercase": "Mật khẩu phải có ít nhất một chữ thường",
-        "noUppercase": "Mật khẩu phải có ít nhất một chữ hoa",
-        "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)"
-      },
       "blank": {
         "password": "Password không được để trống",
         "email": "Email không được để trống",
-        "phone": "Số điện thoại không được để trống"
+        "phone": "Số điện thoại không được để trống",
+        "fullName": "Họ và tên không được để trống"
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ"
@@ -53,6 +48,7 @@
       "phone": "Số điện thoại",
       "confirmPassword": "Xác nhận mật khẩu",
       "passwordHint": "8-32 ký tự, chữ hoa, chữ thường, ký tự đặc biệt (!{'@'}#$%^&*_-)",
+      "phonePlaceholder": "0xxxxxxxxx hoặc xxxxxxxxx",
       "hasAccount": "Đã có tài khoản? Đăng nhập",
       "success": "Đăng ký thành công! Đang chuyển hướng...",
       "error": {

@@ -16,6 +16,7 @@
       "format": {
         "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
         "email": "Only Gmail, Outlook, Hotmail, Yahoo, iCloud emails are accepted",
+        "emailInvalid": "Invalid email format",
         "phone": "Valid Vietnamese mobile number (9-10 digits)"
       },
       "password": {
@@ -26,17 +27,11 @@
         "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)",
         "noVietnamese": "Password must not contain Vietnamese characters"
       },
-      "password": {
-        "tooShort": "Password must be at least 8 characters",
-        "tooLong": "Password must not exceed 32 characters",
-        "noLowercase": "Password must contain at least one lowercase letter",
-        "noUppercase": "Password must contain at least one uppercase letter",
-        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)"
-      },
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",
-        "phone": "Phone number can't be blank"
+        "phone": "Phone number can't be blank",
+        "fullName": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data"
@@ -53,6 +48,7 @@
       "phone": "Phone number",
       "confirmPassword": "Confirm password",
       "passwordHint": "8-32 chars, uppercase, lowercase, special char (!{'@'}#$%^&*_-)",
+      "phonePlaceholder": "0xxxxxxxxx or xxxxxxxxx",
       "hasAccount": "Already have an account? Log in",
       "success": "Registration successful! Redirecting to login...",
       "error": {

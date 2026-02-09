@@ -30,12 +30,11 @@ const formData = reactive({
     fullName: '',
 });
 
-// Regex validate patterns
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$/;
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@(gmail\.com|outlook\.com|hotmail\.com|live\.com|yahoo\.com|icloud\.com|me\.com)$/;
+const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_DOMAIN_REGEX = /^[a-zA-Z0-9._-]+@(gmail\.com|outlook\.com|hotmail\.com|live\.com|yahoo\.com|icloud\.com|me\.com)$/;
 
-// Track touched fields for showing errors
 const touched = reactive({
     email: false,
     password: false,
@@ -53,20 +52,20 @@ const isFormValid = computed(() => {
         formData.phoneNumber &&
         formData.password === formData.confirmPassword &&
         PASSWORD_REGEX.test(formData.password) &&
-        EMAIL_REGEX.test(formData.email) &&
+        EMAIL_DOMAIN_REGEX.test(formData.email) &&
         PHONE_REGEX.test(formData.phoneNumber)
     );
 });
 
-// Mark field as touched on blur and trigger validation
 function onBlur(field: keyof typeof touched) {
     touched[field] = true;
-    // Trigger validation immediately on blur
     if (field === 'email') {
         const val = formData.email;
         if (!val) {
-            error.email = '';
-        } else if (!EMAIL_REGEX.test(val)) {
+            error.email = 'auth.error.blank.email';
+        } else if (!EMAIL_FORMAT_REGEX.test(val)) {
+            error.email = 'auth.error.format.emailInvalid';
+        } else if (!EMAIL_DOMAIN_REGEX.test(val)) {
             error.email = 'auth.error.format.email';
         } else {
             error.email = '';
@@ -74,7 +73,7 @@ function onBlur(field: keyof typeof touched) {
     } else if (field === 'phoneNumber') {
         const val = formData.phoneNumber;
         if (!val) {
-            error.phoneNumber = '';
+            error.phoneNumber = 'auth.error.blank.phone';
         } else if (!PHONE_REGEX.test(val)) {
             error.phoneNumber = 'auth.error.format.phone';
         } else {
@@ -84,6 +83,7 @@ function onBlur(field: keyof typeof touched) {
         const val = formData.password;
         error.password = [];
         if (!val) {
+            error.password = ['auth.error.blank.password'];
             return;
         }
         const errors: string[] = [];
@@ -106,19 +106,20 @@ function onBlur(field: keyof typeof touched) {
     } else if (field === 'fullName') {
         const val = formData.fullName;
         if (!val) {
-            error.fullName = '';
+            error.fullName = 'auth.error.blank.fullName';
         } else {
             error.fullName = '';
         }
     }
 }
 
-// Realtime watchers for validation
 watch(() => formData.email, (val) => {
     if (!touched.email) return;
     if (!val) {
-        error.email = '';
-    } else if (!EMAIL_REGEX.test(val)) {
+        error.email = 'auth.error.blank.email';
+    } else if (!EMAIL_FORMAT_REGEX.test(val)) {
+        error.email = 'auth.error.format.emailInvalid';
+    } else if (!EMAIL_DOMAIN_REGEX.test(val)) {
         error.email = 'auth.error.format.email';
     } else {
         error.email = '';
@@ -128,7 +129,7 @@ watch(() => formData.email, (val) => {
 watch(() => formData.phoneNumber, (val) => {
     if (!touched.phoneNumber) return;
     if (!val) {
-        error.phoneNumber = '';
+        error.phoneNumber = 'auth.error.blank.phone';
     } else if (!PHONE_REGEX.test(val)) {
         error.phoneNumber = 'auth.error.format.phone';
     } else {
@@ -140,6 +141,7 @@ watch(() => formData.password, (val) => {
     if (!touched.password) return;
     error.password = [];
     if (!val) {
+        error.password = ['auth.error.blank.password'];
         return;
     }
     const errors: string[] = [];
@@ -150,7 +152,6 @@ watch(() => formData.password, (val) => {
     if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
     if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
     error.password = errors;
-    // Re-validate confirm password if already touched
     if (touched.confirmPassword && formData.confirmPassword) {
         error.confirmPassword = val !== formData.confirmPassword ? 'auth.register.error.passwordMismatch' : '';
     }
@@ -170,7 +171,7 @@ watch(() => formData.confirmPassword, (val) => {
 watch(() => formData.fullName, (val) => {
     if (!touched.fullName) return;
     if (!val) {
-        error.fullName = '';
+        error.fullName = 'auth.error.blank.fullName';
     } else {
         error.fullName = '';
     }
@@ -186,7 +187,10 @@ function validateForm(): boolean {
 
     if (!formData.email) {
         valid = false;
-    } else if (!EMAIL_REGEX.test(formData.email)) {
+    } else if (!EMAIL_FORMAT_REGEX.test(formData.email)) {
+        error.email = 'auth.error.format.emailInvalid';
+        valid = false;
+    } else if (!EMAIL_DOMAIN_REGEX.test(formData.email)) {
         error.email = 'auth.error.format.email';
         valid = false;
     }
@@ -322,14 +326,12 @@ function goToLogin() {
         <h3 class="text-center text-reactive-primary">{{ $t('auth.register.title') }}</h3>
         <hr class="my-2" />
 
-        <!-- Success message -->
         <div v-if="registerSuccess" class="alert alert-success text-center">
             <i class="bi bi-check-circle me-2" />
             {{ $t('auth.register.success') }}
         </div>
 
         <form v-else novalidate @submit.prevent="register">
-            <!-- Full Name -->
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.fullName') }}<span class="text-danger">*</span>
@@ -343,7 +345,6 @@ function goToLogin() {
                 <div v-if="error.fullName" class="invalid-feedback">{{ $t(error.fullName) }}</div>
             </div>
 
-            <!-- Email -->
             <div class="mb-2">
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
                     {{ $t('common.email') }}<span class="text-danger">*</span>
@@ -357,12 +358,11 @@ function goToLogin() {
                 <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
             </div>
 
-            <!-- Phone Number -->
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.phone') }}<span class="text-danger">*</span>
                 </label>
-                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" placeholder="0xxxxxxxxx hoặc xxxxxxxxx" :class="[
+                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" :placeholder="$t('auth.register.phonePlaceholder')" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
@@ -371,7 +371,6 @@ function goToLogin() {
                 <div v-if="error.phoneNumber" class="invalid-feedback">{{ $t(error.phoneNumber) }}</div>
             </div>
 
-            <!-- Password -->
             <div class="mb-2">
                 <label for="reg-password" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.password') }}<span class="text-danger">*</span>
@@ -393,7 +392,6 @@ function goToLogin() {
                 <small class="form-text text-muted">{{ $t('auth.register.passwordHint') }}</small>
             </div>
 
-            <!-- Confirm Password -->
             <div class="mb-2">
                 <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.confirmPassword') }}<span class="text-danger">*</span>

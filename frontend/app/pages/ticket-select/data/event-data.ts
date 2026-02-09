@@ -4,7 +4,7 @@ import type { Event } from '../types/event.type'
 export const ticketData: Ticket[] = [
   { 
     id: 'svip', 
-    name: 'SVIP - Dứa Lòng', 
+    name: 'SVIP', 
     price: 3000000, 
     color: '#E53E3E', 
     zone: 'SVIP', 

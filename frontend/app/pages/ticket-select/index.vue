@@ -30,7 +30,7 @@
             :disabled="cart.length === 0"
             @click="proceedToCheckout"
           >
-            Tiếp tục thanh toán
+            {{ $t('event_payment.checkout.button') }}
             <i class="bi bi-arrow-right ms-2"></i>
           </button>
         </div>
@@ -45,7 +45,11 @@ import { ticketData, eventData } from './data/event-data'
 import { useEventPayment } from './composables/use-event-payment'
 import SeatingMap from './(components)/SeatingMap.vue'
 import EventInfo from './(components)/EventInfo.vue'
-import CartSummary from './(components)/CartSumary.vue'
+import CartSummary from './(components)/CartSummary.vue'
+
+definePageMeta({
+  layout: 'minimal'
+})
 
 const eventDetails = ref(eventData)
 const ticketInfo = ref(ticketData)

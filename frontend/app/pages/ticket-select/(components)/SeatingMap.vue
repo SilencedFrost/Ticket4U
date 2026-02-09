@@ -5,11 +5,11 @@
         class="btn btn-link text-primary text-decoration-none p-0"
         @click="$emit('back')"
       >
-        <i class="bi bi-arrow-left me-1"></i> Trở về
+        <i class="bi bi-arrow-left me-1"></i> {{ $t('event_payment.header.back') }}
       </button>
       <div class="text-center">
-        <h5 class="text-primary mb-0">Chọn khu vực</h5>
-        <small class="text-reactive-secondary">Bấm vào khu vực để chọn vé</small>
+        <h5 class="text-primary mb-0">{{ $t('event_payment.header.title') }}</h5>
+        <small class="text-reactive-secondary">{{ $t('event_payment.header.subtitle') }}</small>
       </div>
       <div style="width: 80px;"></div>
     </div>
@@ -23,7 +23,7 @@
             <!-- Row 1: Stage -->
             <tr>
               <td colspan="3" class="py-3 bg-warning text-dark fw-bold">
-                Stage
+                {{ $t('event_payment.stage') }}
               </td>
             </tr>
 
@@ -35,7 +35,7 @@
                   :style="{ backgroundColor: getSeatColor('svip') }"
                   @click="handleZoneClick('svip')"
                 >
-                  <strong class="text-white">SVIP</strong>
+                  <strong class="text-white">{{ getTicketName('svip') }}</strong>
                 </div>
               </td>
             </tr>
@@ -48,12 +48,12 @@
                   :style="{ backgroundColor: getSeatColor('ga-a') }"
                   @click="handleZoneClick('ga-a')"
                 >
-                  <strong class="text-white">Phổ Thông (Zone A)</strong>
+                  <strong class="text-white">{{ getTicketName('ga-a') }}</strong>
                 </div>
               </td>
               <td class="p-0 bg-reactive-gray" style="width: 20%;">
                 <div class="p-4">
-                  <strong class="text-reactive-secondary">FOH</strong>
+                  <strong class="text-reactive-secondary">{{ $t('event_payment.foh') }}</strong>
                 </div>
               </td>
               <td class="p-0" style="width: 40%;">
@@ -62,7 +62,7 @@
                   :style="{ backgroundColor: getSeatColor('ga-b') }"
                   @click="handleZoneClick('ga-b')"
                 >
-                  <strong class="text-white">Phổ Thông (Zone B)</strong>
+                  <strong class="text-white">{{ getTicketName('ga-b') }}</strong>
                 </div>
               </td>
             </tr>
@@ -75,9 +75,9 @@
                   :style="{ backgroundColor: getSeatColor('budget-left') }"
                   @click="handleZoneClick('budget-left')"
                 >
-                  <strong class="text-white">Vé Tiết Kiệm (Trái)</strong>
+                  <strong class="text-white">{{ getTicketName('budget-left') }}</strong>
                   <br>
-                  <small class="badge bg-danger mt-1">Sold Out</small>
+                  <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
                 </div>
               </td>
               <td class="p-0 bg-reactive-secondary"></td>
@@ -87,9 +87,9 @@
                   :style="{ backgroundColor: getSeatColor('budget-right') }"
                   @click="handleZoneClick('budget-right')"
                 >
-                  <strong class="text-white">Vé Tiết Kiệm (Phải)</strong>
+                  <strong class="text-white">{{ getTicketName('budget-right') }}</strong>
                   <br>
-                  <small class="badge bg-danger mt-1">Sold Out</small>
+                  <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
                 </div>
               </td>
             </tr>
@@ -106,7 +106,7 @@
             <h5 class="text-reactive-primary mb-1">{{ selectedZone.name }}</h5>
             <small class="text-reactive-secondary">
               <i class="bi bi-people me-1"></i>
-              {{ selectedZone.available }} vé còn lại
+              {{ selectedZone.available }} {{ $t('event_payment.selection.available') }}
             </small>
           </div>
           <button 
@@ -118,12 +118,12 @@
 
         <div v-if="selectedZone.soldOut" class="alert alert-danger mb-0">
           <i class="bi bi-exclamation-triangle me-2"></i>
-          Khu vực này đã hết vé
+          {{ $t('event_payment.selection.sold_out_message') }}
         </div>
 
         <div v-else class="row g-3">
           <div class="col-md-6">
-            <label class="form-label text-reactive-primary fw-semibold small">Số lượng</label>
+            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.quantity') }}</label>
             <div class="d-flex gap-2">
               <button class="btn btn-reactive-gray" @click="decreaseQuantity">
                 <i class="bi bi-dash"></i>
@@ -142,7 +142,7 @@
           </div>
 
           <div class="col-md-6">
-            <label class="form-label text-reactive-primary fw-semibold small">Tổng cộng</label>
+            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.total') }}</label>
             <div class="text-primary fs-4 fw-bold">
               {{ formatPrice(totalCost) }}
             </div>
@@ -155,7 +155,7 @@
               :disabled="quantity === 0"
             >
               <i class="bi bi-cart-plus me-2"></i>
-              Thêm vào giỏ hàng
+              {{ $t('event_payment.selection.add_to_cart') }}
             </button>
           </div>
         </div>
@@ -187,6 +187,11 @@ const totalCost = computed(() => {
 const getSeatColor = (ticketId: string) => {
   const ticket = ticketData.find(t => t.id === ticketId)
   return ticket?.color || '#ccc'
+}
+
+const getTicketName = (ticketId: string) => {
+  const ticket = ticketData.find(t => t.id === ticketId)
+  return ticket?.name || ''
 }
 
 const handleZoneClick = (ticketId: string) => {

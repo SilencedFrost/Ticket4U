@@ -2,7 +2,7 @@
   <div class="cart-summary-wrapper">
     <!-- Ticket Information -->
     <div class="mb-4">
-      <h5 class="mb-3 text-reactive-primary">Thông tin vé</h5>
+      <h5 class="mb-3 text-reactive-primary">{{ $t('event_payment.ticket_info.title') }}</h5>
       
       <div class="card bg-reactive-primary p-3 mb-2" v-for="ticket in tickets" :key="ticket.id">
         <div class="d-flex align-items-center gap-3">
@@ -21,13 +21,13 @@
             </div>
             <small class="text-reactive-secondary">
               <i class="bi bi-people me-1"></i>
-              {{ ticket.available }} chỗ còn lại
+              {{ ticket.available }} {{ $t('event_payment.ticket_info.available') }}
             </small>
             <span 
               v-if="ticket.soldOut" 
               class="badge bg-danger ms-2 small"
             >
-              Sold Out
+              {{ $t('event_payment.ticket_info.sold_out') }}
             </span>
           </div>
         </div>
@@ -36,12 +36,12 @@
 
     <!-- Cart -->
     <div class="mb-4">
-      <h5 class="mb-3 text-reactive-primary">Giỏ hàng của bạn</h5>
+      <h5 class="mb-3 text-reactive-primary">{{ $t('event_payment.cart.title') }}</h5>
 
       <div v-if="cart.length === 0" class="text-center py-5 text-reactive-secondary">
         <i class="bi bi-cart-x fs-1 mb-3 d-block"></i>
-        <p>Chưa có vé nào trong giỏ hàng</p>
-        <small>Chọn khu vực bên trái để thêm vé</small>
+        <p>{{ $t('event_payment.cart.empty') }}</p>
+        <small>{{ $t('event_payment.cart.empty_subtitle') }}</small>
       </div>
 
       <div v-else>
@@ -74,11 +74,11 @@
         <!-- Total Summary -->
         <div class="card bg-reactive-primary p-3 border-primary border-2">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-reactive-secondary">Tổng số vé:</span>
+            <span class="text-reactive-secondary">{{ $t('event_payment.cart.total_tickets') }}</span>
             <span class="text-reactive-primary fw-bold">{{ totalTickets }}</span>
           </div>
           <div class="d-flex justify-content-between align-items-center border-top border-secondary pt-2">
-            <span class="text-reactive-primary fs-5 fw-bold">Tổng tiền:</span>
+            <span class="text-reactive-primary fs-5 fw-bold">{{ $t('event_payment.cart.total_price') }}</span>
             <span class="text-primary fs-4 fw-bold">{{ formatPrice(totalPrice) }}</span>
           </div>
         </div>

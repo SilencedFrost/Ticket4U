@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (pathWithoutLocale.startsWith('/auth')) {
     setPageLayout('auth');
-  } if (pathWithoutLocale.startsWith('/ticket-select')) {
+  } else if (pathWithoutLocale.startsWith('/ticket-select')) {
     setPageLayout('minimal');
   } else {
     setPageLayout('default');

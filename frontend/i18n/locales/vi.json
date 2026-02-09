@@ -69,5 +69,36 @@
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
     }
+  },
+  "event_payment": {
+    "header": {
+      "back": "Trở về",
+      "title": "Chọn khu vực",
+      "subtitle": "Bấm vào khu vực để chọn vé"
+    },
+    "stage": "Sân khấu",
+    "foh": "FOH",
+    "ticket_info": {
+      "title": "Thông tin vé",
+      "available": "chỗ còn lại",
+      "sold_out": "Hết vé"
+    },
+    "cart": {
+      "title": "Giỏ hàng của bạn",
+      "empty": "Chưa có vé nào trong giỏ hàng",
+      "empty_subtitle": "Chọn khu vực bên trái để thêm vé",
+      "total_tickets": "Tổng số vé:",
+      "total_price": "Tổng tiền:"
+    },
+    "selection": {
+      "available": "vé còn lại",
+      "sold_out_message": "Khu vực này đã hết vé",
+      "quantity": "Số lượng",
+      "total": "Tổng cộng",
+      "add_to_cart": "Thêm vào giỏ hàng"
+    },
+    "checkout": {
+      "button": "Tiếp tục thanh toán"
+    }
   }
 }

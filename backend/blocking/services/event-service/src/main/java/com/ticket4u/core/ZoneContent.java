@@ -6,8 +6,12 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -46,4 +50,12 @@ public class ZoneContent {
     @UpdateTimestamp
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
+
+    public List<String> getPerksAsList() {
+        try {
+            return new ObjectMapper().readValue(this.perks, new TypeReference<List<String>>(){});
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
 }

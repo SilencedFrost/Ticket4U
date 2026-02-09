@@ -5,12 +5,16 @@ import com.ticket4u.feature.eventDetail.client.UserClient;
 import com.ticket4u.feature.eventDetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventDetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventDetail.service.EventDetailService;
+import com.ticket4u.feature.homePage.dto.EventCardDTO;
+import com.ticket4u.feature.homePage.service.HomePageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventDetailServiceImpl implements EventDetailService {
     private final EventDetailRepository eventRepository;
+    private final HomePageService homePageService;
     private final UserClient userClient;
 
     @Override
@@ -35,6 +40,7 @@ public class EventDetailServiceImpl implements EventDetailService {
         response.setDescription(event.getDescription());
 
         response.setAddress(event.getAddressLine());
+        response.setCategoryId(event.getCategory().getId());
         String timeRange = event.getStartDate().format(timeFormatter) + " - " +
                 (event.getEndDate() != null ? event.getEndDate().format(timeFormatter) : "N/A");
         response.setDate(event.getStartDate().format(dateFormatter));
@@ -92,5 +98,55 @@ public class EventDetailServiceImpl implements EventDetailService {
         response.setOrganizer(organizer);
 
         return response;
+    }
+
+    @Override
+    public List<EventCardDTO> getRelatedEvents(UUID currentId, Integer categoryId, String address) {
+        Set<EventCardDTO> results = new LinkedHashSet<>();
+        String city = extractCity(address);
+
+        // 1. Same Category
+        addEvents(results, homePageService.getFilteredEvents(null, null, List.of(categoryId), null), currentId);
+
+        // 2. Same City (Fallback)
+        if (results.size() < 8 && !city.isEmpty()) {
+            String searchCity = city.toLowerCase();
+            List<EventCardDTO> byCity = homePageService.getAllEventsWithMinPrice().stream()
+                    .filter(e -> e.getAddressLine().toLowerCase().contains(searchCity))
+                    .toList();
+            addEvents(results, byCity, currentId);
+        }
+
+        // 3. Upcoming Events (Final Fallback)
+        if (results.size() < 8) {
+            addEvents(results, homePageService.getSpecialEvents(), currentId);
+        }
+
+        // 4. Get any remaining events (Suggest randomly if still under 8)
+        if (results.size() < 8) {
+            List<EventCardDTO> allOtherEvents = homePageService.getAllEventsWithMinPrice();
+            addEvents(results, allOtherEvents, currentId);
+        }
+
+        return results.stream().limit(8).toList();
+    }
+
+    private String extractCity(String address) {
+        if (address == null || !address.contains(",")) return "";
+        String[] parts = address.split(",");
+        return parts[parts.length - 1].trim();
+    }
+
+    private void addEvents(Set<EventCardDTO> target, List<EventCardDTO> source, UUID excludeId) {
+        if (source == null) return;
+        for (EventCardDTO event : source) {
+            if (target.size() >= 8) break;
+
+            boolean isDuplicate = target.stream().anyMatch(e -> e.getId().equals(event.getId()));
+
+            if (!event.getId().equals(excludeId) && !isDuplicate) {
+                target.add(event);
+            }
+        }
     }
 }

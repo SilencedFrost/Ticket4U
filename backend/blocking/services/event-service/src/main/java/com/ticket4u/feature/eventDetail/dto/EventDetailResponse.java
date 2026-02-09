@@ -19,6 +19,7 @@ public class EventDetailResponse {
 
     private String minPrice;
     private String maxPrice;
+    private Integer categoryId;
 
     private ImageEventDTO imgEvent;
     private OrganizerDTO organizer;

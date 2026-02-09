@@ -1,29 +1,18 @@
-interface LocalizedContent {
-  vi: string;
-  en: string;
-}
-
 interface Organizer {
+  id: string;
   name: string;
   description: string;
-  logo: string;
-}
-
-interface RelatedEvent {
-  id: number;
-  image: string;
-  title: string;
-  date: string;
-  price: string;
+  avatar: string;
 }
 
 interface SeatType {
+  id: string;
   name: string;
-  price: string;
+  price: number;
   available: number;
   description?: string;
   image?: string;
-  benefits?: string[];
+  benefits?: string[] | null;
 }
 
 interface Showtime {
@@ -33,24 +22,22 @@ interface Showtime {
   seatTypes: SeatType[];
 }
 
-export interface EventImages {
-  hero: string;
-  location: string;
-  about: string;
-  sidebar?: string;
+interface EventImages {
+  heroUrl: string;
+  seatMapUrl: string;
 }
 
-interface EventDetail {
-  title: string;
-  date: string;
-  time: string;
-  venue: LocalizedContent;
-  address: LocalizedContent;
+export interface EventDetailResponse {
+  eventId: string;
+  eventTitle: string;
+  address: string;
   minPrice: string;
   maxPrice: string;
-  images: EventImages;
+  categoryId: number;
+  description: string;
+  imgEvent: EventImages;
   organizer: Organizer;
-  relatedEvents: RelatedEvent[];
+  showtimes: Showtime[];
+  date: string;
+  time: string;
 }
-
-export type { LocalizedContent, Organizer, RelatedEvent, SeatType, Showtime, EventDetail };

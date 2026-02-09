@@ -1,5 +1,11 @@
 <template>
-  <div class="event-card">
+  <div 
+    class="event-card cursor-pointer" 
+    role="button"
+    tabindex="0"
+    @click="handleClick"
+    @keydown.enter="handleClick"
+  >
     <div class="event-card-img mb-3 position-relative overflow-hidden rounded-4">
       <img
         :src="event.bannerUrl"
@@ -34,9 +40,13 @@ interface Props {
   showDetails?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   showDetails: true,
 })
+
+const handleClick = () => {
+  navigateTo(`/event-detail/${props.event.id}`)
+}
 
 const formatPrice = (price: number) => {
   return (price !== null) ? `Từ ${price.toLocaleString('vi-VN')}đ` : "Chưa cập nhật giá";
@@ -64,6 +74,14 @@ const formatDate = (isoDate: string) => {
 
 .event-card-img:hover img {
   transform: scale(1.05);
+}
+
+.event-card:hover {
+  opacity: 0.9;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .text-ellipsis-2 {

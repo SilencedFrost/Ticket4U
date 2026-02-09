@@ -1,7 +1,6 @@
 <template>
   <div class="event-info-wrapper mb-4">
     <h4 class="mb-3 text-reactive-primary">{{ event.title }}</h4>
-    
     <div class="text-reactive-secondary">
       <div class="d-flex align-items-center mb-2">
         <i class="bi bi-calendar3 me-2"></i>

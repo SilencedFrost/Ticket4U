@@ -3,8 +3,7 @@
     <div class="d-flex justify-content-between align-items-center p-4 bg-reactive-secondary">
       <button 
         class="btn btn-link text-primary text-decoration-none p-0"
-        @click="$emit('back')"
-      >
+        @click="$emit('back')">
         <i class="bi bi-arrow-left me-1"></i> {{ $t('event_payment.header.back') }}
       </button>
       <div class="text-center">
@@ -13,41 +12,34 @@
       </div>
       <div style="width: 80px;"></div>
     </div>
-
     <div class="flex-grow-1 overflow-auto p-4 d-flex align-items-center justify-content-center">
       <div style="max-width: 800px; width: 100%;">
-        
         <!-- Stadium Layout Table -->
         <table class="table table-bordered text-center mb-0">
           <tbody>
-            <!-- Row 1: Stage -->
             <tr>
               <td colspan="3" class="py-3 bg-warning text-dark fw-bold">
                 {{ $t('event_payment.stage') }}
               </td>
             </tr>
 
-            <!-- Row 2: SVIP -->
             <tr>
               <td colspan="3" class="p-0">
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('svip') }"
-                  @click="handleZoneClick('svip')"
-                >
+                  @click="handleZoneClick('svip')">
                   <strong class="text-white">{{ getTicketName('svip') }}</strong>
                 </div>
               </td>
             </tr>
 
-            <!-- Row 3: Phổ Thông (Zone A) | FOH | Phổ Thông (Zone B) -->
             <tr>
               <td class="p-0" style="width: 40%;">
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('ga-a') }"
-                  @click="handleZoneClick('ga-a')"
-                >
+                  @click="handleZoneClick('ga-a')">
                   <strong class="text-white">{{ getTicketName('ga-a') }}</strong>
                 </div>
               </td>
@@ -60,21 +52,18 @@
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('ga-b') }"
-                  @click="handleZoneClick('ga-b')"
-                >
+                  @click="handleZoneClick('ga-b')">
                   <strong class="text-white">{{ getTicketName('ga-b') }}</strong>
                 </div>
               </td>
             </tr>
 
-            <!-- Row 4: Vé Tiết Kiệm (Trái) | Empty | Vé Tiết Kiệm (Phải) -->
             <tr>
               <td class="p-0">
                 <div 
                   class="seat-zone p-4 opacity-50"
                   :style="{ backgroundColor: getSeatColor('budget-left') }"
-                  @click="handleZoneClick('budget-left')"
-                >
+                  @click="handleZoneClick('budget-left')">
                   <strong class="text-white">{{ getTicketName('budget-left') }}</strong>
                   <br>
                   <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
@@ -85,8 +74,7 @@
                 <div 
                   class="seat-zone p-4 opacity-50"
                   :style="{ backgroundColor: getSeatColor('budget-right') }"
-                  @click="handleZoneClick('budget-right')"
-                >
+                  @click="handleZoneClick('budget-right')">
                   <strong class="text-white">{{ getTicketName('budget-right') }}</strong>
                   <br>
                   <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
@@ -152,8 +140,7 @@
             <button 
               class="btn btn-primary w-100 py-2 fw-semibold" 
               @click="addToCart" 
-              :disabled="quantity === 0"
-            >
+              :disabled="quantity === 0">
               <i class="bi bi-cart-plus me-2"></i>
               {{ $t('event_payment.selection.add_to_cart') }}
             </button>

@@ -12,6 +12,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -49,6 +50,7 @@ public class Event {
     @Column(name = "end_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime endDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 48)
     private EventStatus status;
 
@@ -59,18 +61,21 @@ public class Event {
     private String description;
 
     @CreationTimestamp
-    @Column(name = "create_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private OffsetDateTime createAt;
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private OffsetDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at",nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private OffsetDateTime updateAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "cancelled_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime cancelledAt;
 
     @OneToOne(mappedBy = "event", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     private EventContent content;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Zone> zones;
 
     public enum EventStatus {
         PLANNED,

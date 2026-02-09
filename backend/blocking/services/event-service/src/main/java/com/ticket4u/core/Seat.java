@@ -31,9 +31,10 @@ public class Seat {
     @Column(name = "col_name")
     private String colName;
 
-    @Column(name = "sear_code")
+    @Column(name = "seat_code")
     private String seatCode;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private SeatStatus status;
 

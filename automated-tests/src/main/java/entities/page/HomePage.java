@@ -18,6 +18,7 @@ public class HomePage extends NavbarComponent{
     public HomePage open() {
         Constant.WEBDRIVER.navigate().to(Constant.TICKET4U_URL);
         WaitUtils.waitForPageLoad();
+        WaitUtils.waitForNuxtHydration();
         return new HomePage();
     }
 }

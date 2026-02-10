@@ -21,6 +21,6 @@ public class BaseTest {
     public void afterMethod() {
         log.info("Post-condition");
 
-        Constant.WEBDRIVER.quit();
+        // Constant.WEBDRIVER.quit();
     }
 }

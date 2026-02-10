@@ -15,7 +15,7 @@ import entities.page.LoginPage;
 public class LoginTest extends BaseTest{
 
     @Test
-    public void LGI01_TC01_LGI01_TC07() {
+    public void LGI01_TC0107() {
         log.info("LGI01_TC01 - Verify that user can log in successfully with valid email and password");
         log.info("LGI01_TC07 - Verify that system does not display error message when user login with valid email and password");
 
@@ -61,8 +61,9 @@ public class LoginTest extends BaseTest{
     }
 
     @Test
-    public void LGI01_TC03() {
+    public void LGI01_TC0309() {
         log.info("LGI01_TC03 - Verify that system reject user login attempt with invalid email and password");
+        log.info("LGI01_TC09 - Verify that system display error message when user attempt login with invalid email and password");
 
         // Data
         UserAccount userAccount = new UserAccount(AccountDefault.RANDOM);

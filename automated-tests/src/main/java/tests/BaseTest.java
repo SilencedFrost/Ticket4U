@@ -1,4 +1,4 @@
-package user.tests;
+package tests;
 
 import common.constants.Constant;
 import lombok.extern.slf4j.Slf4j;

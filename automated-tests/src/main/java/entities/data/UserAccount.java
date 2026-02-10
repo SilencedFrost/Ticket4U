@@ -1,4 +1,4 @@
-package user.entities.data;
+package entities.data;
 
 import common.constants.data.AccountDefault;
 import lombok.Data;
@@ -12,5 +12,10 @@ public class UserAccount {
     public UserAccount(AccountDefault accountDefault) {
         this.email = accountDefault.getEmail();
         this.password = accountDefault.getPassword();
+    }
+
+    public UserAccount(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 }

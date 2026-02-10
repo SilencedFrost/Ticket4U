@@ -1,7 +1,8 @@
-package user.entities.page;
+package entities.page;
 
 import common.constants.Constant;
 import common.utility.Utilities;
+import common.utility.WaitUtils;
 import org.openqa.selenium.By;
 
 public class HomePage extends NavbarComponent{
@@ -16,6 +17,8 @@ public class HomePage extends NavbarComponent{
 
     public HomePage open() {
         Constant.WEBDRIVER.navigate().to(Constant.TICKET4U_URL);
+        WaitUtils.waitForPageLoad();
+        WaitUtils.waitForNuxtHydration();
         return new HomePage();
     }
 }

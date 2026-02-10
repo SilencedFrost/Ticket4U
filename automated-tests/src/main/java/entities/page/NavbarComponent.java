@@ -1,4 +1,4 @@
-package user.entities.page;
+package entities.page;
 
 import common.constants.data.NavbarItem;
 import common.utility.Utilities;

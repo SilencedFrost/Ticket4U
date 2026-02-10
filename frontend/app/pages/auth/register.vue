@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import type { FetchError } from 'ofetch';
 
 definePageMeta({
@@ -60,6 +60,7 @@ const isFormValid = computed(() => {
 function onBlur(field: keyof typeof touched) {
     touched[field] = true;
     if (field === 'email') {
+        formData.email = formData.email.trim();
         const val = formData.email;
         if (!val) {
             error.email = 'auth.error.blank.email';
@@ -104,6 +105,7 @@ function onBlur(field: keyof typeof touched) {
             error.confirmPassword = '';
         }
     } else if (field === 'fullName') {
+        formData.fullName = formData.fullName.trim();
         const val = formData.fullName;
         if (!val) {
             error.fullName = 'auth.error.blank.fullName';
@@ -177,15 +179,43 @@ watch(() => formData.fullName, (val) => {
     }
 });
 
+const FIELD_ORDER: (keyof typeof touched)[] = ['fullName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
+
+const fieldIdMap: Record<keyof typeof touched, string> = {
+    fullName: 'reg-fullname',
+    email: 'reg-email',
+    phoneNumber: 'reg-phone',
+    password: 'reg-password',
+    confirmPassword: 'reg-confirm-password',
+};
+
+function hasFieldError(field: keyof typeof touched): boolean {
+    if (field === 'password') return error.password.length > 0;
+    return !!error[field];
+}
+
+function focusFirstErrorField() {
+    const firstError = FIELD_ORDER.find(hasFieldError);
+    if (firstError) {
+        nextTick(() => {
+            document.getElementById(fieldIdMap[firstError])?.focus();
+        });
+    }
+}
+
 function validateForm(): boolean {
     resetErrors();
+    formData.fullName = formData.fullName.trim();
+    formData.email = formData.email.trim();
     let valid = true;
 
     if (!formData.fullName) {
+        error.fullName = 'auth.error.blank.fullName';
         valid = false;
     }
 
     if (!formData.email) {
+        error.email = 'auth.error.blank.email';
         valid = false;
     } else if (!EMAIL_FORMAT_REGEX.test(formData.email)) {
         error.email = 'auth.error.format.emailInvalid';
@@ -195,7 +225,16 @@ function validateForm(): boolean {
         valid = false;
     }
 
+    if (!formData.phoneNumber) {
+        error.phoneNumber = 'auth.error.blank.phone';
+        valid = false;
+    } else if (!PHONE_REGEX.test(formData.phoneNumber)) {
+        error.phoneNumber = 'auth.error.format.phone';
+        valid = false;
+    }
+
     if (!formData.password) {
+        error.password = ['auth.error.blank.password'];
         valid = false;
     } else if (!PASSWORD_REGEX.test(formData.password)) {
         const errors: string[] = [];
@@ -217,13 +256,11 @@ function validateForm(): boolean {
         valid = false;
     }
 
-    if (!formData.phoneNumber) {
-        valid = false;
-    } else if (!PHONE_REGEX.test(formData.phoneNumber)) {
-        error.phoneNumber = 'auth.error.format.phone';
-        valid = false;
-    }
+    Object.keys(touched).forEach((key) => {
+        touched[key as keyof typeof touched] = true;
+    });
 
+    if (!valid) focusFirstErrorField();
     return valid;
 }
 
@@ -334,70 +371,86 @@ function goToLogin() {
         <form v-else novalidate @submit.prevent="register">
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.fullName') }}<span class="text-danger">*</span>
+                    {{ $t('auth.register.fullName') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
-                <input id="reg-fullname" v-model="formData.fullName" type="text" :disabled="loading" :class="[
+                <input
+id="reg-fullname" v-model="formData.fullName" type="text" autocomplete="name" aria-required="true" :aria-invalid="!!error.fullName" :aria-describedby="error.fullName ? 'reg-fullname-error' : undefined" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.fullName },
                 ]" @blur="onBlur('fullName')" />
-                <div v-if="error.fullName" class="invalid-feedback">{{ $t(error.fullName) }}</div>
+                <div v-if="error.fullName" id="reg-fullname-error" class="invalid-feedback" aria-live="assertive">
+                    {{ $t(error.fullName) }}
+                </div>
             </div>
 
             <div class="mb-2">
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('common.email') }}<span class="text-danger">*</span>
+                    {{ $t('common.email') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
-                <input id="reg-email" v-model="formData.email" type="email" :disabled="loading" :class="[
+                <input
+id="reg-email" v-model="formData.email" type="email" autocomplete="email" aria-required="true" :aria-invalid="!!error.email" :aria-describedby="error.email ? 'reg-email-error' : undefined" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.email },
                 ]" @blur="onBlur('email')" />
-                <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
+                <div v-if="error.email" id="reg-email-error" class="invalid-feedback" aria-live="assertive">
+                    {{ $t(error.email) }}
+                </div>
             </div>
 
             <div class="mb-2">
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.phone') }}<span class="text-danger">*</span>
+                    {{ $t('auth.register.phone') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
-                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" :disabled="loading" :placeholder="$t('auth.register.phonePlaceholder')" :class="[
+                <input
+id="reg-phone" v-model="formData.phoneNumber" type="tel" autocomplete="tel" aria-required="true" :aria-invalid="!!error.phoneNumber" :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined" :disabled="loading" :placeholder="$t('auth.register.phonePlaceholder')" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
                     { 'is-invalid': error.phoneNumber },
                 ]" @blur="onBlur('phoneNumber')" />
-                <div v-if="error.phoneNumber" class="invalid-feedback">{{ $t(error.phoneNumber) }}</div>
+                <div v-if="error.phoneNumber" id="reg-phone-error" class="invalid-feedback" aria-live="assertive">
+                    {{ $t(error.phoneNumber) }}
+                </div>
             </div>
 
             <div class="mb-2">
                 <label for="reg-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.password') }}<span class="text-danger">*</span>
+                    {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
                 <div class="input-group">
-                    <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" :disabled="loading" :class="[
-                        'form-control',
-                        'bg-reactive-primary',
-                        'text-reactive-primary',
-                        { 'is-invalid': error.password.length > 0 },
-                    ]" @blur="onBlur('password')" />
+                    <input
+id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="error.password.length > 0" :aria-describedby="[
+                        error.password.length > 0 ? 'reg-password-error' : '',
+                        'reg-password-hint',
+                    ].filter(Boolean).join(' ') || undefined" :disabled="loading" :class="[
+                            'form-control',
+                            'bg-reactive-primary',
+                            'text-reactive-primary',
+                            { 'is-invalid': error.password.length > 0 },
+                        ]" @blur="onBlur('password')" />
                     <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewPassword">
                         <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                 </div>
-                <ul v-if="error.password.length > 0" class="text-danger small mt-1 mb-0 ps-3">
+                <ul v-if="error.password.length > 0" id="reg-password-error" class="text-danger small mt-1 mb-0 ps-3" aria-live="assertive">
                     <li v-for="(err, index) in error.password" :key="index">{{ $t(err) }}</li>
                 </ul>
-                <small class="form-text text-muted">{{ $t('auth.register.passwordHint') }}</small>
+                <small id="reg-password-hint" class="form-text text-muted">
+                    {{ $t('auth.register.passwordHint') }}
+                </small>
             </div>
 
             <div class="mb-2">
                 <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.confirmPassword') }}<span class="text-danger">*</span>
+                    {{ $t('auth.register.confirmPassword') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
                 <div class="input-group">
-                    <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" :disabled="loading" :class="[
+                    <input
+id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="!!error.confirmPassword" :aria-describedby="error.confirmPassword ? 'reg-confirm-password-error' : undefined" :disabled="loading" :class="[
                         'form-control',
                         'bg-reactive-primary',
                         'text-reactive-primary',
@@ -407,10 +460,14 @@ function goToLogin() {
                         <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                 </div>
-                <div v-if="error.confirmPassword" class="invalid-feedback d-block">{{ $t(error.confirmPassword) }}</div>
+                <div v-if="error.confirmPassword" id="reg-confirm-password-error" class="invalid-feedback d-block" aria-live="assertive">
+                    {{ $t(error.confirmPassword) }}
+                </div>
             </div>
 
-            <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
+            <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">
+                {{ $t(error.generic) }}
+            </div>
 
             <div class="d-flex flex-column">
                 <button class="btn btn-primary text-center mb-2" type="submit" :disabled="loading || !isFormValid">

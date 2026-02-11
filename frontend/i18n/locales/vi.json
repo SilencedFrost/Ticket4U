@@ -25,6 +25,7 @@
         "noLowercase": "Mật khẩu phải có ít nhất một chữ thường",
         "noUppercase": "Mật khẩu phải có ít nhất một chữ hoa",
         "noSpecialChar": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!{'@'}#$%^&*_-)",
+        "noWhitespace": "Mật khẩu không được chứa khoảng trắng",
         "noVietnamese": "Mật khẩu không được chứa ký tự tiếng Việt"
       },
       "blank": {

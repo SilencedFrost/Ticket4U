@@ -25,6 +25,7 @@
         "noLowercase": "Password must contain at least one lowercase letter",
         "noUppercase": "Password must contain at least one uppercase letter",
         "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)",
+        "noWhitespace": "Password must not contain whitespace",
         "noVietnamese": "Password must not contain Vietnamese characters"
       },
       "blank": {

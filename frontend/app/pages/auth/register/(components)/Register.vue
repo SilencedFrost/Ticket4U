@@ -2,10 +2,6 @@
 import { ref, reactive, computed, watch, nextTick } from 'vue';
 import type { FetchError } from 'ofetch';
 
-definePageMeta({
-    layout: 'auth',
-});
-
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const loading = ref<boolean>(false);
@@ -44,17 +40,11 @@ const touched = reactive({
 });
 
 const isFormValid = computed(() => {
-    return (
-        formData.fullName &&
-        formData.email &&
-        formData.password &&
-        formData.confirmPassword &&
-        formData.phoneNumber &&
-        formData.password === formData.confirmPassword &&
-        PASSWORD_REGEX.test(formData.password) &&
-        EMAIL_DOMAIN_REGEX.test(formData.email) &&
-        PHONE_REGEX.test(formData.phoneNumber)
-    );
+    const emailOk = formData.email && EMAIL_DOMAIN_REGEX.test(formData.email);
+    const passwordOk = formData.password && PASSWORD_REGEX.test(formData.password);
+    const confirmOk = formData.confirmPassword && formData.password === formData.confirmPassword;
+    const phoneOk = formData.phoneNumber && PHONE_REGEX.test(formData.phoneNumber);
+    return !!(emailOk && passwordOk && confirmOk && phoneOk);
 });
 
 function onBlur(field: keyof typeof touched) {
@@ -88,6 +78,7 @@ function onBlur(field: keyof typeof touched) {
             return;
         }
         const errors: string[] = [];
+        if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
         if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
         if (val.length < 8) errors.push('auth.error.password.tooShort');
         if (val.length > 32) errors.push('auth.error.password.tooLong');
@@ -106,12 +97,7 @@ function onBlur(field: keyof typeof touched) {
         }
     } else if (field === 'fullName') {
         formData.fullName = formData.fullName.trim();
-        const val = formData.fullName;
-        if (!val) {
-            error.fullName = 'auth.error.blank.fullName';
-        } else {
-            error.fullName = '';
-        }
+        error.fullName = '';
     }
 }
 
@@ -147,7 +133,8 @@ watch(() => formData.password, (val) => {
         return;
     }
     const errors: string[] = [];
-    if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
+    if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
+    if (!/^[\x21-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
     if (val.length < 8) errors.push('auth.error.password.tooShort');
     if (val.length > 32) errors.push('auth.error.password.tooLong');
     if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
@@ -170,13 +157,9 @@ watch(() => formData.confirmPassword, (val) => {
     }
 });
 
-watch(() => formData.fullName, (val) => {
+watch(() => formData.fullName, () => {
     if (!touched.fullName) return;
-    if (!val) {
-        error.fullName = 'auth.error.blank.fullName';
-    } else {
-        error.fullName = '';
-    }
+    error.fullName = '';
 });
 
 const FIELD_ORDER: (keyof typeof touched)[] = ['fullName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
@@ -209,10 +192,7 @@ function validateForm(): boolean {
     formData.email = formData.email.trim();
     let valid = true;
 
-    if (!formData.fullName) {
-        error.fullName = 'auth.error.blank.fullName';
-        valid = false;
-    }
+    formData.fullName = formData.fullName || '';
 
     if (!formData.email) {
         error.email = 'auth.error.blank.email';
@@ -238,7 +218,8 @@ function validateForm(): boolean {
         valid = false;
     } else if (!PASSWORD_REGEX.test(formData.password)) {
         const errors: string[] = [];
-        if (!/^[\x20-\x7E]*$/.test(formData.password)) errors.push('auth.error.password.noVietnamese');
+        if (/\s/.test(formData.password)) errors.push('auth.error.password.noWhitespace');
+        if (!/^[\x21-\x7E]*$/.test(formData.password)) errors.push('auth.error.password.noVietnamese');
         if (formData.password.length < 8) errors.push('auth.error.password.tooShort');
         if (formData.password.length > 32) errors.push('auth.error.password.tooLong');
         if (!/[a-z]/.test(formData.password)) errors.push('auth.error.password.noLowercase');
@@ -371,10 +352,9 @@ function goToLogin() {
         <form v-else novalidate @submit.prevent="register">
             <div class="mb-2">
                 <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
-                    {{ $t('auth.register.fullName') }}<span class="text-danger" aria-hidden="true">*</span>
+                    {{ $t('auth.register.fullName') }}
                 </label>
-                <input
-id="reg-fullname" v-model="formData.fullName" type="text" autocomplete="name" aria-required="true" :aria-invalid="!!error.fullName" :aria-describedby="error.fullName ? 'reg-fullname-error' : undefined" :disabled="loading" :class="[
+                <input id="reg-fullname" v-model="formData.fullName" type="text" autocomplete="name" :aria-invalid="!!error.fullName" :aria-describedby="error.fullName ? 'reg-fullname-error' : undefined" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
@@ -389,8 +369,7 @@ id="reg-fullname" v-model="formData.fullName" type="text" autocomplete="name" ar
                 <label for="reg-email" class="form-label text-reactive-primary user-select-none">
                     {{ $t('common.email') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
-                <input
-id="reg-email" v-model="formData.email" type="email" autocomplete="email" aria-required="true" :aria-invalid="!!error.email" :aria-describedby="error.email ? 'reg-email-error' : undefined" :disabled="loading" :class="[
+                <input id="reg-email" v-model="formData.email" type="email" autocomplete="email" aria-required="true" :aria-invalid="!!error.email" :aria-describedby="error.email ? 'reg-email-error' : undefined" :disabled="loading" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
@@ -405,8 +384,7 @@ id="reg-email" v-model="formData.email" type="email" autocomplete="email" aria-r
                 <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
                     {{ $t('auth.register.phone') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
-                <input
-id="reg-phone" v-model="formData.phoneNumber" type="tel" autocomplete="tel" aria-required="true" :aria-invalid="!!error.phoneNumber" :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined" :disabled="loading" :placeholder="$t('auth.register.phonePlaceholder')" :class="[
+                <input id="reg-phone" v-model="formData.phoneNumber" type="tel" autocomplete="tel" aria-required="true" :aria-invalid="!!error.phoneNumber" :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined" :disabled="loading" :placeholder="$t('auth.register.phonePlaceholder')" :class="[
                     'form-control',
                     'bg-reactive-primary',
                     'text-reactive-primary',
@@ -422,17 +400,16 @@ id="reg-phone" v-model="formData.phoneNumber" type="tel" autocomplete="tel" aria
                     {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
                 <div class="input-group">
-                    <input
-id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="error.password.length > 0" :aria-describedby="[
+                    <input id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="error.password.length > 0" :aria-describedby="[
                         error.password.length > 0 ? 'reg-password-error' : '',
                         'reg-password-hint',
                     ].filter(Boolean).join(' ') || undefined" :disabled="loading" :class="[
-                            'form-control',
-                            'bg-reactive-primary',
-                            'text-reactive-primary',
-                            { 'is-invalid': error.password.length > 0 },
-                        ]" @blur="onBlur('password')" />
-                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewPassword">
+                        'form-control',
+                        'bg-reactive-primary',
+                        'text-reactive-primary',
+                        { 'is-invalid': error.password.length > 0 },
+                    ]" @blur="onBlur('password')" />
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @mousedown.prevent="viewPassword">
                         <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                 </div>
@@ -449,14 +426,13 @@ id="reg-password" v-model="formData.password" :type="isViewingPassword ? 'text' 
                     {{ $t('auth.register.confirmPassword') }}<span class="text-danger" aria-hidden="true">*</span>
                 </label>
                 <div class="input-group">
-                    <input
-id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="!!error.confirmPassword" :aria-describedby="error.confirmPassword ? 'reg-confirm-password-error' : undefined" :disabled="loading" :class="[
+                    <input id="reg-confirm-password" v-model="formData.confirmPassword" :type="isViewingConfirmPassword ? 'text' : 'password'" autocomplete="new-password" aria-required="true" :aria-invalid="!!error.confirmPassword" :aria-describedby="error.confirmPassword ? 'reg-confirm-password-error' : undefined" :disabled="loading" :class="[
                         'form-control',
                         'bg-reactive-primary',
                         'text-reactive-primary',
                         { 'is-invalid': error.confirmPassword },
                     ]" @blur="onBlur('confirmPassword')" />
-                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @click="viewConfirmPassword">
+                    <button class="btn btn-outline-secondary bg-reactive-primary" type="button" :disabled="loading" @mousedown.prevent="viewConfirmPassword">
                         <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
                     </button>
                 </div>

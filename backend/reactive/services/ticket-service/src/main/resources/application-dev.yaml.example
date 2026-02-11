@@ -1,0 +1,29 @@
+# Database Configuration
+spring:
+  datasource:
+    username: <<username>>
+    password: <<password>>
+    driver-class-name: org.postgresql.Driver
+
+  # Enable DevTools
+  devtools:
+    restart:
+      enabled: true
+      poll-interval: 2s
+      quiet-period: 1s
+    livereload:
+      enabled: true
+      port: 35729
+
+# Port
+server:
+  port: 8081
+  ssl:
+    certificate: classpath:keys/localhost+2.pem
+    certificate-private-key: classpath:keys/localhost+2-key.pem
+
+application:
+  security:
+    # CORS
+    cors:
+      allowed-origins: https://localhost:3000

@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.ECDSASigner;
+import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -97,8 +98,23 @@ public class JwtUtil {
         );
         ECKey parsedKey = ECKey.parseFromPEMEncodedObjects(publicKeyPEM).toECKey();
 
+        // Determine algorithm based on curve
+        JWSAlgorithm algorithm;
+        Curve curve = parsedKey.getCurve();
+
+        if (Curve.P_256.equals(curve)) {
+            algorithm = JWSAlgorithm.ES256;
+        } else if (Curve.P_384.equals(curve)) {
+            algorithm = JWSAlgorithm.ES384;
+        } else if (Curve.P_521.equals(curve)) {
+            algorithm = JWSAlgorithm.ES512;
+        } else {
+            throw new IllegalArgumentException("Unsupported curve: " + curve);
+        }
+
         return new ECKey.Builder(parsedKey)
                 .keyID(keyId)
+                .algorithm(algorithm)
                 .build();
     }
 

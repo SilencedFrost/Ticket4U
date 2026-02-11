@@ -1,7 +1,7 @@
 <template>
-    <Register />
+    <RegisterForm />
 </template>
 
 <script setup lang="ts">
-import Register from './(components)/Register.vue'
+import RegisterForm from './(components)/RegisterForm.vue'
 </script>

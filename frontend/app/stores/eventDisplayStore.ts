@@ -5,8 +5,10 @@ import type { CategoryOption } from '~/pages/event-display/types/event-display'
 interface EventDisplayFilters {
   startDate: string | null
   endDate: string | null
-  categoryIds: number[]
+  categoryIds: Array<number | string>
   isFreeOnly: boolean
+  page: number
+  size: number
 }
 
 export const useEventDisplayStore = defineStore('eventDisplay', () => {
@@ -18,6 +20,11 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
   const loading = ref(false)
   const loadingCategories = ref(false)
   const error = ref<string | null>(null)
+  
+  // Pagination state
+  const currentPage = ref(0)
+  const pageSize = ref(20)
+  const hasMore = ref(true) // True nếu còn data để load
 
   // Current filters
   const currentFilters = ref<EventDisplayFilters>({
@@ -25,6 +32,8 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
     endDate: null,
     categoryIds: [],
     isFreeOnly: false,
+    page: 0,
+    size: 20,
   })
 
   // Fetch events with filters
@@ -46,13 +55,20 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
         params.append('endDate', appliedFilters.endDate)
       }
       if (appliedFilters.categoryIds && appliedFilters.categoryIds.length > 0) {
-        appliedFilters.categoryIds.forEach(id => {
-          params.append('categoryIds', id.toString())
-        })
+        const ids = Array.isArray(appliedFilters.categoryIds) ? appliedFilters.categoryIds : [appliedFilters.categoryIds]
+        ids
+          .filter(id => id !== null && id !== undefined && id !== '')
+          .forEach(id => params.append('categoryIds', String(id)))
       }
       if (appliedFilters.isFreeOnly) {
         params.append('isFreeOnly', 'true')
       }
+      
+      // Add pagination params (with defaults)
+      const page = appliedFilters.page ?? 0
+      const size = appliedFilters.size ?? 20
+      params.append('page', page.toString())
+      params.append('size', size.toString())
 
       const queryString = params.toString()
       const url = `${config.public.homeApiUrl}/events/filter${queryString ? `?${queryString}` : ''}`
@@ -60,6 +76,12 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       const data = await $fetch<Event[]>(url, {
         credentials: 'include',
       })
+      
+      // Update pagination state
+      currentPage.value = page
+      pageSize.value = size
+      hasMore.value = data.length === size // Nếu trả về đủ size nghĩa là có thể còn data
+      
       events.value = data
     } catch (err) {
       error.value = 'Failed to load events'
@@ -96,6 +118,31 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       endDate: null,
       categoryIds: [],
       isFreeOnly: false,
+      page: 0,
+      size: 20,
+    }
+    currentPage.value = 0
+    hasMore.value = true
+  }
+  
+  // Go to next page
+  function nextPage() {
+    if (hasMore.value && !loading.value) {
+      fetchEvents({ page: currentPage.value + 1 })
+    }
+  }
+  
+  // Go to previous page
+  function previousPage() {
+    if (currentPage.value > 0 && !loading.value) {
+      fetchEvents({ page: currentPage.value - 1 })
+    }
+  }
+  
+  // Go to specific page
+  function goToPage(page: number) {
+    if (page >= 0 && !loading.value) {
+      fetchEvents({ page })
     }
   }
 
@@ -107,9 +154,16 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
     loadingCategories,
     error,
     currentFilters,
+    // Pagination
+    currentPage,
+    pageSize,
+    hasMore,
     // Actions
     fetchEvents,
     fetchCategories,
     resetFilters,
+    nextPage,
+    previousPage,
+    goToPage,
   }
 })

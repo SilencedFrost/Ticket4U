@@ -13,10 +13,6 @@
         <button v-if="canGoNext && !isMobile" class="carousel-nav-btn next" @click="goNext" aria-label="Next">
             &gt;
         </button>
-
-        <div v-if="showDots" class="carousel-indicators-dots">
-            <button v-for="(_, index) in totalPages" :key="index" class="dot" :class="{ active: currentIndex === index }" @click="goToPage(index)" :aria-label="`Go to page ${index + 1}`" />
-        </div>
     </section>
 </template>
 

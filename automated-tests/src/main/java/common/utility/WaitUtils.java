@@ -60,6 +60,25 @@ public class WaitUtils {
         waitForPageLoad(Constant.PAGE_LOAD_TIMEOUT);
     }
 
+    public static void waitForNuxtHydration(Duration timeout) {
+        WebDriverWait wait = new WebDriverWait(Constant.WEBDRIVER, timeout);
+        wait.until(driver -> {
+            try {
+                return Objects.equals(((JavascriptExecutor) driver).executeScript(
+                        "const nuxtApp = window.useNuxtApp ? window.useNuxtApp() : " +
+                                "(window.$nuxt ? window.$nuxt : null);" +
+                                "return nuxtApp && nuxtApp.isHydrating === false;"
+                ), true);
+            } catch (Exception e) {
+                return false;
+            }
+        });
+    }
+
+    public static void waitForNuxtHydration() {
+        waitForNuxtHydration(Constant.PAGE_LOAD_TIMEOUT);
+    }
+
     public static void waitForAlertPresent(Duration timeout) {
         WebDriverWait wait = new WebDriverWait(Constant.WEBDRIVER, timeout);
         wait.until(ExpectedConditions.alertIsPresent());

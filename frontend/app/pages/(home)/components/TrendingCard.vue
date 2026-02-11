@@ -4,7 +4,13 @@
       <component :is="badgeComponent" />
     </div>
 
-    <div class="trendy-card flex-grow-1 rounded-3 overflow-hidden">
+    <div 
+      class="trendy-card flex-grow-1 rounded-3 overflow-hidden cursor-pointer"
+      role="button"
+      tabindex="0"
+      @click="handleClick"
+      @keydown.enter="handleClick"
+    >
       <img
         :src="event.bannerUrl"
         :alt="event.name"
@@ -37,6 +43,10 @@ const badgeComponent = computed(() => {
       return TrendBadgeOne
   }
 })
+
+const handleClick = () => {
+  navigateTo(`/event-detail/${props.event.id}`)
+}
 </script>
 
 <style scoped>
@@ -57,5 +67,15 @@ const badgeComponent = computed(() => {
 
 .trendy-card {
   aspect-ratio: 16 / 9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trendy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

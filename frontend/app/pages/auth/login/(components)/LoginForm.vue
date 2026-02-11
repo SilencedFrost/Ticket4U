@@ -75,7 +75,9 @@ function viewPassword() {
             { 'is-invalid': error.email },
           ]"
         />
-        <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
+        <div v-if="error.email" id="error-email" class="invalid-feedback">
+          {{ $t(error.email) }}
+        </div>
       </div>
       <div class="mb-2">
         <label for="password" class="form-label text-reactive-primary user-select-none"
@@ -101,7 +103,9 @@ function viewPassword() {
           >
             <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
           </button>
-          <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>
+        </div>
+        <div v-if="error.password" id="error-password" class="invalid-feedback d-block">
+          {{ $t(error.password) }}
         </div>
       </div>
       <div class="form-check mb-2">
@@ -115,9 +119,12 @@ function viewPassword() {
           $t('auth.remember_me')
         }}</label>
       </div>
-      <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
+      <div v-if="error.generic" id="error-generic" class="invalid-feedback d-block mb-2">
+        {{ $t(error.generic) }}
+      </div>
       <div class="d-flex flex-column">
         <button
+          id="submit-btn"
           class="btn btn-primary text-center mb-2"
           :disabled="loading"
           @click.prevent.stop="login()"

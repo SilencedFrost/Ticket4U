@@ -1,0 +1,29 @@
+# Database Configuration
+spring:
+  datasource:
+    url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-Ticket}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# Port
+server:
+  port: ${SERVER_PORT:8081}
+
+application:
+  security:
+    # CORS
+    cors:
+      allowed-origins: ${FRONTEND_URL}
+
+# Logging
+logging:
+  level:
+    root: INFO

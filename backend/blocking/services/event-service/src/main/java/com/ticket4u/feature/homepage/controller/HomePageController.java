@@ -1,10 +1,10 @@
-package com.ticket4u.feature.homePage.controller;
+package com.ticket4u.feature.homepage.controller;
 
-import com.ticket4u.feature.homePage.dto.CategoryDTO;
-import com.ticket4u.feature.homePage.dto.CategoryWithEventsDTO;
-import com.ticket4u.feature.homePage.dto.EventCardDTO;
-import com.ticket4u.feature.homePage.dto.PlaceDTO;
-import com.ticket4u.feature.homePage.service.HomePageService;
+import com.ticket4u.feature.homepage.dto.CategoryDTO;
+import com.ticket4u.feature.homepage.dto.CategoryWithEventsDTO;
+import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.PlaceDTO;
+import com.ticket4u.feature.homepage.service.HomePageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/home")
+@RequestMapping("/api/v1/public/home")
 @RequiredArgsConstructor
+// @RateLimiter(name = "homePageLimiter")
 public class HomePageController {
 
     private final HomePageService homePageService;
@@ -95,9 +96,11 @@ public class HomePageController {
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) List<Integer> categoryIds,
-            @RequestParam(required = false) Boolean isFreeOnly
+            @RequestParam(required = false) Boolean isFreeOnly,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
-        List<EventCardDTO> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly);
+        List<EventCardDTO> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, page, size);
         return ResponseEntity.ok(events);
     }
 }

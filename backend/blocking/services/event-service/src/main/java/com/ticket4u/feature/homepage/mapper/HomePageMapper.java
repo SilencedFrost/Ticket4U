@@ -1,10 +1,10 @@
-package com.ticket4u.feature.homePage.mapper;
+package com.ticket4u.feature.homepage.mapper;
 
 import com.ticket4u.core.Category;
 import com.ticket4u.core.Event;
 import com.ticket4u.core.Zone;
-import com.ticket4u.feature.homePage.dto.CategoryDTO;
-import com.ticket4u.feature.homePage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.CategoryDTO;
+import com.ticket4u.feature.homepage.dto.EventCardDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,7 +12,8 @@ import java.util.List;
 
 /**
  * Mapper for HomePage feature
- * Converts Entity to DTO for homepage display
+ * Converts Entity objects to DTOs using MapStruct
+ * For native query results (Object[]), use NativeQueryMapper instead
  */
 @Mapper(
         componentModel = "spring",

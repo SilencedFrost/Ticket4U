@@ -1,4 +1,4 @@
-package com.ticket4u.feature.homePage.mapper;
+package com.ticket4u.feature.homepage.mapper;
 
 import com.ticket4u.core.Zone;
 import org.mapstruct.Named;

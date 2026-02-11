@@ -5,8 +5,8 @@ import com.ticket4u.feature.eventDetail.client.UserClient;
 import com.ticket4u.feature.eventDetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventDetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventDetail.service.EventDetailService;
-import com.ticket4u.feature.homePage.dto.EventCardDTO;
-import com.ticket4u.feature.homePage.service.HomePageService;
+import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.service.HomePageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -105,8 +105,8 @@ public class EventDetailServiceImpl implements EventDetailService {
         Set<EventCardDTO> results = new LinkedHashSet<>();
         String city = extractCity(address);
 
-        // 1. Same Category
-        addEvents(results, homePageService.getFilteredEvents(null, null, List.of(categoryId), null), currentId);
+        // 1. Same Category (limit to 8 events)
+        addEvents(results, homePageService.getFilteredEvents(null, null, List.of(categoryId), null, 0, 8), currentId);
 
         // 2. Same City (Fallback)
         if (results.size() < 8 && !city.isEmpty()) {

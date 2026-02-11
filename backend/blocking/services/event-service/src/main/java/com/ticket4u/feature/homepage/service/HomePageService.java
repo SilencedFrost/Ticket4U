@@ -1,13 +1,13 @@
-package com.ticket4u.feature.homePage.service;
+package com.ticket4u.feature.homepage.service;
 
-import com.ticket4u.feature.homePage.dto.CategoryDTO;
-import com.ticket4u.feature.homePage.dto.CategoryWithEventsDTO;
-import com.ticket4u.feature.homePage.dto.EventCardDTO;
-import com.ticket4u.feature.homePage.dto.PlaceDTO;
-import com.ticket4u.feature.homePage.repository.CategoryRepository;
-import com.ticket4u.feature.homePage.repository.EventRepository;
+import com.ticket4u.feature.homepage.dto.CategoryDTO;
+import com.ticket4u.feature.homepage.dto.CategoryWithEventsDTO;
+import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.PlaceDTO;
+import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
+import com.ticket4u.feature.homepage.repository.CategoryRepository;
+import com.ticket4u.feature.homepage.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,17 +18,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class HomePageService {
-    @Autowired
-    EventRepository eventRepository;
+    private final EventRepository eventRepository;
+    private final CategoryRepository categoryRepository;
+    private final NativeQueryMapper nativeQueryMapper;
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private static final int MAX_PAGE_SIZE = 100;
+    private static final int MAX_EVENTS_PER_CATEGORY = 4; // For homepage display
 
     // Lấy tất cả events với giá thấp nhất
     public List<EventCardDTO> getAllEventsWithMinPrice() {
         List<Object[]> results = eventRepository.findEventsWithMinPrice();
         return results.stream()
-                .map(EventCardDTO::new)
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +44,7 @@ public class HomePageService {
     public List<EventCardDTO> getFeaturedEvents() {
         List<Object[]> results = eventRepository.findFeaturedEvents();
         return results.stream()
-                .map(EventCardDTO::new)
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +52,7 @@ public class HomePageService {
     public List<EventCardDTO> getSpecialEvents() {
         List<Object[]> results = eventRepository.findSpecialEvents();
         return results.stream()
-                .map(EventCardDTO::new)
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
@@ -58,7 +60,7 @@ public class HomePageService {
     public List<EventCardDTO> getTrendingEvents() {
         List<Object[]> results = eventRepository.findTrendingEvents();
         return results.stream()
-                .map(EventCardDTO::new)
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
@@ -66,18 +68,17 @@ public class HomePageService {
     public List<EventCardDTO> getSuggestedEvents() {
         List<Object[]> results = eventRepository.findSuggestedEvents();
         return results.stream()
-                .map(EventCardDTO::new)
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
-    // Music: Events với category = 'Music'
-    public List<EventCardDTO> getMusicEvents() {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        List<Object[]> results = eventRepository.findEventsByCategory("Âm nhạc (Concert)");
-        return results.stream()
-                .map(EventCardDTO::new)
-                .collect(Collectors.toList());
-    }
+     // Music: Events với category = 'Music'
+     public List<EventCardDTO> getMusicEvents() {
+         List<Object[]> results = eventRepository.findEventsByCategory("Âm nhạc (Concert)");
+         return results.stream()
+                 .map(nativeQueryMapper::toEventCardDTO)
+                 .collect(Collectors.toList());
+     }
 
     // Places: Return empty list for now (future implementation)
     public List<PlaceDTO> getPlaces() {
@@ -95,16 +96,28 @@ public class HomePageService {
             // Get latest 4 events for this category
             List<Object[]> eventResults = eventRepository.findLatestEventsByCategoryId(categoryId);
             List<EventCardDTO> events = eventResults.stream()
-                    .map(EventCardDTO::new)
+                    .map(nativeQueryMapper::toEventCardDTO)
+                    .limit(MAX_EVENTS_PER_CATEGORY)
                     .collect(Collectors.toList());
             
             return new CategoryWithEventsDTO(categoryId, categoryName, events);
         }).collect(Collectors.toList());
     }
 
-    // Event Display: Get filtered events (supports multiple categories)
-    public List<EventCardDTO> getFilteredEvents(String startDate, String endDate, List<Integer> categoryIds, Boolean isFreeOnly) {
+    // Event Display: Get filtered events (supports multiple categories) with pagination
+    public List<EventCardDTO> getFilteredEvents(
+            String startDate, 
+            String endDate, 
+            List<Integer> categoryIds, 
+            Boolean isFreeOnly,
+            Integer page,
+            Integer size
+    ) {
         Boolean effectiveIsFreeOnly = (isFreeOnly != null) ? isFreeOnly : false;
+        int effectivePage = (page != null && page >= 0) ? page : 0;
+        int effectiveSize = (size != null && size > 0 && size <= MAX_PAGE_SIZE) ? size : DEFAULT_PAGE_SIZE;
+        
+        int offset = effectivePage * effectiveSize;
         
         // Check if category filter should be applied
         List<Object[]> results;
@@ -113,7 +126,9 @@ public class HomePageService {
             results = eventRepository.findEventsWithoutCategoryFilter(
                 startDate,
                 endDate,
-                effectiveIsFreeOnly
+                effectiveIsFreeOnly,
+                effectiveSize,
+                offset
             );
         } else {
             // Apply category filter
@@ -121,19 +136,14 @@ public class HomePageService {
                 startDate,
                 endDate,
                 categoryIds,
-                effectiveIsFreeOnly
+                effectiveIsFreeOnly,
+                effectiveSize,
+                offset
             );
         }
         
         return results.stream()
-                .map(result -> {
-                    EventCardDTO dto = new EventCardDTO(result);
-                    // result[7] is category_name from the query
-                    if (result.length > 7 && result[7] != null) {
-                        dto.setCategoryName((String) result[7]);
-                    }
-                    return dto;
-                })
+                .map(nativeQueryMapper::toEventCardDTO)
                 .collect(Collectors.toList());
     }
 
@@ -141,11 +151,7 @@ public class HomePageService {
     public List<CategoryDTO> getAllCategories() {
         List<Object[]> results = categoryRepository.findCategoriesWithActiveEvents();
         return results.stream()
-                .map(result -> {
-                    Integer id = (Integer) result[0];
-                    String name = (String) result[1];
-                    return new CategoryDTO(id, name, null);
-                })
+                .map(nativeQueryMapper::toCategoryDTO)
                 .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@ package com.ticket4u.feature.eventDetail.controller;
 
 import com.ticket4u.feature.eventDetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventDetail.service.EventDetailService;
-import com.ticket4u.feature.homePage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.EventCardDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.ticket4u.feature.homePage.dto;
+package com.ticket4u.feature.homepage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

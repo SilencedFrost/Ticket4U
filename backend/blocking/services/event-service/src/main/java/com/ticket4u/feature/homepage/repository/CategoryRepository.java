@@ -1,4 +1,4 @@
-package com.ticket4u.feature.homePage.repository;
+package com.ticket4u.feature.homepage.repository;
 
 import com.ticket4u.core.Category;
 import org.springframework.data.jpa.repository.JpaRepository;

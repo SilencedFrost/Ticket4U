@@ -1,4 +1,4 @@
-package com.ticket4u.feature.homePage.repository;
+package com.ticket4u.feature.homepage.repository;
 
 import com.ticket4u.core.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -127,11 +127,14 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
           ))
         GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, c.name
         ORDER BY e.start_date ASC
+        LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
     List<Object[]> findEventsWithoutCategoryFilter(
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
-        @Param("isFreeOnly") Boolean isFreeOnly
+        @Param("isFreeOnly") Boolean isFreeOnly,
+        @Param("limit") Integer limit,
+        @Param("offset") Integer offset
     );
 
     // Event Display: Filter events WITH category filter (when specific categories selected)
@@ -151,11 +154,14 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
           ))
         GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, c.name
         ORDER BY e.start_date ASC
+        LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
     List<Object[]> findEventsWithCategoryFilter(
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
         @Param("categoryIds") List<Integer> categoryIds,
-        @Param("isFreeOnly") Boolean isFreeOnly
+        @Param("isFreeOnly") Boolean isFreeOnly,
+        @Param("limit") Integer limit,
+        @Param("offset") Integer offset
     );
 }

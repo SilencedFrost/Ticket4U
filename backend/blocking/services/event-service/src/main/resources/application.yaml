@@ -43,3 +43,10 @@ logging:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: openid,profile,email
+#
+#  resilience4j.ratelimiter:
+#    instances:
+#      homePageLimiter: # Đây là tên của instance
+#        limitForPeriod: 60              # Số request tối đa
+#        limitRefreshPeriod: 1m          # Trong khoảng thời gian bao lâu (1 phút)
+#        timeoutDuration: 0s             # Thời gian chờ nếu đã hết lượt (0 là từ chối ngay)

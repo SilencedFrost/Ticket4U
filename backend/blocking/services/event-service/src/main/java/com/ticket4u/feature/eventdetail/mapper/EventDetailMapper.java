@@ -3,6 +3,7 @@ package com.ticket4u.feature.eventdetail.mapper;
 import com.ticket4u.core.Event;
 import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
+import com.ticket4u.feature.eventdetail.dto.ImageEventDTO;
 import com.ticket4u.feature.eventdetail.dto.SeatTypeDTO;
 import com.ticket4u.feature.eventdetail.dto.ShowtimeDTO;
 import org.mapstruct.Mapper;
@@ -15,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ZoneMapper.class})
-public interface EvenDetailMapper {
+public interface EventDetailMapper {
 
     @Mapping(source = "id", target = "eventId")
     @Mapping(source = "name", target = "eventTitle")
@@ -23,10 +24,20 @@ public interface EvenDetailMapper {
     @Mapping(source = "startDate", target = "time", qualifiedByName = "toLocalTimeString")
     @Mapping(source = "addressLine", target = "address")
     @Mapping(source = "category.id", target = "categoryId")
-    @Mapping(source = "bannerUrl", target = "imgEvent.heroUrl")
-    @Mapping(source = "content.seatingPlanImageUrl", target = "imgEvent.seatMapUrl")
+    @Mapping(source = "event", target = "imgEvent")
     @Mapping(source = "zones", target = "showtimes", qualifiedByName = "mapZonesToShowtimes")
+    @Mapping(target = "minPrice", ignore = true)
+    @Mapping(target = "maxPrice", ignore = true)
+    @Mapping(target = "organizer", ignore = true)
     EventDetailResponse toResponse(Event event);
+
+    default ImageEventDTO mapImages(Event event) {
+        if (event == null) return null;
+        return new ImageEventDTO(
+                event.getBannerUrl(),
+                event.getContent() != null ? event.getContent().getSeatingPlanImageUrl() : null
+        );
+    }
 
     @Named("toLocalDateString")
     default String toLocalDateString(OffsetDateTime dateTime) {
@@ -45,10 +56,11 @@ public interface EvenDetailMapper {
         ZoneMapper zoneMapper = org.mapstruct.factory.Mappers.getMapper(ZoneMapper.class);
         List<SeatTypeDTO> seatTypes = zoneMapper.toSeatTypeDTOs(zones);
 
+        Event event = zones.get(0).getEvent();
         return List.of(new ShowtimeDTO(
-                zones.get(0).getEvent().getId().toString(),
-                toLocalDateString(zones.get(0).getEvent().getStartDate()),
-                toLocalTimeString(zones.get(0).getEvent().getStartDate()),
+                event.getId().toString(),
+                toLocalDateString(event.getStartDate()),
+                toLocalTimeString(event.getStartDate()),
                 seatTypes
         ));
     }

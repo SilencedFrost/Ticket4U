@@ -1,4 +1,4 @@
-package com.ticket4u.feature.eventDetail.repository;
+package com.ticket4u.feature.eventdetail.repository;
 
 import com.ticket4u.core.Event;
 import org.springframework.data.jpa.repository.EntityGraph;

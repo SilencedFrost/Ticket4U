@@ -1,6 +1,6 @@
-package com.ticket4u.feature.eventDetail.client;
+package com.ticket4u.feature.eventdetail.client;
 
-import com.ticket4u.feature.eventDetail.dto.EventDetailResponse;
+import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

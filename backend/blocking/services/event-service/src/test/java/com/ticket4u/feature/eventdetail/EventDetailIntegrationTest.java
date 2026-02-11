@@ -1,4 +1,4 @@
-package com.ticket4u.feature.eventDetail;
+package com.ticket4u.feature.eventdetail;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

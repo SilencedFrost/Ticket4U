@@ -1,6 +1,5 @@
-package com.ticket4u.feature.eventDetail.dto;
+package com.ticket4u.feature.eventdetail.dto;
 
-import com.ticket4u.core.Seat;
 import lombok.Data;
 
 import java.util.List;

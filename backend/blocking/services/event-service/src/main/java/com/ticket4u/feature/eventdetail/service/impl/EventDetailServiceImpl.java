@@ -1,10 +1,10 @@
-package com.ticket4u.feature.eventDetail.service.impl;
+package com.ticket4u.feature.eventdetail.service.impl;
 
 import com.ticket4u.core.Event;
-import com.ticket4u.feature.eventDetail.client.UserClient;
-import com.ticket4u.feature.eventDetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventDetail.repository.EventDetailRepository;
-import com.ticket4u.feature.eventDetail.service.EventDetailService;
+import com.ticket4u.feature.eventdetail.client.UserClient;
+import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
+import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
+import com.ticket4u.feature.eventdetail.service.EventDetailService;
 import com.ticket4u.feature.homepage.dto.EventCardDTO;
 import com.ticket4u.feature.homepage.service.HomePageService;
 import jakarta.persistence.EntityNotFoundException;

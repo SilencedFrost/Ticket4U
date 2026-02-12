@@ -17,10 +17,8 @@
         <!-- Placeholder for alignment -->
       </div>
     </div>
-
     <div class="flex-grow-1 overflow-auto p-4 d-flex align-items-center justify-content-center">
       <div style="max-width: 800px; width: 100%;">
-        
         <!-- Stadium Layout Table -->
         <table class="table table-bordered text-center mb-0">
           <tbody>
@@ -35,8 +33,7 @@
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('svip') }"
-                  @click="handleZoneClick('svip')"
-                >
+                  @click="handleZoneClick('svip')">
                   <strong class="text-white">{{ getTicketName('svip') }}</strong>
                   <br/>
                   <small class="text-white opacity-75">{{ getMaxLimitText('svip') }}</small>
@@ -49,8 +46,7 @@
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('ga-a') }"
-                  @click="handleZoneClick('ga-a')"
-                >
+                  @click="handleZoneClick('ga-a')">
                   <strong class="text-white">{{ getTicketName('ga-a') }}</strong>
                   <br/>
                   <small class="text-white opacity-75">{{ getMaxLimitText('ga-a') }}</small>
@@ -65,8 +61,7 @@
                 <div 
                   class="seat-zone p-4"
                   :style="{ backgroundColor: getSeatColor('ga-b') }"
-                  @click="handleZoneClick('ga-b')"
-                >
+                  @click="handleZoneClick('ga-b')">
                   <strong class="text-white">{{ getTicketName('ga-b') }}</strong>
                   <br/>
                   <small class="text-white opacity-75">{{ getMaxLimitText('ga-b') }}</small>
@@ -79,8 +74,7 @@
                 <div 
                   class="seat-zone p-4 opacity-50"
                   :style="{ backgroundColor: getSeatColor('budget-left') }"
-                  @click="handleZoneClick('budget-left')"
-                >
+                  @click="handleZoneClick('budget-left')">
                   <strong class="text-white">{{ getTicketName('budget-left') }}</strong>
                   <br/>
                   <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
@@ -91,8 +85,7 @@
                 <div 
                   class="seat-zone p-4 opacity-50"
                   :style="{ backgroundColor: getSeatColor('budget-right') }"
-                  @click="handleZoneClick('budget-right')"
-                >
+                  @click="handleZoneClick('budget-right')">
                   <strong class="text-white">{{ getTicketName('budget-right') }}</strong>
                   <br/>
                   <small class="badge bg-danger mt-1">{{ $t('event_payment.ticket_info.sold_out') }}</small>
@@ -164,16 +157,15 @@
               </div>
             </div>
 
-            <div class="col-12">
-              <button 
-                class="btn btn-primary w-100 py-2 fw-semibold" 
-                @click="addToCart" 
-                :disabled="quantity === 0"
-              >
-                <i class="bi bi-cart-plus me-2"/>
-                {{ $t('event_payment.selection.add_to_cart') }}
-              </button>
-            </div>
+          <div class="col-12">
+            <button 
+              class="btn btn-primary w-100 py-2 fw-semibold" 
+              @click="addToCart" 
+              :disabled="quantity === 0"
+            >
+              <i class="bi bi-cart-plus me-2"></i>
+              {{ $t('event_payment.selection.add_to_cart') }}
+            </button>
           </div>
         </div>
       </div>

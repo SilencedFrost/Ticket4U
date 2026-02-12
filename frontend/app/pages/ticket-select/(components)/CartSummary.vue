@@ -135,8 +135,7 @@
         <div 
           v-for="(item, index) in cart" 
           :key="index"
-          class="card bg-reactive-primary p-3 mb-3"
-        >
+          class="card bg-reactive-primary p-3 mb-3">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div class="flex-grow-1">
               <h6 class="text-reactive-primary mb-1">{{ item.name }}</h6>

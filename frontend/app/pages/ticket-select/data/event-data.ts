@@ -9,7 +9,8 @@ export const ticketData: Ticket[] = [
     color: '#E53E3E', 
     zone: 'SVIP', 
     available: 100, 
-    soldOut: false 
+    soldOut: false,
+    maxPerAccount: 1  
   },
   { 
     id: 'ga-a', 
@@ -18,7 +19,8 @@ export const ticketData: Ticket[] = [
     color: '#06B6D4', 
     zone: 'GA', 
     available: 150, 
-    soldOut: false 
+    soldOut: false,
+    maxPerAccount: 2
   },
   { 
     id: 'ga-b', 
@@ -27,16 +29,18 @@ export const ticketData: Ticket[] = [
     color: '#22D3EE', 
     zone: 'GA', 
     available: 150, 
-    soldOut: false 
+    soldOut: false,
+    maxPerAccount: 2
   },
   { 
     id: 'budget-left', 
     name: 'Vé Tiết Kiệm (Trái)', 
-    price: 300000, 
+    price: 300000,
     color: '#D69E2E', 
     zone: 'BUDGET', 
     available: 0, 
-    soldOut: true 
+    soldOut: true,
+    maxPerAccount: 4
   },
   { 
     id: 'budget-right', 
@@ -45,9 +49,11 @@ export const ticketData: Ticket[] = [
     color: '#D69E2E', 
     zone: 'BUDGET', 
     available: 0, 
-    soldOut: true 
+    soldOut: true,
+    maxPerAccount: 4
   },
 ]
+
 
 export const eventData: Event = {
   id: '1',

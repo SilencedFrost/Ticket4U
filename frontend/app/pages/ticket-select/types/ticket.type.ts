@@ -6,6 +6,7 @@ export interface Ticket {
   zone: string
   available: number
   soldOut: boolean
+  maxPerAccount: number | null
 }
 
 export interface SelectedTicket {

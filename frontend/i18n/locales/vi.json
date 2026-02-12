@@ -99,6 +99,10 @@
     },
     "checkout": {
       "button": "Tiếp tục thanh toán"
+    },
+    "validation": {
+      "max_per_account": "Tối đa {max} vé mỗi tài khoản",
+      "max_reached": "Bạn chỉ có thể mua tối đa {max} vé loại này"
     }
   }
 }

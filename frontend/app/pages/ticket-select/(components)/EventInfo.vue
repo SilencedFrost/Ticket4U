@@ -4,11 +4,11 @@
     
     <div class="text-reactive-secondary">
       <div class="d-flex align-items-center mb-2">
-        <i class="bi bi-calendar3 me-2"></i>
+        <i class="bi bi-calendar3 me-2"/>
         <small>{{ event.time }}, {{ event.date }}</small>
       </div>
       <div class="d-flex align-items-center">
-        <i class="bi bi-geo-alt me-2"></i>
+        <i class="bi bi-geo-alt me-2"/>
         <small>{{ event.venue }}</small>
       </div>
     </div>

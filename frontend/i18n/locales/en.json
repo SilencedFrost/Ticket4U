@@ -99,6 +99,10 @@
     },
     "checkout": {
       "button": "Proceed to Payment"
+    },
+    "validation": {
+      "max_per_account": "Maximum {max} ticket(s) per account",
+      "max_reached": "You can only purchase {max} ticket(s) of this type"
     }
   }
 }

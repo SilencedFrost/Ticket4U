@@ -2,7 +2,7 @@
   <div class="event-payment-wrapper container-fluid bg-reactive-primary text-reactive-primary vh-100">
     <div class="row h-100 g-0">
       <!-- Left: Seating Map -->
-      <div class="col-lg-8 bg-black">
+      <div class="col-lg-8">
         <SeatingMap 
           @back="handleBack"
           @add-ticket="handleAddTicket"
@@ -10,8 +10,8 @@
       </div>
 
       <!-- Right: Cart Summary -->
-      <div class="col-lg-4 bg-reactive-secondary p-4 d-flex flex-column h-100">
-        <div class="flex-grow-1 overflow-auto">
+      <div class="col-lg-4 bg-reactive-secondary d-flex flex-column h-100">
+        <div class="flex-grow-1 overflow-auto px-4 pt-4">
           <EventInfo :event="eventDetails" />
           
           <CartSummary 
@@ -20,18 +20,18 @@
             :total-price="totalPrice"
             :total-tickets="totalTickets"
             @remove-item="removeFromCart"
+            @add-ticket="handleAddTicket"
           />
         </div>
 
         <!-- Bottom Button -->
-        <div class="pt-3 border-top border-secondary">
+        <div class="p-4 pt-3 border-top border-secondary">
           <button 
             class="btn btn-primary w-100 py-3 fw-semibold"
             :disabled="cart.length === 0"
-            @click="proceedToCheckout"
-          >
+            @click="proceedToCheckout">
             {{ $t('event_payment.checkout.button') }}
-            <i class="bi bi-arrow-right ms-2"></i>
+            <i class="bi bi-arrow-right ms-2"/>
           </button>
         </div>
       </div>

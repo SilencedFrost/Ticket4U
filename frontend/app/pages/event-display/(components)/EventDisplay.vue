@@ -78,6 +78,19 @@
 
       <!-- Events Grid -->
       <EventGrid v-else :events="events" @event-click="handleEventClick" />
+
+      <!-- Pagination -->
+      <Pagination
+        v-if="!loading && !error && events.length > 0"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :has-more="hasMore"
+        :loading="loading"
+        :total-displayed="events.length"
+        @previous="handlePreviousPage"
+        @next="handleNextPage"
+        @go-to-page="handleGoToPage"
+      />
     </div>
   </div>
 </template>
@@ -88,6 +101,7 @@ import { storeToRefs } from 'pinia';
 import DateRangeFilter from './DateRangeFilter.vue';
 import MainFilter from './MainFilter.vue';
 import EventGrid from './EventGrid.vue';
+import Pagination from './Pagination.vue';
 import { useDateRange } from '../composables/use-date-range';
 import { useEventFilter } from '../composables/use-event-filter';
 import { useEventDisplayStore } from '~/stores/eventDisplayStore';
@@ -95,7 +109,7 @@ import { locations, datePresets } from '../data/filters';
 
 // Store
 const eventDisplayStore = useEventDisplayStore();
-const { events, categories, loading, error } = storeToRefs(eventDisplayStore);
+const { events, categories, loading, error, currentPage, pageSize, hasMore } = storeToRefs(eventDisplayStore);
 
 // Mobile state
 const isMobile = ref(false);
@@ -245,6 +259,7 @@ const fetchWithFilters = () => {
     endDate: endDate.value || null,
     categoryIds: categoryIds,
     isFreeOnly: isFreeEvent.value,
+    page: 0, // Reset to first page when filters change
   });
 };
 
@@ -286,6 +301,22 @@ const applyMainFilter = () => {
 // Event click handler
 const handleEventClick = (eventId: string) => {
   navigateTo(`/event-detail/${eventId}`);
+};
+
+// Pagination handlers
+const handlePreviousPage = () => {
+  eventDisplayStore.previousPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const handleNextPage = () => {
+  eventDisplayStore.nextPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const handleGoToPage = (page: number) => {
+  eventDisplayStore.goToPage(page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // Close popup when clicking outside

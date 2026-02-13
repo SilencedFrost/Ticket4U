@@ -22,6 +22,7 @@ public record RegisterRequest(
         @ValidPhoneNumber(message = "auth.error.format.phone")
         String phoneNumber,
 
+        @NotBlank(message = "auth.error.blank.fullName")
         @Size(max = 100, message = "auth.error.size.fullName")
         String fullName
 ) {

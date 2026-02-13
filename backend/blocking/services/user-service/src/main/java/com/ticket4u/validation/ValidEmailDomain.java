@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEmailDomain {
-    String message() default "auth.error.format.email";
+    String message() default "This email domain is not accepted";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

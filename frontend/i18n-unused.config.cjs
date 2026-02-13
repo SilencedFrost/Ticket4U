@@ -5,7 +5,7 @@ module.exports = {
   localesPath: 'i18n/locales',
   
   /** Path to scan for translation usage */
-  srcPath: 'app',
+  srcPath: '.',
   
   /** Allowed extensions for locale files */
   localesExtensions: ['json'],
@@ -26,13 +26,12 @@ module.exports = {
   
   /**
    * Regex to match translation keys in your code
-   * Matches: $t('key') and t('key')
+   * Matches: 'key' and "key"
    */
-  translationKeyMatcher: /(?:\$t|(?<!\.)\bt)\s*\(\s*['"]([\w.]+)['"]/g,
-  
+  translationKeyMatcher: /['"]([\w.]+)['"]/g,
+
   /**
    * Parser to extract the actual key from the match
-   * This extracts the content between quotes
    */
   missedTranslationParser: (match) => {
     const extracted = match.match(/['"]([\w.]+)['"]/);

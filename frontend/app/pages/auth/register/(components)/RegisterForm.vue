@@ -6,14 +6,12 @@ const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
-const isViewingConfirmPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
 
 // Reactive object for error fields
 const error = reactive({
   email: '',
   password: [] as string[],
-  confirmPassword: '',
   phoneNumber: '',
   fullName: '',
   generic: '',
@@ -23,7 +21,6 @@ const error = reactive({
 const formData = reactive({
   email: '',
   password: '',
-  confirmPassword: '',
   phoneNumber: '',
   fullName: '',
 });
@@ -39,7 +36,6 @@ const EMAIL_DOMAIN_REGEX =
 const touched = reactive({
   email: false,
   password: false,
-  confirmPassword: false,
   phoneNumber: false,
   fullName: false,
 });
@@ -48,9 +44,8 @@ const touched = reactive({
 const isFormValid = computed(() => {
   const emailOk = formData.email && EMAIL_DOMAIN_REGEX.test(formData.email);
   const passwordOk = formData.password && PASSWORD_REGEX.test(formData.password);
-  const confirmOk = formData.confirmPassword && formData.password === formData.confirmPassword;
   const phoneOk = formData.phoneNumber && PHONE_REGEX.test(formData.phoneNumber);
-  return !!(emailOk && passwordOk && confirmOk && phoneOk);
+  return !!(emailOk && passwordOk && phoneOk);
 });
 
 // Onblur function to do validation
@@ -93,15 +88,6 @@ function onBlur(field: keyof typeof touched) {
     if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
     if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
     error.password = errors;
-  } else if (field === 'confirmPassword') {
-    const val = formData.confirmPassword;
-    if (!val) {
-      error.confirmPassword = 'auth.register.error.confirmRequired';
-    } else if (formData.password !== val) {
-      error.confirmPassword = 'auth.register.error.passwordMismatch';
-    } else {
-      error.confirmPassword = '';
-    }
   } else if (field === 'fullName') {
     formData.fullName = formData.fullName.trim();
     error.fullName = '';
@@ -159,25 +145,6 @@ watch(
     if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
     if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
     error.password = errors;
-    if (touched.confirmPassword && formData.confirmPassword) {
-      error.confirmPassword =
-        val !== formData.confirmPassword ? 'auth.register.error.passwordMismatch' : '';
-    }
-  },
-);
-
-// watch method call for password confirm field
-watch(
-  () => formData.confirmPassword,
-  (val) => {
-    if (!touched.confirmPassword) return;
-    if (!val) {
-      error.confirmPassword = 'auth.register.error.confirmRequired';
-    } else if (formData.password !== val) {
-      error.confirmPassword = 'auth.register.error.passwordMismatch';
-    } else {
-      error.confirmPassword = '';
-    }
   },
 );
 
@@ -191,13 +158,7 @@ watch(
 );
 
 // field order
-const FIELD_ORDER: (keyof typeof touched)[] = [
-  'fullName',
-  'email',
-  'phoneNumber',
-  'password',
-  'confirmPassword',
-];
+const FIELD_ORDER: (keyof typeof touched)[] = ['fullName', 'email', 'phoneNumber', 'password'];
 
 // field id map
 const fieldIdMap: Record<keyof typeof touched, string> = {
@@ -205,7 +166,6 @@ const fieldIdMap: Record<keyof typeof touched, string> = {
   email: 'reg-email',
   phoneNumber: 'reg-phone',
   password: 'reg-password',
-  confirmPassword: 'reg-confirm-password',
 };
 
 // idek
@@ -265,14 +225,6 @@ function validateForm(): boolean {
     if (!/[A-Z]/.test(formData.password)) errors.push('auth.error.password.noUppercase');
     if (!/[!@#$%^&*_-]/.test(formData.password)) errors.push('auth.error.password.noSpecialChar');
     error.password = errors;
-    valid = false;
-  }
-
-  if (!formData.confirmPassword) {
-    error.confirmPassword = 'auth.register.error.confirmRequired';
-    valid = false;
-  } else if (formData.password !== formData.confirmPassword) {
-    error.confirmPassword = 'auth.register.error.passwordMismatch';
     valid = false;
   }
 
@@ -373,11 +325,6 @@ function handleError(fetchError: FetchError) {
 // Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
-}
-
-// Helper function to view confirm password field
-function viewConfirmPassword() {
-  isViewingConfirmPassword.value = !isViewingConfirmPassword.value;
 }
 
 // Helper function to go to login
@@ -532,48 +479,6 @@ function goToLogin() {
         <small id="reg-password-hint" class="form-text text-muted">
           {{ $t('auth.register.passwordHint') }}
         </small>
-      </div>
-      <!-- confirm password -->
-      <div class="mb-2">
-        <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
-          {{ $t('auth.register.confirmPassword')
-          }}<span class="text-danger" aria-hidden="true">*</span>
-        </label>
-        <div class="input-group">
-          <input
-            id="reg-confirm-password"
-            v-model="formData.confirmPassword"
-            :type="isViewingConfirmPassword ? 'text' : 'password'"
-            autocomplete="new-password"
-            aria-required="true"
-            :aria-invalid="!!error.confirmPassword"
-            :aria-describedby="error.confirmPassword ? 'reg-confirm-password-error' : undefined"
-            :disabled="loading"
-            :class="[
-              'form-control',
-              'bg-reactive-primary',
-              'text-reactive-primary',
-              { 'is-invalid': error.confirmPassword },
-            ]"
-            @blur="onBlur('confirmPassword')"
-          />
-          <button
-            class="btn btn-outline-secondary bg-reactive-primary"
-            type="button"
-            :disabled="loading"
-            @mousedown.prevent="viewConfirmPassword"
-          >
-            <i :class="isViewingConfirmPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
-          </button>
-        </div>
-        <div
-          v-if="error.confirmPassword"
-          id="reg-confirm-password-error"
-          class="invalid-feedback d-block"
-          aria-live="assertive"
-        >
-          {{ $t(error.confirmPassword) }}
-        </div>
       </div>
       <!-- generic error -->
       <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">

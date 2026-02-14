@@ -22,7 +22,7 @@ public class LoginPage extends CorePageEntity {
     // Methods
     @Override
     public boolean isComponentDisplayed() {
-        return Utilities.isElementPresent(By.xpath("//div[@class='form-width'][./h3[.='Login:']]"));
+        return Utilities.isElementPresent(By.xpath("//div[@class='form-width'][./h3[.='Login']]"));
     }
 
     public String getFormErrorMsg() {

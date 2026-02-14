@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch, nextTick } from 'vue';
 import type { FetchError } from 'ofetch';
 
 const config = useRuntimeConfig();
@@ -8,232 +7,156 @@ const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
 
-// Reactive object for error fields
-const error = reactive({
-  email: '',
-  password: [] as string[],
-  phoneNumber: '',
-  fullName: '',
-  generic: '',
-});
+/**======================
+ * Reused constants
+ =======================*/
 
-// Reactive object for form data
-const formData = reactive({
-  email: '',
-  password: '',
-  phoneNumber: '',
-  fullName: '',
-});
-
-// Regex patterns
-const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$/;
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const EMAIL_DOMAIN_REGEX =
-  /^[a-zA-Z0-9._-]+@(gmail\.com|outlook\.com|hotmail\.com|live\.com|yahoo\.com|icloud\.com|me\.com)$/;
 
-// Reactive object to identify if field have ever been touched before for first time on blur validation
-const touched = reactive({
-  email: false,
-  password: false,
-  phoneNumber: false,
-  fullName: false,
-});
+/**===========
+ * Interfaces
+ ============*/
 
-// Computed property to check for form validation status
-const isFormValid = computed(() => {
-  const emailOk = formData.email && EMAIL_DOMAIN_REGEX.test(formData.email);
-  const passwordOk = formData.password && PASSWORD_REGEX.test(formData.password);
-  const phoneOk = formData.phoneNumber && PHONE_REGEX.test(formData.phoneNumber);
-  return !!(emailOk && passwordOk && phoneOk);
-});
-
-// Onblur function to do validation
-function onBlur(field: keyof typeof touched) {
-  touched[field] = true;
-  if (field === 'email') {
-    formData.email = formData.email.trim();
-    const val = formData.email;
-    if (!val) {
-      error.email = 'auth.error.blank.email';
-    } else if (!EMAIL_FORMAT_REGEX.test(val)) {
-      error.email = 'auth.error.format.emailInvalid';
-    } else if (!EMAIL_DOMAIN_REGEX.test(val)) {
-      error.email = 'auth.error.format.email';
-    } else {
-      error.email = '';
-    }
-  } else if (field === 'phoneNumber') {
-    const val = formData.phoneNumber;
-    if (!val) {
-      error.phoneNumber = 'auth.error.blank.phone';
-    } else if (!PHONE_REGEX.test(val)) {
-      error.phoneNumber = 'auth.error.format.phone';
-    } else {
-      error.phoneNumber = '';
-    }
-  } else if (field === 'password') {
-    const val = formData.password;
-    error.password = [];
-    if (!val) {
-      error.password = ['auth.error.blank.password'];
-      return;
-    }
-    const errors: string[] = [];
-    if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
-    if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
-    if (val.length < 8) errors.push('auth.error.password.tooShort');
-    if (val.length > 32) errors.push('auth.error.password.tooLong');
-    if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
-    if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
-    if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
-    error.password = errors;
-  } else if (field === 'fullName') {
-    formData.fullName = formData.fullName.trim();
-    error.fullName = '';
-  }
+interface registerError {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  password: string[];
+  generic: string;
 }
 
-// watch method call for email
-watch(
-  () => formData.email,
-  (val) => {
-    if (!touched.email) return;
-    if (!val) {
-      error.email = 'auth.error.blank.email';
-    } else if (!EMAIL_FORMAT_REGEX.test(val)) {
-      error.email = 'auth.error.format.emailInvalid';
-    } else if (!EMAIL_DOMAIN_REGEX.test(val)) {
-      error.email = 'auth.error.format.email';
-    } else {
-      error.email = '';
-    }
-  },
-);
+interface registerForm {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+}
 
-// watch method call for phone number
-watch(
-  () => formData.phoneNumber,
-  (val) => {
-    if (!touched.phoneNumber) return;
-    if (!val) {
-      error.phoneNumber = 'auth.error.blank.phone';
-    } else if (!PHONE_REGEX.test(val)) {
-      error.phoneNumber = 'auth.error.format.phone';
-    } else {
-      error.phoneNumber = '';
-    }
-  },
-);
+interface registerTouched {
+  fullName: boolean;
+  email: boolean;
+  phoneNumber: boolean;
+  password: boolean;
+}
 
-// watch method call for password
-watch(
-  () => formData.password,
-  (val) => {
-    if (!touched.password) return;
-    error.password = [];
-    if (!val) {
-      error.password = ['auth.error.blank.password'];
-      return;
-    }
-    const errors: string[] = [];
-    if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
-    if (!/^[\x21-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
-    if (val.length < 8) errors.push('auth.error.password.tooShort');
-    if (val.length > 32) errors.push('auth.error.password.tooLong');
-    if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
-    if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
-    if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
-    error.password = errors;
-  },
-);
+/**======================
+ * State constants
+ =======================*/
 
-// watch method call for full name field
-watch(
-  () => formData.fullName,
-  () => {
-    if (!touched.fullName) return;
-    error.fullName = '';
-  },
-);
-
-// field order
-const FIELD_ORDER: (keyof typeof touched)[] = ['fullName', 'email', 'phoneNumber', 'password'];
-
-// field id map
-const fieldIdMap: Record<keyof typeof touched, string> = {
-  fullName: 'reg-fullname',
-  email: 'reg-email',
-  phoneNumber: 'reg-phone',
-  password: 'reg-password',
+const emptyError: registerError = {
+  fullName: '',
+  email: '',
+  phoneNumber: '',
+  password: [] as string[],
+  generic: '',
 };
 
-// idek
-function hasFieldError(field: keyof typeof touched): boolean {
-  if (field === 'password') return error.password.length > 0;
-  return !!error[field];
-}
+const emptyForm: registerForm = {
+  fullName: '',
+  email: '',
+  phoneNumber: '',
+  password: '',
+};
 
-// What?
-function focusFirstErrorField() {
-  const firstError = FIELD_ORDER.find(hasFieldError);
-  if (firstError) {
-    nextTick(() => {
-      document.getElementById(fieldIdMap[firstError])?.focus();
-    });
+const defaultTouched: registerTouched = {
+  fullName: false,
+  email: false,
+  phoneNumber: false,
+  password: false,
+};
+
+/**======================
+ * Form reactive objects
+ =======================*/
+
+const error = reactive<registerError>(emptyError);
+const formData = reactive<registerForm>(emptyForm);
+const touched = reactive<registerTouched>(defaultTouched);
+
+/**==========
+ * Functions
+ ===========*/
+
+// Onblur function to do validation
+function onBlur(field: keyof registerForm) {
+  if (touched[field] === false) {
+    touched[field] = true;
+    const validators: Record<keyof registerForm, () => boolean> = {
+      email: validateEmail,
+      phoneNumber: validatePhone,
+      password: validatePassword,
+      fullName: validateFullName,
+    };
+
+    validators[field]?.();
   }
 }
 
-// Magic function to validate form?
-function validateForm(): boolean {
-  resetErrors();
-  formData.fullName = formData.fullName.trim();
-  formData.email = formData.email.trim();
-  let valid = true;
-
-  formData.fullName = formData.fullName || '';
-
-  if (!formData.email) {
+// Validation functions
+function validateEmail(): boolean {
+  const val = formData.email.trim();
+  if (!val) {
     error.email = 'auth.error.blank.email';
-    valid = false;
-  } else if (!EMAIL_FORMAT_REGEX.test(formData.email)) {
+    return false;
+  }
+
+  if (!EMAIL_FORMAT_REGEX.test(val)) {
     error.email = 'auth.error.format.emailInvalid';
-    valid = false;
-  } else if (!EMAIL_DOMAIN_REGEX.test(formData.email)) {
-    error.email = 'auth.error.format.email';
-    valid = false;
+    return false;
   }
 
-  if (!formData.phoneNumber) {
+  error.email = '';
+  return true;
+}
+
+function validatePhone(): boolean {
+  const val = formData.phoneNumber.trim();
+  if (!val) {
     error.phoneNumber = 'auth.error.blank.phone';
-    valid = false;
-  } else if (!PHONE_REGEX.test(formData.phoneNumber)) {
+    return false;
+  }
+  if (!PHONE_REGEX.test(val)) {
     error.phoneNumber = 'auth.error.format.phone';
-    valid = false;
+    return false;
   }
 
-  if (!formData.password) {
+  error.phoneNumber = '';
+  return true;
+}
+
+function validatePassword(): boolean {
+  const val = formData.password.trim();
+  if (!val) {
     error.password = ['auth.error.blank.password'];
-    valid = false;
-  } else if (!PASSWORD_REGEX.test(formData.password)) {
-    const errors: string[] = [];
-    if (/\s/.test(formData.password)) errors.push('auth.error.password.noWhitespace');
-    if (!/^[\x21-\x7E]*$/.test(formData.password)) errors.push('auth.error.password.noVietnamese');
-    if (formData.password.length < 8) errors.push('auth.error.password.tooShort');
-    if (formData.password.length > 32) errors.push('auth.error.password.tooLong');
-    if (!/[a-z]/.test(formData.password)) errors.push('auth.error.password.noLowercase');
-    if (!/[A-Z]/.test(formData.password)) errors.push('auth.error.password.noUppercase');
-    if (!/[!@#$%^&*_-]/.test(formData.password)) errors.push('auth.error.password.noSpecialChar');
-    error.password = errors;
-    valid = false;
+    return false;
+  }
+  const errors: string[] = [];
+  if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
+  if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
+  if (val.length < 8) errors.push('auth.error.password.tooShort');
+  if (val.length > 32) errors.push('auth.error.password.tooLong');
+  if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
+  if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
+  if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
+  error.password = errors;
+  return errors.length === 0;
+}
+
+function validateFullName(): boolean {
+  const val = formData.fullName.trim();
+  if (!val) {
+    error.fullName = 'auth.error.blank.full_name';
+    return false;
   }
 
-  Object.keys(touched).forEach((key) => {
-    touched[key as keyof typeof touched] = true;
-  });
+  error.fullName = '';
+  return true;
+}
 
-  if (!valid) focusFirstErrorField();
-  return valid;
+// Validate the form, return status
+function validateForm(): boolean {
+  return validateFullName() && validateEmail() && validatePhone() && validatePassword();
 }
 
 // Function to register
@@ -248,10 +171,10 @@ async function register() {
       {
         method: 'POST',
         body: {
-          email: formData.email,
-          password: formData.password,
-          phoneNumber: formData.phoneNumber,
-          fullName: formData.fullName || null,
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+          phoneNumber: formData.phoneNumber.trim(),
+          fullName: formData.fullName.trim(),
         },
       },
     );
@@ -274,18 +197,6 @@ async function register() {
   } finally {
     loading.value = false;
   }
-}
-
-// Function to reset all errors
-function resetErrors() {
-  Object.assign(error, {
-    email: '',
-    password: [],
-    confirmPassword: '',
-    phoneNumber: '',
-    fullName: '',
-    generic: '',
-  });
 }
 
 // Handle errors returned by backend I suppose
@@ -331,6 +242,54 @@ function viewPassword() {
 function goToLogin() {
   navigateTo(localePath('/auth/login'));
 }
+
+/**===================
+ * Computed & watches
+ ====================*/
+
+const isFormValid = computed(() => {
+  const allTouched = touched.fullName && touched.email && touched.phoneNumber && touched.password;
+
+  const noErrors =
+    error.fullName === '' &&
+    error.email === '' &&
+    error.phoneNumber === '' &&
+    error.password.length === 0;
+
+  return allTouched && noErrors;
+});
+
+watch(
+  () => (formData.fullName.trim().length > 0 ? formData.fullName : null),
+  () => {
+    touched.fullName = true;
+    validateFullName();
+  },
+);
+
+watch(
+  () => (formData.email.trim().length > 0 ? formData.email : null),
+  () => {
+    touched.email = true;
+    validateEmail();
+  },
+);
+
+watch(
+  () => (formData.phoneNumber.trim().length > 0 ? formData.phoneNumber : null),
+  () => {
+    touched.phoneNumber = true;
+    validatePhone();
+  },
+);
+
+watch(
+  () => (formData.password.trim().length > 0 ? formData.password : null),
+  () => {
+    touched.password = true;
+    validatePassword();
+  },
+);
 </script>
 
 <template>

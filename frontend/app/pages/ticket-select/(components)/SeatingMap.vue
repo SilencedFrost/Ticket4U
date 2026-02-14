@@ -163,13 +163,14 @@
               @click="addToCart" 
               :disabled="quantity === 0"
             >
-              <i class="bi bi-cart-plus me-2"></i>
+              <i class="bi bi-cart-plus me-2"/>
               {{ $t('event_payment.selection.add_to_cart') }}
             </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

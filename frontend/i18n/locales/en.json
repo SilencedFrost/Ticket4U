@@ -48,7 +48,7 @@
       "fullName": "Full name",
       "phone": "Phone number",
       "confirmPassword": "Confirm password",
-      "passwordHint": "8-32 chars, uppercase, lowercase, special char (!{'@'}#$%^&*_-)",
+      "passwordHint": "8-32 characters, uppercase, lowercase, number, and special char",
       "phonePlaceholder": "0xxxxxxxxx or xxxxxxxxx",
       "hasAccount": "Already have an account? Log in",
       "success": "Registration successful! Redirecting to login...",

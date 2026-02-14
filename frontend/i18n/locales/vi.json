@@ -48,7 +48,7 @@
       "fullName": "Họ và tên",
       "phone": "Số điện thoại",
       "confirmPassword": "Xác nhận mật khẩu",
-      "passwordHint": "8-32 ký tự, chữ hoa, chữ thường, ký tự đặc biệt (!{'@'}#$%^&*_-)",
+      "passwordHint": "8-32 ký tự, chữ hoa, chữ thường, số, và ký tự đặc biệt",
       "phonePlaceholder": "0xxxxxxxxx hoặc xxxxxxxxx",
       "hasAccount": "Đã có tài khoản? Đăng nhập",
       "success": "Đăng ký thành công! Đang chuyển hướng...",

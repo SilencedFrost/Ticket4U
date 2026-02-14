@@ -18,6 +18,7 @@
 ### Custom ###
 **/*.pem
 **/.idea/
+**/*.p12
 
 ### AI ###
 **/AGENTS.md

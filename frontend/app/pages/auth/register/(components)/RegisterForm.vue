@@ -9,6 +9,7 @@ const isViewingPassword = ref<boolean>(false);
 const isViewingConfirmPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
 
+// Reactive object for error fields
 const error = reactive({
   email: '',
   password: [] as string[],
@@ -18,6 +19,7 @@ const error = reactive({
   generic: '',
 });
 
+// Reactive object for form data
 const formData = reactive({
   email: '',
   password: '',
@@ -26,12 +28,14 @@ const formData = reactive({
   fullName: '',
 });
 
+// Regex patterns
 const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_-]).{8,32}$/;
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const EMAIL_DOMAIN_REGEX =
   /^[a-zA-Z0-9._-]+@(gmail\.com|outlook\.com|hotmail\.com|live\.com|yahoo\.com|icloud\.com|me\.com)$/;
 
+// Reactive object to identify if field have ever been touched before for first time on blur validation
 const touched = reactive({
   email: false,
   password: false,
@@ -40,6 +44,7 @@ const touched = reactive({
   fullName: false,
 });
 
+// Computed property to check for form validation status
 const isFormValid = computed(() => {
   const emailOk = formData.email && EMAIL_DOMAIN_REGEX.test(formData.email);
   const passwordOk = formData.password && PASSWORD_REGEX.test(formData.password);
@@ -48,6 +53,7 @@ const isFormValid = computed(() => {
   return !!(emailOk && passwordOk && confirmOk && phoneOk);
 });
 
+// Onblur function to do validation
 function onBlur(field: keyof typeof touched) {
   touched[field] = true;
   if (field === 'email') {
@@ -102,6 +108,7 @@ function onBlur(field: keyof typeof touched) {
   }
 }
 
+// watch method call for email
 watch(
   () => formData.email,
   (val) => {
@@ -118,6 +125,7 @@ watch(
   },
 );
 
+// watch method call for phone number
 watch(
   () => formData.phoneNumber,
   (val) => {
@@ -132,6 +140,7 @@ watch(
   },
 );
 
+// watch method call for password
 watch(
   () => formData.password,
   (val) => {
@@ -157,6 +166,7 @@ watch(
   },
 );
 
+// watch method call for password confirm field
 watch(
   () => formData.confirmPassword,
   (val) => {
@@ -171,6 +181,7 @@ watch(
   },
 );
 
+// watch method call for full name field
 watch(
   () => formData.fullName,
   () => {
@@ -179,6 +190,7 @@ watch(
   },
 );
 
+// field order
 const FIELD_ORDER: (keyof typeof touched)[] = [
   'fullName',
   'email',
@@ -187,6 +199,7 @@ const FIELD_ORDER: (keyof typeof touched)[] = [
   'confirmPassword',
 ];
 
+// field id map
 const fieldIdMap: Record<keyof typeof touched, string> = {
   fullName: 'reg-fullname',
   email: 'reg-email',
@@ -195,11 +208,13 @@ const fieldIdMap: Record<keyof typeof touched, string> = {
   confirmPassword: 'reg-confirm-password',
 };
 
+// idek
 function hasFieldError(field: keyof typeof touched): boolean {
   if (field === 'password') return error.password.length > 0;
   return !!error[field];
 }
 
+// What?
 function focusFirstErrorField() {
   const firstError = FIELD_ORDER.find(hasFieldError);
   if (firstError) {
@@ -209,6 +224,7 @@ function focusFirstErrorField() {
   }
 }
 
+// Magic function to validate form?
 function validateForm(): boolean {
   resetErrors();
   formData.fullName = formData.fullName.trim();
@@ -268,6 +284,7 @@ function validateForm(): boolean {
   return valid;
 }
 
+// Function to register
 async function register() {
   if (!validateForm()) return;
 
@@ -307,6 +324,7 @@ async function register() {
   }
 }
 
+// Function to reset all errors
 function resetErrors() {
   Object.assign(error, {
     email: '',
@@ -318,6 +336,7 @@ function resetErrors() {
   });
 }
 
+// Handle errors returned by backend I suppose
 function handleError(fetchError: FetchError) {
   if (!fetchError.statusCode) {
     error.generic = 'auth.error.network';
@@ -351,14 +370,17 @@ function handleError(fetchError: FetchError) {
   }
 }
 
+// Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
 }
 
+// Helper function to view confirm password field
 function viewConfirmPassword() {
   isViewingConfirmPassword.value = !isViewingConfirmPassword.value;
 }
 
+// Helper function to go to login
 function goToLogin() {
   navigateTo(localePath('/auth/login'));
 }
@@ -375,6 +397,7 @@ function goToLogin() {
     </div>
 
     <form v-else novalidate @submit.prevent="register">
+      <!-- full name -->
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.register.fullName') }}
@@ -404,7 +427,7 @@ function goToLogin() {
           {{ $t(error.fullName) }}
         </div>
       </div>
-
+      <!-- email -->
       <div class="mb-2">
         <label for="reg-email" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.email') }}<span class="text-danger" aria-hidden="true">*</span>
@@ -430,7 +453,7 @@ function goToLogin() {
           {{ $t(error.email) }}
         </div>
       </div>
-
+      <!-- phone number -->
       <div class="mb-2">
         <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.register.phone') }}<span class="text-danger" aria-hidden="true">*</span>
@@ -462,7 +485,7 @@ function goToLogin() {
           {{ $t(error.phoneNumber) }}
         </div>
       </div>
-
+      <!-- password -->
       <div class="mb-2">
         <label for="reg-password" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true">*</span>
@@ -510,7 +533,7 @@ function goToLogin() {
           {{ $t('auth.register.passwordHint') }}
         </small>
       </div>
-
+      <!-- confirm password -->
       <div class="mb-2">
         <label for="reg-confirm-password" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.register.confirmPassword')
@@ -552,11 +575,11 @@ function goToLogin() {
           {{ $t(error.confirmPassword) }}
         </div>
       </div>
-
+      <!-- generic error -->
       <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">
         {{ $t(error.generic) }}
       </div>
-
+      <!-- Buttons -->
       <div class="d-flex flex-column">
         <button
           class="btn btn-primary text-center mb-2"

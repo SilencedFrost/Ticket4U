@@ -13,6 +13,10 @@ const registerSuccess = ref<boolean>(false);
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
+const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
+const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
+const PASSWORD_DIGIT_REGEX = /\d+/;
 
 /**===========
  * Interfaces
@@ -132,13 +136,12 @@ function validatePassword(): boolean {
     return false;
   }
   const errors: string[] = [];
-  if (/\s/.test(val)) errors.push('auth.error.password.noWhitespace');
-  if (!/^[\x20-\x7E]*$/.test(val)) errors.push('auth.error.password.noVietnamese');
   if (val.length < 8) errors.push('auth.error.password.tooShort');
   if (val.length > 32) errors.push('auth.error.password.tooLong');
-  if (!/[a-z]/.test(val)) errors.push('auth.error.password.noLowercase');
-  if (!/[A-Z]/.test(val)) errors.push('auth.error.password.noUppercase');
-  if (!/[!@#$%^&*_-]/.test(val)) errors.push('auth.error.password.noSpecialChar');
+  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.password.noLowercase');
+  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.password.noUppercase');
+  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val)) errors.push('auth.error.password.noSpecialChar');
+  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.password.noDigit');
   error.password = errors;
   return errors.length === 0;
 }

@@ -3,68 +3,22 @@
 module.exports = {
   /** Path to your translation files */
   localesPath: 'i18n/locales',
-  
+
   /** Path to scan for translation usage */
   srcPath: '.',
-  
-  /** Allowed extensions for locale files */
-  localesExtensions: ['json'],
-  
+
   /** Allowed extensions for source files to scan */
-  srcExtensions: ['js', 'ts', 'vue', 'jsx', 'tsx'],
-  
+  srcExtensions: ['js', 'ts', 'vue', 'java'],
+
   /** Paths to ignore during scanning */
-  ignorePaths: [
-    'node_modules',
-    '.nuxt',
-    '.output',
-    'dist',
-    '.git',
-    'coverage',
-    'public',
-  ],
-  
-  /**
-   * Regex to match translation keys in your code
-   * Matches: 'key' and "key"
-   */
-  translationKeyMatcher: /['"]([\w.]+)['"]/g,
+  ignorePaths: ['node_modules', '.nuxt', '.output', 'dist', '.git', 'coverage', 'public'],
 
   /**
-   * Parser to extract the actual key from the match
+   * Regex to match translation keys with at least one dot
+   * Matches: 'key.second', "auth.login.title"
+   * Does NOT match: 'key', "title"
    */
-  missedTranslationParser: (match) => {
-    const extracted = match.match(/['"]([\w.]+)['"]/);
-    return extracted ? extracted[1] : match;
-  },
-  
-  /** 
-   * Enable if you're using flat JSON structure
-   */
-  flatTranslations: false,
-  
-  /** 
-   * Separator used in translation keys
-   */
-  translationSeparator: '.',
-  
-  /** 
-   * Marker string to add to unused translations
-   */
-  marker: '[UNUSED]',
-  
-  /** 
-   * JSON formatting for locale files
-   */
-  localeJsonStringifyIndent: 2,
-  
-  /** 
-   * Ignore code comments when scanning for translations
-   */
-  ignoreComments: true,
-  
-  /** 
-   * Show git diff/status after operations
-   */
-  gitCheck: true,
+  translationKeyMatcher: /['"](\w+\.[\w.]+)['"]/g,
+
+  // Does not support display-missed
 };

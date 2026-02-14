@@ -5,6 +5,18 @@
       "action": "Log in",
       "google": "Log in with Google"
     },
+    "logout": {
+      "title": "Logout",
+      "action": "Log out"
+    },
+    "register": {
+      "title": "Register",
+      "action": "Create account",
+      "google": "Register with Google",
+      "password_hint": "8-32 characters, uppercase, lowercase, number, and special char",
+      "has_account": "Already have an account? Log in",
+      "success": "Registration successful! Redirecting to login..."
+    },
     "password": "Password",
     "create_account": "Create account",
     "forgot_password": "Forgot password",
@@ -14,48 +26,27 @@
       "unknown": "Unknown error, please contact system admin",
       "network": "Network error, please check your connection",
       "format": {
-        "password": "Password must contain one lowercase letter, one uppercase letter, one special character, and be 8-32 characters long",
-        "email": "Only Gmail, Outlook, Hotmail, Yahoo, iCloud emails are accepted",
-        "emailInvalid": "Invalid email format",
-        "phone": "Valid Vietnamese mobile number (9-10 digits)"
-      },
-      "password": {
-        "tooShort": "Password must be at least 8 characters",
-        "tooLong": "Password must not exceed 32 characters",
-        "noLowercase": "Password must contain at least one lowercase letter",
-        "noUppercase": "Password must contain at least one uppercase letter",
-        "noSpecialChar": "Password must contain at least one special character (!{'@'}#$%^&*_-)",
-        "noWhitespace": "Password must not contain whitespace",
-        "noVietnamese": "Password must not contain Vietnamese characters"
+        "email": "Invalid email format",
+        "phone": "Invalid phone number",
+        "password": {
+          "length": {
+            "short": "Password must be at least 8 characters",
+            "long": "Password must not exceed 32 characters"
+          },
+          "lowercase": "Password must contain at least one lowercase letter",
+          "uppercase": "Password must contain at least one uppercase letter",
+          "special_char": "Password must contain at least one special character (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "digit": "Password must contain at least one digit"
+        }
       },
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",
         "phone": "Phone number can't be blank",
-        "fullName": "Full name can't be blank"
+        "full_name": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data"
-    },
-    "logout": {
-      "title": "Logout",
-      "action": "Log out"
-    },
-    "register": {
-      "title": "Register",
-      "action": "Create account",
-      "google": "Register with Google",
-      "fullName": "Full name",
-      "phone": "Phone number",
-      "confirmPassword": "Confirm password",
-      "passwordHint": "8-32 characters, uppercase, lowercase, number, and special char",
-      "phonePlaceholder": "0xxxxxxxxx or xxxxxxxxx",
-      "hasAccount": "Already have an account? Log in",
-      "success": "Registration successful! Redirecting to login...",
-      "error": {
-        "confirmRequired": "Please confirm your password",
-        "passwordMismatch": "Passwords do not match"
-      }
     },
     "session": {
       "invalid": "Invalid session"
@@ -72,13 +63,15 @@
     "ticket": "Ticket",
     "tickets": "Tickets",
     "see": {
-      "more": "See More",
-      "less": "See Less"
+      "more": "See more",
+      "less": "See less"
     },
     "action": {
-      "buy": "Buy Tickets Now",
+      "buy": "Buy tickets now",
       "view": "View"
-    }
+    },
+    "full_name": "Full name",
+    "phone": "Phone number"
   },
   "brand": {
     "name": "Ticket4U",

@@ -53,7 +53,7 @@ function togglePassword() {
 
 <template>
   <div class="form-width">
-    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}:</h3>
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}</h3>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">

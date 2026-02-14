@@ -87,10 +87,10 @@ function onBlur(field: keyof registerForm) {
   if (touched[field] === false) {
     touched[field] = true;
     const validators: Record<keyof registerForm, () => boolean> = {
+      fullName: validateFullName,
       email: validateEmail,
       phoneNumber: validatePhone,
       password: validatePassword,
-      fullName: validateFullName,
     };
 
     validators[field]?.();
@@ -98,6 +98,17 @@ function onBlur(field: keyof registerForm) {
 }
 
 // Validation functions
+function validateFullName(): boolean {
+  const val = formData.fullName.trim();
+  if (!val) {
+    error.fullName = 'auth.error.blank.full_name';
+    return false;
+  }
+
+  error.fullName = '';
+  return true;
+}
+
 function validateEmail(): boolean {
   const val = formData.email.trim();
   if (!val) {
@@ -106,7 +117,7 @@ function validateEmail(): boolean {
   }
 
   if (!EMAIL_FORMAT_REGEX.test(val)) {
-    error.email = 'auth.error.format.emailInvalid';
+    error.email = 'auth.error.format.email';
     return false;
   }
 
@@ -136,25 +147,15 @@ function validatePassword(): boolean {
     return false;
   }
   const errors: string[] = [];
-  if (val.length < 8) errors.push('auth.error.password.tooShort');
-  if (val.length > 32) errors.push('auth.error.password.tooLong');
-  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.password.noLowercase');
-  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.password.noUppercase');
-  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val)) errors.push('auth.error.password.noSpecialChar');
-  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.password.noDigit');
+  if (val.length < 8) errors.push('auth.error.format.password.length.short');
+  if (val.length > 32) errors.push('auth.error.format.password.length.long');
+  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.format.password.lowercase');
+  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.format.password.uppercase');
+  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val))
+    errors.push('auth.error.format.password.special_char');
+  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.format.password.digit');
   error.password = errors;
   return errors.length === 0;
-}
-
-function validateFullName(): boolean {
-  const val = formData.fullName.trim();
-  if (!val) {
-    error.fullName = 'auth.error.blank.full_name';
-    return false;
-  }
-
-  error.fullName = '';
-  return true;
 }
 
 // Validate the form, return status
@@ -309,7 +310,7 @@ watch(
       <!-- full name -->
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
-          {{ $t('auth.register.fullName') }}
+          {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
         </label>
         <input
           id="reg-fullname"
@@ -339,7 +340,7 @@ watch(
       <!-- email -->
       <div class="mb-2">
         <label for="reg-email" class="form-label text-reactive-primary user-select-none">
-          {{ $t('common.email') }}<span class="text-danger" aria-hidden="true">*</span>
+          {{ $t('common.email') }}<span class="text-danger" aria-hidden="true"> *</span>
         </label>
         <input
           id="reg-email"
@@ -365,7 +366,7 @@ watch(
       <!-- phone number -->
       <div class="mb-2">
         <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
-          {{ $t('auth.register.phone') }}<span class="text-danger" aria-hidden="true">*</span>
+          {{ $t('common.phone') }}<span class="text-danger" aria-hidden="true"> *</span>
         </label>
         <input
           id="reg-phone"
@@ -376,7 +377,6 @@ watch(
           :aria-invalid="!!error.phoneNumber"
           :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined"
           :disabled="loading"
-          :placeholder="$t('auth.register.phonePlaceholder')"
           :class="[
             'form-control',
             'bg-reactive-primary',
@@ -397,7 +397,7 @@ watch(
       <!-- password -->
       <div class="mb-2">
         <label for="reg-password" class="form-label text-reactive-primary user-select-none">
-          {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true">*</span>
+          {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true"> *</span>
         </label>
         <div class="input-group">
           <input
@@ -433,20 +433,29 @@ watch(
         <ul
           v-if="error.password.length > 0"
           id="reg-password-error"
-          class="text-danger small mt-1 mb-0 ps-3"
+          :class="[
+            'text-danger',
+            'small',
+            'mt-1',
+            'mb-0',
+            { 'ps-3': error.password.length !== 1 },
+            { 'list-unstyled': error.password.length === 1 },
+          ]"
           aria-live="assertive"
         >
-          <li v-for="(err, index) in error.password" :key="index">{{ $t(err) }}</li>
+          <li v-for="(err, index) in error.password" :key="index">
+            {{ $t(err) }}
+          </li>
         </ul>
         <small id="reg-password-hint" class="form-text text-muted">
-          {{ $t('auth.register.passwordHint') }}
+          {{ $t('auth.register.password_hint') }}
         </small>
       </div>
       <!-- generic error -->
       <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">
         {{ $t(error.generic) }}
       </div>
-      <!-- Buttons -->
+      <!-- buttons -->
       <div class="d-flex flex-column">
         <button
           class="btn btn-primary text-center mb-2"
@@ -465,7 +474,7 @@ watch(
     <hr class="my-2" />
     <div class="text-center form-text">
       <a href="#" class="text-decoration-none text-reactive-secondary" @click.prevent="goToLogin">
-        {{ $t('auth.register.hasAccount') }}
+        {{ $t('auth.register.has_account') }}
       </a>
     </div>
   </div>

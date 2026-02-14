@@ -1,23 +1,25 @@
 @use 'bootstrap/scss/functions' as bs;
 @use 'bootstrap/scss/bootstrap' with (
-  $primary: #07b3df,
+  $primary: #08c7f7,
   $danger: #b82d2d,
-  $font-family-base: ('Open Sans', sans-serif)
+  $font-family-base: (
+    'Open Sans',
+    sans-serif,
+  )
 );
 @use 'bootstrap-icons/font/bootstrap-icons.css';
-
 
 // Colors for light theme
 :root {
   --bg-reactive-primary: #fcfcfc;
   --bg-reactive-secondary: #ececec;
   --bg-reactive-gray: #c7c7c7;
-    --bg-reactive-gray-hover: #{bs.shade-color(#c7c7c7, 10%)};
-    --bg-reactive-gray-active: #{bs.shade-color(#c7c7c7, 20%)};
+  --bg-reactive-gray-hover: #{bs.shade-color(#c7c7c7, 10%)};
+  --bg-reactive-gray-active: #{bs.shade-color(#c7c7c7, 20%)};
   --bg-reactive-dark: #252525;
   --text-reactive-primary: #111111;
   --text-reactive-secondary: #6e6e6e;
-  --bs-primary-rgb: 7,179,223;
+  --bs-primary-rgb: 7, 179, 223;
 }
 
 // Colors for dark theme
@@ -25,8 +27,8 @@
   --bg-reactive-primary: #111111;
   --bg-reactive-secondary: #181818;
   --bg-reactive-gray: #5e5e5e;
-    --bg-reactive-gray-hover: #{bs.shade-color(#5e5e5e, 10%)};
-    --bg-reactive-gray-active: #{bs.shade-color(#5e5e5e, 20%)};
+  --bg-reactive-gray-hover: #{bs.shade-color(#5e5e5e, 10%)};
+  --bg-reactive-gray-active: #{bs.shade-color(#5e5e5e, 20%)};
   --bg-reactive-dark: #181818;
   --text-reactive-primary: #fcfcfc;
   --text-reactive-secondary: #979797;
@@ -85,5 +87,5 @@
 }
 
 .card-info {
-background-color: rgba(var(--bs-primary-rgb), 0.3);
+  background-color: rgba(var(--bs-primary-rgb), 0.3);
 }

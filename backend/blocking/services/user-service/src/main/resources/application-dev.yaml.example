@@ -24,6 +24,11 @@ spring:
             client-id: <<Client ID>>
             client-secret: <<Client Secret>>
             scope: openid,profile,email
+            
+app:
+  services:
+    user-service:
+      url: http://localhost:8080
 
 # Port
 server:

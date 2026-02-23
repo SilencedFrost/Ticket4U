@@ -25,9 +25,14 @@ spring:
             client-secret: <<Client Secret>>
             scope: openid,profile,email
 
+app:
+  services:
+    user-service:
+      url: https://localhost:8080
+
 # Port
 server:
-  port: 8080
+  port: 8081
   ssl:
     certificate: classpath:keys/localhost+2.pem
     certificate-private-key: classpath:keys/localhost+2-key.pem
@@ -44,3 +49,6 @@ application:
 # CORS
     cors:
       allowed-origins: https://localhost:3000
+
+    auth:
+      jwks-uri: https://localhost:8080/auth/.well-known/jwks.json

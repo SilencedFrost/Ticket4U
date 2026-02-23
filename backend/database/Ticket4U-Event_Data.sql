@@ -23,18 +23,47 @@ INSERT INTO public.events (id, name, organizer_id, category_id, address_line, st
 (uuidv7(), 'Van Gogh Art Lighting Experience', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 3, 'Gigamall Thủ Đức', NOW() - INTERVAL '10 days', NOW() + INTERVAL '20 days', 'ONGOING', 'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990', 'Triển lãm nghệ thuật tương tác đa giác quan');
 
 --3. Table: Event Contents
+
 INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
-VALUES 
-('00000000-2ed5-7db3-b2fb-69cdc7664400', 'Chi tiết hội thảo...', 'Workshop details...', 'Mang laptop', 'Hoàn tiền 50%', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
-('00000000-2ec7-7ac1-90b6-20f5889f2000', 'Chi tiết tiếng Việt...', 'English details...', 'Cấm trẻ em', 'Không hoàn tiền', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
-('00000000-2ed5-766f-ba9b-eb8c92d4f800', 'Hành trình âm nhạc đầy mộng mơ dành cho giới trẻ.', 'A dreamy musical journey for the youth.', 'Vui lòng mang theo CCCD khi check-in.', 'Không hoàn trả vé sau khi mua.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
-('00000000-2ed5-79e9-a5ef-885e22274800', 'Lễ hội âm nhạc điện tử lớn nhất khu vực.', 'The biggest EDM festival in the region.', 'Trang phục tự do, không mang chất cấm.', 'Hoàn tiền 50% trước 7 ngày diễn ra.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'),
-('00000000-2ed5-76b6-b3a3-84dc4ce00c00', 'Vở diễn huyền thoại Ngày Xửa Ngày Xưa.', 'The legendary Once Upon A Time play.', 'Mỗi vé dành cho một người, trẻ em cần có người lớn đi kèm.', 'Không hoàn tiền.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
-('00000000-2ed5-73c8-938b-5da1596eac00', 'Trận đối đầu kịch tính của giải bóng rổ chuyên nghiệp Việt Nam.', 'Intense match of the Vietnam Basketball Association.', 'Không mang đồ ăn thức uống bên ngoài vào sân.', 'Hoàn vé theo quy định của BTC.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'),
-('00000000-2ed5-72b2-8d0e-1bff10dcf400', 'Hội thảo chia sẻ kinh nghiệm Marketing 0 đồng.', 'Marketing on a zero-dollar budget workshop.', 'Khuyến khích mang theo laptop cá nhân.', 'Hoàn tiền 50% nếu hủy trước 3 ngày.', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
-('00000000-2ed5-7e2e-8252-70ecdbf5c800', 'Đêm hài độc thoại cười ra nước mắt.', 'A night of hilarious stand-up comedy.', 'Vui lòng không quay phim trong buổi diễn.', 'Không hoàn trả vé.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
-('00000000-2ed5-769a-8842-16312d3a4c00', 'Triển lãm nghệ thuật ánh sáng tương tác đa giác quan.', 'Multi-sensory interactive light art exhibition.', 'Mỗi lượt tham quan tối đa 60 phút.', 'Không hỗ trợ hoàn tiền.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg')
-;
+SELECT id, 'Chi tiết hội thảo...', 'Workshop details...', 'Mang laptop', 'Hoàn tiền 50%', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'
+FROM public.events WHERE name = 'Vietnam Tech Summit 2025';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Chi tiết tiếng Việt...', 'English details...', 'Cấm trẻ em', 'Không hoàn tiền', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'
+FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Hành trình âm nhạc đầy mộng mơ dành cho giới trẻ.', 'A dreamy musical journey for the youth.', 'Vui lòng mang theo CCCD khi check-in.', 'Không hoàn trả vé sau khi mua.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'
+FROM public.events WHERE name = 'Những Thành Phố Mơ Màng - Summer Tour';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Lễ hội âm nhạc điện tử lớn nhất khu vực.', 'The biggest EDM festival in the region.', 'Trang phục tự do, không mang chất cấm.', 'Hoàn tiền 50% trước 7 ngày diễn ra.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'
+FROM public.events WHERE name = 'Ravolution Music Festival: Unite';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Vở diễn huyền thoại Ngày Xửa Ngày Xưa.', 'The legendary Once Upon A Time play.', 'Mỗi vé dành cho một người, trẻ em cần có người lớn đi kèm.', 'Không hoàn tiền.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'
+FROM public.events WHERE name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Trận đối đầu kịch tính của giải bóng rổ chuyên nghiệp Việt Nam.', 'Intense match of the Vietnam Basketball Association.', 'Không mang đồ ăn thức uống bên ngoài vào sân.', 'Hoàn vé theo quy định của BTC.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'
+FROM public.events WHERE name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Hội thảo chia sẻ kinh nghiệm Marketing 0 đồng.', 'Marketing on a zero-dollar budget workshop.', 'Khuyến khích mang theo laptop cá nhân.', 'Hoàn tiền 50% nếu hủy trước 3 ngày.', 'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'
+FROM public.events WHERE name = 'Workshop: Marketing 0 Đồng cho Startup';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Đêm hài độc thoại cười ra nước mắt.', 'A night of hilarious stand-up comedy.', 'Vui lòng không quay phim trong buổi diễn.', 'Không hoàn trả vé.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'
+FROM public.events WHERE name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
+
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Triển lãm nghệ thuật ánh sáng tương tác đa giác quan.', 'Multi-sensory interactive light art exhibition.', 'Mỗi lượt tham quan tối đa 60 phút.', 'Không hỗ trợ hoàn tiền.', 'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'
+FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
+
+-- Mình thêm sự kiện "Mây Lang Thang" vì trong 9 record ở trên bị thiếu event này
+INSERT INTO public.event_contents (event_id, about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url)
+SELECT id, 'Đêm nhạc Trịnh mộc mạc giữa rừng thông.', 'Rustic Trinh music night in the pine forest.', 'Nên mang theo áo khoác ấm.', 'Không hoàn tiền vé.', 'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'
+FROM public.events WHERE name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
 --4. Table: Zones
 
@@ -112,17 +141,16 @@ WHERE z.name = 'VIP (Kèm quà tặng)' AND e.name = 'Van Gogh Art Lighting Expe
 
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, status)
 SELECT 
-    uuidv7(),             -- Tự sinh ID cho ghế
-    z.id,                 -- Lấy ID của Zone VVIP
-    'Ghế ' || r || c,     -- Tên ghế
-    chr(64 + r),          -- Hàng A, B, C...
-    c::text,              -- Cột 1, 2, 3...
-    chr(64 + r) || c,     -- Mã ghế (A1, A2...)
-    'AVAILABLE'
+    uuidv7(), 
+    z.id, 
+    'Ghế ' || chr(64 + r) || c, 
+    chr(64 + r), 
+    c::text, 
+    chr(64 + r) || c,
+    'AVAILABLE'
 FROM public.zones z
 JOIN public.events e ON z.event_id = e.id
-CROSS JOIN generate_series(1, 5) r  -- 5 Hàng
-CROSS JOIN generate_series(1, 10) c -- 10 Cột
+CROSS JOIN generate_series(1, 5) r 
+CROSS JOIN generate_series(1, 10) c 
 WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
-như vậy được chưa kiểu lướt 1 lần là vô dữ liệu hết 

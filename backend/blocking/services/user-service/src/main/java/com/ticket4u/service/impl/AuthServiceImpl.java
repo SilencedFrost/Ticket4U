@@ -1,6 +1,7 @@
 package com.ticket4u.service.impl;
 
 import com.nimbusds.jose.JOSEException;
+import com.ticket4u.constant.RoleId;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.GoogleUserInfo;
 import com.ticket4u.dto.auth.GoogleIdToken;
@@ -248,7 +249,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = userMapper.toEntityFromRegister(request);
-        user.assignRole(new Role() {{ setId(0); }});
+        user.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
         User savedUser = userRepository.save(user);
 
         // TODO: Send verification email
@@ -274,7 +275,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = userMapper.toEntityFromGoogle(userInfo);
-        user.assignRole(new Role() {{ setId(0); }});
+        user.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
         User savedUser = userRepository.save(user);
         log.info("User registered via Google successfully: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
 

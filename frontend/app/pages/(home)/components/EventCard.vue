@@ -1,43 +1,63 @@
 <template>
-  <div class="event-card">
+  <div 
+    class="event-card cursor-pointer" 
+    role="button"
+    tabindex="0"
+    @click="handleClick"
+    @keydown.enter="handleClick"
+  >
     <div class="event-card-img mb-3 position-relative overflow-hidden rounded-4">
       <img
-        :src="event.imageUrl"
-        :alt="event.title"
+        :src="event.bannerUrl"
+        :alt="event.name"
         class="w-100 h-100 object-fit-cover"
       />
     </div>
 
     <div v-if="showDetails">
       <h3 class="fs-5 fw-bold text-reactive-primary mb-2 text-ellipsis-2">
-        {{ event.title }}
+        {{ event.name }}
       </h3>
 
       <p class="text-primary fw-medium mb-1">
-        {{ formatPrice(event.price) }}
+        {{ formatPrice(event.minPrice) }}
       </p>
 
       <p class="text-reactive-secondary mb-0">
-        {{ event.date }}
+        {{ formatDate(event.startDate) }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { Event } from '~/types/home'
+  import type { Event } from '~/pages/(home)/types/home'
+  
+
 
 interface Props {
   event: Event
   showDetails?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   showDetails: true,
 })
 
+const handleClick = () => {
+  navigateTo(`/event-detail/${props.event.id}`)
+}
+
 const formatPrice = (price: number) => {
-  return `Từ ${price.toLocaleString('vi-VN')}đ`
+  return (price !== null) ? `Từ ${price.toLocaleString('vi-VN')}đ` : "Chưa cập nhật giá";
+}
+
+const formatDate = (isoDate: string) => {
+  const date = new Date(isoDate)
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${day} tháng ${month}, ${year}` //07 tháng 02, 2026
 }
 </script>
 
@@ -54,6 +74,14 @@ const formatPrice = (price: number) => {
 
 .event-card-img:hover img {
   transform: scale(1.05);
+}
+
+.event-card:hover {
+  opacity: 0.9;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .text-ellipsis-2 {

@@ -1,26 +1,47 @@
 <template>
-  <div class="special-event-card rounded-4 overflow-hidden">
+  <div 
+    class="special-event-card rounded-4 overflow-hidden cursor-pointer" 
+    role="button"
+    tabindex="0"
+    @click="handleClick"
+    @keydown.enter="handleClick"
+  >
     <img
-      :src="event.imageUrl"
-      :alt="event.title"
+      v-img-fallback="[350, 200]"
+      :src="event.bannerUrl"
+      :alt="event.name"
       class="w-100 h-100 object-fit-cover"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home'
-
+import type { Event } from '~/pages/(home)/types/home'
+const { vFallback: vImgFallback } = useImagePlaceholder();
 interface Props {
   event: Event
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const handleClick = () => {
+  navigateTo(`/event-detail/${props.event.id}`)
+}
 </script>
 
 <style scoped>
 .special-event-card {
   height: 483px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.special-event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 @media (max-width: 767.98px) {

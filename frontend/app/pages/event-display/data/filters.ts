@@ -1,4 +1,4 @@
-import type { LocationOption, CategoryOption, DatePreset } from '../types/event-display'
+import type { LocationOption, DatePreset } from '../types/event-display'
 
 export const locations: LocationOption[] = [
   { label: 'Toàn quốc', value: '' },
@@ -8,12 +8,8 @@ export const locations: LocationOption[] = [
   { label: 'Vị trí khác', value: 'other' },
 ]
 
-export const categories: CategoryOption[] = [
-  { label: 'Nhạc sống', value: 'music' },
-  { label: 'Sân khấu & Nghệ thuật', value: 'theatersandart' },
-  { label: 'Thể Thao', value: 'sport' },
-  { label: 'Khác', value: 'others' },
-]
+// Categories are now fetched dynamically from backend
+// See eventDisplayStore.fetchCategories()
 
 export const datePresets: DatePreset[] = [
   { label: 'Tất cả các ngày', value: 'all' },

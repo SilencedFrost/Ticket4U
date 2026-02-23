@@ -13,12 +13,13 @@
       >
         <div class="event-card-large position-relative rounded-4 overflow-hidden">
           <img
-            :src="event.imageUrl"
-            :alt="event.title"
+            :src="event.bannerUrl"
+            :alt="event.name"
             class="w-100 h-100 object-fit-cover"
           />
           <button
             class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2"
+            @click="handleEventClick(event.id)"
           >
             Xem chi tiết
           </button>
@@ -29,8 +30,8 @@
     <button
       v-if="totalSlides > 1 && !isMobile"
       class="carousel-nav-btn prev"
-      @click="goPrev"
       aria-label="Previous"
+      @click="goPrev"
     >
       &lt;
     </button>
@@ -38,8 +39,8 @@
     <button
       v-if="totalSlides > 1 && !isMobile"
       class="carousel-nav-btn next"
-      @click="goNext"
       aria-label="Next"
+      @click="goNext"
     >
       &gt;
     </button>
@@ -50,8 +51,8 @@
         :key="index"
         class="dot"
         :class="{ active: currentSlide === index }"
-        @click="goToSlide(index)"
         :aria-label="`Go to slide ${index + 1}`"
+        @click="goToSlide(index)"
       />
     </div>
   </section>
@@ -59,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { Event } from '~/types/home'
+import type { Event } from '~/pages/(home)/types/home'
 
 interface Props {
   events: Event[]
@@ -130,6 +131,10 @@ const goNext = () => {
 
 const goToSlide = (index: number) => {
   currentSlide.value = index
+}
+
+const handleEventClick = (eventId: string) => {
+  navigateTo(`/event-detail/${eventId}`)
 }
 
 onMounted(() => {

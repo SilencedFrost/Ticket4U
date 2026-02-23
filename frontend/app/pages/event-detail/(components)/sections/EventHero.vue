@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { LocalizedContent } from '@/types/event-detail';
+const { vFallback: vImgFallback } = useImagePlaceholder();
 defineProps<{
   title: string;
   time: string;
   date: string;
-  venue: LocalizedContent;
-  address: LocalizedContent;
+  address: string;
   minPrice: string;
   heroImage: string;
 }>();
@@ -16,7 +15,11 @@ const emit = defineEmits(['buyClick']);
 <template>
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
-      <img :src="heroImage" class="w-100 h-100 object-fit-cover hero-bg-blur" />
+      <img
+        v-img-fallback="[1200, 600]"
+        :src="heroImage"
+        class="w-100 h-100 object-fit-cover hero-bg-blur"
+      />
     </div>
     <div class="position-relative z-1">
       <div class="container-xxl pb-4">
@@ -29,15 +32,15 @@ const emit = defineEmits(['buyClick']);
                 </h5>
                 <div class="mb-2 small">
                   <i class="bi bi-calendar-event text-reactive-primary me-1" />
-                  <span class="text-primary fw-semibold"
-                    >{{ time }},
+                  <span class="text-primary fw-semibold">
+                    {{ time }},
                     {{ $d(new Date(date), 'short') }}
                   </span>
                 </div>
                 <div class="mb-2 text-reactive-secondary small">
-                  <i class="bi bi-geo-alt-fill text-primary me-1" />
-                  <span class="text-primary fw-semibold">{{ venue[$i18n.locale] }}</span>
-                  <p class="mb-0 small">{{ address[$i18n.locale] }}</p>
+                  <i class="bi bi-geo-alt-fill text-reactive-primary me-1" />
+                  <span class="text-primary fw-semibold">{{ address }}</span>
+                  <!-- <p class="mb-0 small">{{  }}</p> -->
                 </div>
                 <div class="mt-auto">
                   <hr class="bg-reactive-secondary my-2" />
@@ -54,6 +57,7 @@ const emit = defineEmits(['buyClick']);
                 </div>
               </div>
               <img
+                v-img-fallback="[1200, 600]"
                 :src="heroImage"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
               />

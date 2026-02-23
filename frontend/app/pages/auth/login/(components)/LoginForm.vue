@@ -23,7 +23,7 @@ async function login() {
     router.push(localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
-    console.log(fetchError);
+
     if (!fetchError.statusCode) {
       error.generic = 'auth.error.network';
       return;
@@ -46,18 +46,14 @@ async function login() {
   }
 }
 
-function viewPassword() {
-  isViewingPassword.value = true;
-
-  setTimeout(() => {
-    isViewingPassword.value = false;
-  }, 500);
+function togglePassword() {
+  isViewingPassword.value = !isViewingPassword.value;
 }
 </script>
 
 <template>
   <div class="form-width">
-    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}:</h3>
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}</h3>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
@@ -75,7 +71,9 @@ function viewPassword() {
             { 'is-invalid': error.email },
           ]"
         />
-        <div v-if="error.email" class="invalid-feedback">{{ $t(error.email) }}</div>
+        <div v-if="error.email" id="error-email" class="invalid-feedback">
+          {{ $t(error.email) }}
+        </div>
       </div>
       <div class="mb-2">
         <label for="password" class="form-label text-reactive-primary user-select-none"
@@ -96,12 +94,13 @@ function viewPassword() {
           <button
             class="btn btn-outline-secondary bg-reactive-primary"
             type="button"
-            :disabled="isViewingPassword"
-            @click="viewPassword"
+            @mousedown.prevent="togglePassword"
           >
             <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
           </button>
-          <div v-if="error.password" class="invalid-feedback">{{ $t(error.password) }}</div>
+        </div>
+        <div v-if="error.password" id="error-password" class="invalid-feedback d-block">
+          {{ $t(error.password) }}
         </div>
       </div>
       <div class="form-check mb-2">
@@ -115,9 +114,12 @@ function viewPassword() {
           $t('auth.remember_me')
         }}</label>
       </div>
-      <div v-if="error.generic" class="invalid-feedback d-block mb-2">{{ $t(error.generic) }}</div>
+      <div v-if="error.generic" id="error-generic" class="invalid-feedback d-block mb-2">
+        {{ $t(error.generic) }}
+      </div>
       <div class="d-flex flex-column">
         <button
+          id="submit-btn"
           class="btn btn-primary text-center mb-2"
           :disabled="loading"
           @click.prevent.stop="login()"
@@ -133,9 +135,11 @@ function viewPassword() {
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <a href="" class="text-decoration-none text-reactive-secondary">{{
-        $t('auth.create_account')
-      }}</a>
+      <NuxtLink
+        :to="localePath('/auth/register')"
+        class="text-decoration-none text-reactive-secondary"
+        >{{ $t('auth.create_account') }}</NuxtLink
+      >
       |
       <a href="" class="text-decoration-none text-reactive-secondary">{{
         $t('auth.forgot_password')

@@ -28,6 +28,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authUrl: 'https://localhost:8080/api/v1/auth',
+      ticketUrl: 'https://localhost:8081/api/v1',
+      ticketHealthUrl: 'https://localhost:8081/health',
     },
   },
 

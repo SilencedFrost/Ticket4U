@@ -5,6 +5,18 @@
       "action": "Đăng nhập",
       "google": "Đăng nhập với google"
     },
+    "logout": {
+      "title": "Đăng xuất",
+      "action": "Đăng xuất"
+    },
+    "register": {
+      "title": "Đăng ký",
+      "action": "Tạo tài khoản",
+      "google": "Đăng ký với Google",
+      "password_hint": "8-32 ký tự, chữ hoa, chữ thường, số, và ký tự đặc biệt",
+      "has_account": "Đã có tài khoản? Đăng nhập",
+      "success": "Đăng ký thành công! Đang chuyển hướng..."
+    },
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
     "forgot_password": "Quên mật khẩu",
@@ -14,21 +26,35 @@
       "unknown": "Lỗi không biết, hãy liên hệ system admin",
       "network": "Lỗi kết nối, kiểm tra kết nối của bạn",
       "format": {
-        "password": "Mật khẩu phải có một ký tự viết thường, một ký tự viết hoa, một ký tự đặc biệt, và dài 8-32 ký tự",
-        "email": "Định dạng email không hợp lệ"
+        "email": "Định dạng email không hợp lệ",
+        "phone": "Định dạng số điện thoại không hợp lệ",
+        "password": {
+          "length": {
+            "short": "Mật khẩu phải có ít nhất 8 ký tự",
+            "long": "Mật khẩu không được vượt quá 32 ký tự"
+          },
+          "lowercase": "Mật khẩu phải có ít nhất một chữ thường",
+          "uppercase": "Mật khẩu phải có ít nhất một chữ hoa",
+          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "digit": "Mật khẩu phải có ít nhất một số"
+        }
       },
       "blank": {
-        "password": "Password không được để trống",
-        "email": "Email không được để trống"
-      }
+        "password": "Mật khẩu không được để trống",
+        "email": "Email không được để trống",
+        "phone": "Số điện thoại không được để trống",
+        "full_name": "Họ và tên không được để trống"
+      },
+      "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
+      "validation": "Dữ liệu không hợp lệ"
     },
-    "logout": {
-      "title": "Đăng xuất",
-      "action": "Đăng xuất"
-    },
-    "register": "Đăng ký",
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
+    }
+  },
+  "user": {
+    "registration": {
+      "check_email": "Vui lòng kiểm tra email để xác thực tài khoản"
     }
   },
   "common": {
@@ -43,7 +69,9 @@
     "action": {
       "buy": "Mua vé ngay",
       "view": "Xem"
-    }
+    },
+    "full_name": "Họ và tên",
+    "phone": "Số điện thoại"
   },
   "brand": {
     "name": "Ticket4U",

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -31,6 +32,6 @@ public class Organizer {
     @Column(columnDefinition = "TEXT")
     private String logo_url;
 
-    @Column(precision = 3)
-    private Double rating;
+    @Column(precision = 3, scale = 2)
+    private BigDecimal rating;
 }

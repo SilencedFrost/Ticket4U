@@ -91,3 +91,6 @@ CREATE TABLE IF NOT EXISTS public.organizer
     CONSTRAINT organizer_fk_user FOREIGN KEY (id) 
         REFERENCES public.users (id)
 );
+
+ALTER TABLE IF EXISTS public.organizer
+    OWNER to postgres;

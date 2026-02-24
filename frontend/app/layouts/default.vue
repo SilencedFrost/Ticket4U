@@ -5,11 +5,11 @@ const { currentTheme } = useTheme();
 </script>
 
 <template>
-    <div class="d-flex flex-column overflow-hidden h-100">
+    <div class="d-flex flex-column min-vh-100">
         <header class="sticky-top z-3">
             <nav-bar />
         </header>
-        <div class="overflow-auto flex-fill">
+        <div class="flex-fill">
             <main :class="[
                 { 'bg-reactive-primary': currentTheme == 'dark' },
                 { 'bg-reactive-secondary': currentTheme == 'light' },

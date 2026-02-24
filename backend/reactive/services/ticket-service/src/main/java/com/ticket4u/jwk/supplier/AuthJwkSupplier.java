@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.ticket4u.jwk.exception.JwkRetrievalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class AuthJwkSupplier implements JwkSupplier {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthJwkSupplier.class);
     private static final String CACHE_KEY = "auth-jwkset";
-    private static final String JWKS_URL = "https://localhost:8080/auth/.well-known/jwks.json";
+
     public static final String KEY_IDENTIFIER = "auth-key-es256";
 
     private final Cache<String, JWK> cache;
@@ -30,13 +31,9 @@ public class AuthJwkSupplier implements JwkSupplier {
     private final String jwksUrl;
     private final String cacheKey;
 
-    public AuthJwkSupplier() {
-        this(JWKS_URL, CACHE_KEY);
-    }
-
-    public AuthJwkSupplier(String jwksUrl, String cacheKey) {
+    public AuthJwkSupplier(@Value("${application.service-url.user}/auth/.well-known/jwks.json") String jwksUrl) {
         this.jwksUrl = jwksUrl;
-        this.cacheKey = cacheKey;
+        this.cacheKey = CACHE_KEY;
         this.cache = Caffeine.newBuilder()
                 .maximumSize(1)
                 .expireAfterWrite(Duration.ofHours(1))

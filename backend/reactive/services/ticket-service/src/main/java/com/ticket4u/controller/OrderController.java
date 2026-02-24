@@ -38,8 +38,8 @@ public class OrderController {
         return null;
     }
 
-    //TODO: Converts a reservation into a purchased order. Only seats in user's reservation can be purchased.
-    @PostMapping
+    //TODO: Convert all reserved tickets into an order
+    @PostMapping("/from-cart")
     public ResponseEntity<?> createOrder() {
         return null;
     }

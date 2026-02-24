@@ -8,47 +8,47 @@ export const useUserStore = defineStore('user', () => {
     roleId: -1,
     username: '',
     email: '',
-  }
+  };
 
-  const user = ref<User>(emptyUser);
+  const _user = ref<User>({ ...emptyUser });
 
-  const isLoggedIn = computed(() => user.value.roleId >= 0);
+  const user = computed(() => _user.value);
+  const isLoggedIn = computed(() => _user.value.roleId >= 0);
 
   async function login(email: string, password: string, rememberMe: boolean) {
-    user.value = await $fetch(`${config.public.authUrl}/login`, {
+    _user.value = await $fetch(`${config.public.authUrl}/login`, {
       credentials: 'include',
       method: 'POST',
-      body: {
-        email: email,
-        password: password,
-        rememberMe: rememberMe,
-      },
+      body: { email, password, rememberMe },
     });
   }
 
   async function refresh() {
-    user.value = await $fetch(`${config.public.authUrl}/refresh`, {
-      credentials: 'include',
-      method: 'POST'
-    })
+    try {
+      _user.value = await $fetch(`${config.public.authUrl}/refresh`, {
+        credentials: 'include',
+        method: 'POST',
+      });
+    } catch {
+      // No session - ignore
+    }
   }
 
-  async function logout(
-  ) {
+  async function logout() {
     try {
-      await await $fetch(`${config.public.authUrl}/logout`, {
-      credentials: 'include',
-      method: 'POST'
-    })
-
-    Object.assign(user.value, emptyUser)
+      await $fetch(`${config.public.authUrl}/logout`, {
+        credentials: 'include',
+        method: 'POST',
+      });
+      _user.value = { ...emptyUser };
     } catch {
-      alert($t("auth.session.invalid"))
+      const { $i18n } = useNuxtApp();
+      alert($i18n.t('auth.session.invalid'));
     }
   }
 
   return {
-    user: readonly(user),
+    user,
     isLoggedIn,
     login,
     refresh,

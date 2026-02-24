@@ -23,7 +23,7 @@ async function login() {
     router.push(localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
-    console.log(fetchError);
+
     if (!fetchError.statusCode) {
       error.generic = 'auth.error.network';
       return;
@@ -46,18 +46,14 @@ async function login() {
   }
 }
 
-function viewPassword() {
-  isViewingPassword.value = true;
-
-  setTimeout(() => {
-    isViewingPassword.value = false;
-  }, 500);
+function togglePassword() {
+  isViewingPassword.value = !isViewingPassword.value;
 }
 </script>
 
 <template>
   <div class="form-width">
-    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}:</h3>
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}</h3>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
@@ -98,8 +94,7 @@ function viewPassword() {
           <button
             class="btn btn-outline-secondary bg-reactive-primary"
             type="button"
-            :disabled="isViewingPassword"
-            @click="viewPassword"
+            @mousedown.prevent="togglePassword"
           >
             <i :class="isViewingPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
           </button>
@@ -140,9 +135,11 @@ function viewPassword() {
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <a href="" class="text-decoration-none text-reactive-secondary">{{
-        $t('auth.create_account')
-      }}</a>
+      <NuxtLink
+        :to="localePath('/auth/register')"
+        class="text-decoration-none text-reactive-secondary"
+        >{{ $t('auth.create_account') }}</NuxtLink
+      >
       |
       <a href="" class="text-decoration-none text-reactive-secondary">{{
         $t('auth.forgot_password')

@@ -11,11 +11,11 @@ public class PhoneNumberUtil {
         }
 
         String cleaned = phoneNumber.replaceAll("[\\s-]", "");
-        if (cleaned.startsWith("+84")) {
-            return "0" + cleaned.substring(3);
-        } else if (cleaned.startsWith("84")) {
-            return "0" + cleaned.substring(2);
+        
+        if (cleaned.length() == 9 && cleaned.matches("^(3|5|7|8|9)\\d{8}$")) {
+            return "0" + cleaned;
         }
+        
         return cleaned;
     }
 }

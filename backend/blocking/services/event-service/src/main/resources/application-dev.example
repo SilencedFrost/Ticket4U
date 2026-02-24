@@ -25,9 +25,11 @@ spring:
             client-secret: <<Client Secret>>
             scope: openid,profile,email
 
+# Microservices Communication Configuration
 app:
   services:
     user-service:
+      # Base URL to fetch business data from User Service
       url: https://localhost:8080
 
 # Port
@@ -50,5 +52,6 @@ application:
     cors:
       allowed-origins: https://localhost:3000
 
+# Endpoint to fetch Public Keys for JWT validation
     auth:
       jwks-uri: https://localhost:8080/auth/.well-known/jwks.json

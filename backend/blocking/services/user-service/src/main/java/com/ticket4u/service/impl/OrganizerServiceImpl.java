@@ -19,6 +19,6 @@ public class OrganizerServiceImpl implements OrganizerService {
     public OrganizerDTO getOrganizerById(UUID id) {
         return organizerRepository.findById(id)
                 .map(organizerMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà tổ chức với ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Organizer not found with ID: " + id));
     }
 }

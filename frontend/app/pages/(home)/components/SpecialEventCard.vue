@@ -24,8 +24,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const localePath = useLocalePath()
+
 const handleClick = () => {
-  navigateTo(`/event-detail/${props.event.id}`)
+  navigateTo(localePath(`/event-detail/${props.event.id}`))
 }
 </script>
 

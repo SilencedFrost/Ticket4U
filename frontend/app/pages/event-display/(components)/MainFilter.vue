@@ -2,7 +2,7 @@
     <div class="position-relative">
         <button class="btn btn-filter-secondary d-flex align-items-center gap-2" :class="isMobile ? 'btn-filter-mobile' : 'btn-filter-desktop'" @click="$emit('toggle')">
             <i class="bi bi-funnel fs-5"></i>
-            <span class="d-none d-sm-inline">Bộ lọc</span>
+            <span class="d-none d-sm-inline">{{ $t('event_display.label.filter') }}</span>
             <span class="d-sm-none">Lọc</span>
             <i class="bi bi-chevron-down ms-auto"></i>
         </button>
@@ -11,7 +11,7 @@
             <div class="p-4">
                 <!-- Location Filter -->
                 <div class="mb-3">
-                    <h6 class="fw-bold text-reactive-primary mb-3 small">Vị trí</h6>
+                    <h6 class="fw-bold text-reactive-primary mb-3 small">{{ $t('event_display.title.place') }}</h6>
                     <div class="d-flex flex-column gap-2">
                         <label v-for="location in locations" :key="location.value" class="d-flex align-items-center gap-2 cursor-pointer user-select-none">
                             <input :checked="selectedLocation === location.value" type="radio" :value="location.value" name="location" class="form-check-input m-0" @change="$emit('update:selectedLocation', location.value)" />
@@ -24,9 +24,9 @@
 
                 <!-- Price Filter -->
                 <div class="mb-3">
-                    <h6 class="fw-bold text-reactive-primary mb-3 small">Giá tiền</h6>
+                    <h6 class="fw-bold text-reactive-primary mb-3 small">{{ $t('event_display.title.price') }}</h6>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-reactive-primary small">Miễn phí</span>
+                        <span class="text-reactive-primary small">{{ $t('event_display.label.free') }}</span>
                         <div class="form-check form-switch">
                             <input :checked="isFreeEvent" type="checkbox" class="form-check-input cursor-pointer" role="switch" @change="$emit('update:isFreeEvent', ($event.target as HTMLInputElement).checked)" />
                         </div>
@@ -37,7 +37,7 @@
 
                 <!-- Category Filter -->
                 <div class="mb-3">
-                    <h6 class="fw-bold text-reactive-primary mb-3 small">Thể loại</h6>
+                    <h6 class="fw-bold text-reactive-primary mb-3 small">{{ $t('event_display.title.category') }}</h6>
                     <div class="d-flex flex-wrap gap-2">
                         <button v-for="category in categories" :key="category.value" :class="[
                             'btn btn-sm rounded-pill border',
@@ -53,10 +53,10 @@
                 <!-- Action Buttons -->
                 <div class="d-flex gap-2 mt-3">
                     <button class="btn btn-outline-secondary flex-fill rounded-2" @click="$emit('reset')">
-                        Thiết lập lại
+                        {{ $t('event_display.button.reset') }}
                     </button>
                     <button class="btn btn-primary flex-fill rounded-2" @click="$emit('apply')">
-                        Áp dụng
+                        {{ $t('event_display.button.apply') }}
                     </button>
                 </div>
             </div>

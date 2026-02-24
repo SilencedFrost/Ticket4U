@@ -5,7 +5,7 @@ const { currentTheme } = useTheme();
 </script>
 
 <template>
-    <div class="d-flex flex-column min-vh-100">
+    <div class="d-flex flex-column overflow-hidden h-100">
         <header class="sticky-top z-3">
             <nav-bar />
         </header>

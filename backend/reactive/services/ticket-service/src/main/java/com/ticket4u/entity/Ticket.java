@@ -1,9 +1,6 @@
 package com.ticket4u.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,14 +22,24 @@ public class Ticket {
     @Column(updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID orderId;
+    @ManyToOne
+    @JoinColumn(name = "order_id", unique = true)
+    private Order order;
 
     @Column(nullable = false)
     private UUID eventId;
 
+    @Column(nullable = false)
+    private UUID seatId;
+
     @Column(nullable = false, length = 32)
     private String seatName;
+
+    @Column(nullable = false)
+    private UUID zoneId;
+
+    @Column(nullable = false)
+    private String zoneName;
 
     @Column(nullable = false, length = 32)
     private String ticketType;

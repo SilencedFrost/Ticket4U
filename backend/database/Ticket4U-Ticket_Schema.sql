@@ -34,9 +34,12 @@ ALTER TABLE IF EXISTS public.order
 CREATE TABLE IF NOT EXISTS public.ticket
 (
 	id uuid PRIMARY KEY,
-	order_id uuid NOT NULL,
+	order_id uuid UNIQUE,
 	event_id uuid NOT NULL,
+	seat_id uuid NOT NULL,
 	seat_name varchar(32) NOT NULL,
+	zone_id uuid NOT NULL,
+	zone_name VARCHAR(255) NOT NULL,
 	ticket_type varchar(32) NOT NULL,
 	base_price decimal(10, 2) NOT NULL,
 	status varchar(32) NOT NULL,

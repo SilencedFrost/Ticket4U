@@ -4,8 +4,8 @@ import com.nimbusds.jose.jwk.JWK;
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.jwk.supplier.AuthJwkSupplier;
-import com.ticket4u.util.CookieUtil;
 import com.ticket4u.jwk.util.JwtUtil;
+import com.ticket4u.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;

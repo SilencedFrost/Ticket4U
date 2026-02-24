@@ -11,8 +11,10 @@ const limitedEvents = computed(() => {
   return props.eventData?.slice(0, 8) || [];
 });
 
+const localePath = useLocalePath();
+
 const handleEventClick = (eventId: string) => {
-  navigateTo(`/event-detail/${eventId}`);
+  navigateTo(localePath(`/event-detail/${eventId}`));
 };
 </script>
 

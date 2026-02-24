@@ -2,13 +2,13 @@
   <section class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h2 class="text-reactive-primary fs-4 fw-bold mb-0">{{ title }}</h2>
-      <NuxtLink
+      <NuxtLinkLocale
         v-if="showViewAll"
         :to="viewAllLink"
         class="text-reactive-primary text-decoration-none fw-light"
       >
-        Xem thêm &gt;
-      </NuxtLink>
+        {{ $t('common.see.more') }} &gt;
+      </NuxtLinkLocale>
     </div>
     <EventCarousel
       :items="events"

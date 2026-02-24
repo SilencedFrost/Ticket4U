@@ -12,9 +12,9 @@ export const locations: LocationOption[] = [
 // See eventDisplayStore.fetchCategories()
 
 export const datePresets: DatePreset[] = [
-  { label: 'Tất cả các ngày', value: 'all' },
-  { label: 'Hôm nay', value: 'today' },
-  { label: 'Ngày mai', value: 'tomorrow' },
-  { label: 'Cuối tuần này', value: 'this-weekend' },
-  { label: 'Tháng này', value: 'this-month' },
+  { label: 'all_date', value: 'all' },
+  { label: 'today', value: 'today' },
+  { label: 'tomorrow', value: 'tomorrow' },
+  { label: 'this_weekend', value: 'this-weekend' },
+  { label: 'this_month', value: 'this-month' },
 ]

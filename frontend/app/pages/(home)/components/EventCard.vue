@@ -44,12 +44,14 @@ const props = withDefaults(defineProps<Props>(), {
   showDetails: true,
 })
 
+const localePath = useLocalePath()
+
 const handleClick = () => {
-  navigateTo(`/event-detail/${props.event.id}`)
+  navigateTo(localePath(`/event-detail/${props.event.id}`))
 }
 
 const formatPrice = (price: number) => {
-  return (price !== null) ? `Từ ${price.toLocaleString('vi-VN')}đ` : "Chưa cập nhật giá";
+  return (price !== null) ? `${$t('common.price_from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price_not_updated');
 }
 
 const formatDate = (isoDate: string) => {
@@ -78,10 +80,6 @@ const formatDate = (isoDate: string) => {
 
 .event-card:hover {
   opacity: 0.9;
-}
-
-.cursor-pointer {
-  cursor: pointer;
 }
 
 .text-ellipsis-2 {

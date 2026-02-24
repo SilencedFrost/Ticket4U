@@ -97,5 +97,40 @@
       "ticket_info": "Ticket Information",
       "related": "You May Also Like"
     }
+  },
+  "event_payment": {
+    "header": {
+      "back": "Back",
+      "title": "Select Area",
+      "subtitle": "Click on area to select tickets"
+    },
+    "stage": "Stage",
+    "foh": "FOH",
+    "ticket_info": {
+      "title": "Ticket Information",
+      "available": "seats available",
+      "sold_out": "Sold Out"
+    },
+    "cart": {
+      "title": "Your Cart",
+      "empty": "No tickets in cart",
+      "empty_subtitle": "Select an area on the left to add tickets",
+      "total_tickets": "Total tickets:",
+      "total_price": "Total amount:"
+    },
+    "selection": {
+      "available": "tickets available",
+      "sold_out_message": "This area is sold out",
+      "quantity": "Quantity",
+      "total": "Total",
+      "add_to_cart": "Add to Cart"
+    },
+    "checkout": {
+      "button": "Proceed to Payment"
+    },
+    "validation": {
+      "max_per_account": "Maximum {max} ticket(s) per account",
+      "max_reached": "You can only purchase {max} ticket(s) of this type"
+    }
   }
 }

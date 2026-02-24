@@ -1,8 +1,12 @@
 package com.ticket4u.controller;
 
+import com.ticket4u.dto.OrderResponse;
+import com.ticket4u.entity.CustomUserDetails;
+import com.ticket4u.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -13,10 +17,19 @@ import java.util.UUID;
 @Slf4j
 public class OrderController {
 
-    //TODO: Retrieves complete order information including ticket summary
+    private final OrderService orderService;
+
+    /**
+     * GET /api/v1/orders/{order-id}
+     * Retrieves complete order information including ticket summary
+     * @param orderId provided by path
+     * @param userDetails provided by authentication principle
+     * @return the order detail if the user owns that order
+     */
     @GetMapping("/{order-id}")
-    public ResponseEntity<?> getOrderInformation(@PathVariable("order-id") UUID orderId) {
-        return null;
+    public ResponseEntity<OrderResponse> getOrderInformation(@PathVariable("order-id") UUID orderId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        UUID userId = userDetails.getUserId();
+        return ResponseEntity.ok(orderService.getOrderOfUserById(userId, orderId));
     }
 
     //TODO:  Retrieves all tickets within a specific order

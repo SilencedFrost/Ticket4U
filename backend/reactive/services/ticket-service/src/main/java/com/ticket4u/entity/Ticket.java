@@ -30,6 +30,9 @@ public class Ticket {
     private UUID eventId;
 
     @Column(nullable = false)
+    private String eventName;
+
+    @Column(nullable = false)
     private UUID seatId;
 
     @Column(nullable = false, length = 32)

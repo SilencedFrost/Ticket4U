@@ -6,6 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public abstract class SeatMapper {
-
     public abstract SeatResponse toDTO (Ticket ticket);
 }

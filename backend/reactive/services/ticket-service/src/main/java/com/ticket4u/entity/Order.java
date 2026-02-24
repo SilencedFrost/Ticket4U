@@ -56,8 +56,6 @@ public class Order {
 
     private OffsetDateTime purchasedAt;
 
-    private OffsetDateTime expiresAt;
-
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 

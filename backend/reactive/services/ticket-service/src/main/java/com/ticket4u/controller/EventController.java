@@ -21,11 +21,11 @@ public class EventController {
     private final EventService eventService;
 
     /**
-     * GET /api/v1/public/events/{event-id}/seats/availability
+     * GET /api/v1/public/events/{event-id}/availability
      * Retrieves availability status of seats/slots without revealing reservation ownership
      */
-    @GetMapping("/public/events/{event-id}/seats/availability")
-    public ResponseEntity<?> getSeatAvailability(@PathVariable("event-id") UUID eventId) {
+    @GetMapping("/public/events/{event-id}/availability")
+    public ResponseEntity<AvailabilityResponse> getAvailability(@PathVariable("event-id") UUID eventId) {
         return ResponseEntity.ok(eventService.getAvailabilityByServiceId(eventId));
     }
 }

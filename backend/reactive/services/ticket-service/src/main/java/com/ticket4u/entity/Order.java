@@ -30,6 +30,9 @@ public class Order {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
+    @Column(nullable = false)
+    private String currency;
+
     private String discountCode;
 
     @Column(precision = 10, scale = 2)

@@ -34,7 +34,7 @@ public class OrderController {
 
     //TODO:  Retrieves all tickets within a specific order
     @GetMapping("/{order-id}/tickets")
-    public ResponseEntity<?> getOrderInformationWithTickets(@PathVariable("order-id") UUID orderId) {
+    public ResponseEntity<?> getTicketsInOrder(@PathVariable("order-id") UUID orderId) {
         return null;
     }
 

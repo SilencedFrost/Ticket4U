@@ -9,6 +9,7 @@ public record OrderResponse(
         UUID id,
         UUID userId,
         BigDecimal totalAmount,
+        String currency,
         String discountCode,
         BigDecimal discountAmount,
         BigDecimal fees,

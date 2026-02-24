@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.order
 	id uuid PRIMARY KEY,
 	user_id uuid NOT NULL,
 	total_amount decimal(10, 2) NOT NULL,
+	currency char(3) NOT NULL,
 	discount_code varchar(50),
 	discount_amount decimal(10, 2),
 	fees decimal(10, 2),
@@ -45,7 +46,6 @@ CREATE TABLE IF NOT EXISTS public.ticket
 	status varchar(32) NOT NULL,
 	created_at timestamptz NOT NULL,
 	used_at timestamptz,
-	currency char(3) NOT NULL,
 	qr_secret varchar(64) NOT NULL,
 	FOREIGN KEY (order_id) REFERENCES public.order(id) ON DELETE CASCADE
 );

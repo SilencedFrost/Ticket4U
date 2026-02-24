@@ -29,9 +29,3 @@
 
 ### Java/Spring Binaries ###
 **/bin/
-**/build/
-**/out/
-.gradle/
-.idea/
-target/
-*.class

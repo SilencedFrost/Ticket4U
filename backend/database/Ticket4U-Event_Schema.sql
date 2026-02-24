@@ -93,3 +93,7 @@ CREATE TABLE IF NOT EXISTS public.seats (
     price_override DECIMAL(10, 2), -- nếu muốn 1 ghế nào đó đặc biệt giá khác trong 1 zone
     CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id) REFERENCES public.zones (id) ON UPDATE NO ACTION ON DELETE NO ACTION
     );
+
+-- Add seating_layout
+ALTER TABLE public.event_contents
+    ADD COLUMN IF NOT EXISTS seating_layout JSONB;

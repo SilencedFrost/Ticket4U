@@ -26,3 +26,6 @@
 ### Environment secrets ###
 **/application-*.yaml
 **/application-*.yml
+
+### Java/Spring Binaries ###
+**/bin/

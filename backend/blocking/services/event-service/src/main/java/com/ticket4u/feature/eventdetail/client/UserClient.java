@@ -15,7 +15,7 @@ public class UserClient {
 
     public OrganizerDTO getOrganizerById(UUID id) {
         return userServiceClient.get()
-                .uri("/api/v1/organizers/{id}", id)
+                .uri("/api/v1/public/organizers/{id}", id)
                 .retrieve()
                 .body(OrganizerDTO.class);
     }

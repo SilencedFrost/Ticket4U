@@ -93,3 +93,4 @@ CREATE TABLE IF NOT EXISTS public.organizer
 );
 
 ALTER TABLE IF EXISTS public.organizer
+    OWNER to postgres;

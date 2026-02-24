@@ -32,6 +32,6 @@ public class Organizer {
     @Column(columnDefinition = "TEXT")
     private String logo_url;
 
-    @Column(precision = 3)
+    @Column(precision = 3, scale = 2)
     private BigDecimal rating;
 }

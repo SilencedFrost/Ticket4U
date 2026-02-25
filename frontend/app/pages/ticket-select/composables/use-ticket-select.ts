@@ -1,19 +1,16 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import type { Ticket } from '../types/ticket.type'
-import type { Event } from '../types/event.type'
-import type { SeatingLayout } from '../types/seating-layout.type.ts'
+import type { Ticket } from '../(types)/ticket.type'
+import type { Event } from '../(types)/event.type'
+import type { SeatingLayout } from '../(types)/seating-layout.type'
 
-// Shape returned by GET /ticket-select?eventId=xxx
 interface TicketSelectResponse {
-  event: {
-    id: string
-    name: string
-    startDate: string
-    endDate: string
-    addressLine: string
-    seatingLayout: SeatingLayout | null
-  }
+  eventId: string
+  name: string
+  startDate: string
+  endDate: string
+  addressLine: string
+  seatingLayout: SeatingLayout | null
   zones: {
     id: string
     name: string
@@ -36,32 +33,32 @@ const mapResponse = (data: TicketSelectResponse): {
   tickets: Ticket[]
   seatingLayout: SeatingLayout | null
 } => {
-  const start = new Date(data.event.startDate)
-  const end = new Date(data.event.endDate)
+  const start = new Date(data.startDate)
+  const end = new Date(data.endDate)
 
   const event: Event = {
-    id: data.event.id,
-    title: data.event.name,
+    id: data.eventId,
+    title: data.name,
     date: start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     time: `${start.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}`,
-    venue: data.event.addressLine,
+    venue: data.addressLine,
   }
 
   const tickets: Ticket[] = data.zones.map((zone, i) => {
     const available = zone.capacity - zone.quantitySold
     return {
-        id: zone.id,
-        name: zone.name,
-        price: zone.price,
-        color: zone.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#000000', // Add fallback to ensure string
-        zone: zone.name,
-        available,
-        soldOut: available <= 0,
-        maxPerAccount: zone.purchaseLimit,
+      id: zone.id,
+      name: zone.name,
+      price: zone.price,
+      color: zone.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#000000',
+      zone: zone.name,
+      available,
+      soldOut: available <= 0,
+      maxPerAccount: zone.purchaseLimit,
     }
-    })
+  })
 
-  return { event, tickets, seatingLayout: data.event.seatingLayout ?? null }
+  return { event, tickets, seatingLayout: data.seatingLayout ?? null }
 }
 
 export const useTicketSelect = () => {
@@ -76,9 +73,9 @@ export const useTicketSelect = () => {
     error.value = null
     try {
       const { data } = await axios.get<TicketSelectResponse>(
-        'http://localhost:8080/ticket-select',
-        { params: { eventId } }
+        `https://localhost:8081/ticket-select/${eventId}`
       )
+      console.log('API response:', JSON.stringify(data))
       const mapped = mapResponse(data)
       event.value = mapped.event
       tickets.value = mapped.tickets

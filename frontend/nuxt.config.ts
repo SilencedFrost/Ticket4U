@@ -4,6 +4,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
+  ignore: [
+    'pages/**/*.type.ts',
+    'pages/**/*.types.ts',
+  ],
+
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
@@ -54,4 +59,5 @@ export default defineNuxtConfig({
       ],
     },
   },
+  
 });

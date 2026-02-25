@@ -29,23 +29,26 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
 
       <div v-for="(schedule, dateIdx) in showTime" :key="dateIdx" class="mb-3">
         <div class="card-border mb-3">
-          <button
-            class="btn w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-0 bg-transparent gap-3"
-            type="button"
+          <!-- ✅ Changed from <button> to <div> to fix nested button issue -->
+          <div
+            class="w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 cursor-pointer"
             @click="toggleTicketDate(schedule.id)"
           >
             <div
               class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 flex-grow-1"
             >
               <i class="bi bi-calendar-event text-info fs-5" />
-              <span class="text-reactive-primary fw-semibold small"
-                >{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span
-              >
+              <span class="text-reactive-primary fw-semibold small">
+                {{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}
+              </span>
             </div>
             <div
               class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto"
             >
-              <button class="btn btn-primary fw-bold" @click.stop="emit('buyClick')">
+              <button
+                class="btn btn-primary fw-bold"
+                @click.stop="emit('buyClick')"
+              >
                 {{ $t('common.action.buy') }}
               </button>
               <i
@@ -53,7 +56,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                 :class="expandedTickets[schedule.id] ? 'bi-chevron-up' : 'bi-chevron-down'"
               />
             </div>
-          </button>
+          </div>
         </div>
 
         <div v-if="expandedTickets[schedule.id]" class="mt-3">
@@ -88,30 +91,19 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                   >
                     <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }}</p>
                     <button
-                      v-if="
-                        seat.description ||
-                        seat.image ||
-                        (seat.benefits && seat.benefits.length > 0)
-                      "
+                      v-if="seat.description || seat.image || (seat.benefits && seat.benefits.length > 0)"
                       class="btn btn-link text-reactive-primary p-0"
                       @click="toggleSeatDetail(schedule.id, seat.name)"
                     >
                       <i
                         class="bi fs-5"
-                        :class="
-                          expandedSeatDetails[`${schedule.id}-${seat.name}`]
-                            ? 'bi-chevron-up'
-                            : 'bi-chevron-down'
-                        "
+                        :class="expandedSeatDetails[`${schedule.id}-${seat.name}`] ? 'bi-chevron-up' : 'bi-chevron-down'"
                       />
                     </button>
                   </div>
                 </div>
                 <div
-                  v-if="
-                    expandedSeatDetails[`${schedule.id}-${seat.name}`] &&
-                    (seat.description || seat.image || (seat.benefits && seat.benefits.length > 0))
-                  "
+                  v-if="expandedSeatDetails[`${schedule.id}-${seat.name}`] && (seat.description || seat.image || (seat.benefits && seat.benefits.length > 0))"
                   class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
                   <p v-if="seat.description" class="text-reactive-primary mb-3 small">

@@ -7,7 +7,15 @@ import EventOrganizer from './sections/EventOrganizer.vue';
 import EventNav from './sections/EventNav.vue';
 import EventRelated from './sections/EventRelated.vue';
 import EventAds from './sections/EventAds.vue';
+
 const eventStore = useEventStore();
+
+const handleBuyClick = () => {
+  if (eventStore.currentEvent?.eventId) {
+    eventStore.selectEvent(eventStore.currentEvent.eventId)
+    navigateTo('/ticket-select')
+  }
+}
 </script>
 
 <template>
@@ -31,7 +39,10 @@ const eventStore = useEventStore();
           :event-thumb-image="eventStore.currentEvent!.imgEvent.seatMapUrl"
         />
         <event-about :description="eventStore.currentEvent!.description" />
-        <event-tickets :show-time="eventStore.currentEvent!.showtimes" />
+        <event-tickets
+          :show-time="eventStore.currentEvent!.showtimes"
+          @buy-click="handleBuyClick"
+        />
         <event-organizer :event-data="eventStore.currentEvent!.organizer" />
       </div>
       <event-ads />

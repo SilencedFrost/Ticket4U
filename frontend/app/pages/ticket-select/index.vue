@@ -70,23 +70,26 @@ import CartSummary from './(components)/CartSummary.vue'
 
 definePageMeta({ layout: 'minimal' })
 
-// ── Replace with your Pinia store ──────────────────────────
-// import { useEventStore } from '~/stores/event'
-// const eventId = useEventStore().selectedEventId
-const eventId = 'YOUR-EVENT-UUID-HERE'
-// ───────────────────────────────────────────────────────────
+const eventStore = useEventStore()
+const eventId = eventStore.selectedEventId
+
+if (!eventId) {
+  navigateTo('/')
+}
 
 const { event, tickets, seatingLayout, loading, error, fetchTicketSelect } = useTicketSelect()
 const { cart, totalPrice, totalTickets, addToCart, removeFromCart } = useEventPayment()
 
-onMounted(() => fetchTicketSelect(eventId))
-const retry = () => fetchTicketSelect(eventId)
+onMounted(() => fetchTicketSelect(eventId!))
+const retry = () => fetchTicketSelect(eventId!)
 
 const handleAddTicket = (zoneId: string, zoneName: string, quantity: number, price: number) => {
   addToCart(zoneId, zoneName, quantity, price)
 }
 
-const handleBack = () => navigateTo('/event-detail')
+const handleBack = () => {
+  navigateTo(`/event-detail/${eventId}`)
+}
 
 const proceedToCheckout = () => {
   if (cart.value.length > 0) {

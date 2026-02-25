@@ -175,8 +175,8 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import type { Ticket } from '../types/ticket.type'
-import type { CartItem } from '../types/event-payment.type'
+import type { Ticket } from '../(types)/ticket.type'
+import type { CartItem } from '../(types)/event-payment.type'
 
 const { t } = useI18n()
 

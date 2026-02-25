@@ -1,5 +1,5 @@
-import type { Ticket } from '../types/ticket.type'
-import type { Event } from '../types/event.type'
+import type { Ticket } from '../(types)/ticket.type'
+import type { Event } from '../(types)/event.type'
 
 export const ticketData: Ticket[] = [
   { 

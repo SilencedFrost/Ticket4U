@@ -27,9 +27,20 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      authUrl: 'https://localhost:8080/api/v1/auth',
+      authUrl: '/api/v1/auth',
       ticketUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
+      googleClientId: '92326811627-ki3vln8jibn82peulclpp8skgheee0mf.apps.googleusercontent.com',
+    },
+  },
+
+  nitro: {
+    devProxy: {
+      '/api/v1/auth/': {
+        target: 'https://localhost:8080/api/v1/auth/',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 

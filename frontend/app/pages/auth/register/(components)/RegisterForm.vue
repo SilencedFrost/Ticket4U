@@ -1,3 +1,5 @@
+// Form đăng ký tài khoản người dùng (email và Google OAuth2)
+
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
@@ -6,10 +8,53 @@ const localePath = useLocalePath();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
+const googleBtnRef = ref<HTMLElement | null>(null);
 
-/**======================
- * Reused constants
- =======================*/
+const {
+  loaded: googleLoaded,
+  buttonTheme,
+  loadScript,
+  initialize,
+  renderButton,
+  reRenderButton,
+} = useGoogleAuth({
+  onCredential: handleGoogleCredential,
+  buttonText: 'signup_with',
+  buttonWidth: 320,
+});
+
+onMounted(async () => {
+  try {
+    await loadScript();
+    initialize();
+    if (googleBtnRef.value) renderButton(googleBtnRef.value);
+  } catch {
+    //
+  }
+});
+
+watch(buttonTheme, () => reRenderButton(googleBtnRef.value));
+
+async function handleGoogleCredential(idToken: string) {
+  loading.value = true;
+  Object.assign(error, { ...emptyError, password: [] });
+  try {
+    const response = await $fetch<{ userId: string | null; email: string; message: string }>(
+      `${config.public.authUrl}/register/google`,
+      { method: 'POST', body: { idToken } },
+    );
+    if (response.userId) {
+      registerSuccess.value = true;
+      setTimeout(() => goToLogin(), 2000);
+    } else {
+      error.generic = response.message;
+    }
+  } catch (err) {
+    handleError(err as FetchError);
+  } finally {
+    loading.value = false;
+  }
+}
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -17,10 +62,6 @@ const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
 const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
 const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
 const PASSWORD_DIGIT_REGEX = /\d+/;
-
-/**===========
- * Interfaces
- ============*/
 
 interface registerError {
   fullName: string;
@@ -44,10 +85,6 @@ interface registerTouched {
   password: boolean;
 }
 
-/**======================
- * State constants
- =======================*/
-
 const emptyError: registerError = {
   fullName: '',
   email: '',
@@ -70,19 +107,10 @@ const defaultTouched: registerTouched = {
   password: false,
 };
 
-/**======================
- * Form reactive objects
- =======================*/
-
 const error = reactive<registerError>(emptyError);
 const formData = reactive<registerForm>(emptyForm);
 const touched = reactive<registerTouched>(defaultTouched);
 
-/**==========
- * Functions
- ===========*/
-
-// Onblur function to do validation
 function onBlur(field: keyof registerForm) {
   if (touched[field] === false) {
     touched[field] = true;
@@ -97,7 +125,6 @@ function onBlur(field: keyof registerForm) {
   }
 }
 
-// Validation functions
 function validateFullName(): boolean {
   const val = formData.fullName.trim();
   if (!val) {
@@ -158,12 +185,10 @@ function validatePassword(): boolean {
   return errors.length === 0;
 }
 
-// Validate the form, return status
 function validateForm(): boolean {
   return validateFullName() && validateEmail() && validatePhone() && validatePassword();
 }
 
-// Function to register
 async function register() {
   if (!validateForm()) return;
 
@@ -203,7 +228,6 @@ async function register() {
   }
 }
 
-// Handle errors returned by backend I suppose
 function handleError(fetchError: FetchError) {
   if (!fetchError.statusCode) {
     error.generic = 'auth.error.network';
@@ -237,19 +261,13 @@ function handleError(fetchError: FetchError) {
   }
 }
 
-// Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
 }
 
-// Helper function to go to login
 function goToLogin() {
   navigateTo(localePath('/auth/login'));
 }
-
-/**===================
- * Computed & watches
- ====================*/
 
 const isFormValid = computed(() => {
   const allTouched = touched.fullName && touched.email && touched.phoneNumber && touched.password;
@@ -307,7 +325,6 @@ watch(
     </div>
 
     <form v-else novalidate @submit.prevent="register">
-      <!-- full name -->
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -337,7 +354,6 @@ watch(
           {{ $t(error.fullName) }}
         </div>
       </div>
-      <!-- email -->
       <div class="mb-2">
         <label for="reg-email" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.email') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -363,7 +379,6 @@ watch(
           {{ $t(error.email) }}
         </div>
       </div>
-      <!-- phone number -->
       <div class="mb-2">
         <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.phone') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -394,7 +409,6 @@ watch(
           {{ $t(error.phoneNumber) }}
         </div>
       </div>
-      <!-- password -->
       <div class="mb-2">
         <label for="reg-password" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -451,11 +465,9 @@ watch(
           {{ $t('auth.register.password_hint') }}
         </small>
       </div>
-      <!-- generic error -->
       <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">
         {{ $t(error.generic) }}
       </div>
-      <!-- buttons -->
       <div class="d-flex flex-column">
         <button
           class="btn btn-primary text-center mb-2"
@@ -465,7 +477,8 @@ watch(
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
           {{ $t('auth.register.action') }}
         </button>
-        <button type="button" class="btn btn-reactive-gray" :disabled="loading">
+        <div v-if="googleLoaded" ref="googleBtnRef" />
+        <button v-else type="button" class="btn btn-reactive-gray" disabled>
           <i class="bi bi-google me-2" />
           <span>{{ $t('auth.register.google') }}</span>
         </button>

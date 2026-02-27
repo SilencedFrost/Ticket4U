@@ -3,7 +3,8 @@
     "login": {
       "title": "Login",
       "action": "Log in",
-      "google": "Log in with Google"
+      "google": "Log in with Google",
+      "try_login": "Account created successfully! Please log in."
     },
     "logout": {
       "title": "Logout",
@@ -46,7 +47,8 @@
         "full_name": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
-      "validation": "Invalid data"
+      "validation": "Invalid data",
+      "google_token_invalid": "Google authentication failed. Please try again."
     },
     "session": {
       "invalid": "Invalid session"

@@ -3,7 +3,8 @@
     "login": {
       "title": "Đăng nhập",
       "action": "Đăng nhập",
-      "google": "Đăng nhập với google"
+      "google": "Đăng nhập với google",
+      "try_login": "Tạo tài khoản thành công! Vui lòng đăng nhập."
     },
     "logout": {
       "title": "Đăng xuất",
@@ -46,7 +47,8 @@
         "full_name": "Họ và tên không được để trống"
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
-      "validation": "Dữ liệu không hợp lệ"
+      "validation": "Dữ liệu không hợp lệ",
+      "google_token_invalid": "Xác thực Google thất bại. Vui lòng thử lại."
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"

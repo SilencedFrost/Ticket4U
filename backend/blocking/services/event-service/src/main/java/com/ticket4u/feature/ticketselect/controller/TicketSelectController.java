@@ -15,9 +15,9 @@ public class TicketSelectController {
 
     private final TicketSelectService ticketSelectService;
 
-    @GetMapping
+    @GetMapping("/{eventId}")
     public ResponseEntity<TicketSelectResponse> getTicketSelectData(
-            @RequestParam UUID eventId
+            @PathVariable UUID eventId
     ) {
         TicketSelectResponse response = ticketSelectService.getTicketSelectData(eventId);
         return ResponseEntity.ok(response);

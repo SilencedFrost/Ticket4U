@@ -17,7 +17,7 @@ const expandAbout = ref(false);
         :class="{ expanded: expandAbout }"
       >
         <div class="p-3 p-md-4">
-          <div class="text-reactive-primary description-content" v-html="description" />
+          <div class="text-reactive-primary description-content" v-html="description"/>
         </div>
       </div>
       <button

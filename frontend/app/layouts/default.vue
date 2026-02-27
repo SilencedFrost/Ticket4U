@@ -9,7 +9,7 @@ const { currentTheme } = useTheme();
         <header class="sticky-top z-3">
             <nav-bar />
         </header>
-        <div class="flex-fill">
+        <div class="overflow-auto flex-fill">
             <main :class="[
                 { 'bg-reactive-primary': currentTheme == 'dark' },
                 { 'bg-reactive-secondary': currentTheme == 'light' },

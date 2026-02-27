@@ -34,7 +34,7 @@ app:
 
 # Port
 server:
-  port: 8081
+  port: 8083
   ssl:
     certificate: classpath:keys/localhost+2.pem
     certificate-private-key: classpath:keys/localhost+2-key.pem

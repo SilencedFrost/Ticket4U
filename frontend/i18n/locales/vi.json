@@ -62,7 +62,10 @@
     "settings": "Cài đặt",
     "ticket": "Vé",
     "tickets": "Vé",
-    "price_from": "Giá từ",
+    "price": {
+      "from": "Từ",
+      "not_updated": "Chưa cập nhật giá"
+    },
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -72,8 +75,7 @@
       "view": "Xem"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại",
-    "price_not_updated": "Chưa cập nhật giá"
+    "phone": "Số điện thoại"
   },
   "brand": {
     "name": "Ticket4U",
@@ -131,7 +133,7 @@
     "title": {
       "category": "Thể loại",
       "price" : "Giá tiền",
-      "place" : "Địa điểm",
+      "place" : "Địa điểm"
     }
   }
 }

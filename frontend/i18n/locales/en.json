@@ -62,7 +62,10 @@
     "settings": "Settings",
     "ticket": "Ticket",
     "tickets": "Tickets",
-    "price_from": "From",
+    "price": {
+      "from": "From",
+      "not_updated": "Price not updated yet"
+    },
     "see": {
       "more": "See more",
       "less": "See less"
@@ -72,8 +75,7 @@
       "view": "View"
     },
     "full_name": "Full name",
-    "phone": "Phone number",
-    "price_not_updated": "Price not updated yet"
+    "phone": "Phone number"
   },
   "brand": {
     "name": "Ticket4U",

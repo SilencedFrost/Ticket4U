@@ -15,7 +15,7 @@ spring:
 
 # Port
 server:
-  port: ${SERVER_PORT:8081}
+  port: ${SERVER_PORT:8083}
 
 application:
   security:
@@ -27,16 +27,6 @@ application:
 logging:
   level:
     root: INFO
-
-# OAuth2 Configuration
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: openid,profile,email
 #
 #  resilience4j.ratelimiter:
 #    instances:

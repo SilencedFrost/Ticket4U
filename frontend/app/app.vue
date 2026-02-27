@@ -6,7 +6,7 @@ useTheme();
 </script>
 
 <template>
-  <nuxt-layout class="bg-reactive-primary">
+  <nuxt-layout class="vh-100 bg-reactive-primary">
     <nuxt-page />
   </nuxt-layout>
 </template>

@@ -44,7 +44,7 @@ defineEmits<{
 }>()
 
 const formatPrice = (price: number): string => {
-    return price ? `${$t('common.price_from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price_not_updated');
+    return price ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
 }
 
 const formatDate = (isoDate: string): string => {

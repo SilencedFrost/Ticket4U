@@ -11,11 +11,11 @@ import jakarta.validation.Valid;
 public interface AuthService {
     LoginResult login(@Valid LoginRequest loginRequest, String oldRefreshToken, String userAgent);
 
+    LoginResult authenticateWithGoogle(String idToken, String userAgent);
+
     LogoutResult logout(String refreshToken);
 
     RefreshResult refresh(String refreshToken);
 
     RegisterResponse registerWithEmail(@Valid RegisterRequest request);
-
-    RegisterResponse registerWithGoogle(String idToken);
 }

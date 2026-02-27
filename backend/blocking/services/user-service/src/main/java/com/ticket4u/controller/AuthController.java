@@ -88,11 +88,21 @@ public class AuthController {
     }
 
     /**
-     * POST /api/v1/auth/register/google
-     * Register new user with Google OAuth2
+     * POST /api/v1/auth/google
+     * Find or create user with Google OAuth2, then return session tokens
      */
-    @PostMapping("/register/google")
-    public ResponseEntity<?> registerWithGoogle(@Valid @RequestBody OAuth2RegisterRequest request) {
-        return ResponseEntity.ok(authService.registerWithGoogle(request.idToken()));
+    @PostMapping("/google")
+    public ResponseEntity<?> authenticateWithGoogle(
+            @Valid @RequestBody OAuth2RegisterRequest request,
+            HttpServletRequest httpRequest
+    ) {
+        String userAgent = httpRequest.getHeader(CommonKeys.USER_AGENT.getKey());
+        String ua = userAgent != null ? userAgent : "Undefined";
+
+        LoginResult loginResult = authService.authenticateWithGoogle(request.idToken(), ua);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
+                .body(loginResult.authResponse());
     }
 }

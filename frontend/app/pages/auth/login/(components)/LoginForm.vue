@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
 import type { FetchError } from 'ofetch';
 
 const localePath = useLocalePath();
@@ -8,18 +7,61 @@ const loading = ref<boolean>(false);
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
+const googleBtnRef = ref<HTMLElement | null>(null);
 const formData = reactive({
   email: '',
   password: '',
   rememberMe: false,
 });
 
+const {
+  loaded: googleLoaded,
+  buttonTheme,
+  loadScript,
+  initialize,
+  renderButton,
+  reRenderButton,
+} = useGoogleAuth({
+  onCredential: handleGoogleCredential,
+  buttonText: 'signin_with',
+  buttonWidth: 320,
+});
+
+onMounted(async () => {
+  try {
+    await loadScript();
+    initialize();
+    if (googleBtnRef.value) renderButton(googleBtnRef.value);
+  } catch {
+    //
+  }
+});
+
+watch(buttonTheme, () => reRenderButton(googleBtnRef.value));
+
+async function handleGoogleCredential(idToken: string) {
+  loading.value = true;
+  Object.assign(error, { email: '', password: '', generic: '' });
+  try {
+    await useUser.loginWithGoogle(idToken);
+    router.push(localePath('/'));
+  } catch (err) {
+    const fetchError = err as FetchError;
+    if (!fetchError.statusCode) {
+      error.generic = 'auth.error.network';
+      return;
+    }
+    error.generic = 'auth.error.unauthorized';
+  } finally {
+    loading.value = false;
+  }
+}
+
 async function login() {
   loading.value = true;
   Object.assign(error, { email: '', password: '', generic: '' });
   try {
     await useUser.login(formData.email, formData.password, formData.rememberMe);
-
     router.push(localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
@@ -127,7 +169,8 @@ function togglePassword() {
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
           {{ $t('auth.login.action') }}
         </button>
-        <button class="btn btn-reactive-gray">
+        <div v-if="googleLoaded" ref="googleBtnRef" />
+        <button v-else class="btn btn-reactive-gray" disabled>
           <i class="bi bi-google me-2" />
           <span>{{ $t('auth.login.google') }}</span>
         </button>

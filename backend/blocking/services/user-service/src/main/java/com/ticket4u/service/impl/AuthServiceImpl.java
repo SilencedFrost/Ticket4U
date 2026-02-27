@@ -29,6 +29,7 @@ import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.PhoneNumberUtil;
 import com.ticket4u.util.TokenUtil;
 import com.ticket4u.validation.GoogleTokenValidator;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final GoogleTokenValidator googleTokenValidator;
     private final UserMapper userMapper;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
@@ -261,24 +263,50 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public RegisterResponse registerWithGoogle(String idTokenValue) {
+    public LoginResult authenticateWithGoogle(String idTokenValue, String userAgent) {
         GoogleIdToken idToken = new GoogleIdToken(idTokenValue);
         GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
 
-        if (userRepository.existsByEmailIgnoreCase(userInfo.email())) {
-            log.warn("Google registration attempt with existing email: {}", userInfo.email());
-            return new RegisterResponse(
-                null,
-                userInfo.email(),
-                "auth.login.try_login"
-            );
+        if (!userRepository.existsByEmailIgnoreCase(userInfo.email())) {
+            User newUser = userMapper.toEntityFromGoogle(userInfo);
+            newUser.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
+            userRepository.saveAndFlush(newUser);
+            entityManager.clear();
+            log.info("User registered via Google: {}, userId: {}", newUser.getEmail(), newUser.getId());
         }
 
-        User user = userMapper.toEntityFromGoogle(userInfo);
-        user.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
-        User savedUser = userRepository.save(user);
-        log.info("User registered via Google successfully: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
+        User user = userRepository.findWithRoleByEmailIgnoreCase(userInfo.email())
+                .orElseThrow(() -> new TokenCreationException("Failed to find user after Google authentication"));
 
-        return userMapper.toRegisterResponse(savedUser, "auth.login.try_login");
+        CustomUserDetails userDetails = new CustomUserDetails(
+                user.getEmail(),
+                user.getPasswordHash(),
+                List.of(new SimpleGrantedAuthority(user.getRole().getRoleName())),
+                user.getId(),
+                user.getRole().getId(),
+                user.getUsername()
+        );
+
+        Optional<String> accessToken = createAccessToken(userDetails);
+        if (accessToken.isEmpty()) {
+            throw new TokenCreationException("Failed to create access token");
+        }
+
+        String at = createAccessTokenCookie(accessToken.get());
+        String refreshToken = tokenUtil.generateToken();
+        String rt = createRefreshTokenCookie(refreshToken, true);
+
+        sessionService.createSession(user.getId(), userAgent, refreshToken, true);
+
+        return new LoginResult(
+                new AuthResponse(
+                        user.getId(),
+                        user.getRole().getId(),
+                        user.getUsername(),
+                        user.getEmail()
+                ),
+                at,
+                rt
+        );
     }
 }

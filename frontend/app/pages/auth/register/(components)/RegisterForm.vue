@@ -5,6 +5,8 @@ import type { FetchError } from 'ofetch';
 
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
+const router = useRouter();
+const userStore = useUserStore();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
@@ -39,16 +41,8 @@ async function handleGoogleCredential(idToken: string) {
   loading.value = true;
   Object.assign(error, { ...emptyError, password: [] });
   try {
-    const response = await $fetch<{ userId: string | null; email: string; message: string }>(
-      `${config.public.authUrl}/register/google`,
-      { method: 'POST', body: { idToken } },
-    );
-    if (response.userId) {
-      registerSuccess.value = true;
-      setTimeout(() => goToLogin(), 2000);
-    } else {
-      error.generic = response.message;
-    }
+    await userStore.loginWithGoogle(idToken);
+    router.push(localePath('/'));
   } catch (err) {
     handleError(err as FetchError);
   } finally {

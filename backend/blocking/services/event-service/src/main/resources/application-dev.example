@@ -51,7 +51,3 @@ application:
 # CORS
     cors:
       allowed-origins: https://localhost:3000
-
-# Endpoint to fetch Public Keys for JWT validation
-    auth:
-      jwks-uri: https://localhost:8080/auth/.well-known/jwks.json

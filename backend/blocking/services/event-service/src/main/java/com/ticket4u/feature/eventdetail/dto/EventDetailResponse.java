@@ -13,7 +13,7 @@ public record EventDetailResponse (
          String minPrice,
          String maxPrice,
          Integer categoryId,
-         ImageEventDTO imgEvent,
-         OrganizerDTO organizer,
-         List<ShowtimeDTO> showtimes
+         ImageEventResponse imgEvent,
+         OrganizerResponse organizer,
+         List<ShowtimeResponse> showtimes
 ) {}

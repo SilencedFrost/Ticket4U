@@ -1,6 +1,6 @@
 package com.ticket4u.feature.eventdetail.client;
 
-import com.ticket4u.feature.eventdetail.dto.OrganizerDTO;
+import com.ticket4u.feature.eventdetail.dto.OrganizerResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -13,10 +13,10 @@ public class UserClient {
 
     private final RestClient userServiceClient;
 
-    public OrganizerDTO getOrganizerById(UUID id) {
+    public OrganizerResponse getOrganizerById(UUID id) {
         return userServiceClient.get()
                 .uri("/api/v1/public/organizers/{id}", id)
                 .retrieve()
-                .body(OrganizerDTO.class);
+                .body(OrganizerResponse.class);
     }
 }

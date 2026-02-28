@@ -3,7 +3,7 @@ package com.ticket4u.feature.eventdetail.service.impl;
 import com.ticket4u.core.Event;
 import com.ticket4u.feature.eventdetail.client.UserClient;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.dto.OrganizerDTO;
+import com.ticket4u.feature.eventdetail.dto.OrganizerResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
@@ -35,7 +35,7 @@ public class EventDetailServiceImpl implements EventDetailService {
 
         EventDetailResponse response = eventDetailMapper.toResponse(event);
 
-        OrganizerDTO organizer = userClient.getOrganizerById(event.getOrganizerId());
+        OrganizerResponse organizer = userClient.getOrganizerById(event.getOrganizerId());
 
         String minPrice = formatPrice(calculateMinPrice(event));
         String maxPrice = formatPrice(calculateMaxPrice(event));

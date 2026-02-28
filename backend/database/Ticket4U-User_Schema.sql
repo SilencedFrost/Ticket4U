@@ -92,8 +92,5 @@ CREATE TABLE IF NOT EXISTS public.organizer
         REFERENCES public.users (id)
 );
 
-ALTER TABLE public.organizer 
-ADD COLUMN IF NOT EXISTS logo_url text;
-
 ALTER TABLE IF EXISTS public.organizer
     OWNER to postgres;

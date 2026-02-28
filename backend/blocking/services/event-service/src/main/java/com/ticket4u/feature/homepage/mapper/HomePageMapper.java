@@ -20,24 +20,6 @@ import java.util.List;
         uses = {HomePageHelperMapper.class}
 )
 public interface HomePageMapper {
-
-    /**
-     * Map Event entity to EventCardDTO for homepage event cards
-     * @param event Event entity from database
-     * @param zones List of zones belonging to this event (for price calculation)
-     * @return EventCardDTO for frontend display
-     */
-    @Mapping(target = "id", source = "event.id")
-    @Mapping(target = "name", source = "event.name")
-    @Mapping(target = "bannerUrl", source = "event.bannerUrl")
-    @Mapping(target = "startDate", source = "event.startDate")
-    @Mapping(target = "endDate", source = "event.endDate")
-    @Mapping(target = "addressLine", source = "event.addressLine")
-    @Mapping(target = "categoryName", expression = "java(event.getCategory() != null ? event.getCategory().getName() : null)")
-    @Mapping(target = "status", expression = "java(event.getStatus() != null ? event.getStatus().name() : null)")
-    @Mapping(target = "minPrice", source = "zones", qualifiedByName = "computeMinPrice")
-    EventCardDTO toEventWithMinPriceDTO(Event event, List<Zone> zones);
-
     /**
      * Map Category entity to CategoryDTO
      * @param category Category entity from database

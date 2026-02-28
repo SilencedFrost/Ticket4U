@@ -46,8 +46,7 @@
         "full_name": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
-      "validation": "Invalid data",
-      "google_token_invalid": "Google authentication failed. Please try again."
+      "validation": "Invalid data"
     },
     "session": {
       "invalid": "Invalid session"

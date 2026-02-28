@@ -1,5 +1,3 @@
-// Form đăng ký tài khoản người dùng (email và Google OAuth2)
-
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
@@ -37,6 +35,7 @@ onMounted(async () => {
 
 watch(buttonTheme, () => reRenderButton(googleBtnRef.value));
 
+// Google credential callback
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
   Object.assign(error, { ...emptyError, password: [] });
@@ -50,12 +49,20 @@ async function handleGoogleCredential(idToken: string) {
   }
 }
 
+/**======================
+ * Reused constants
+ =======================*/
+
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
 const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
 const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
 const PASSWORD_DIGIT_REGEX = /\d+/;
+
+/**===========
+ * Interfaces
+ ============*/
 
 interface registerError {
   fullName: string;
@@ -79,6 +86,10 @@ interface registerTouched {
   password: boolean;
 }
 
+/**======================
+ * State constants
+ =======================*/
+
 const emptyError: registerError = {
   fullName: '',
   email: '',
@@ -101,10 +112,19 @@ const defaultTouched: registerTouched = {
   password: false,
 };
 
+/**======================
+ * Form reactive objects
+ =======================*/
+
 const error = reactive<registerError>(emptyError);
 const formData = reactive<registerForm>(emptyForm);
 const touched = reactive<registerTouched>(defaultTouched);
 
+/**==========
+ * Functions
+ ===========*/
+
+// Onblur function to do validation
 function onBlur(field: keyof registerForm) {
   if (touched[field] === false) {
     touched[field] = true;
@@ -119,6 +139,7 @@ function onBlur(field: keyof registerForm) {
   }
 }
 
+// Validation functions
 function validateFullName(): boolean {
   const val = formData.fullName.trim();
   if (!val) {
@@ -179,10 +200,12 @@ function validatePassword(): boolean {
   return errors.length === 0;
 }
 
+// Validate the form, return status
 function validateForm(): boolean {
   return validateFullName() && validateEmail() && validatePhone() && validatePassword();
 }
 
+// Function to register
 async function register() {
   if (!validateForm()) return;
 
@@ -222,6 +245,7 @@ async function register() {
   }
 }
 
+// Handle errors returned by backend I suppose
 function handleError(fetchError: FetchError) {
   if (!fetchError.statusCode) {
     error.generic = 'auth.error.network';
@@ -255,13 +279,19 @@ function handleError(fetchError: FetchError) {
   }
 }
 
+// Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
 }
 
+// Helper function to go to login
 function goToLogin() {
   navigateTo(localePath('/auth/login'));
 }
+
+/**===================
+ * Computed & watches
+ ====================*/
 
 const isFormValid = computed(() => {
   const allTouched = touched.fullName && touched.email && touched.phoneNumber && touched.password;

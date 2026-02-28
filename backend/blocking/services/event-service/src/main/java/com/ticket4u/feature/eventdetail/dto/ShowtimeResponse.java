@@ -2,9 +2,9 @@ package com.ticket4u.feature.eventdetail.dto;
 
 import java.util.List;
 
-public record ShowtimeDTO(
+public record ShowtimeResponse(
          String id,
          String date,
          String time,
-         List<SeatTypeDTO>seatTypes
+         List<SeatTypeResponse>seatTypes
 ) {}

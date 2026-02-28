@@ -27,14 +27,14 @@ application:
       issuer: ticket4u
     # CORS
     cors:
-      allowed-origins: ${FRONTEND_URL}
+      allowed-origins: ${FRONTEND_URL:https://localhost:3000}
 
 # Logging
 logging:
   level:
     root: INFO
 
-# OAuth2 Configuration
+  # OAuth2 Configuration
   security:
     oauth2:
       client:

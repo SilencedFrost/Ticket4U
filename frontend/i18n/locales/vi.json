@@ -3,8 +3,7 @@
     "login": {
       "title": "Đăng nhập",
       "action": "Đăng nhập",
-      "google": "Đăng nhập với google",
-      "try_login": "Tạo tài khoản thành công! Vui lòng đăng nhập."
+      "google": "Đăng nhập với google"
     },
     "logout": {
       "title": "Đăng xuất",

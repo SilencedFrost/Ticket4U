@@ -3,8 +3,7 @@
     "login": {
       "title": "Login",
       "action": "Log in",
-      "google": "Log in with Google",
-      "try_login": "Account created successfully! Please log in."
+      "google": "Log in with Google"
     },
     "logout": {
       "title": "Logout",

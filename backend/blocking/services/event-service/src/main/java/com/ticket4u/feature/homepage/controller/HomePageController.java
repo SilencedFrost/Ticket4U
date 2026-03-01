@@ -20,77 +20,138 @@ public class HomePageController {
 
     private final HomePageService homePageService;
 
-    // GET /api/home/events - Lấy danh sách events với giá thấp nhất
+
+    /**
+     * GET /api/v1/public/home/events
+     * Get a list of event with min price
+     */
     @GetMapping("/events")
     public ResponseEntity<List<EventCardResponse>> getEventsWithMinPrice() {
         List<EventCardResponse> events = homePageService.getAllEventsWithMinPrice();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/events/{id}/min-price - Lấy giá thấp nhất của 1 event
+    /**
+     * GET /api/v1/public/home/events/{id}/min-price
+     * Get the minimum price of a specific event
+     * 
+     * @param id Event ID to get minimum price for
+     * @return Minimum ticket price for the event
+     */
     @GetMapping("/events/{id}/min-price")
     public ResponseEntity<Double> getMinPriceForEvent(@PathVariable UUID id) {
         Double minPrice = homePageService.getMinPriceForEvent(id);
         return ResponseEntity.ok(minPrice);
     }
 
-    // GET /api/home/featured - Events nổi bật (mới nhất)
+    /**
+     * GET /api/v1/public/home/featured
+     * Get featured events (latest events)
+     * 
+     * @return List of featured events
+     */
     @GetMapping("/featured")
     public ResponseEntity<List<EventCardResponse>> getFeaturedEvents() {
         List<EventCardResponse> events = homePageService.getFeaturedEvents();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/special - Events đặc biệt (sắp diễn ra trong 7 ngày)
+    /**
+     * GET /api/v1/public/home/special
+     * Get special events (upcoming within 7 days)
+     * 
+     * @return List of events starting within the next 7 days
+     */
     @GetMapping("/special")
     public ResponseEntity<List<EventCardResponse>> getSpecialEvents() {
         List<EventCardResponse> events = homePageService.getSpecialEvents();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/trending - Events xu hướng (random top 3)
+    /**
+     * GET /api/v1/public/home/trending
+     * Get trending events (random top 3 events)
+     * 
+     * @return List of 3 randomly selected trending events
+     */
     @GetMapping("/trending")
     public ResponseEntity<List<EventCardResponse>> getTrendingEvents() {
         List<EventCardResponse> events = homePageService.getTrendingEvents();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/suggested - Events gợi ý (random)
+    /**
+     * GET /api/v1/public/home/suggested
+     * Get suggested events (random selection)
+     * 
+     * @return List of randomly suggested events
+     */
     @GetMapping("/suggested")
     public ResponseEntity<List<EventCardResponse>> getSuggestedEvents() {
         List<EventCardResponse> events = homePageService.getSuggestedEvents();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/music - Events âm nhạc
+    /**
+     * GET /api/v1/public/home/music
+     * Get music events
+     * 
+     * @return List of music category events
+     */
     @GetMapping("/music")
     public ResponseEntity<List<EventCardResponse>> getMusicEvents() {
         List<EventCardResponse> events = homePageService.getMusicEvents();
         return ResponseEntity.ok(events);
     }
 
-    // GET /api/home/places - Danh sách địa điểm
+    /**
+     * GET /api/v1/public/home/places
+     * Get list of places/venues
+     * 
+     * @return List of event venues
+     */
     @GetMapping("/places")
     public ResponseEntity<List<PlaceResponse>> getPlaces() {
         List<PlaceResponse> places = homePageService.getPlaces();
         return ResponseEntity.ok(places);
     }
 
-    // GET /api/home/categories - Get all categories with their latest 4 events
+    /**
+     * GET /api/v1/public/home/categories
+     * Get all categories with their latest 4 events
+     * 
+     * @return List of categories, each containing up to 4 latest events
+     */
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryWithEventsResponse>> getCategoriesWithEvents() {
         List<CategoryWithEventsResponse> categories = homePageService.getCategoriesWithEvents();
         return ResponseEntity.ok(categories);
     }
 
-    // GET /api/home/categories/all - Get all categories for filter dropdown
+    /**
+     * GET /api/v1/public/home/categories/all
+     * Get all categories for filter dropdown
+     * 
+     * @return List of all event categories
+     */
     @GetMapping("/categories/all")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = homePageService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
 
-    // GET /api/home/events/filter - Get filtered events for event-display page (supports multiple categories)
+    /**
+     * GET /api/v1/public/home/events/filter
+     * Get filtered events for event-display page (supports multiple categories)
+     * 
+     * @param startDate Filter events starting from this date (format: yyyy-MM-dd)
+     * @param endDate Filter events ending before this date (format: yyyy-MM-dd)
+     * @param categoryIds List of category IDs to filter by (supports multiple)
+     * @param isFreeOnly Filter to show only free events (true/false)
+     * @param page Page number for pagination (default: 0)
+     * @param size Number of items per page (default: 20)
+     * @return Paginated list of filtered events
+     */
     @GetMapping("/events/filter")
     public ResponseEntity<List<EventCardResponse>> getFilteredEvents(
             @RequestParam(required = false) String startDate,

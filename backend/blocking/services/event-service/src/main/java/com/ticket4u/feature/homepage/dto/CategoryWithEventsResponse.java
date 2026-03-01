@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import com.ticket4u.feature.homepage.dto.EventCardResponse;
-
 /**
  * Response DTO for category with its events
  * Used for homepage category sections

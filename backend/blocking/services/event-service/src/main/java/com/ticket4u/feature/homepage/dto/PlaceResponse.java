@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * Response DTO representing a place/venue on the homepage
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-// Response DTO representing a place on the homepage
 public class PlaceResponse {
     private UUID id;
     private String name;

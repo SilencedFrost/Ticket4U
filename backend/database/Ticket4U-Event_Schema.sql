@@ -1,13 +1,10 @@
+
 DROP TABLE IF EXISTS public.seats;
+DROP TABLE IF EXISTS public.zone_contents;
 DROP TABLE IF EXISTS public.zones;
+DROP TABLE IF EXISTS public.event_contents;
 DROP TABLE IF EXISTS public.events;
 DROP TABLE IF EXISTS public.categories;
-
-DROP TABLE IF EXISTS public.venue;
-DROP TABLE IF EXISTS public.wards;
-DROP TABLE IF EXISTS public.provinces;
-
-
 
 -- Table: categories
 
@@ -20,22 +17,20 @@ CREATE TABLE IF NOT EXISTS public.categories (
 -- Table: events
 
 CREATE TABLE IF NOT EXISTS public.events (
-		id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
+		id UUID PRIMARY KEY NOT NULL,
 		name VARCHAR(255),
-		organizer_id UUID, -- references to the table organizers of the users service
+		organizer_id UUID,
 		category_id INTEGER,
 		address_line VARCHAR(255),
 		start_date TIMESTAMPTZ,
 		end_date TIMESTAMPTZ,
-		status varchar(50) CHECK (
-			status IN ('PLANNED', 'ONGOING', 'FINISHED', 'CANCELLED')
-		), -- editing, premier ,selling, paused (tạm dừng bán),ongoing ,finished ,cancelled
+		status varchar(50), -- editing, premier ,selling, paused ,ongoing ,finished ,cancelled
 		banner_url TEXT,
 		description TEXT,
-		created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-		cancelled_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-		CONSTRAINT event_fk_category FOREIGN KEY (category_id) REFERENCES public.categories (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+		created_at TIMESTAMPTZ,
+		updated_at TIMESTAMPTZ,
+		cancelled_at TIMESTAMPTZ,
+		CONSTRAINT event_fk_category FOREIGN KEY (category_id) REFERENCES public.categories (id)
 	);
 
 -- Table: event contents
@@ -55,35 +50,34 @@ CREATE TABLE IF NOT EXISTS public.event_contents (
 -- Table: zones
 
 CREATE TABLE IF NOT EXISTS public.zones (
-		id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
+		id UUID PRIMARY KEY,
 		event_id UUID,
 		name VARCHAR(255),
-		is_standing BOOLEAN DEFAULT FALSE,
-		capacity INTEGER DEFAULT 0,
-		quantity_sold INTEGER DEFAULT 0 CHECK (quantity_sold >= 0),
-		purchase_limit INTEGER NULL, -- null means no limit
+		is_standing BOOLEAN,
+		capacity INTEGER,
+		quantity_sold INTEGER,
+		purchase_limit INTEGER, -- null means no limit
 		price DECIMAL(10, 2),
-		CONSTRAINT zone_fk_event FOREIGN KEY (event_id) REFERENCES public.events (id) ON UPDATE NO ACTION ON DELETE NO ACTION
+		CONSTRAINT zone_fk_event FOREIGN KEY (event_id) REFERENCES public.events (id)
 	);
 
---Table: zone_contents
+-- Table: zone_contents
 -- This table holds multilingual descriptions for zones
 
 CREATE TABLE IF NOT EXISTS public.zone_contents (
     zone_id UUID PRIMARY KEY, -- 1-1 với zone 
     description TEXT, -- Mô tả chi tiết hạng vé
     gift_image_url VARCHAR(512),
-
     perks JSONB, -- Lưu danh sách ưu đãi dạng [ "Nước uống miễn phí", "Lightstick", "Fansign" ]
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP,
+	updated_at TIMESTAMP,
     CONSTRAINT zoneContent_fk_zone FOREIGN KEY (zone_id) REFERENCES public.zones (id) ON DELETE CASCADE
 );
 
 -- Table: seats
 
 CREATE TABLE IF NOT EXISTS public.seats (
-		id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
+		id UUID PRIMARY KEY,
 		zone_id UUID,
 		name VARCHAR(255),
 		row_name VARCHAR(5),

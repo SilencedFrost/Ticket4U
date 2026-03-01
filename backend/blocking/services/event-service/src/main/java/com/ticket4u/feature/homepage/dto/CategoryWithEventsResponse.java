@@ -1,22 +1,20 @@
 package com.ticket4u.feature.homepage.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
- * DTO for category information on homepage
+ * Response DTO for category with its events
+ * Used for homepage category sections
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTO {
-    
+public class CategoryWithEventsResponse {
     private Integer id;
-    
     private String name;
-    
-    private Integer eventCount;
+    private List<EventCardResponse> events;
 }

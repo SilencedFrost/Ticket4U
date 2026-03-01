@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.UUID;
 
 /**
- * DTO for category with its events
- * Used for homepage category sections
+ * Response DTO representing a place/venue on the homepage
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryWithEventsDTO {
-    private Integer id;
+public class PlaceResponse {
+    private UUID id;
     private String name;
-    private List<EventCardDTO> events;
+    private String imageUrl;
 }

@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
-import type { EventCardDTO } from '~/pages/(home)/types/api';
+import type { EventCardResponse } from '~/pages/(home)/types/api';
 
 export const useEventStore = defineStore('event', () => {
   const config = useRuntimeConfig();
 
   const currentEvent = ref<EventDetailResponse | null>(null);
-  const relatedEvents = ref<EventCardDTO[]>([]);
+  const relatedEvents = ref<EventCardResponse[]>([]);
 
   const formatPrice = (price: string | number) =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
@@ -68,7 +68,7 @@ export const useEventStore = defineStore('event', () => {
 
   async function fetchRelatedEvents(eventId: string, categoryId: number, address: string) {
     try {
-      const data = await $fetch<EventCardDTO[]>(
+      const data = await $fetch<EventCardResponse[]>(
         `${config.public.eventDetailUrl}/${eventId}/related`,
         {
           method: 'GET',

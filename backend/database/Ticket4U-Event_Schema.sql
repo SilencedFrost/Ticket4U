@@ -20,14 +20,14 @@ CREATE TABLE IF NOT EXISTS public.categories (
 CREATE TABLE IF NOT EXISTS public.events (
 	id 						UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
 	name 					VARCHAR(255) NOT NULL UNIQUE,
-	organizer_id 			UUID NOT NULL, 
+	organizer_id 			UUID NOT NULL,
 	category_id 			INTEGER,
 	address_line 			VARCHAR(255),
 	start_date 				TIMESTAMPTZ,
 	end_date 				TIMESTAMPTZ,
 	status 					varchar(50) CHECK (
 								status IN ('PLANNED', 'ONGOING', 'FINISHED', 'CANCELLED')
-							), 
+							),
 	banner_url 				TEXT,
 	description 			TEXT,
 
@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS public.events (
 	updated_at 				TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 	cancelled_at 			TIMESTAMPTZ,
 
-	about_vi 				TEXT,             
-	about_en				TEXT,             
+	about_vi 				TEXT,
+	about_en				TEXT,
 	terms_and_conditions 	TEXT,
-	policy_refund 			TEXT,      
+	policy_refund 			TEXT,
 	seating_plan_image_url 	TEXT,
 
-	CONSTRAINT event_fk_category FOREIGN KEY (category_id) 
+	CONSTRAINT event_fk_category FOREIGN KEY (category_id)
 		REFERENCES public.categories (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
@@ -55,16 +55,16 @@ CREATE TABLE IF NOT EXISTS public.zones (
 	is_standing 		BOOLEAN DEFAULT FALSE,
 	capacity 			INTEGER DEFAULT 0,
 	quantity_sold 		INTEGER DEFAULT 0 CHECK (quantity_sold >= 0),
-	purchase_limit 		INTEGER NULL, 
+	purchase_limit 		INTEGER NULL,
 	price 				DECIMAL(10, 2) NOT NULL,
 
 	description 		TEXT,
 	gift_image_url 		VARCHAR(512),
-    perks 				JSONB, 
+    perks 				JSONB,
     created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 	updated_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
-	CONSTRAINT zone_fk_event FOREIGN KEY (event_id) 
+	CONSTRAINT zone_fk_event FOREIGN KEY (event_id)
 		REFERENCES public.events (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS public.seats (
 	col_name 		VARCHAR(5),
 	seat_code 		VARCHAR(20),
 	status 			varchar(50) CHECK (status IN ('AVAILABLE', 'BOOKED', 'HOLD')),
-	price_override 	DECIMAL(10, 2), 
-	CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id) 
+	price_override 	DECIMAL(10, 2),
+	CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id)
 		REFERENCES public.zones (id) ON UPDATE NO ACTION ON DELETE CASCADE
 );

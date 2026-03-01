@@ -1,7 +1,7 @@
 package com.ticket4u.feature.homepage.mapper;
 
-import com.ticket4u.feature.homepage.dto.CategoryDTO;
-import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.CategoryResponse;
+import com.ticket4u.feature.homepage.dto.EventCardResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class NativeQueryMapper {
 
     /**
-     * Convert Object[] from native query to EventCardDTO
+     * Convert Object[] from native query to EventCardResponse
      * Handles both 7-element array (without category) and 8-element array (with category)
      * 
      * @param row Object array from native query
@@ -31,10 +31,10 @@ public class NativeQueryMapper {
      *            [5] = end_date (Instant/Timestamp/OffsetDateTime)
      *            [6] = min_price (Double/BigDecimal)
      *            [7] = category_name (String) - optional
-     * @return EventCardDTO for frontend display
+     * @return EventCardResponse for frontend display
      */
-    public EventCardDTO toEventCardDTO(Object[] row) {
-        EventCardDTO dto = new EventCardDTO();
+    public EventCardResponse toEventCardResponse(Object[] row) {
+        EventCardResponse dto = new EventCardResponse();
 
         dto.setId((UUID) row[0]);
         dto.setName((String) row[1]);
@@ -50,7 +50,6 @@ public class NativeQueryMapper {
                 dto.setMinPrice(BigDecimal.valueOf((Double) row[6]));
             }
         } else {
-//            dto.setMinPrice(BigDecimal.ZERO);
             dto.setMinPrice(null);
         }
         
@@ -63,15 +62,15 @@ public class NativeQueryMapper {
     }
 
     /**
-     * Convert Category query result to CategoryDTO
+     * Convert Category query result to CategoryResponse
      * 
      * @param row Object array from native query
      *            [0] = category_id (Integer)
      *            [1] = name (String)
-     * @return CategoryDTO
+     * @return CategoryResponse
      */
-    public CategoryDTO toCategoryDTO(Object[] row) {
-        CategoryDTO dto = new CategoryDTO();
+    public CategoryResponse toCategoryResponse(Object[] row) {
+        CategoryResponse dto = new CategoryResponse();
         dto.setId((Integer) row[0]);
         dto.setName((String) row[1]);
         return dto;

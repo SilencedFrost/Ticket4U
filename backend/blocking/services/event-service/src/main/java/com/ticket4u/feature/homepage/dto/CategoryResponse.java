@@ -1,16 +1,22 @@
 package com.ticket4u.feature.homepage.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
+/**
+ * Response DTO for category information on homepage
+ */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceDTO {
-    private UUID id;
+public class CategoryResponse {
+    
+    private Integer id;
+    
     private String name;
-    private String imageUrl;
+    
+    private Integer eventCount;
 }

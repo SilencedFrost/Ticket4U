@@ -3,9 +3,9 @@ package com.ticket4u.feature.eventdetail.mapper;
 import com.ticket4u.core.Event;
 import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.dto.ImageEventDTO;
-import com.ticket4u.feature.eventdetail.dto.SeatTypeDTO;
-import com.ticket4u.feature.eventdetail.dto.ShowtimeDTO;
+import com.ticket4u.feature.eventdetail.dto.ImageEventResponse;
+import com.ticket4u.feature.eventdetail.dto.SeatTypeResponse;
+import com.ticket4u.feature.eventdetail.dto.ShowtimeResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -24,16 +24,16 @@ public interface EventDetailMapper {
     @Mapping(source = "startDate", target = "time", qualifiedByName = "toLocalTimeString")
     @Mapping(source = "addressLine", target = "address")
     @Mapping(source = "category.id", target = "categoryId")
-    @Mapping(source = "event", target = "imgEvent")
+    @Mapping(source = ".", target = "imgEvent")
     @Mapping(source = "zones", target = "showtimes", qualifiedByName = "mapZonesToShowtimes")
     @Mapping(target = "minPrice", ignore = true)
     @Mapping(target = "maxPrice", ignore = true)
     @Mapping(target = "organizer", ignore = true)
     EventDetailResponse toResponse(Event event);
 
-    default ImageEventDTO mapImages(Event event) {
+    default ImageEventResponse mapImages(Event event) {
         if (event == null) return null;
-        return new ImageEventDTO(
+        return new ImageEventResponse(
                 event.getBannerUrl(),
                 event.getContent() != null ? event.getContent().getSeatingPlanImageUrl() : null
         );
@@ -50,14 +50,14 @@ public interface EventDetailMapper {
     }
 
     @Named("mapZonesToShowtimes")
-    default List<ShowtimeDTO> mapZonesToShowtimes(List<Zone> zones) {
+    default List<ShowtimeResponse> mapZonesToShowtimes(List<Zone> zones) {
         if (zones == null || zones.isEmpty()) return Collections.emptyList();
 
         ZoneMapper zoneMapper = org.mapstruct.factory.Mappers.getMapper(ZoneMapper.class);
-        List<SeatTypeDTO> seatTypes = zoneMapper.toSeatTypeDTOs(zones);
+        List<SeatTypeResponse> seatTypes = zoneMapper.toSeatTypeResponse(zones);
 
         Event event = zones.get(0).getEvent();
-        return List.of(new ShowtimeDTO(
+        return List.of(new ShowtimeResponse(
                 event.getId().toString(),
                 toLocalDateString(event.getStartDate()),
                 toLocalTimeString(event.getStartDate()),

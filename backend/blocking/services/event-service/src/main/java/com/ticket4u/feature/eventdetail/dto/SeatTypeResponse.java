@@ -3,7 +3,7 @@ package com.ticket4u.feature.eventdetail.dto;
 import java.util.List;
 import java.util.UUID;
 
-public record SeatTypeDTO (
+public record SeatTypeResponse(
          UUID id,
          String name,
          String price,

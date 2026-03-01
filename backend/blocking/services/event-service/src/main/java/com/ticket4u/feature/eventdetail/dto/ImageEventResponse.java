@@ -1,6 +1,6 @@
 package com.ticket4u.feature.eventdetail.dto;
 
-public record ImageEventDTO (
+public record ImageEventResponse(
         String heroUrl,
         String seatMapUrl
 ) {}

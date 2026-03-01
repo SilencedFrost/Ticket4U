@@ -1,7 +1,7 @@
 // Backend response types
-// Note: EventCardDTO matches the Event interface in home.d.ts
+// Note: EventCardResponse matches the Event interface in home.d.ts
 // No mapping needed - frontend uses backend field names directly
-export interface EventCardDTO {
+export interface EventCardResponse {
   id: string // UUID as string
   name: string
   bannerUrl: string
@@ -14,15 +14,15 @@ export interface EventCardDTO {
 }
 
 // Backend response type for places
-export interface PlaceDTO {
+export interface PlaceResponse {
   id: string
   name: string
   imageUrl: string
 }
 
 // Backend response type for categories with events
-export interface CategoryWithEventsDTO {
+export interface CategoryWithEventsResponse {
   id: number
   name: string
-  events: EventCardDTO[]
+  events: EventCardResponse[]
 }

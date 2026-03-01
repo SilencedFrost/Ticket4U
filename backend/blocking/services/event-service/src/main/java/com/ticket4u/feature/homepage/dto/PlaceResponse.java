@@ -9,7 +9,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceDTO {
+// Response DTO representing a place on the homepage
+public class PlaceResponse {
     private UUID id;
     private String name;
     private String imageUrl;

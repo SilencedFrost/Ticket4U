@@ -1,9 +1,9 @@
 package com.ticket4u.feature.homepage.service;
 
-import com.ticket4u.feature.homepage.dto.CategoryDTO;
-import com.ticket4u.feature.homepage.dto.CategoryWithEventsDTO;
-import com.ticket4u.feature.homepage.dto.EventCardDTO;
-import com.ticket4u.feature.homepage.dto.PlaceDTO;
+import com.ticket4u.feature.homepage.dto.CategoryResponse;
+import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
+import com.ticket4u.feature.homepage.dto.EventCardResponse;
+import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
 import com.ticket4u.feature.homepage.repository.CategoryRepository;
 import com.ticket4u.feature.homepage.repository.EventRepository;
@@ -27,10 +27,10 @@ public class HomePageService {
     private static final int MAX_EVENTS_PER_CATEGORY = 4; // For homepage display
 
     // Lấy tất cả events với giá thấp nhất
-    public List<EventCardDTO> getAllEventsWithMinPrice() {
+    public List<EventCardResponse> getAllEventsWithMinPrice() {
         List<Object[]> results = eventRepository.findEventsWithMinPrice();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
@@ -41,52 +41,52 @@ public class HomePageService {
     }
 
     // Featured: Events mới nhất
-    public List<EventCardDTO> getFeaturedEvents() {
+    public List<EventCardResponse> getFeaturedEvents() {
         List<Object[]> results = eventRepository.findFeaturedEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
     // Special: Events sắp diễn ra trong 7 ngày
-    public List<EventCardDTO> getSpecialEvents() {
+    public List<EventCardResponse> getSpecialEvents() {
         List<Object[]> results = eventRepository.findSpecialEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
     // Trending: Random 3 PLANNED/ONGOING events
-    public List<EventCardDTO> getTrendingEvents() {
+    public List<EventCardResponse> getTrendingEvents() {
         List<Object[]> results = eventRepository.findTrendingEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
     // Suggested: Random PLANNED/ONGOING events
-    public List<EventCardDTO> getSuggestedEvents() {
+    public List<EventCardResponse> getSuggestedEvents() {
         List<Object[]> results = eventRepository.findSuggestedEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
      // Music: Events với category = 'Music'
-     public List<EventCardDTO> getMusicEvents() {
+     public List<EventCardResponse> getMusicEvents() {
          List<Object[]> results = eventRepository.findEventsByCategory("Âm nhạc (Concert)");
          return results.stream()
-                 .map(nativeQueryMapper::toEventCardDTO)
+                 .map(nativeQueryMapper::toEventCardResponse)
                  .collect(Collectors.toList());
      }
 
     // Places: Return empty list for now (future implementation)
-    public List<PlaceDTO> getPlaces() {
+    public List<PlaceResponse> getPlaces() {
         return new ArrayList<>();
     }
 
     // Get all categories with their latest 4 events
-    public List<CategoryWithEventsDTO> getCategoriesWithEvents() {
+    public List<CategoryWithEventsResponse> getCategoriesWithEvents() {
         List<Object[]> categoryResults = categoryRepository.findCategoriesWithActiveEvents();
         
         return categoryResults.stream().map(categoryRow -> {
@@ -95,17 +95,17 @@ public class HomePageService {
             
             // Get latest 4 events for this category
             List<Object[]> eventResults = eventRepository.findLatestEventsByCategoryId(categoryId);
-            List<EventCardDTO> events = eventResults.stream()
-                    .map(nativeQueryMapper::toEventCardDTO)
+            List<EventCardResponse> events = eventResults.stream()
+                    .map(nativeQueryMapper::toEventCardResponse)
                     .limit(MAX_EVENTS_PER_CATEGORY)
                     .collect(Collectors.toList());
             
-            return new CategoryWithEventsDTO(categoryId, categoryName, events);
+            return new CategoryWithEventsResponse(categoryId, categoryName, events);
         }).collect(Collectors.toList());
     }
 
     // Event Display: Get filtered events (supports multiple categories) with pagination
-    public List<EventCardDTO> getFilteredEvents(
+    public List<EventCardResponse> getFilteredEvents(
             String startDate, 
             String endDate, 
             List<Integer> categoryIds, 
@@ -143,15 +143,15 @@ public class HomePageService {
         }
         
         return results.stream()
-                .map(nativeQueryMapper::toEventCardDTO)
+                .map(nativeQueryMapper::toEventCardResponse)
                 .collect(Collectors.toList());
     }
 
     // Get all categories (for filter dropdown)
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryResponse> getAllCategories() {
         List<Object[]> results = categoryRepository.findCategoriesWithActiveEvents();
         return results.stream()
-                .map(nativeQueryMapper::toCategoryDTO)
+                .map(nativeQueryMapper::toCategoryResponse)
                 .collect(Collectors.toList());
     }
 }

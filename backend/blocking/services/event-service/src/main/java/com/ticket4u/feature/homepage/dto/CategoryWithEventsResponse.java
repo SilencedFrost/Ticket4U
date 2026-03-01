@@ -6,15 +6,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.ticket4u.feature.homepage.dto.EventCardResponse;
+
 /**
- * DTO for category with its events
+ * Response DTO for category with its events
  * Used for homepage category sections
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryWithEventsDTO {
+public class CategoryWithEventsResponse {
     private Integer id;
     private String name;
-    private List<EventCardDTO> events;
+    private List<EventCardResponse> events;
 }

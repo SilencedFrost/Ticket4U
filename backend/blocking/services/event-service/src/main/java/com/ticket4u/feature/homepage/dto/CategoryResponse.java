@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * DTO for category information on homepage
+ * Response DTO for category information on homepage
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTO {
+public class CategoryResponse {
     
     private Integer id;
     

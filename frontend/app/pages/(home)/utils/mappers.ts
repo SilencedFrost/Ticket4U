@@ -1,18 +1,18 @@
 /**
  * @deprecated This file is no longer used.
- * The Event interface now directly matches EventCardDTO from backend.
+ * The Event interface now directly matches EventCardResponse from backend.
  * No mapping is needed - frontend uses backend field names directly.
  */
 
-import type { EventCardDTO } from '../types/api'
+import type { EventCardResponse } from '../types/api'
 import type { Event, TrendingEvent } from '../types/home'
 
 /**
- * @deprecated Event interface now matches EventCardDTO directly
+ * @deprecated Event interface now matches EventCardResponse directly
  * This function is kept for reference but should not be used
  */
-export function mapEventDtoToEvent(dto: EventCardDTO): Event {
-  // Event interface now matches EventCardDTO, so no mapping needed
+export function mapEventDtoToEvent(dto: EventCardResponse): Event {
+  // Event interface now matches EventCardResponse, so no mapping needed
   return dto
 }
 
@@ -21,7 +21,7 @@ export function mapEventDtoToEvent(dto: EventCardDTO): Event {
  * Example: { ...event, rank: 1 as 1 | 2 | 3 }
  */
 export function mapEventDtoToTrendingEvent(
-  dto: EventCardDTO,
+  dto: EventCardResponse,
   rank: 1 | 2 | 3
 ): TrendingEvent {
   return {

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventCardDTO {
+public class EventCardResponse {
     private UUID id;
     private String name;
     private String bannerUrl;
@@ -26,7 +26,7 @@ public class EventCardDTO {
 
     // Constructor để map từ Object[] result (native query)
     // categoryName và status sẽ null, cần set riêng nếu cần
-    public EventCardDTO(Object[] result) {
+    public EventCardResponse(Object[] result) {
         this.id = (UUID) result[0];
         this.name = (String) result[1];
         this.bannerUrl = (String) result[2];

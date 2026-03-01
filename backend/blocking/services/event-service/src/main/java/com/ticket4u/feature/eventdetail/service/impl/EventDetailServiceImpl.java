@@ -7,7 +7,7 @@ import com.ticket4u.feature.eventdetail.dto.OrganizerDTO;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
-import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.EventCardResponse;
 import com.ticket4u.feature.homepage.mapper.HomePageMapper;
 import com.ticket4u.feature.homepage.service.HomePageService;
 import jakarta.persistence.EntityNotFoundException;
@@ -73,8 +73,8 @@ public class EventDetailServiceImpl implements EventDetailService {
     }
 
     @Override
-    public List<EventCardDTO> getRelatedEvents(UUID currentId, Integer categoryId, String address) {
-        Set<EventCardDTO> results = new LinkedHashSet<>();
+    public List<EventCardResponse> getRelatedEvents(UUID currentId, Integer categoryId, String address) {
+        Set<EventCardResponse> results = new LinkedHashSet<>();
         String city = extractCity(address);
 
         // 1. Same Category (limit to 8 events)
@@ -83,7 +83,7 @@ public class EventDetailServiceImpl implements EventDetailService {
         // 2. Same City (Fallback)
         if (results.size() < 8 && !city.isEmpty()) {
             String searchCity = city.toLowerCase();
-            List<EventCardDTO> byCity = homePageService.getAllEventsWithMinPrice().stream()
+            List<EventCardResponse> byCity = homePageService.getAllEventsWithMinPrice().stream()
                     .filter(e -> e.getAddressLine().toLowerCase().contains(searchCity))
                     .toList();
             addEvents(results, byCity, currentId);
@@ -96,7 +96,7 @@ public class EventDetailServiceImpl implements EventDetailService {
 
         // 4. Get any remaining events (Suggest randomly if still under 8)
         if (results.size() < 8) {
-            List<EventCardDTO> allOtherEvents = homePageService.getAllEventsWithMinPrice();
+            List<EventCardResponse> allOtherEvents = homePageService.getAllEventsWithMinPrice();
             addEvents(results, allOtherEvents, currentId);
         }
 
@@ -109,9 +109,9 @@ public class EventDetailServiceImpl implements EventDetailService {
         return parts[parts.length - 1].trim();
     }
 
-    private void addEvents(Set<EventCardDTO> target, List<EventCardDTO> source, UUID excludeId) {
+    private void addEvents(Set<EventCardResponse> target, List<EventCardResponse> source, UUID excludeId) {
         if (source == null) return;
-        for (EventCardDTO event : source) {
+        for (EventCardResponse event : source) {
             if (target.size() >= 8) break;
 
             boolean isSameEvent = event.getId().equals(excludeId);

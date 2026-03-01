@@ -50,7 +50,6 @@ public class NativeQueryMapper {
                 dto.setMinPrice(BigDecimal.valueOf((Double) row[6]));
             }
         } else {
-//            dto.setMinPrice(BigDecimal.ZERO);
             dto.setMinPrice(null);
         }
         

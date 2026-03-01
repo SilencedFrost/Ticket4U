@@ -7,7 +7,7 @@ const loading = ref<boolean>(false);
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
-const googleBtnRef = ref<HTMLElement | null>(null);
+const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 const formData = reactive({
   email: '',
   password: '',
@@ -21,23 +21,23 @@ const {
   initialize,
   renderButton,
   reRenderButton,
+  clickHiddenButton,
 } = useGoogleAuth({
   onCredential: handleGoogleCredential,
   buttonText: 'signin_with',
-  buttonWidth: 320,
 });
 
 onMounted(async () => {
   try {
     await loadScript();
     initialize();
-    if (googleBtnRef.value) renderButton(googleBtnRef.value);
+    if (hiddenGoogleBtn.value) renderButton(hiddenGoogleBtn.value);
   } catch {
     //
   }
 });
 
-watch(buttonTheme, () => reRenderButton(googleBtnRef.value));
+watch(buttonTheme, () => reRenderButton(hiddenGoogleBtn.value));
 
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
@@ -169,8 +169,13 @@ function togglePassword() {
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
           {{ $t('auth.login.action') }}
         </button>
-        <div v-if="googleLoaded" ref="googleBtnRef" />
-        <button v-else class="btn btn-reactive-gray" disabled>
+        <div ref="hiddenGoogleBtn" class="d-none" />
+        <button
+          type="button"
+          class="btn btn-reactive-gray"
+          :disabled="loading || !googleLoaded"
+          @click="clickHiddenButton(hiddenGoogleBtn)"
+        >
           <i class="bi bi-google me-2" />
           <span>{{ $t('auth.login.google') }}</span>
         </button>

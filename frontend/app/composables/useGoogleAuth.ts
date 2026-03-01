@@ -63,5 +63,22 @@ export function useGoogleAuth(options: GoogleAuthOptions) {
     renderButton(element);
   }
 
-  return { loaded, buttonTheme, loadScript, initialize, renderButton, reRenderButton };
+  function clickHiddenButton(container: HTMLElement | null) {
+    if (!container) return;
+    const btn =
+      container.querySelector<HTMLElement>('[role="button"]') ||
+      container.querySelector<HTMLElement>('div[aria-labelledby]') ||
+      container.querySelector<HTMLElement>('iframe');
+    btn?.click();
+  }
+
+  return {
+    loaded,
+    buttonTheme,
+    loadScript,
+    initialize,
+    renderButton,
+    reRenderButton,
+    clickHiddenButton,
+  };
 }

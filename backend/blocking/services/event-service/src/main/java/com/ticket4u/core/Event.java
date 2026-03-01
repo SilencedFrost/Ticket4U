@@ -11,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,31 +29,29 @@ public class Event {
     @Column(nullable = false, length = 254)
     private String name;
 
-    @Column(name = "organizer_id")
+    @Column(nullable = false, name = "organizer_id")
     private UUID organizerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(nullable = false, length = 254)
+    @Column(name = "address_line", length = 255)
     private String addressLine;
 
-    @CreationTimestamp //auto create time
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "start_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime startDate;
 
-    @CreationTimestamp //auto create time
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "end_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "end_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 48)
+    @Column(length = 50)
     private EventStatus status;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "banner_url", columnDefinition = "TEXT")
     private String bannerUrl;
 
     @Column(columnDefinition = "TEXT")
@@ -65,15 +62,29 @@ public class Event {
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at",nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
 
     @Column(name = "cancelled_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime cancelledAt;
 
-    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
-    private EventContent content;
+    // Event content fields (gộp từ EventContent)
+    @Column(name = "about_vi", columnDefinition = "TEXT")
+    private String aboutVi;
 
+    @Column(name = "about_en", columnDefinition = "TEXT")
+    private String aboutEn;
+
+    @Column(name = "terms_and_conditions", columnDefinition = "TEXT")
+    private String termsAndConditions;
+
+    @Column(name = "policy_refund", columnDefinition = "TEXT")
+    private String policyRefund;
+
+    @Column(name = "seating_plan_image_url", columnDefinition = "TEXT")
+    private String seatingPlanImageUrl;
+
+    // Relationships
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Zone> zones;
 
@@ -84,4 +95,3 @@ public class Event {
         CANCELLED
     }
 }
-

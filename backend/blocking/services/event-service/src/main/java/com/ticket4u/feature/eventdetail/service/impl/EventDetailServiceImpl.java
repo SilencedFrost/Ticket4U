@@ -5,10 +5,10 @@ import com.ticket4u.feature.eventdetail.client.UserClient;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.dto.OrganizerResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
+import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
 import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
 import com.ticket4u.feature.homepage.dto.EventCardDTO;
-import com.ticket4u.feature.homepage.mapper.HomePageMapper;
 import com.ticket4u.feature.homepage.service.HomePageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,53 +23,41 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EventDetailServiceImpl implements EventDetailService {
     private final EventDetailRepository eventRepository;
-    private final HomePageService homePageService;
-    private final UserClient userClient;
     private final EventDetailMapper eventDetailMapper;
-    private final HomePageMapper homePageMapper;
+    private final HomePageService homePageService;
+    private final ZoneMapper zoneMapper;
+    private final UserClient userClient;
 
     @Override
     public EventDetailResponse getEventDetail(UUID id) {
         Event event = eventRepository.findWithDetailsById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + id));
 
-        EventDetailResponse response = eventDetailMapper.toResponse(event);
+        EventDetailResponse response = eventDetailMapper.toResponse(event, zoneMapper);
 
         OrganizerResponse organizer = userClient.getOrganizerById(event.getOrganizerId());
 
-        String minPrice = formatPrice(calculateMinPrice(event));
-        String maxPrice = formatPrice(calculateMaxPrice(event));
+        double minPrice = event.getZones().stream()
+                .mapToDouble(z -> z.getPrice().doubleValue())
+                .min().orElse(0.0);
+
+        double maxPrice = event.getZones().stream()
+                .mapToDouble(z -> z.getPrice().doubleValue())
+                .max().orElse(0.0);
 
         return new EventDetailResponse(
                 response.eventId(),
                 response.eventTitle(),
-                response.date(),
-                response.time(),
+                response.startDate(),
                 response.address(),
                 response.description(),
-                minPrice,
-                maxPrice,
+                String.valueOf(minPrice),
+                String.valueOf(maxPrice),
                 response.categoryId(),
                 response.imgEvent(),
                 organizer,
                 response.showtimes()
         );
-    }
-
-    private double calculateMinPrice(Event event) {
-        return event.getZones().stream()
-                .mapToDouble(z -> z.getPrice().doubleValue())
-                .min().orElse(0.0);
-    }
-
-    private double calculateMaxPrice(Event event) {
-        return event.getZones().stream()
-                .mapToDouble(z -> z.getPrice().doubleValue())
-                .max().orElse(0.0);
-    }
-
-    private String formatPrice(double price) {
-        return com.ticket4u.utils.PriceFormatter.format(price);
     }
 
     @Override

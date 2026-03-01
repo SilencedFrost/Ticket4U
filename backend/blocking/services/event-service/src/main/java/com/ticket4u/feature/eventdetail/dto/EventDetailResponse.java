@@ -1,13 +1,13 @@
 package com.ticket4u.feature.eventdetail.dto;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
 public record EventDetailResponse (
          UUID eventId,
          String eventTitle,
-         String date,
-         String time,
+         OffsetDateTime startDate,
          String address,
          String description,
          String minPrice,

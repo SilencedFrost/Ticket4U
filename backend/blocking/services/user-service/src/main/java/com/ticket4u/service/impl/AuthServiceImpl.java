@@ -216,18 +216,6 @@ public class AuthServiceImpl implements AuthService {
         return rtBuilder.maxAge(ttl).build().toString();
     }
 
-
-
-    private String[] splitFullName(String fullName) {
-        if (fullName == null || fullName.isBlank()) {
-            return new String[]{null, null};
-        }
-        String[] names = fullName.trim().split("\\s+", 2);
-        String firstName = names[0];
-        String lastName = names.length > 1 ? names[1] : null;
-        return new String[]{firstName, lastName};
-    }
-
     @Override
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {

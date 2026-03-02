@@ -23,11 +23,6 @@ server:
     certificate-private-key: classpath:keys/localhost+2-key.pem
 
 application:
-  services:
-    user-service:
-      # Base URL to fetch business data from User Service
-      url: https://localhost:8080
-
   security:
     # CORS
     cors:

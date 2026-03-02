@@ -72,7 +72,7 @@ public class EventDetailServiceImpl implements EventDetailService {
         if (results.size() < 8 && !city.isEmpty()) {
             String searchCity = city.toLowerCase();
             List<EventCardResponse> byCity = homePageService.getAllEventsWithMinPrice().stream()
-                    .filter(e -> e.getAddressLine().toLowerCase().contains(searchCity))
+                    .filter(e -> e.addressLine().toLowerCase().contains(searchCity))
                     .toList();
             addEvents(results, byCity, currentId);
         }
@@ -102,8 +102,8 @@ public class EventDetailServiceImpl implements EventDetailService {
         for (EventCardResponse event : source) {
             if (target.size() >= 8) break;
 
-            boolean isSameEvent = event.getId().equals(excludeId);
-            boolean isDuplicate = target.stream().anyMatch(e -> e.getId().equals(event.getId()));
+            boolean isSameEvent = event.id().equals(excludeId);
+            boolean isDuplicate = target.stream().anyMatch(e -> e.id().equals(event.id()));
 
             if (!isSameEvent && !isDuplicate) {
                 target.add(event);

@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
         componentModel = "spring",
         uses = TicketMapper.class
 )
-public abstract class OrderMapper {
+public interface OrderMapper {
     @Mapping(target = "ticketSummaries", source = "tickets")
-    public abstract OrderResponse toDTO(Order order);
+    OrderResponse toDTO(Order order);
 }

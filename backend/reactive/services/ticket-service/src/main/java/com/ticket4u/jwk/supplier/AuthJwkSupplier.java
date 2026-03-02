@@ -31,7 +31,7 @@ public class AuthJwkSupplier implements JwkSupplier {
     private final String jwksUrl;
     private final String cacheKey;
 
-    public AuthJwkSupplier(@Value("${application.service-url.user}/auth/.well-known/jwks.json") String jwksUrl) {
+    public AuthJwkSupplier(@Value("${application.services.user}/auth/.well-known/jwks.json") String jwksUrl) {
         this.jwksUrl = jwksUrl;
         this.cacheKey = CACHE_KEY;
         this.cache = Caffeine.newBuilder()

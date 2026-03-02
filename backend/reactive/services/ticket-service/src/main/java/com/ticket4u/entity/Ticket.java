@@ -58,9 +58,6 @@ public class Ticket {
 
     private OffsetDateTime usedAt;
 
-    @Column(nullable = false, length = 3)
-    private String currency;
-
     @Column(nullable = false, length = 64)
     private String qrSecret;
 }

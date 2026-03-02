@@ -18,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public OrderResponse getOrderOfUserById(UUID userId, UUID orderId) {
+    public OrderResponse findOrderOfUserById(UUID userId, UUID orderId) {
         return orderMapper.toDTO(orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(() -> new OrderNotFoundException(orderId)));
     }
 }

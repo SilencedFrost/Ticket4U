@@ -5,6 +5,6 @@ import com.ticket4u.entity.Ticket;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public abstract class SeatMapper {
-    public abstract SeatResponse toDTO (Ticket ticket);
+public interface SeatMapper {
+    SeatResponse toDTO (Ticket ticket);
 }

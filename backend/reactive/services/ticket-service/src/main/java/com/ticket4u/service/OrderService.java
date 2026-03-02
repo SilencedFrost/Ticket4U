@@ -5,5 +5,5 @@ import com.ticket4u.dto.OrderResponse;
 import java.util.UUID;
 
 public interface OrderService {
-    OrderResponse getOrderOfUserById(UUID userId, UUID orderId);
+    OrderResponse findOrderOfUserById(UUID userId, UUID orderId);
 }

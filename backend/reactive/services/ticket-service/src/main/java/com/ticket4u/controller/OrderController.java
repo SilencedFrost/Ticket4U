@@ -29,7 +29,7 @@ public class OrderController {
     @GetMapping("/{order-id}")
     public ResponseEntity<OrderResponse> getOrderInformation(@PathVariable("order-id") UUID orderId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         UUID userId = userDetails.getUserId();
-        return ResponseEntity.ok(orderService.getOrderOfUserById(userId, orderId));
+        return ResponseEntity.ok(orderService.findOrderOfUserById(userId, orderId));
     }
 
     //TODO:  Retrieves all tickets within a specific order

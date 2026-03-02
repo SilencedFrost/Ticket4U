@@ -69,24 +69,32 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
             >
               <div class="p-3 p-md-4">
                 <div
-                  class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0"
+                  class="d-flex flex-row flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0"
                 >
-                  <div class="flex-grow-1">
-                    <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2">{{ seat.name }}</h6>
-                    <div
-                      v-if="seat.available === 0"
-                      class="badge rounded-pill bg-danger-subtle text-danger fw-bold px-3 py-2"
-                    >
-                      {{ $t('event_detail.label.sold_out') }}
-                    </div>
-                    <p v-else class="text-reactive-primary mb-0 small">
-                      {{ seat.available }} {{ $t('event_detail.label.available') }}
-                    </p>
-                  </div>
                   <div
-                    class="d-flex align-items-center gap-2 gap-md-3 text-start text-md-end flex-wrap justify-content-end"
+                    class="d-flex flex-column flex-md-row flex-grow-1 gap-2 gap-md-3 align-items-start align-items-md-center w-100"
                   >
-                    <p class="text-primary fw-bold fs-5 mb-0">{{ seat.price }}</p>
+                    <div class="order-2 order-md-1 flex-grow-1 flex-shrink-1">
+                      <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2 fs-6">
+                        {{ seat.name }}
+                      </h6>
+                      <div
+                        v-if="seat.available === 0"
+                        class="badge rounded-pill bg-danger-subtle text-danger fw-bold px-3 py-2 small"
+                      >
+                        {{ $t('event_detail.label.sold_out') }}
+                      </div>
+                      <p v-else class="text-reactive-primary mb-0 small">
+                        {{ seat.available }} {{ $t('event_detail.label.available') }}
+                      </p>
+                    </div>
+                    <div class="order-1 order-md-2 flex-shrink-0">
+                      <p class="text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
+                        {{ seat.price }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex-shrink-0">
                     <button
                       v-if="
                         seat.description ||

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { LocalizedContent } from '@/pages/event-detail/types/event-detail';
 const { vFallback: vImgFallback } = useImagePlaceholder();
 defineProps<{
   title: string;
-  address: LocalizedContent;
+  address: string;
   date: string;
   time: string;
   eventThumbImage: string;
@@ -19,7 +18,7 @@ defineProps<{
 
       <div class="d-flex flex-column gap-2 mb-3">
         <h6 class="text-reactive-primary mb-1">{{ title }}</h6>
-        <p class="text-reactive-secondary mb-2 small">{{ address[$i18n.locale] }}</p>
+        <p class="text-reactive-secondary mb-2 small">{{ address }}</p>
       </div>
 
       <div class="mb-4">

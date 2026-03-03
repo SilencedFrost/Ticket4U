@@ -9,5 +9,5 @@ import java.util.List;
 public record CategoryWithEventsResponse(
         Integer id,
         String name,
-        List<EventCardResponse> events
+        List<EventSummaryResponse> events
 ) {}

@@ -8,6 +8,11 @@ import EventNav from './sections/EventNav.vue';
 import EventRelated from './sections/EventRelated.vue';
 import EventAds from './sections/EventAds.vue';
 const eventStore = useEventStore();
+
+useHead({
+  title: () => eventStore.currentEvent?.eventTitle || 'Loading Event...',
+  titleTemplate: (title) => `${title}`,
+});
 </script>
 
 <template>

@@ -2,7 +2,7 @@ package com.ticket4u.feature.eventdetail.controller;
 
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
-import com.ticket4u.feature.homepage.dto.EventCardResponse;
+import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +39,12 @@ public class EventDetailController {
      * - address: to find events in the same city.
      */
     @GetMapping("/{id}/related")
-    public ResponseEntity<List<EventCardResponse>> getRelatedEvents(
+    public ResponseEntity<List<EventSummaryResponse>> getRelatedEvents(
             @PathVariable UUID id,
             @RequestParam Integer categoryId,
             @RequestParam String address
     ) {
-        List<EventCardResponse> events = eventDetailService.getRelatedEvents(id, categoryId, address);
+        List<EventSummaryResponse> events = eventDetailService.getRelatedEvents(id, categoryId, address);
         return ResponseEntity.ok(events);
     }
 }

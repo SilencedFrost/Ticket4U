@@ -18,13 +18,12 @@ server:
   port: ${SERVER_PORT:8083}
 
 application:
-  services:
-    user-service:
-      url: ${USER_SERVICE_URL:https://localhost:8080}
   security:
     # CORS
     cors:
       allowed-origins: ${FRONTEND_URL}
+  services:
+    user: ${USER_SERVICE_URL:https://localhost:8080}
 
 # Logging
 logging:

@@ -57,10 +57,14 @@ export const useEventStore = defineStore('event', () => {
         }),
       } as EventDetailResponse;
 
-      await fetchRelatedEvents(rest.eventId as string, rest.categoryId as number, rest.address as string);
+      await fetchRelatedEvents(
+        rest.eventId as string,
+        rest.categoryId as number,
+        rest.address as string,
+      );
       return currentEvent.value;
     } catch (error) {
-      console.error('Lỗi lấy chi tiết sự kiện:', error);
+      console.error('Error fetching event detail:', error);
       currentEvent.value = null;
       throw error;
     }

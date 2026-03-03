@@ -2,7 +2,7 @@ package com.ticket4u.feature.homepage.controller;
 
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
-import com.ticket4u.feature.homepage.dto.EventCardResponse;
+import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.service.HomePageService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class HomePageController {
      * Get a list of event with min price
      */
     @GetMapping("/events")
-    public ResponseEntity<List<EventCardResponse>> getEventsWithMinPrice() {
-        List<EventCardResponse> events = homePageService.getAllEventsWithMinPrice();
+    public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice() {
+        List<EventSummaryResponse> events = homePageService.getAllEventsWithMinPrice();
         return ResponseEntity.ok(events);
     }
 
@@ -51,8 +51,8 @@ public class HomePageController {
      * @return List of featured events
      */
     @GetMapping("/featured")
-    public ResponseEntity<List<EventCardResponse>> getFeaturedEvents() {
-        List<EventCardResponse> events = homePageService.getFeaturedEvents();
+    public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents() {
+        List<EventSummaryResponse> events = homePageService.getFeaturedEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -63,8 +63,8 @@ public class HomePageController {
      * @return List of events starting within the next 7 days
      */
     @GetMapping("/special")
-    public ResponseEntity<List<EventCardResponse>> getSpecialEvents() {
-        List<EventCardResponse> events = homePageService.getSpecialEvents();
+    public ResponseEntity<List<EventSummaryResponse>> getSpecialEvents() {
+        List<EventSummaryResponse> events = homePageService.getSpecialEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -75,8 +75,8 @@ public class HomePageController {
      * @return List of 3 randomly selected trending events
      */
     @GetMapping("/trending")
-    public ResponseEntity<List<EventCardResponse>> getTrendingEvents() {
-        List<EventCardResponse> events = homePageService.getTrendingEvents();
+    public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
+        List<EventSummaryResponse> events = homePageService.getTrendingEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -87,8 +87,8 @@ public class HomePageController {
      * @return List of randomly suggested events
      */
     @GetMapping("/suggested")
-    public ResponseEntity<List<EventCardResponse>> getSuggestedEvents() {
-        List<EventCardResponse> events = homePageService.getSuggestedEvents();
+    public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
+        List<EventSummaryResponse> events = homePageService.getSuggestedEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -99,8 +99,8 @@ public class HomePageController {
      * @return List of music category events
      */
     @GetMapping("/music")
-    public ResponseEntity<List<EventCardResponse>> getMusicEvents() {
-        List<EventCardResponse> events = homePageService.getMusicEvents();
+    public ResponseEntity<List<EventSummaryResponse>> getMusicEvents() {
+        List<EventSummaryResponse> events = homePageService.getMusicEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -153,7 +153,7 @@ public class HomePageController {
      * @return Paginated list of filtered events
      */
     @GetMapping("/events/filter")
-    public ResponseEntity<List<EventCardResponse>> getFilteredEvents(
+    public ResponseEntity<List<EventSummaryResponse>> getFilteredEvents(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) List<Integer> categoryIds,
@@ -161,7 +161,7 @@ public class HomePageController {
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
-        List<EventCardResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, page, size);
+        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, page, size);
         return ResponseEntity.ok(events);
     }
 }

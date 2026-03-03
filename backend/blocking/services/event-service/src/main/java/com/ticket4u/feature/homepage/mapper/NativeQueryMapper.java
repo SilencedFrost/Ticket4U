@@ -1,7 +1,7 @@
 package com.ticket4u.feature.homepage.mapper;
 
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
-import com.ticket4u.feature.homepage.dto.EventCardResponse;
+import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -33,7 +33,7 @@ public class NativeQueryMapper {
      *            [7] = category_name (String) - optional
      * @return EventCardResponse for frontend display
      */
-    public EventCardResponse toEventCardResponse(Object[] row) {
+    public EventSummaryResponse toEventCardResponse(Object[] row) {
         UUID id = (UUID) row[0];
         String name = (String) row[1];
         String bannerUrl = (String) row[2];
@@ -56,7 +56,7 @@ public class NativeQueryMapper {
             categoryName = (String) row[7];
         }
         
-        return new EventCardResponse(id, name, bannerUrl, addressLine, startDate, endDate, minPrice, categoryName, null);
+        return new EventSummaryResponse(id, name, bannerUrl, addressLine, startDate, endDate, minPrice, categoryName, null);
     }
 
     /**

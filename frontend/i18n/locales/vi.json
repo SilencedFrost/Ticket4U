@@ -75,7 +75,14 @@
       "view": "Xem"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại"
+    "phone": "Số điện thoại",
+    "category": {
+      "1": "Âm nhạc",
+      "2": "Hội thảo",
+      "3": "Sân khấu - Nghệ thuật",
+      "4": "Thể thao",
+      "5": "Giải trí về đêm"
+    }
   },
   "brand": {
     "name": "Ticket4U",

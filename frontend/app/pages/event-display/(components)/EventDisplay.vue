@@ -111,6 +111,9 @@ import { locations, datePresets } from '../data/filters';
 const eventDisplayStore = useEventDisplayStore();
 const { events, categories, loading, error, currentPage, pageSize, hasMore } = storeToRefs(eventDisplayStore);
 
+// i18n
+const { t } = useI18n();
+
 // Mobile state
 const isMobile = ref(false);
 
@@ -157,7 +160,7 @@ const activeFilters = computed<ActiveFilter[]>(() => {
       filters.push({
         key: 'category',
         value: categoryId,
-        label: category.label,
+        label: t(`common.category.${category.value}`, category.label),
       });
     }
   });
@@ -176,7 +179,7 @@ const activeFilters = computed<ActiveFilter[]>(() => {
     filters.push({
       key: 'freeEvent',
       value: 'freeEvent',
-      label: 'Sự kiện miễn phí',
+      label: t('event_display.label.free'),
     });
   }
 

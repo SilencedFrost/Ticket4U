@@ -3,11 +3,11 @@
 TRUNCATE TABLE public.categories RESTART IDENTITY CASCADE;
 
 INSERT INTO public.categories (name) VALUES 
-('Âm nhạc (Concert)'), 
-('Hội thảo (Workshop)'), 
+('Âm nhạc'), 
+('Hội thảo'), 
 ('Sân khấu - Nghệ thuật'), 
 ('Thể thao'), 
-('Nightlife');
+('Giải trí về đêm');
 
 --2. Table: Events (đã gộp event_contents vào)
 INSERT INTO public.events (

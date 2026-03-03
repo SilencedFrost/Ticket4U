@@ -45,7 +45,7 @@
                                 ? 'btn-primary text-white border-primary'
                                 : 'btn-outline-secondary text-reactive-primary'
                         ]" @click="$emit('toggle-category', category.value)">
-                            {{ category.label }}
+                            {{ $t(`common.category.${category.value}`, category.label) }}
                         </button>
                     </div>
                 </div>

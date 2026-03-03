@@ -2,7 +2,7 @@ package com.ticket4u.feature.homepage.service;
 
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
-import com.ticket4u.feature.homepage.dto.EventCardResponse;
+import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
 import com.ticket4u.feature.homepage.repository.CategoryRepository;
@@ -27,7 +27,7 @@ public class HomePageService {
     private static final int MAX_EVENTS_PER_CATEGORY = 4; // For homepage display
 
     // Lấy tất cả events với giá thấp nhất
-    public List<EventCardResponse> getAllEventsWithMinPrice() {
+    public List<EventSummaryResponse> getAllEventsWithMinPrice() {
         List<Object[]> results = eventRepository.findEventsWithMinPrice();
         return results.stream()
                 .map(nativeQueryMapper::toEventCardResponse)
@@ -41,7 +41,7 @@ public class HomePageService {
     }
 
     // Featured: Events mới nhất
-    public List<EventCardResponse> getFeaturedEvents() {
+    public List<EventSummaryResponse> getFeaturedEvents() {
         List<Object[]> results = eventRepository.findFeaturedEvents();
         return results.stream()
                 .map(nativeQueryMapper::toEventCardResponse)
@@ -49,7 +49,7 @@ public class HomePageService {
     }
 
     // Special: Events sắp diễn ra trong 7 ngày
-    public List<EventCardResponse> getSpecialEvents() {
+    public List<EventSummaryResponse> getSpecialEvents() {
         List<Object[]> results = eventRepository.findSpecialEvents();
         return results.stream()
                 .map(nativeQueryMapper::toEventCardResponse)
@@ -57,7 +57,7 @@ public class HomePageService {
     }
 
     // Trending: Random 3 PLANNED/ONGOING events
-    public List<EventCardResponse> getTrendingEvents() {
+    public List<EventSummaryResponse> getTrendingEvents() {
         List<Object[]> results = eventRepository.findTrendingEvents();
         return results.stream()
                 .map(nativeQueryMapper::toEventCardResponse)
@@ -65,7 +65,7 @@ public class HomePageService {
     }
 
     // Suggested: Random PLANNED/ONGOING events
-    public List<EventCardResponse> getSuggestedEvents() {
+    public List<EventSummaryResponse> getSuggestedEvents() {
         List<Object[]> results = eventRepository.findSuggestedEvents();
         return results.stream()
                 .map(nativeQueryMapper::toEventCardResponse)
@@ -73,7 +73,7 @@ public class HomePageService {
     }
 
      // Music: Events với category = 'Music'
-     public List<EventCardResponse> getMusicEvents() {
+     public List<EventSummaryResponse> getMusicEvents() {
          List<Object[]> results = eventRepository.findEventsByCategory("Âm nhạc (Concert)");
          return results.stream()
                  .map(nativeQueryMapper::toEventCardResponse)
@@ -95,7 +95,7 @@ public class HomePageService {
             
             // Get latest 4 events for this category
             List<Object[]> eventResults = eventRepository.findLatestEventsByCategoryId(categoryId);
-            List<EventCardResponse> events = eventResults.stream()
+            List<EventSummaryResponse> events = eventResults.stream()
                     .map(nativeQueryMapper::toEventCardResponse)
                     .limit(MAX_EVENTS_PER_CATEGORY)
                     .collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class HomePageService {
     }
 
     // Event Display: Get filtered events (supports multiple categories) with pagination
-    public List<EventCardResponse> getFilteredEvents(
+    public List<EventSummaryResponse> getFilteredEvents(
             String startDate, 
             String endDate, 
             List<Integer> categoryIds, 

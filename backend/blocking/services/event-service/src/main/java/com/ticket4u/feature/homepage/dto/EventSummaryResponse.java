@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record EventCardResponse(
+public record EventSummaryResponse(
         UUID id,
         String name,
         String bannerUrl,

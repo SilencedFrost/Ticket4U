@@ -6,7 +6,7 @@ import java.util.List;
  * Response DTO for homepage event list
  */
 public record EventListResponse(
-        List<EventCardResponse> events,
+        List<EventSummaryResponse> events,
         Integer totalElements,
         Integer totalPages,
         Integer currentPage,

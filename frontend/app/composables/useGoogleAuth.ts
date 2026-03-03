@@ -1,9 +1,8 @@
-// Composable xử lý tích hợp Google Identity Services
-
 type GoogleButtonTheme = 'outline' | 'filled_black';
 type GoogleButtonText = 'signin_with' | 'signup_with' | 'continue_with';
 
 interface GoogleAuthOptions {
+  buttonRef: Ref<HTMLElement | null>;
   onCredential: (idToken: string) => void;
   buttonText?: GoogleButtonText;
   buttonWidth?: number;
@@ -13,6 +12,7 @@ export function useGoogleAuth(options: GoogleAuthOptions) {
   const config = useRuntimeConfig();
   const { currentTheme } = useTheme();
   const loaded = ref(false);
+  const scriptError = ref(false);
   const buttonTheme = computed<GoogleButtonTheme>(() =>
     currentTheme.value === 'dark' ? 'filled_black' : 'outline',
   );
@@ -57,13 +57,14 @@ export function useGoogleAuth(options: GoogleAuthOptions) {
     });
   }
 
-  function reRenderButton(element: HTMLElement | null) {
-    if (!loaded.value || !element) return;
-    element.innerHTML = '';
-    renderButton(element);
+  function reRenderButton(el: HTMLElement | null) {
+    if (!loaded.value || !el) return;
+    el.innerHTML = '';
+    renderButton(el);
   }
 
-  function clickHiddenButton(container: HTMLElement | null) {
+  function clickHiddenButton() {
+    const container = options.buttonRef.value;
     if (!container) return;
     const btn =
       container.querySelector<HTMLElement>('[role="button"]') ||
@@ -72,13 +73,21 @@ export function useGoogleAuth(options: GoogleAuthOptions) {
     btn?.click();
   }
 
+  onMounted(async () => {
+    try {
+      await loadScript();
+      initialize();
+      if (options.buttonRef.value) renderButton(options.buttonRef.value);
+    } catch {
+      scriptError.value = true;
+    }
+  });
+
+  watch(buttonTheme, () => reRenderButton(options.buttonRef.value));
+
   return {
     loaded,
-    buttonTheme,
-    loadScript,
-    initialize,
-    renderButton,
-    reRenderButton,
+    scriptError,
     clickHiddenButton,
   };
 }

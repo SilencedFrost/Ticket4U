@@ -16,28 +16,13 @@ const formData = reactive({
 
 const {
   loaded: googleLoaded,
-  buttonTheme,
-  loadScript,
-  initialize,
-  renderButton,
-  reRenderButton,
+  scriptError: googleScriptError,
   clickHiddenButton,
 } = useGoogleAuth({
+  buttonRef: hiddenGoogleBtn,
   onCredential: handleGoogleCredential,
   buttonText: 'signin_with',
 });
-
-onMounted(async () => {
-  try {
-    await loadScript();
-    initialize();
-    if (hiddenGoogleBtn.value) renderButton(hiddenGoogleBtn.value);
-  } catch {
-    //
-  }
-});
-
-watch(buttonTheme, () => reRenderButton(hiddenGoogleBtn.value));
 
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
@@ -174,11 +159,14 @@ function togglePassword() {
           type="button"
           class="btn btn-reactive-gray"
           :disabled="loading || !googleLoaded"
-          @click="clickHiddenButton(hiddenGoogleBtn)"
+          @click="clickHiddenButton()"
         >
           <i class="bi bi-google me-2" />
           <span>{{ $t('auth.login.google') }}</span>
         </button>
+        <small v-if="googleScriptError" class="text-warning mt-1">
+          {{ $t('auth.error.google_unavailable') }}
+        </small>
       </div>
     </form>
     <hr class="my-2" />

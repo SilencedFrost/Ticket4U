@@ -9,5 +9,6 @@ public record TicketSelectResponse(
         String startDate,
         String endDate,
         String addressLine,
-        List<ZoneDTO> zones
+        List<ZoneDTO> zones,
+        List<FloorDTO> floors
 ) {}

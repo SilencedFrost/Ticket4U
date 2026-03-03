@@ -154,3 +154,575 @@ CROSS JOIN generate_series(1, 5) r
 CROSS JOIN generate_series(1, 10) c 
 WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
+
+
+-- ============================================================
+-- 10 DEFAULT VENUE LAYOUT TEMPLATES
+-- Coordinate system: -1 to 1 on both axes
+-- Origin (0,0) is center of venue
+-- Y: -1 = top (stage side), 1 = bottom (back)
+-- X: -1 = left, 1 = right
+-- seat_rotation: 0 = facing up (toward stage), negative = tilted left, positive = tilted right
+-- ============================================================
+
+-- ── 1. Standing Only - Single Zone ────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Standing - Single Zone',
+     'One large standing zone. Good for small clubs or simple GA events.',
+     true,
+     '{
+       "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+       "zones": [
+         {
+           "zone_name": "GA",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.9, "y": -0.8 },
+           "corner2": { "x":  0.9, "y": -0.8 },
+           "corner3": { "x":  0.9, "y":  0.9 },
+           "corner4": { "x": -0.9, "y":  0.9 },
+           "seats": []
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 2. Standing - VIP + GA Split ──────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Standing - VIP + GA',
+     'Two standing zones. VIP close to stage, GA behind.',
+     true,
+     '{
+       "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+       "zones": [
+         {
+           "zone_name": "VIP",
+           "zone_type": "standing",
+           "color": "#F59E0B",
+           "corner1": { "x": -0.9, "y": -0.8 },
+           "corner2": { "x":  0.9, "y": -0.8 },
+           "corner3": { "x":  0.9, "y": -0.2 },
+           "corner4": { "x": -0.9, "y": -0.2 },
+           "seats": []
+         },
+         {
+           "zone_name": "GA",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.9, "y": -0.15 },
+           "corner2": { "x":  0.9, "y": -0.15 },
+           "corner3": { "x":  0.9, "y":  0.9 },
+           "corner4": { "x": -0.9, "y":  0.9 },
+           "seats": []
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 3. Standing - SVIP + VIP + GA (3 Zones) ───────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Standing - 3 Zones',
+     'Three standing zones. SVIP front, VIP middle, GA back.',
+     true,
+     '{
+       "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+       "zones": [
+         {
+           "zone_name": "SVIP",
+           "zone_type": "standing",
+           "color": "#DC2626",
+           "corner1": { "x": -0.9, "y": -0.8 },
+           "corner2": { "x":  0.9, "y": -0.8 },
+           "corner3": { "x":  0.9, "y": -0.35 },
+           "corner4": { "x": -0.9, "y": -0.35 },
+           "seats": []
+         },
+         {
+           "zone_name": "VIP",
+           "zone_type": "standing",
+           "color": "#F59E0B",
+           "corner1": { "x": -0.9, "y": -0.3 },
+           "corner2": { "x":  0.9, "y": -0.3 },
+           "corner3": { "x":  0.9, "y":  0.2 },
+           "corner4": { "x": -0.9, "y":  0.2 },
+           "seats": []
+         },
+         {
+           "zone_name": "GA",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.9, "y":  0.25 },
+           "corner2": { "x":  0.9, "y":  0.25 },
+           "corner3": { "x":  0.9, "y":  0.9 },
+           "corner4": { "x": -0.9, "y":  0.9 },
+           "seats": []
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 4. Standing - 5 Zones (Festival Style) ────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Standing - 5 Zones Festival',
+     'Five standing zones. SVIP center front, VIP left/right, GA left/right back.',
+     true,
+     '{
+       "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+       "zones": [
+         {
+           "zone_name": "SVIP",
+           "zone_type": "standing",
+           "color": "#DC2626",
+           "corner1": { "x": -0.4, "y": -0.8 },
+           "corner2": { "x":  0.4, "y": -0.8 },
+           "corner3": { "x":  0.4, "y": -0.2 },
+           "corner4": { "x": -0.4, "y": -0.2 },
+           "seats": []
+         },
+         {
+           "zone_name": "VIP Left",
+           "zone_type": "standing",
+           "color": "#F59E0B",
+           "corner1": { "x": -0.9, "y": -0.8 },
+           "corner2": { "x": -0.45, "y": -0.8 },
+           "corner3": { "x": -0.45, "y": -0.2 },
+           "corner4": { "x": -0.9, "y": -0.2 },
+           "seats": []
+         },
+         {
+           "zone_name": "VIP Right",
+           "zone_type": "standing",
+           "color": "#F59E0B",
+           "corner1": { "x":  0.45, "y": -0.8 },
+           "corner2": { "x":  0.9,  "y": -0.8 },
+           "corner3": { "x":  0.9,  "y": -0.2 },
+           "corner4": { "x":  0.45, "y": -0.2 },
+           "seats": []
+         },
+         {
+           "zone_name": "GA Left",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.9, "y": -0.15 },
+           "corner2": { "x": -0.05,"y": -0.15 },
+           "corner3": { "x": -0.05,"y":  0.9  },
+           "corner4": { "x": -0.9, "y":  0.9  },
+           "seats": []
+         },
+         {
+           "zone_name": "GA Right",
+           "zone_type": "standing",
+           "color": "#1D4ED8",
+           "corner1": { "x":  0.05, "y": -0.15 },
+           "corner2": { "x":  0.9,  "y": -0.15 },
+           "corner3": { "x":  0.9,  "y":  0.9  },
+           "corner4": { "x":  0.05, "y":  0.9  },
+           "seats": []
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 5. Cinema Layout ──────────────────────────────────────
+-- 8 rows x 10 seats, all facing stage (rotation 0)
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Cinema',
+     'Classic cinema seating. Rows of seats all facing the screen.',
+     true,
+     '{
+       "stage": { "x1": -0.5, "y1": -1.0, "x2": 0.5, "y2": -0.88 },
+       "zones": [
+         {
+           "zone_name": "Screen Zone",
+           "zone_type": "sitting",
+           "color": "#059669",
+           "corner1": { "x": -0.9, "y": -0.85 },
+           "corner2": { "x":  0.9, "y": -0.85 },
+           "corner3": { "x":  0.9, "y":  0.9  },
+           "corner4": { "x": -0.9, "y":  0.9  },
+           "seats": [
+             { "seat_name": "A1",  "seat_id": "A1",  "seat_pos": { "x": -0.72, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A2",  "seat_id": "A2",  "seat_pos": { "x": -0.56, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A3",  "seat_id": "A3",  "seat_pos": { "x": -0.40, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A4",  "seat_id": "A4",  "seat_pos": { "x": -0.24, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A5",  "seat_id": "A5",  "seat_pos": { "x": -0.08, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A6",  "seat_id": "A6",  "seat_pos": { "x":  0.08, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A7",  "seat_id": "A7",  "seat_pos": { "x":  0.24, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A8",  "seat_id": "A8",  "seat_pos": { "x":  0.40, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A9",  "seat_id": "A9",  "seat_pos": { "x":  0.56, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A10", "seat_id": "A10", "seat_pos": { "x":  0.72, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "B1",  "seat_id": "B1",  "seat_pos": { "x": -0.72, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B2",  "seat_id": "B2",  "seat_pos": { "x": -0.56, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B3",  "seat_id": "B3",  "seat_pos": { "x": -0.40, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B4",  "seat_id": "B4",  "seat_pos": { "x": -0.24, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B5",  "seat_id": "B5",  "seat_pos": { "x": -0.08, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B6",  "seat_id": "B6",  "seat_pos": { "x":  0.08, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B7",  "seat_id": "B7",  "seat_pos": { "x":  0.24, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B8",  "seat_id": "B8",  "seat_pos": { "x":  0.40, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B9",  "seat_id": "B9",  "seat_pos": { "x":  0.56, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B10", "seat_id": "B10", "seat_pos": { "x":  0.72, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "C1",  "seat_id": "C1",  "seat_pos": { "x": -0.72, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C2",  "seat_id": "C2",  "seat_pos": { "x": -0.56, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C3",  "seat_id": "C3",  "seat_pos": { "x": -0.40, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C4",  "seat_id": "C4",  "seat_pos": { "x": -0.24, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C5",  "seat_id": "C5",  "seat_pos": { "x": -0.08, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C6",  "seat_id": "C6",  "seat_pos": { "x":  0.08, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C7",  "seat_id": "C7",  "seat_pos": { "x":  0.24, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C8",  "seat_id": "C8",  "seat_pos": { "x":  0.40, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C9",  "seat_id": "C9",  "seat_pos": { "x":  0.56, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "C10", "seat_id": "C10", "seat_pos": { "x":  0.72, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "D1",  "seat_id": "D1",  "seat_pos": { "x": -0.72, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D2",  "seat_id": "D2",  "seat_pos": { "x": -0.56, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D3",  "seat_id": "D3",  "seat_pos": { "x": -0.40, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D4",  "seat_id": "D4",  "seat_pos": { "x": -0.24, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D5",  "seat_id": "D5",  "seat_pos": { "x": -0.08, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D6",  "seat_id": "D6",  "seat_pos": { "x":  0.08, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D7",  "seat_id": "D7",  "seat_pos": { "x":  0.24, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D8",  "seat_id": "D8",  "seat_pos": { "x":  0.40, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D9",  "seat_id": "D9",  "seat_pos": { "x":  0.56, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "D10", "seat_id": "D10", "seat_pos": { "x":  0.72, "y": -0.15 }, "seat_rotation": 0 },
+             { "seat_name": "E1",  "seat_id": "E1",  "seat_pos": { "x": -0.72, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E2",  "seat_id": "E2",  "seat_pos": { "x": -0.56, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E3",  "seat_id": "E3",  "seat_pos": { "x": -0.40, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E4",  "seat_id": "E4",  "seat_pos": { "x": -0.24, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E5",  "seat_id": "E5",  "seat_pos": { "x": -0.08, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E6",  "seat_id": "E6",  "seat_pos": { "x":  0.08, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E7",  "seat_id": "E7",  "seat_pos": { "x":  0.24, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E8",  "seat_id": "E8",  "seat_pos": { "x":  0.40, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E9",  "seat_id": "E9",  "seat_pos": { "x":  0.56, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "E10", "seat_id": "E10", "seat_pos": { "x":  0.72, "y":  0.05 }, "seat_rotation": 0 },
+             { "seat_name": "F1",  "seat_id": "F1",  "seat_pos": { "x": -0.72, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F2",  "seat_id": "F2",  "seat_pos": { "x": -0.56, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F3",  "seat_id": "F3",  "seat_pos": { "x": -0.40, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F4",  "seat_id": "F4",  "seat_pos": { "x": -0.24, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F5",  "seat_id": "F5",  "seat_pos": { "x": -0.08, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F6",  "seat_id": "F6",  "seat_pos": { "x":  0.08, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F7",  "seat_id": "F7",  "seat_pos": { "x":  0.24, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F8",  "seat_id": "F8",  "seat_pos": { "x":  0.40, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F9",  "seat_id": "F9",  "seat_pos": { "x":  0.56, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "F10", "seat_id": "F10", "seat_pos": { "x":  0.72, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "G1",  "seat_id": "G1",  "seat_pos": { "x": -0.72, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G2",  "seat_id": "G2",  "seat_pos": { "x": -0.56, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G3",  "seat_id": "G3",  "seat_pos": { "x": -0.40, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G4",  "seat_id": "G4",  "seat_pos": { "x": -0.24, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G5",  "seat_id": "G5",  "seat_pos": { "x": -0.08, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G6",  "seat_id": "G6",  "seat_pos": { "x":  0.08, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G7",  "seat_id": "G7",  "seat_pos": { "x":  0.24, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G8",  "seat_id": "G8",  "seat_pos": { "x":  0.40, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G9",  "seat_id": "G9",  "seat_pos": { "x":  0.56, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "G10", "seat_id": "G10", "seat_pos": { "x":  0.72, "y":  0.55 }, "seat_rotation": 0 },
+             { "seat_name": "H1",  "seat_id": "H1",  "seat_pos": { "x": -0.72, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H2",  "seat_id": "H2",  "seat_pos": { "x": -0.56, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H3",  "seat_id": "H3",  "seat_pos": { "x": -0.40, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H4",  "seat_id": "H4",  "seat_pos": { "x": -0.24, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H5",  "seat_id": "H5",  "seat_pos": { "x": -0.08, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H6",  "seat_id": "H6",  "seat_pos": { "x":  0.08, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H7",  "seat_id": "H7",  "seat_pos": { "x":  0.24, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H8",  "seat_id": "H8",  "seat_pos": { "x":  0.40, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H9",  "seat_id": "H9",  "seat_pos": { "x":  0.56, "y":  0.75 }, "seat_rotation": 0 },
+             { "seat_name": "H10", "seat_id": "H10", "seat_pos": { "x":  0.72, "y":  0.75 }, "seat_rotation": 0 }
+           ]
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 6. Theater - VIP + Standard ───────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Theater - VIP + Standard',
+     'Two seated zones. VIP front rows, Standard back rows.',
+     true,
+     '{
+       "stage": { "x1": -0.5, "y1": -1.0, "x2": 0.5, "y2": -0.88 },
+       "zones": [
+         {
+           "zone_name": "VIP",
+           "zone_type": "sitting",
+           "color": "#DC2626",
+           "corner1": { "x": -0.85, "y": -0.85 },
+           "corner2": { "x":  0.85, "y": -0.85 },
+           "corner3": { "x":  0.85, "y": -0.1  },
+           "corner4": { "x": -0.85, "y": -0.1  },
+           "seats": [
+             { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.75 }, "seat_rotation": 0 },
+             { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": -0.55 }, "seat_rotation": 0 },
+             { "seat_name": "C1", "seat_id": "C1", "seat_pos": { "x": -0.65, "y": -0.25 }, "seat_rotation": 0 },
+             { "seat_name": "C2", "seat_id": "C2", "seat_pos": { "x": -0.4,  "y": -0.25 }, "seat_rotation": 0 },
+             { "seat_name": "C3", "seat_id": "C3", "seat_pos": { "x": -0.15, "y": -0.25 }, "seat_rotation": 0 },
+             { "seat_name": "C4", "seat_id": "C4", "seat_pos": { "x":  0.15, "y": -0.25 }, "seat_rotation": 0 },
+             { "seat_name": "C5", "seat_id": "C5", "seat_pos": { "x":  0.4,  "y": -0.25 }, "seat_rotation": 0 },
+             { "seat_name": "C6", "seat_id": "C6", "seat_pos": { "x":  0.65, "y": -0.25 }, "seat_rotation": 0 }
+           ]
+         },
+         {
+           "zone_name": "Standard",
+           "zone_type": "sitting",
+           "color": "#059669",
+           "corner1": { "x": -0.85, "y": -0.05 },
+           "corner2": { "x":  0.85, "y": -0.05 },
+           "corner3": { "x":  0.85, "y":  0.9  },
+           "corner4": { "x": -0.85, "y":  0.9  },
+           "seats": [
+             { "seat_name": "D1", "seat_id": "D1", "seat_pos": { "x": -0.65, "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "D2", "seat_id": "D2", "seat_pos": { "x": -0.4,  "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "D3", "seat_id": "D3", "seat_pos": { "x": -0.15, "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "D4", "seat_id": "D4", "seat_pos": { "x":  0.15, "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "D5", "seat_id": "D5", "seat_pos": { "x":  0.4,  "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "D6", "seat_id": "D6", "seat_pos": { "x":  0.65, "y": 0.1  }, "seat_rotation": 0 },
+             { "seat_name": "E1", "seat_id": "E1", "seat_pos": { "x": -0.65, "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "E2", "seat_id": "E2", "seat_pos": { "x": -0.4,  "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "E3", "seat_id": "E3", "seat_pos": { "x": -0.15, "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "E4", "seat_id": "E4", "seat_pos": { "x":  0.15, "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "E5", "seat_id": "E5", "seat_pos": { "x":  0.4,  "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "E6", "seat_id": "E6", "seat_pos": { "x":  0.65, "y": 0.35 }, "seat_rotation": 0 },
+             { "seat_name": "F1", "seat_id": "F1", "seat_pos": { "x": -0.65, "y": 0.6  }, "seat_rotation": 0 },
+             { "seat_name": "F2", "seat_id": "F2", "seat_pos": { "x": -0.4,  "y": 0.6  }, "seat_rotation": 0 },
+             { "seat_name": "F3", "seat_id": "F3", "seat_pos": { "x": -0.15, "y": 0.6  }, "seat_rotation": 0 },
+             { "seat_name": "F4", "seat_id": "F4", "seat_pos": { "x":  0.15, "y": 0.6  }, "seat_rotation": 0 },
+             { "seat_name": "F5", "seat_id": "F5", "seat_pos": { "x":  0.4,  "y": 0.6  }, "seat_rotation": 0 },
+             { "seat_name": "F6", "seat_id": "F6", "seat_pos": { "x":  0.65, "y": 0.6  }, "seat_rotation": 0 }
+           ]
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 7. Sports Arena ───────────────────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Sports Arena',
+     'Courtside VIP on left and right, bleachers wrapping the back.',
+     true,
+     '{
+       "stage": { "x1": -0.3, "y1": -0.3, "x2": 0.3, "y2": 0.3 },
+       "zones": [
+         {
+           "zone_name": "Courtside Left",
+           "zone_type": "sitting",
+           "color": "#F59E0B",
+           "corner1": { "x": -0.9,  "y": -0.5 },
+           "corner2": { "x": -0.35, "y": -0.5 },
+           "corner3": { "x": -0.35, "y":  0.5 },
+           "corner4": { "x": -0.9,  "y":  0.5 },
+           "seats": [
+             { "seat_name": "L-A1", "seat_id": "L-A1", "seat_pos": { "x": -0.8,  "y": -0.35 }, "seat_rotation":  90 },
+             { "seat_name": "L-A2", "seat_id": "L-A2", "seat_pos": { "x": -0.8,  "y": -0.1  }, "seat_rotation":  90 },
+             { "seat_name": "L-A3", "seat_id": "L-A3", "seat_pos": { "x": -0.8,  "y":  0.15 }, "seat_rotation":  90 },
+             { "seat_name": "L-A4", "seat_id": "L-A4", "seat_pos": { "x": -0.8,  "y":  0.4  }, "seat_rotation":  90 },
+             { "seat_name": "L-B1", "seat_id": "L-B1", "seat_pos": { "x": -0.6,  "y": -0.35 }, "seat_rotation":  90 },
+             { "seat_name": "L-B2", "seat_id": "L-B2", "seat_pos": { "x": -0.6,  "y": -0.1  }, "seat_rotation":  90 },
+             { "seat_name": "L-B3", "seat_id": "L-B3", "seat_pos": { "x": -0.6,  "y":  0.15 }, "seat_rotation":  90 },
+             { "seat_name": "L-B4", "seat_id": "L-B4", "seat_pos": { "x": -0.6,  "y":  0.4  }, "seat_rotation":  90 }
+           ]
+         },
+         {
+           "zone_name": "Courtside Right",
+           "zone_type": "sitting",
+           "color": "#F59E0B",
+           "corner1": { "x":  0.35, "y": -0.5 },
+           "corner2": { "x":  0.9,  "y": -0.5 },
+           "corner3": { "x":  0.9,  "y":  0.5 },
+           "corner4": { "x":  0.35, "y":  0.5 },
+           "seats": [
+             { "seat_name": "R-A1", "seat_id": "R-A1", "seat_pos": { "x":  0.6,  "y": -0.35 }, "seat_rotation": -90 },
+             { "seat_name": "R-A2", "seat_id": "R-A2", "seat_pos": { "x":  0.6,  "y": -0.1  }, "seat_rotation": -90 },
+             { "seat_name": "R-A3", "seat_id": "R-A3", "seat_pos": { "x":  0.6,  "y":  0.15 }, "seat_rotation": -90 },
+             { "seat_name": "R-A4", "seat_id": "R-A4", "seat_pos": { "x":  0.6,  "y":  0.4  }, "seat_rotation": -90 },
+             { "seat_name": "R-B1", "seat_id": "R-B1", "seat_pos": { "x":  0.8,  "y": -0.35 }, "seat_rotation": -90 },
+             { "seat_name": "R-B2", "seat_id": "R-B2", "seat_pos": { "x":  0.8,  "y": -0.1  }, "seat_rotation": -90 },
+             { "seat_name": "R-B3", "seat_id": "R-B3", "seat_pos": { "x":  0.8,  "y":  0.15 }, "seat_rotation": -90 },
+             { "seat_name": "R-B4", "seat_id": "R-B4", "seat_pos": { "x":  0.8,  "y":  0.4  }, "seat_rotation": -90 }
+           ]
+         },
+         {
+           "zone_name": "Bleachers",
+           "zone_type": "sitting",
+           "color": "#64748B",
+           "corner1": { "x": -0.9, "y":  0.55 },
+           "corner2": { "x":  0.9, "y":  0.55 },
+           "corner3": { "x":  0.9, "y":  0.95 },
+           "corner4": { "x": -0.9, "y":  0.95 },
+           "seats": [
+             { "seat_name": "BL-A1", "seat_id": "BL-A1", "seat_pos": { "x": -0.72, "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A2", "seat_id": "BL-A2", "seat_pos": { "x": -0.48, "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A3", "seat_id": "BL-A3", "seat_pos": { "x": -0.24, "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A4", "seat_id": "BL-A4", "seat_pos": { "x":  0.0,  "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A5", "seat_id": "BL-A5", "seat_pos": { "x":  0.24, "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A6", "seat_id": "BL-A6", "seat_pos": { "x":  0.48, "y": 0.68 }, "seat_rotation": 0 },
+             { "seat_name": "BL-A7", "seat_id": "BL-A7", "seat_pos": { "x":  0.72, "y": 0.68 }, "seat_rotation": 0 }
+           ]
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 8. Club Layout ────────────────────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Club',
+     'Dance floor center, VIP lounge left, bar area right.',
+     true,
+     '{
+       "stage": { "x1": -0.25, "y1": -1.0, "x2": 0.25, "y2": -0.88 },
+       "zones": [
+         {
+           "zone_name": "Dance Floor",
+           "zone_type": "standing",
+           "color": "#DB2777",
+           "corner1": { "x": -0.45, "y": -0.85 },
+           "corner2": { "x":  0.45, "y": -0.85 },
+           "corner3": { "x":  0.45, "y":  0.4  },
+           "corner4": { "x": -0.45, "y":  0.4  },
+           "seats": []
+         },
+         {
+           "zone_name": "VIP Lounge",
+           "zone_type": "sitting",
+           "color": "#7C3AED",
+           "corner1": { "x": -0.9,  "y": -0.85 },
+           "corner2": { "x": -0.5,  "y": -0.85 },
+           "corner3": { "x": -0.5,  "y":  0.9  },
+           "corner4": { "x": -0.9,  "y":  0.9  },
+           "seats": [
+             { "seat_name": "V1", "seat_id": "V1", "seat_pos": { "x": -0.75, "y": -0.6  }, "seat_rotation":  90 },
+             { "seat_name": "V2", "seat_id": "V2", "seat_pos": { "x": -0.75, "y": -0.3  }, "seat_rotation":  90 },
+             { "seat_name": "V3", "seat_id": "V3", "seat_pos": { "x": -0.75, "y":  0.0  }, "seat_rotation":  90 },
+             { "seat_name": "V4", "seat_id": "V4", "seat_pos": { "x": -0.75, "y":  0.3  }, "seat_rotation":  90 },
+             { "seat_name": "V5", "seat_id": "V5", "seat_pos": { "x": -0.75, "y":  0.6  }, "seat_rotation":  90 }
+           ]
+         },
+         {
+           "zone_name": "Bar Area",
+           "zone_type": "standing",
+           "color": "#D97706",
+           "corner1": { "x":  0.5,  "y": -0.85 },
+           "corner2": { "x":  0.9,  "y": -0.85 },
+           "corner3": { "x":  0.9,  "y":  0.9  },
+           "corner4": { "x":  0.5,  "y":  0.9  },
+           "seats": []
+         },
+         {
+           "zone_name": "GA Back",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.45, "y":  0.45 },
+           "corner2": { "x":  0.45, "y":  0.45 },
+           "corner3": { "x":  0.45, "y":  0.9  },
+           "corner4": { "x": -0.45, "y":  0.9  },
+           "seats": []
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 9. Restaurant ─────────────────────────────────────────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Restaurant',
+     'Three dining sections: Premium window, Main floor, Private room.',
+     true,
+     '{
+       "stage": { "x1": -0.15, "y1": -1.0, "x2": 0.15, "y2": -0.9 },
+       "zones": [
+         {
+           "zone_name": "Window Section",
+           "zone_type": "sitting",
+           "color": "#DC2626",
+           "corner1": { "x": -0.9, "y": -0.85 },
+           "corner2": { "x": -0.3, "y": -0.85 },
+           "corner3": { "x": -0.3, "y":  0.9  },
+           "corner4": { "x": -0.9, "y":  0.9  },
+           "seats": [
+             { "seat_name": "W1", "seat_id": "W1", "seat_pos": { "x": -0.7, "y": -0.65 }, "seat_rotation":  90 },
+             { "seat_name": "W2", "seat_id": "W2", "seat_pos": { "x": -0.7, "y": -0.35 }, "seat_rotation":  90 },
+             { "seat_name": "W3", "seat_id": "W3", "seat_pos": { "x": -0.7, "y": -0.05 }, "seat_rotation":  90 },
+             { "seat_name": "W4", "seat_id": "W4", "seat_pos": { "x": -0.7, "y":  0.25 }, "seat_rotation":  90 },
+             { "seat_name": "W5", "seat_id": "W5", "seat_pos": { "x": -0.7, "y":  0.55 }, "seat_rotation":  90 }
+           ]
+         },
+         {
+           "zone_name": "Main Floor",
+           "zone_type": "sitting",
+           "color": "#059669",
+           "corner1": { "x": -0.25, "y": -0.85 },
+           "corner2": { "x":  0.25, "y": -0.85 },
+           "corner3": { "x":  0.25, "y":  0.9  },
+           "corner4": { "x": -0.25, "y":  0.9  },
+           "seats": [
+             { "seat_name": "M1", "seat_id": "M1", "seat_pos": { "x":  0.0, "y": -0.65 }, "seat_rotation": 0 },
+             { "seat_name": "M2", "seat_id": "M2", "seat_pos": { "x":  0.0, "y": -0.35 }, "seat_rotation": 0 },
+             { "seat_name": "M3", "seat_id": "M3", "seat_pos": { "x":  0.0, "y": -0.05 }, "seat_rotation": 0 },
+             { "seat_name": "M4", "seat_id": "M4", "seat_pos": { "x":  0.0, "y":  0.25 }, "seat_rotation": 0 },
+             { "seat_name": "M5", "seat_id": "M5", "seat_pos": { "x":  0.0, "y":  0.55 }, "seat_rotation": 0 }
+           ]
+         },
+         {
+           "zone_name": "Private Room",
+           "zone_type": "sitting",
+           "color": "#7C3AED",
+           "corner1": { "x":  0.3,  "y": -0.85 },
+           "corner2": { "x":  0.9,  "y": -0.85 },
+           "corner3": { "x":  0.9,  "y":  0.9  },
+           "corner4": { "x":  0.3,  "y":  0.9  },
+           "seats": [
+             { "seat_name": "P1", "seat_id": "P1", "seat_pos": { "x":  0.6, "y": -0.65 }, "seat_rotation": -90 },
+             { "seat_name": "P2", "seat_id": "P2", "seat_pos": { "x":  0.6, "y": -0.35 }, "seat_rotation": -90 },
+             { "seat_name": "P3", "seat_id": "P3", "seat_pos": { "x":  0.6, "y": -0.05 }, "seat_rotation": -90 },
+             { "seat_name": "P4", "seat_id": "P4", "seat_pos": { "x":  0.6, "y":  0.25 }, "seat_rotation": -90 },
+             { "seat_name": "P5", "seat_id": "P5", "seat_pos": { "x":  0.6, "y":  0.55 }, "seat_rotation": -90 }
+           ]
+         }
+       ]
+     }'::jsonb);
+
+
+-- ── 10. Concert Classic - VIP Sitting + GA Standing ───────
+INSERT INTO public.venue_layouts (name, description, is_public, layout_json) VALUES
+    ('Concert Classic',
+     'VIP seated zone up front, large GA standing zone at the back.',
+     true,
+     '{
+       "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+       "zones": [
+         {
+           "zone_name": "VIP",
+           "zone_type": "sitting",
+           "color": "#DC2626",
+           "corner1": { "x": -0.85, "y": -0.82 },
+           "corner2": { "x":  0.85, "y": -0.82 },
+           "corner3": { "x":  0.85, "y": -0.2  },
+           "corner4": { "x": -0.85, "y": -0.2  },
+           "seats": [
+             { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.7  }, "seat_rotation": 0 },
+             { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": -0.45 }, "seat_rotation": 0 },
+             { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": -0.45 }, "seat_rotation": 0 },
+             { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": -0.45 }, "seat_rotation": 0 },
+             { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": -0.45 }, "seat_rotation": 0 },
+             { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": -0.45 }, "seat_rotation": 0 },
+             { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": -0.45 }, "seat_rotation": 0 }
+           ]
+         },
+         {
+           "zone_name": "GA",
+           "zone_type": "standing",
+           "color": "#2563EB",
+           "corner1": { "x": -0.85, "y": -0.15 },
+           "corner2": { "x":  0.85, "y": -0.15 },
+           "corner3": { "x":  0.85, "y":  0.9  },
+           "corner4": { "x": -0.85, "y":  0.9  },
+           "seats": []
+         }
+       ]
+     }'::jsonb);

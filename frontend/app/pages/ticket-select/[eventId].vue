@@ -23,9 +23,9 @@
     <div v-else-if="event" class="row h-100 g-0">
       <!-- Left: Seating Map -->
       <div class="col-lg-8">
-        <SeatingMap 
+        <SeatingMap
           :tickets="tickets"
-          :seating-layout="seatingLayout"
+          :floors="floors"
           @back="handleBack"
           @add-ticket="handleAddTicket"
         />
@@ -35,7 +35,7 @@
       <div class="col-lg-4 bg-reactive-secondary d-flex flex-column h-100">
         <div class="flex-grow-1 overflow-auto px-4 pt-4">
           <EventInfo :event="event" />
-          <CartSummary 
+          <CartSummary
             :tickets="tickets"
             :cart="cart"
             :total-price="totalPrice"
@@ -46,7 +46,7 @@
         </div>
 
         <div class="p-4 pt-3 border-top border-secondary">
-          <button 
+          <button
             class="btn btn-primary w-100 py-3 fw-semibold"
             :disabled="cart.length === 0"
             @click="proceedToCheckout"
@@ -67,29 +67,33 @@ import { useEventPayment } from './composables/use-event-payment'
 import SeatingMap from './(components)/SeatingMap.vue'
 import EventInfo from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'
+import type { SelectedSeat } from './(types)/ticket.type'
 
 definePageMeta({ layout: 'minimal' })
 
-const eventStore = useEventStore()
-const eventId = eventStore.selectedEventId
+// Route param instead of store — survives refresh
+const route   = useRoute()
+const eventId = route.params.eventId as string
 
-if (!eventId) {
-  navigateTo('/')
+if (!eventId) navigateTo('/')
+
+const { event, tickets, floors, loading, error, fetchTicketSelect } = useTicketSelect()
+const { cart, totalPrice, totalTickets, addToCart, removeFromCart }  = useEventPayment()
+
+onMounted(() => fetchTicketSelect(eventId))
+const retry = () => fetchTicketSelect(eventId)
+
+const handleAddTicket = (
+  zoneId: string,
+  zoneName: string,
+  quantity: number,
+  price: number,
+  seats?: SelectedSeat[]
+) => {
+  addToCart(zoneId, zoneName, quantity, price, seats)
 }
 
-const { event, tickets, seatingLayout, loading, error, fetchTicketSelect } = useTicketSelect()
-const { cart, totalPrice, totalTickets, addToCart, removeFromCart } = useEventPayment()
-
-onMounted(() => fetchTicketSelect(eventId!))
-const retry = () => fetchTicketSelect(eventId!)
-
-const handleAddTicket = (zoneId: string, zoneName: string, quantity: number, price: number) => {
-  addToCart(zoneId, zoneName, quantity, price)
-}
-
-const handleBack = () => {
-  navigateTo(`/event-detail/${eventId}`)
-}
+const handleBack = () => navigateTo(`/event-detail/${eventId}`)
 
 const proceedToCheckout = () => {
   if (cart.value.length > 0) {

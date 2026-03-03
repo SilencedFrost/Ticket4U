@@ -8,5 +8,7 @@ public record ZoneDTO(
         double price,
         int capacity,
         int quantitySold,
-        Integer purchaseLimit
+        Integer purchaseLimit,
+        String color,
+        boolean isStanding
 ) {}

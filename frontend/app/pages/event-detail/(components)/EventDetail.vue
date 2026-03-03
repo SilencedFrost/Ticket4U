@@ -12,8 +12,7 @@ const eventStore = useEventStore();
 
 const handleBuyClick = () => {
   if (eventStore.currentEvent?.eventId) {
-    eventStore.selectEvent(eventStore.currentEvent.eventId)
-    navigateTo('/ticket-select')
+    navigateTo(`/ticket-select/${eventStore.currentEvent.eventId}`)
   }
 }
 </script>

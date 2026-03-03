@@ -46,9 +46,12 @@ public class Zone {
     @Column(precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "color", length = 7)
+    private String color;
+
     @OneToOne(mappedBy = "zone", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private ZoneContent content;
 
     @OneToMany(mappedBy = "zone", fetch = FetchType.LAZY)
     private List<Seat> seats;
-} 
+}

@@ -59,5 +59,13 @@ export default defineNuxtConfig({
       ],
     },
   },
-  
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'https://localhost:8081',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  }
 });

@@ -11,7 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
+
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(updatable = false, nullable = false)
@@ -40,12 +40,10 @@ public class Event {
     @Column(nullable = false, length = 254)
     private String addressLine;
 
-    @CreationTimestamp //auto create time
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime startDate;
 
-    @CreationTimestamp //auto create time
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @Column(name = "end_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime endDate;
@@ -65,17 +63,20 @@ public class Event {
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at",nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
 
     @Column(name = "cancelled_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime cancelledAt;
 
-    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private EventContent content;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Zone> zones;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<EventLayout> eventLayouts;
 
     public enum EventStatus {
         PLANNED,
@@ -84,4 +85,3 @@ public class Event {
         CANCELLED
     }
 }
-

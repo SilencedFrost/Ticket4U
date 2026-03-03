@@ -8,6 +8,7 @@ import com.ticket4u.feature.ticketselect.service.TicketSelectService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -19,9 +20,18 @@ public class TicketSelectServiceImpl implements TicketSelectService {
     private final TicketSelectMapper ticketSelectMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public TicketSelectResponse getTicketSelectData(UUID eventId) {
+        // First query: fetch event + zones (for ticket info panel)
         Event event = ticketSelectRepository.findWithZonesById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + eventId));
+                .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
+
+        // Second query: fetch event layouts + venue layout JSON + modifications
+        // We merge the layouts into the same event object
+        ticketSelectRepository.findWithLayoutsById(eventId)
+                .ifPresent(eventWithLayouts ->
+                        event.setEventLayouts(eventWithLayouts.getEventLayouts())
+                );
 
         return ticketSelectMapper.toResponse(event);
     }

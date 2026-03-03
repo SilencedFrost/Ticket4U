@@ -99,17 +99,27 @@
     }
   },
   "event_payment": {
+    "loading": "Loading event data...",
+    "retry": "Try Again",
     "header": {
       "back": "Back",
       "title": "Select Area",
-      "subtitle": "Click on area to select tickets"
+      "subtitle": "Click on an area to select tickets"
     },
     "stage": "Stage",
     "foh": "FOH",
+    "legend": {
+      "available": "Available",
+      "selected": "Selected",
+      "unavailable": "Unavailable"
+    },
     "ticket_info": {
       "title": "Ticket Information",
       "available": "seats available",
-      "sold_out": "Sold Out"
+      "sold_out": "Sold Out",
+      "standing": "Standing",
+      "seated": "Seated",
+      "select_on_map": "Select on map"
     },
     "cart": {
       "title": "Your Cart",
@@ -123,14 +133,16 @@
       "sold_out_message": "This area is sold out",
       "quantity": "Quantity",
       "total": "Total",
-      "add_to_cart": "Add to Cart"
+      "add_to_cart": "Add to Cart",
+      "selected_seats": "Selected Seats"
     },
     "checkout": {
       "button": "Proceed to Payment"
     },
     "validation": {
       "max_per_account": "Maximum {max} ticket(s) per account",
-      "max_reached": "You can only purchase {max} ticket(s) of this type"
+      "max_reached": "You can only purchase {max} ticket(s) of this type",
+      "unlimited": "No purchase limit"
     }
   }
 }

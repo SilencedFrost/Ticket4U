@@ -99,6 +99,8 @@
     }
   },
   "event_payment": {
+    "loading": "Đang tải thông tin sự kiện...",
+    "retry": "Thử lại",
     "header": {
       "back": "Trở về",
       "title": "Chọn khu vực",
@@ -106,10 +108,18 @@
     },
     "stage": "Sân khấu",
     "foh": "FOH",
+    "legend": {
+      "available": "Còn trống",
+      "selected": "Đã chọn",
+      "unavailable": "Không khả dụng"
+    },
     "ticket_info": {
       "title": "Thông tin vé",
       "available": "chỗ còn lại",
-      "sold_out": "Hết vé"
+      "sold_out": "Hết vé",
+      "standing": "Đứng",
+      "seated": "Có ghế",
+      "select_on_map": "Chọn trên bản đồ"
     },
     "cart": {
       "title": "Giỏ hàng của bạn",
@@ -123,14 +133,16 @@
       "sold_out_message": "Khu vực này đã hết vé",
       "quantity": "Số lượng",
       "total": "Tổng cộng",
-      "add_to_cart": "Thêm vào giỏ hàng"
+      "add_to_cart": "Thêm vào giỏ hàng",
+      "selected_seats": "Ghế đã chọn"
     },
     "checkout": {
       "button": "Tiếp tục thanh toán"
     },
     "validation": {
       "max_per_account": "Tối đa {max} vé mỗi tài khoản",
-      "max_reached": "Bạn chỉ có thể mua tối đa {max} vé loại này"
+      "max_reached": "Bạn chỉ có thể mua tối đa {max} vé loại này",
+      "unlimited": "Không giới hạn số lượng mua"
     }
   }
 }

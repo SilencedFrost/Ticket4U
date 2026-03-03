@@ -16,7 +16,7 @@ defineProps<{
         <div class="col-6 col-md-4">
           <img
             v-img-fallback="[400, 400]"
-            :src="eventData.avatar"
+            :src="eventData.logo_url"
             alt="Organizer"
             class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
           />

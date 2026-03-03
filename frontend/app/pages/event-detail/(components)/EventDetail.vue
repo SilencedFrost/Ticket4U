@@ -37,7 +37,10 @@ useHead({
         />
         <event-about :description="eventStore.currentEvent!.description" />
         <event-tickets :show-time="eventStore.currentEvent!.showtimes" />
-        <event-organizer :event-data="eventStore.currentEvent!.organizer" />
+        <event-organizer
+          v-if="eventStore.currentEvent!.organizer?.id"
+          :event-data="eventStore.currentEvent!.organizer"
+        />
       </div>
       <event-ads />
     </div>

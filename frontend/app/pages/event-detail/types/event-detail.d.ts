@@ -1,8 +1,8 @@
-interface Organizer {
+export interface Organizer {
   id: string;
   name: string;
   description: string;
-  avatar: string;
+  logo_url: string;
 }
 
 interface SeatType {
@@ -36,7 +36,8 @@ export interface EventDetailResponse {
   categoryId: number;
   description: string;
   imgEvent: EventImages;
-  organizer: Organizer;
+  organizerId?: string;
+  organizer?: Organizer | null;
   showtimes: Showtime[];
   date: string;
   time: string;

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
+import type { EventDetailResponse, Organizer } from '@/pages/event-detail/types/event-detail';
 import type { EventCardResponse } from '~/pages/(home)/types/api';
 
 export const useEventStore = defineStore('event', () => {
@@ -23,45 +23,75 @@ export const useEventStore = defineStore('event', () => {
 
   async function fetchEventDetail(eventId: string) {
     try {
-      const { startDate, minPrice, maxPrice, showtimes, ...rest } = await $fetch<{
+      const data = await $fetch<{
+        id: string;
+        name: string;
         startDate: string;
+        addressLine: string;
+        description: string;
         minPrice: string;
         maxPrice: string;
+        categoryId: number;
+        bannerUrl: string;
+        seatingPlanImageUrl: string;
+        organizerId?: string;
         showtimes: Array<{
-          date: string;
-          seatTypes: Array<{ price: string; [key: string]: unknown }>;
-          [key: string]: unknown;
+          id: string;
+          startDate: string;
+          seatTypes: Array<{
+            id: string;
+            name: string;
+            price: string;
+            available: number;
+            description?: string;
+            image?: string;
+            benefits?: string[] | null;
+          }>;
         }>;
-        [key: string]: unknown;
       }>(`${config.public.eventDetailUrl}/${eventId}`);
 
-      const { date, time } = formatDateTime(startDate);
+      const { date, time } = formatDateTime(data.startDate);
 
       currentEvent.value = {
-        ...rest,
+        eventId: data.id,
+        eventTitle: data.name,
+        address: data.addressLine,
+        description: data.description,
+        categoryId: data.categoryId,
+        organizerId: data.organizerId,
         date,
         time,
-        minPrice: formatPrice(minPrice),
-        maxPrice: formatPrice(maxPrice),
-        showtimes: showtimes?.map(({ date: stDate, seatTypes, ...stRest }) => {
-          const stDateTime = formatDateTime(stDate);
+        minPrice: formatPrice(data.minPrice),
+        maxPrice: formatPrice(data.maxPrice),
+        imgEvent: {
+          heroUrl: data.bannerUrl,
+          seatMapUrl: data.seatingPlanImageUrl,
+        },
+        showtimes: data.showtimes?.map((showtime) => {
+          const { date: stDate, time: stTime } = formatDateTime(showtime.startDate);
           return {
-            ...stRest,
-            date: stDateTime.date,
-            time: stDateTime.time,
-            seatTypes: seatTypes?.map(({ price, ...seatRest }) => ({
-              ...seatRest,
-              price: formatPrice(price),
+            id: showtime.id,
+            date: stDate,
+            time: stTime,
+            seatTypes: showtime.seatTypes?.map((seatType) => ({
+              id: seatType.id,
+              name: seatType.name,
+              price: formatPrice(seatType.price),
+              available: seatType.available,
+              description: seatType.description,
+              image: seatType.image,
+              benefits: seatType.benefits,
             })),
           };
         }),
       } as EventDetailResponse;
 
-      await fetchRelatedEvents(
-        rest.eventId as string,
-        rest.categoryId as number,
-        rest.address as string,
-      );
+      if (data.organizerId) {
+        fetchOrganizer(data.organizerId);
+      }
+
+      fetchRelatedEvents(data.id);
+
       return currentEvent.value;
     } catch (error) {
       console.error('Error fetching event detail:', error);
@@ -70,16 +100,12 @@ export const useEventStore = defineStore('event', () => {
     }
   }
 
-  async function fetchRelatedEvents(eventId: string, categoryId: number, address: string) {
+  async function fetchRelatedEvents(eventId: string) {
     try {
       const data = await $fetch<EventCardResponse[]>(
         `${config.public.eventDetailUrl}/${eventId}/related`,
         {
           method: 'GET',
-          params: {
-            categoryId: categoryId,
-            address: address,
-          },
         },
       );
       relatedEvents.value = data;
@@ -89,10 +115,27 @@ export const useEventStore = defineStore('event', () => {
     }
   }
 
+  async function fetchOrganizer(organizerId: string) {
+    try {
+      const organizerData = await $fetch<Organizer>(
+        `${config.public.userServiceUrl}/public/organizers/${organizerId}`,
+      );
+      if (currentEvent.value) {
+        currentEvent.value.organizer = organizerData;
+      }
+    } catch (error) {
+      console.error('Error fetching organizer:', error);
+      if (currentEvent.value) {
+        currentEvent.value.organizer = null;
+      }
+    }
+  }
+
   return {
     currentEvent,
     relatedEvents,
     fetchEventDetail,
     fetchRelatedEvents,
+    fetchOrganizer,
   };
 });

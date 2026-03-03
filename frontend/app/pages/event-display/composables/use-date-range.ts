@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import type { Event } from '../types/event-display'
 
 export function useDateRange() {
+  const { t } = useI18n()
   const startDate = ref<string>('')
   const endDate = ref<string>('')
   const selectedPreset = ref<string>('')
@@ -69,7 +70,7 @@ export function useDateRange() {
   }
 
   const formatDateRange = () => {
-    if (!startDate.value || !endDate.value) return 'Tất cả các ngày'
+    if (!startDate.value || !endDate.value) return t('event_display.label.all_date')
 
     const formatDate = (dateStr: string) => {
       const parts = dateStr.split('-')

@@ -87,12 +87,10 @@ CREATE TABLE IF NOT EXISTS public.organizer
 	name varchar(64) NOT NULL,
 	description text,
 	rating decimal(3,2) CHECK (rating >= 0 AND rating <= 5),
+	logo_url text,
     CONSTRAINT organizer_fk_user FOREIGN KEY (id) 
         REFERENCES public.users (id)
 );
-
-ALTER TABLE public.organizer 
-ADD COLUMN IF NOT EXISTS logo_url text;
 
 ALTER TABLE IF EXISTS public.organizer
     OWNER to postgres;

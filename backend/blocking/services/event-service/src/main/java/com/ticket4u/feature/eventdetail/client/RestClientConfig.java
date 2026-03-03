@@ -14,7 +14,7 @@ import java.security.cert.X509Certificate;
 
 @Configuration
 public class RestClientConfig {
-    @Value("${app.services.user-service.url}")
+    @Value("${application.services.user}")
     private String userServiceUrl;
 
     @Bean

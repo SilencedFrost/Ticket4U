@@ -21,7 +21,7 @@
             class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2"
             @click="handleEventClick(event.id)"
           >
-            Xem chi tiết
+            {{ $t('home_page.label.view_detail') }}
           </button>
         </div>
       </div>
@@ -133,8 +133,10 @@ const goToSlide = (index: number) => {
   currentSlide.value = index
 }
 
+const localePath = useLocalePath()
+
 const handleEventClick = (eventId: string) => {
-  navigateTo(`/event-detail/${eventId}`)
+  navigateTo(localePath(`/event-detail/${eventId}`))
 }
 
 onMounted(() => {

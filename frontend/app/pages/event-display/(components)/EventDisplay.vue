@@ -4,7 +4,7 @@
       <!-- Header section with filters -->
       <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <h2 class="text-primary fw-normal mb-0 d-none d-md-block" style="font-size: 20px">
-          Kết quả tìm kiếm
+          {{ $t('event_display.label.search_result') }}
         </h2>
 
         <div class="d-flex gap-2 gap-md-3 ms-auto">
@@ -198,6 +198,7 @@ const activeFilters = computed<ActiveFilter[]>(() => {
 // Update URL with current filter state
 const updateURLWithFilters = () => {
   const router = useRouter();
+  const localePath = useLocalePath();
   const query: Record<string, string> = {};
 
   // Add categoryIds to URL if any selected
@@ -224,8 +225,9 @@ const updateURLWithFilters = () => {
   }
 
   // Navigate to update URL (replace to avoid adding to history)
+  // Use localePath to preserve language prefix
   router.replace({
-    path: '/event-display',
+    path: localePath('/event-display'),
     query: Object.keys(query).length > 0 ? query : undefined,
   });
 };
@@ -300,7 +302,8 @@ const applyMainFilter = () => {
 
 // Event click handler
 const handleEventClick = (eventId: string) => {
-  navigateTo(`/event-detail/${eventId}`);
+  const localePath = useLocalePath();
+  navigateTo(localePath(`/event-detail/${eventId}`));
 };
 
 // Pagination handlers

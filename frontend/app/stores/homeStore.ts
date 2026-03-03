@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home'
-import type { PlaceDTO, CategoryWithEventsDTO } from '~/pages/(home)/types/api'
+import type { PlaceResponse, CategoryWithEventsResponse } from '~/pages/(home)/types/api'
 
 export const useHomeStore = defineStore('home', () => {
   const config = useRuntimeConfig()
@@ -142,7 +142,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.places = true
     errors.value.places = null
     try {
-      const data = await $fetch<PlaceDTO[]>(`${config.public.homeApiUrl}/places`, {
+      const data = await $fetch<PlaceResponse[]>(`${config.public.homeApiUrl}/places`, {
         credentials: 'include',
       })
       places.value = data
@@ -158,7 +158,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.categories = true
     errors.value.categories = null
     try {
-      const data = await $fetch<CategoryWithEventsDTO[]>(
+      const data = await $fetch<CategoryWithEventsResponse[]>(
         `${config.public.homeApiUrl}/categories`,
         {
           credentials: 'include',

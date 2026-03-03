@@ -8,7 +8,7 @@ interface Organizer {
 interface SeatType {
   id: string;
   name: string;
-  price: number;
+  price: string;
   available: number;
   description?: string;
   image?: string;

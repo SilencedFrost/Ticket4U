@@ -15,18 +15,18 @@
                         'btn btn-sm rounded-2 text-reactive-primary',
                         selectedPreset === preset.value ? 'btn-primary text-white' : 'btn-transparent'
                     ]" @click="$emit('select-preset', preset.value)">
-                        {{ preset.label }}
+                        {{ $t(`event_display.label.${preset.label}`) }}
                     </button>
                 </div>
 
                 <!-- Date Pickers -->
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-sm-6">
-                        <label class="form-label text-reactive-primary small">Từ ngày</label>
+                        <label class="form-label text-reactive-primary small">{{ $t('event_display.label.date_from') }}</label>
                         <input :value="startDate" type="date" class="form-control bg-reactive-primary text-reactive-primary border-secondary" @input="$emit('update:startDate', ($event.target as HTMLInputElement).value)" />
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label class="form-label text-reactive-primary small">Đến ngày</label>
+                        <label class="form-label text-reactive-primary small">{{ $t('event_display.label.date_to') }}</label>
                         <input :value="endDate" type="date" class="form-control bg-reactive-primary text-reactive-primary border-secondary" @input="$emit('update:endDate', ($event.target as HTMLInputElement).value)" />
                     </div>
                 </div>
@@ -34,10 +34,10 @@
                 <!-- Action Buttons -->
                 <div class="d-flex gap-3 pt-3">
                     <button class="btn btn-outline-secondary flex-fill rounded-2" @click="$emit('reset')">
-                        Thiết lập lại
+                        {{ $t('event_display.button.reset') }}
                     </button>
                     <button class="btn btn-primary flex-fill rounded-2" @click="$emit('apply')">
-                        Áp dụng
+                        {{ $t('event_display.button.apply') }}
                     </button>
                 </div>
             </div>

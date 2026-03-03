@@ -15,32 +15,15 @@ spring:
       enabled: true
       port: 35729
 
-# OAuth2 Configuration
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: <<Client ID>>
-            client-secret: <<Client Secret>>
-            scope: openid,profile,email
-
 # Port
 server:
-  port: 8080
+  port: 8083
   ssl:
     certificate: classpath:keys/localhost+2.pem
     certificate-private-key: classpath:keys/localhost+2-key.pem
 
 application:
   security:
-    # JWT
-    jwt:
-      private-key-path: keys/ec-private.pem
-      public-key-path: keys/ec-public.pem
-      key-id: auth-key-es256
-      issuer: ticket4u
-
-# CORS
+    # CORS
     cors:
       allowed-origins: https://localhost:3000

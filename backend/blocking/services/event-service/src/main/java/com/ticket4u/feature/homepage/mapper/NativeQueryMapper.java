@@ -1,7 +1,7 @@
 package com.ticket4u.feature.homepage.mapper;
 
-import com.ticket4u.feature.homepage.dto.CategoryDTO;
-import com.ticket4u.feature.homepage.dto.EventCardDTO;
+import com.ticket4u.feature.homepage.dto.CategoryResponse;
+import com.ticket4u.feature.homepage.dto.EventCardResponse;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class NativeQueryMapper {
 
     /**
-     * Convert Object[] from native query to EventCardDTO
+     * Convert Object[] from native query to EventCardResponse
      * Handles both 7-element array (without category) and 8-element array (with category)
      * 
      * @param row Object array from native query
@@ -31,50 +31,46 @@ public class NativeQueryMapper {
      *            [5] = end_date (Instant/Timestamp/OffsetDateTime)
      *            [6] = min_price (Double/BigDecimal)
      *            [7] = category_name (String) - optional
-     * @return EventCardDTO for frontend display
+     * @return EventCardResponse for frontend display
      */
-    public EventCardDTO toEventCardDTO(Object[] row) {
-        EventCardDTO dto = new EventCardDTO();
-
-        dto.setId((UUID) row[0]);
-        dto.setName((String) row[1]);
-        dto.setBannerUrl((String) row[2]);
-        dto.setAddressLine((String) row[3]);
-
-        dto.setStartDate(convertToOffsetDateTime(row[4]));
-        dto.setEndDate(convertToOffsetDateTime(row[5]));
+    public EventCardResponse toEventCardResponse(Object[] row) {
+        UUID id = (UUID) row[0];
+        String name = (String) row[1];
+        String bannerUrl = (String) row[2];
+        String addressLine = (String) row[3];
+        OffsetDateTime startDate = convertToOffsetDateTime(row[4]);
+        OffsetDateTime endDate = convertToOffsetDateTime(row[5]);
+        
+        BigDecimal minPrice = null;
         if (row[6] != null) {
             if (row[6] instanceof BigDecimal) {
-                dto.setMinPrice((BigDecimal) row[6]);
+                minPrice = (BigDecimal) row[6];
             } else if (row[6] instanceof Double) {
-                dto.setMinPrice(BigDecimal.valueOf((Double) row[6]));
+                minPrice = BigDecimal.valueOf((Double) row[6]);
             }
-        } else {
-//            dto.setMinPrice(BigDecimal.ZERO);
-            dto.setMinPrice(null);
         }
         
         // row[7] - category_name (optional - only present in filter queries)
+        String categoryName = null;
         if (row.length > 7 && row[7] != null) {
-            dto.setCategoryName((String) row[7]);
+            categoryName = (String) row[7];
         }
         
-        return dto;
+        return new EventCardResponse(id, name, bannerUrl, addressLine, startDate, endDate, minPrice, categoryName, null);
     }
 
     /**
-     * Convert Category query result to CategoryDTO
+     * Convert Category query result to CategoryResponse
      * 
      * @param row Object array from native query
      *            [0] = category_id (Integer)
      *            [1] = name (String)
-     * @return CategoryDTO
+     * @return CategoryResponse
      */
-    public CategoryDTO toCategoryDTO(Object[] row) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId((Integer) row[0]);
-        dto.setName((String) row[1]);
-        return dto;
+    public CategoryResponse toCategoryResponse(Object[] row) {
+        Integer id = (Integer) row[0];
+        String name = (String) row[1];
+        return new CategoryResponse(id, name, null);
     }
 
     /**

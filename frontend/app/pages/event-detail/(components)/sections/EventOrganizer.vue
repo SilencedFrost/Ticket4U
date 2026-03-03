@@ -13,7 +13,7 @@ defineProps<{
         {{ $t('event_detail.label.organizer') }}
       </h3>
       <div class="row g-4 align-items-start">
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
           <img
             v-img-fallback="[400, 400]"
             :src="eventData.avatar"
@@ -21,7 +21,7 @@ defineProps<{
             class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"
           />
         </div>
-        <div class="col-md-8">
+        <div class="col-12 col-md-8">
           <h4 class="text-reactive-primary fw-bold mb-3 fs-5">{{ eventData.name }}</h4>
           <p class="text-reactive-primary lh-lg medium">
             {{ eventData.description }}

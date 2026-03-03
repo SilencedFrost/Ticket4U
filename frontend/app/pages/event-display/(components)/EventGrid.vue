@@ -26,7 +26,7 @@
 
     <!-- Empty State -->
     <div v-if="events.length === 0" class="text-center py-5">
-        <p class="text-reactive-secondary mb-0">Không tìm thấy sự kiện nào</p>
+        <p class="text-reactive-secondary mb-0">{{ $t('event_display.label.not_found') }}</p>
     </div>
 </template>
 
@@ -44,7 +44,7 @@ defineEmits<{
 }>()
 
 const formatPrice = (price: number): string => {
-    return price ? `Từ ${price.toLocaleString('vi-VN')}đ` : 'Chưa cập nhật giá'
+    return price ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
 }
 
 const formatDate = (isoDate: string): string => {

@@ -17,7 +17,7 @@
             </div>
 
             <section class="mb-5">
-                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">Sự kiện đặc biệt</h2>
+                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">{{ $t('home_page.section.special') }}</h2>
                 <div v-if="loading.special" class="text-center">
                     <div class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -38,7 +38,7 @@
             </section>
 
             <section class="mb-5">
-                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">Sự kiện xu hướng</h2>
+                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">{{ $t('home_page.section.trending') }}</h2>
                 <div v-if="loading.trending" class="text-center">
                     <div class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -60,7 +60,7 @@
 
             <EventSection
                 v-if="!loading.suggested && suggestedEvents.length > 0"
-                title="Dành cho bạn"
+                :title="$t('home_page.section.recommended')"
                 :events="suggestedEvents"
             />
 
@@ -76,7 +76,7 @@
             />
 
             <section class="mb-5">
-                <h2 class="text-white fs-4 fw-bold mb-4">Điểm đến thú vị</h2>
+                <h2 class="text-white fs-4 fw-bold mb-4">{{ $t('home_page.section.places') }}</h2>
                 <div v-if="loading.places" class="text-center">
                     <div class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>

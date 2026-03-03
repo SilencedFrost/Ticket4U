@@ -3,11 +3,39 @@ package com.ticket4u.feature.eventdetail.repository;
 import com.ticket4u.core.Event;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface EventDetailRepository extends JpaRepository<Event, UUID> {
     @EntityGraph(attributePaths = {"category", "zones"})
     Optional<Event> findWithDetailsById(UUID id);
+
+    @Query(value = """
+        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
+               MIN(z.price) as min_price, 
+               c.name as category_name,
+               e.status
+        FROM events e
+        LEFT JOIN zones z ON e.id = z.event_id
+        LEFT JOIN categories c ON e.category_id = c.id 
+        WHERE e.id != :currentId 
+          AND e.status IN ('PLANNED', 'ONGOING')
+        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, c.name 
+        ORDER BY 
+            (CASE WHEN e.category_id = :categoryId THEN 1 ELSE 0 END) DESC,
+            (CASE WHEN e.address_line ILIKE %:city% THEN 1 ELSE 0 END) DESC,
+            e.start_date ASC,
+            e.created_at DESC
+        LIMIT :limit
+        """, nativeQuery = true)
+    List<Object[]> findRelatedEvents(
+            @Param("currentId") UUID currentId,
+            @Param("categoryId") Integer categoryId,
+            @Param("city") String city,
+            @Param("limit") Integer limit
+    );
 }

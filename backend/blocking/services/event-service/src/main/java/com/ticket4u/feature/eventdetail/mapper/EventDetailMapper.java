@@ -5,40 +5,43 @@ import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.dto.SeatTypeResponse;
 import com.ticket4u.feature.eventdetail.dto.ShowtimeResponse;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring", uses = {ZoneMapper.class})
-public interface EventDetailMapper {
+public abstract class EventDetailMapper {
 
-    @Mapping(source = "id", target = "eventId")
-    @Mapping(source = "name", target = "eventTitle")
-    @Mapping(source = "startDate", target = "startDate")
-    @Mapping(source = "addressLine", target = "address")
-    @Mapping(source = "category.id", target = "categoryId")
-    @Mapping(source = "bannerUrl", target = "imgEvent.heroUrl")
-    @Mapping(source = "seatingPlanImageUrl", target = "imgEvent.seatMapUrl")
-    @Mapping(source = "zones", target = "showtimes", qualifiedByName = "mapZonesToShowtimes")
-    @Mapping(target = "minPrice", ignore = true)
-    @Mapping(target = "maxPrice", ignore = true)
-    @Mapping(target = "organizer", ignore = true)
-    EventDetailResponse toResponse(Event event, @Context ZoneMapper zoneMapper);
+    @Autowired
+    protected ZoneMapper zoneMapper;
+
+    @Mapping(source = "event.id", target = "id")
+    @Mapping(source = "event.name", target = "name")
+    @Mapping(source = "event.description", target = "description")
+    @Mapping(source = "event.seatingPlanImageUrl", target = "seatingPlanImageUrl")
+    @Mapping(source = "event.category.id", target = "categoryId")
+    @Mapping(source = "event.zones", target = "showtimes", qualifiedByName = "mapZonesToShowtimes")
+    public abstract EventDetailResponse toResponse(
+            Event event,
+            String minPrice,
+            String maxPrice
+    );
 
     @Named("mapZonesToShowtimes")
-    default List<ShowtimeResponse> mapZonesToShowtimes(List<Zone> zones, @Context ZoneMapper zoneMapper) {
+    protected List<ShowtimeResponse> mapZonesToShowtimes(List<Zone> zones) {
         if (zones == null || zones.isEmpty()) return Collections.emptyList();
 
         List<SeatTypeResponse> seatTypes = zoneMapper.toSeatTypeResponse(zones);
 
         Event event = zones.get(0).getEvent();
+
         return List.of(new ShowtimeResponse(
                 event.getId().toString(),
-                event.getStartDate(),
                 event.getStartDate(),
                 seatTypes
         ));

@@ -37,19 +37,14 @@ class EventDetailIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.eventTitle").exists())
-                .andExpect(jsonPath("$.organizer.name").exists());
+                .andExpect(jsonPath("$.name").exists());
     }
 
     @Test
     void shouldReturnExactly8RelatedEvents_WhenRequestIsValid() throws Exception {
-        String validEventId = "00000000-2ec7-7ac1-90b6-20f5889f2000";
-        Integer categoryId = 1;
-        String address = "GEM Center, Quận 1, TP. HCM";
+        String validEventId = "01000000-0000-748a-828b-72ca099b3bb3";
 
         mockMvc.perform(get("/api/v1/public/events/" + validEventId + "/related")
-                        .param("categoryId", categoryId.toString())
-                        .param("address", address)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

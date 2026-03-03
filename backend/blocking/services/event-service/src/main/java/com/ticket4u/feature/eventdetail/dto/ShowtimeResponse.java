@@ -5,7 +5,6 @@ import java.util.List;
 
 public record ShowtimeResponse(
          String id,
-         OffsetDateTime date,
-         OffsetDateTime time,
+         OffsetDateTime startDate,
          List<SeatTypeResponse>seatTypes
 ) {}

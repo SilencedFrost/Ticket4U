@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface EventDetailService {
     EventDetailResponse  getEventDetail(UUID id);
-    List<EventSummaryResponse> getRelatedEvents(UUID currentId, Integer categoryId, String address);
+    List<EventSummaryResponse> getRelatedEvents(UUID currentId);
 }

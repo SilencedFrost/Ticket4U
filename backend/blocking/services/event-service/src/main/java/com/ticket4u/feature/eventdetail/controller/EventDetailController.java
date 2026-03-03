@@ -35,16 +35,12 @@ public class EventDetailController {
      * Get a list of related events based on category, city and upcoming event.
      * Helps users find similar shows or events nearby.
      * - id: to exclude the current event.
-     * - categoryId: to find events in the same category.
-     * - address: to find events in the same city.
      */
     @GetMapping("/{id}/related")
     public ResponseEntity<List<EventSummaryResponse>> getRelatedEvents(
-            @PathVariable UUID id,
-            @RequestParam Integer categoryId,
-            @RequestParam String address
+            @PathVariable UUID id
     ) {
-        List<EventSummaryResponse> events = eventDetailService.getRelatedEvents(id, categoryId, address);
+        List<EventSummaryResponse> events = eventDetailService.getRelatedEvents(id);
         return ResponseEntity.ok(events);
     }
 }

@@ -1,22 +1,18 @@
 package com.ticket4u.feature.eventdetail.service.impl;
 
 import com.ticket4u.core.Event;
-import com.ticket4u.feature.eventdetail.client.UserClient;
+import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.dto.OrganizerResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
-import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
 import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
 import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
-import com.ticket4u.feature.homepage.service.HomePageService;
+import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -24,90 +20,52 @@ import java.util.UUID;
 public class EventDetailServiceImpl implements EventDetailService {
     private final EventDetailRepository eventRepository;
     private final EventDetailMapper eventDetailMapper;
-    private final HomePageService homePageService;
-    private final ZoneMapper zoneMapper;
-    private final UserClient userClient;
+    private final NativeQueryMapper nativeQueryMapper;
 
     @Override
     public EventDetailResponse getEventDetail(UUID id) {
         Event event = eventRepository.findWithDetailsById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + id));
 
-        EventDetailResponse response = eventDetailMapper.toResponse(event, zoneMapper);
+        String minPrice = calculateMinPrice(event.getZones());
+        String maxPrice = calculateMaxPrice(event.getZones());
 
-        OrganizerResponse organizer = userClient.getOrganizerById(event.getOrganizerId());
+        return eventDetailMapper.toResponse(event, minPrice, maxPrice);
+    }
 
-        double minPrice = event.getZones().stream()
-                .mapToDouble(z -> z.getPrice().doubleValue())
-                .min().orElse(0.0);
+    private String calculateMinPrice(List<Zone> zones) {
+        return zones == null || zones.isEmpty() ? "0" :
+                String.valueOf(zones.stream().mapToDouble(z -> z.getPrice().doubleValue()).min().orElse(0.0));
+    }
 
-        double maxPrice = event.getZones().stream()
-                .mapToDouble(z -> z.getPrice().doubleValue())
-                .max().orElse(0.0);
-
-        return new EventDetailResponse(
-                response.eventId(),
-                response.eventTitle(),
-                response.startDate(),
-                response.address(),
-                response.description(),
-                String.valueOf(minPrice),
-                String.valueOf(maxPrice),
-                response.categoryId(),
-                response.imgEvent(),
-                organizer,
-                response.showtimes()
-        );
+    private String calculateMaxPrice(List<Zone> zones) {
+        return zones == null || zones.isEmpty() ? "0" :
+                String.valueOf(zones.stream().mapToDouble(z -> z.getPrice().doubleValue()).max().orElse(0.0));
     }
 
     @Override
-    public List<EventSummaryResponse> getRelatedEvents(UUID currentId, Integer categoryId, String address) {
-        Set<EventSummaryResponse> results = new LinkedHashSet<>();
-        String city = extractCity(address);
+    public List<EventSummaryResponse> getRelatedEvents(UUID currentId) {
+        Event currentEvent = eventRepository.findById(currentId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
-        // 1. Same Category (limit to 8 events)
-        addEvents(results, homePageService.getFilteredEvents(null, null, List.of(categoryId), null, 0, 8), currentId);
+        Integer categoryId = currentEvent.getCategory().getId();
+        String city = extractCity(currentEvent.getAddressLine());
 
-        // 2. Same City (Fallback)
-        if (results.size() < 8 && !city.isEmpty()) {
-            String searchCity = city.toLowerCase();
-            List<EventSummaryResponse> byCity = homePageService.getAllEventsWithMinPrice().stream()
-                    .filter(e -> e.addressLine().toLowerCase().contains(searchCity))
-                    .toList();
-            addEvents(results, byCity, currentId);
-        }
+        List<Object[]> results = eventRepository.findRelatedEvents(
+                currentId,
+                categoryId,
+                city,
+                8
+        );
 
-        // 3. Upcoming Events (Final Fallback)
-        if (results.size() < 8) {
-            addEvents(results, homePageService.getSpecialEvents(), currentId);
-        }
-
-        // 4. Get any remaining events (Suggest randomly if still under 8)
-        if (results.size() < 8) {
-            List<EventSummaryResponse> allOtherEvents = homePageService.getAllEventsWithMinPrice();
-            addEvents(results, allOtherEvents, currentId);
-        }
-
-        return results.stream().limit(8).toList();
+        return results.stream()
+                .map(nativeQueryMapper::toEventCardResponse)
+                .toList();
     }
 
     private String extractCity(String address) {
         if (address == null || !address.contains(",")) return "";
         String[] parts = address.split(",");
         return parts[parts.length - 1].trim();
-    }
-
-    private void addEvents(Set<EventSummaryResponse> target, List<EventSummaryResponse> source, UUID excludeId) {
-        if (source == null) return;
-        for (EventSummaryResponse event : source) {
-            if (target.size() >= 8) break;
-
-            boolean isSameEvent = event.id().equals(excludeId);
-            boolean isDuplicate = target.stream().anyMatch(e -> e.id().equals(event.id()));
-
-            if (!isSameEvent && !isDuplicate) {
-                target.add(event);
-            }
-        }
     }
 }

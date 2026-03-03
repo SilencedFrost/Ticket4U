@@ -69,7 +69,7 @@
                 v-for="category in categories"
                 :key="category.id"
                 v-show="!loading.categories && category.events.length > 0"
-                :title="category.name"
+                :title="$t(`common.category.${category.id}`, category.name)"
                 :events="category.events"
                 :category-id="category.id"
                 show-view-all

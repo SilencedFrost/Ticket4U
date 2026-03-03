@@ -75,7 +75,14 @@
       "view": "View"
     },
     "full_name": "Full name",
-    "phone": "Phone number"
+    "phone": "Phone number",
+    "category": {
+      "1": "Music",
+      "2": "Workshop",
+      "3": "Theater & Arts",
+      "4": "Sports",
+      "5": "Nightlife"
+    }
   },
   "brand": {
     "name": "Ticket4U",

@@ -1,3 +1,4 @@
+-- Event Data for the Event table
 --1. Table: categories (Thể loại sự kiện)
 
 TRUNCATE TABLE public.categories RESTART IDENTITY CASCADE;
@@ -157,12 +158,7 @@ WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
 
 -- ============================================================
--- 10 DEFAULT VENUE LAYOUT TEMPLATES
--- Coordinate system: -1 to 1 on both axes
--- Origin (0,0) is center of venue
--- Y: -1 = top (stage side), 1 = bottom (back)
--- X: -1 = left, 1 = right
--- seat_rotation: 0 = facing up (toward stage), negative = tilted left, positive = tilted right
+-- Layout Templates
 -- ============================================================
 
 -- ── 1. Standing Only - Single Zone ────────────────────────

@@ -5,6 +5,5 @@ package com.ticket4u.feature.homepage.dto;
  */
 public record CategoryResponse(
         Integer id,
-        String name,
-        Integer eventCount
+        String name
 ) {}

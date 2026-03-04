@@ -12,7 +12,5 @@ public record EventSummaryResponse(
         OffsetDateTime startDate,
         OffsetDateTime endDate,
         BigDecimal minPrice,
-        String categoryName,
-        String status
+        String categoryName
 ) {}
-

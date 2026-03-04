@@ -10,7 +10,6 @@ export const useHomeStore = defineStore('home', () => {
   const specialEvents = ref<Event[]>([])
   const trendingEvents = ref<TrendingEvent[]>([])
   const suggestedEvents = ref<Event[]>([])
-  const musicEvents = ref<Event[]>([])
   const places = ref<Place[]>([])
   const categories = ref<CategoryWithEvents[]>([])
 
@@ -20,7 +19,6 @@ export const useHomeStore = defineStore('home', () => {
     special: false,
     trending: false,
     suggested: false,
-    music: false,
     places: false,
     categories: false,
   })
@@ -31,7 +29,6 @@ export const useHomeStore = defineStore('home', () => {
     special: null as string | null,
     trending: null as string | null,
     suggested: null as string | null,
-    music: null as string | null,
     places: null as string | null,
     categories: null as string | null,
   })
@@ -119,24 +116,6 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
-  async function fetchMusicEvents() {
-    loading.value.music = true
-    errors.value.music = null
-    try {
-      const data = await $fetch<Event[]>(
-        `${config.public.homeApiUrl}/events`,
-        {
-          credentials: 'include',
-        }
-      )
-      musicEvents.value = data
-    } catch (error) {
-      errors.value.music = 'Failed to load music events'
-      console.error('Error fetching music events:', error)
-    } finally {
-      loading.value.music = false
-    }
-  }
 
   async function fetchPlaces() {
     loading.value.places = true
@@ -180,7 +159,6 @@ export const useHomeStore = defineStore('home', () => {
       fetchSpecialEvents(),
       fetchTrendingEvents(),
       fetchSuggestedEvents(),
-      fetchMusicEvents(),
       fetchPlaces(),
       fetchCategories(),
     ])
@@ -192,7 +170,6 @@ export const useHomeStore = defineStore('home', () => {
     specialEvents,
     trendingEvents,
     suggestedEvents,
-    musicEvents,
     places,
     categories,
     loading,
@@ -202,7 +179,6 @@ export const useHomeStore = defineStore('home', () => {
     fetchSpecialEvents,
     fetchTrendingEvents,
     fetchSuggestedEvents,
-    fetchMusicEvents,
     fetchPlaces,
     fetchCategories,
     fetchAllHomeData,

@@ -10,7 +10,6 @@ export interface EventCardResponse {
   endDate: string
   minPrice: number
   categoryName?: string
-  status?: string
 }
 
 // Backend response type for places

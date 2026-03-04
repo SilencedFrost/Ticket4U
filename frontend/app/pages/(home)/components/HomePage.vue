@@ -111,7 +111,7 @@ onMounted(() => {
 })
 
 // Use store state directly (reactive)
-const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, musicEvents, places, categories, loading, errors } =
+const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, places, categories, loading, errors } =
     storeToRefs(homeStore)
 </script>
 

@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @RestController
 @RequestMapping("/api/v1/public/home")
@@ -18,16 +21,28 @@ import java.util.UUID;
 // @RateLimiter(name = "homePageLimiter")
 public class HomePageController {
 
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private static final int MAX_PAGE_SIZE = 100;
+
     private final HomePageService homePageService;
 
 
     /**
      * GET /api/v1/public/home/events
-     * Get a list of event with min price
+     * Get a paginated list of events with min price
+     *
+     * @param page Page number (default: 0)
+     * @param size Number of items per page (default: 20, max: 100)
+     * @return Paginated list of events with minimum ticket price
      */
     @GetMapping("/events")
-    public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice() {
-        List<EventSummaryResponse> events = homePageService.getAllEventsWithMinPrice();
+    public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "20") Integer size
+    ) {
+        int validPage = Math.max(page, 0);
+        int validSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
+        List<EventSummaryResponse> events = homePageService.getAllEventsWithMinPrice(validPage, validSize);
         return ResponseEntity.ok(events);
     }
 
@@ -93,18 +108,6 @@ public class HomePageController {
     }
 
     /**
-     * GET /api/v1/public/home/music
-     * Get music events
-     * 
-     * @return List of music category events
-     */
-    @GetMapping("/music")
-    public ResponseEntity<List<EventSummaryResponse>> getMusicEvents() {
-        List<EventSummaryResponse> events = homePageService.getMusicEvents();
-        return ResponseEntity.ok(events);
-    }
-
-    /**
      * GET /api/v1/public/home/places
      * Get list of places/venues
      * 
@@ -154,14 +157,16 @@ public class HomePageController {
      */
     @GetMapping("/events/filter")
     public ResponseEntity<List<EventSummaryResponse>> getFilteredEvents(
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) List<Integer> categoryIds,
-            @RequestParam(required = false) Boolean isFreeOnly,
+            @RequestParam(required = false, defaultValue = "false") boolean isFreeOnly,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
-        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, page, size);
+        int validPage = Math.max(page, 0);
+        int validSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
+        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, validPage, validSize);
         return ResponseEntity.ok(events);
     }
 }

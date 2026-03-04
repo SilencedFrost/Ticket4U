@@ -5,13 +5,22 @@ import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
 import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
+import com.ticket4u.feature.homepage.projection.CategoryWithEventProjection;
+import com.ticket4u.feature.homepage.projection.EventSummaryProjection;
+import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import com.ticket4u.feature.homepage.repository.CategoryRepository;
 import com.ticket4u.feature.homepage.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -22,15 +31,13 @@ public class HomePageService {
     private final CategoryRepository categoryRepository;
     private final NativeQueryMapper nativeQueryMapper;
 
-    private static final int DEFAULT_PAGE_SIZE = 20;
-    private static final int MAX_PAGE_SIZE = 100;
-    private static final int MAX_EVENTS_PER_CATEGORY = 4; // For homepage display
+    // Lấy tất cả events với giá thấp nhất (paginated)
+    public List<EventSummaryResponse> getAllEventsWithMinPrice(int page, int size) {
+        int offset = page * size;
 
-    // Lấy tất cả events với giá thấp nhất
-    public List<EventSummaryResponse> getAllEventsWithMinPrice() {
-        List<Object[]> results = eventRepository.findEventsWithMinPrice();
+        List<EventSummaryProjection> results = eventRepository.findEventsWithMinPrice(size, offset);
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
@@ -42,116 +49,117 @@ public class HomePageService {
 
     // Featured: Events mới nhất
     public List<EventSummaryResponse> getFeaturedEvents() {
-        List<Object[]> results = eventRepository.findFeaturedEvents();
+        List<EventSummaryProjection> results = eventRepository.findFeaturedEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
     // Special: Events sắp diễn ra trong 7 ngày
     public List<EventSummaryResponse> getSpecialEvents() {
-        List<Object[]> results = eventRepository.findSpecialEvents();
+        List<EventSummaryProjection> results = eventRepository.findSpecialEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
     // Trending: Random 3 PLANNED/ONGOING events
     public List<EventSummaryResponse> getTrendingEvents() {
-        List<Object[]> results = eventRepository.findTrendingEvents();
+        List<EventSummaryProjection> results = eventRepository.findTrendingEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
     // Suggested: Random PLANNED/ONGOING events
     public List<EventSummaryResponse> getSuggestedEvents() {
-        List<Object[]> results = eventRepository.findSuggestedEvents();
+        List<EventSummaryProjection> results = eventRepository.findSuggestedEvents();
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
-
-     // Music: Events với category = 'Music'
-     public List<EventSummaryResponse> getMusicEvents() {
-         List<Object[]> results = eventRepository.findEventsByCategory("Âm nhạc (Concert)");
-         return results.stream()
-                 .map(nativeQueryMapper::toEventCardResponse)
-                 .collect(Collectors.toList());
-     }
 
     // Places: Return empty list for now (future implementation)
     public List<PlaceResponse> getPlaces() {
         return new ArrayList<>();
     }
 
-    // Get all categories with their latest 4 events
+    // Get all categories with their latest 4 events (single query, no N+1)
     public List<CategoryWithEventsResponse> getCategoriesWithEvents() {
-        List<Object[]> categoryResults = categoryRepository.findCategoriesWithActiveEvents();
-        
-        return categoryResults.stream().map(categoryRow -> {
-            Integer categoryId = (Integer) categoryRow[0];
-            String categoryName = (String) categoryRow[1];
-            
-            // Get latest 4 events for this category
-            List<Object[]> eventResults = eventRepository.findLatestEventsByCategoryId(categoryId);
-            List<EventSummaryResponse> events = eventResults.stream()
-                    .map(nativeQueryMapper::toEventCardResponse)
-                    .limit(MAX_EVENTS_PER_CATEGORY)
-                    .collect(Collectors.toList());
-            
-            return new CategoryWithEventsResponse(categoryId, categoryName, events);
-        }).collect(Collectors.toList());
+        List<CategoryWithEventProjection> rows = categoryRepository.findCategoriesWithLatestEvents();
+
+        // Group flat rows by category, preserving order from the query (ORDER BY c.id)
+        Map<Integer, CategoryWithEventsResponse> categoryMap = new LinkedHashMap<>();
+
+        for (CategoryWithEventProjection row : rows) {
+            Integer categoryId = row.getCategoryId();
+            String categoryName = row.getCategoryName();
+
+            EventSummaryResponse event = new EventSummaryResponse(
+                    row.getEventId(), row.getEventName(), row.getBannerUrl(),
+                    row.getAddressLine(), toOffsetDateTime(row.getStartDate()), toOffsetDateTime(row.getEndDate()),
+                    row.getMinPrice(), null
+            );
+
+            categoryMap.computeIfAbsent(categoryId,
+                    id -> new CategoryWithEventsResponse(id, categoryName, new ArrayList<>()))
+                    .events().add(event);
+        }
+
+        return new ArrayList<>(categoryMap.values());
     }
 
     // Event Display: Get filtered events (supports multiple categories) with pagination
     public List<EventSummaryResponse> getFilteredEvents(
-            String startDate, 
-            String endDate, 
+            LocalDate startDate, 
+            LocalDate endDate, 
             List<Integer> categoryIds, 
-            Boolean isFreeOnly,
-            Integer page,
-            Integer size
+            boolean isFreeOnly,
+            int page,
+            int size
     ) {
-        Boolean effectiveIsFreeOnly = (isFreeOnly != null) ? isFreeOnly : false;
-        int effectivePage = (page != null && page >= 0) ? page : 0;
-        int effectiveSize = (size != null && size > 0 && size <= MAX_PAGE_SIZE) ? size : DEFAULT_PAGE_SIZE;
-        
-        int offset = effectivePage * effectiveSize;
+        int offset = page * size;
+
+        // Convert LocalDate to String for native query (yyyy-MM-dd format)
+        String startDateStr = (startDate != null) ? startDate.toString() : null;
+        String endDateStr = (endDate != null) ? endDate.toString() : null;
         
         // Check if category filter should be applied
-        List<Object[]> results;
+        List<EventWithCategoryProjection> results;
         if (categoryIds == null || categoryIds.isEmpty()) {
             // No category filter - get all events
             results = eventRepository.findEventsWithoutCategoryFilter(
-                startDate,
-                endDate,
-                effectiveIsFreeOnly,
-                effectiveSize,
+                startDateStr,
+                endDateStr,
+                isFreeOnly,
+                size,
                 offset
             );
         } else {
             // Apply category filter
             results = eventRepository.findEventsWithCategoryFilter(
-                startDate,
-                endDate,
+                startDateStr,
+                endDateStr,
                 categoryIds,
-                effectiveIsFreeOnly,
-                effectiveSize,
+                isFreeOnly,
+                size,
                 offset
             );
         }
         
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
     // Get all categories (for filter dropdown)
     public List<CategoryResponse> getAllCategories() {
-        List<Object[]> results = categoryRepository.findCategoriesWithActiveEvents();
-        return results.stream()
+        return categoryRepository.findCategoriesWithActiveEvents().stream()
                 .map(nativeQueryMapper::toCategoryResponse)
                 .collect(Collectors.toList());
+    }
+
+    private OffsetDateTime toOffsetDateTime(Instant instant) {
+        return instant != null ? instant.atOffset(ZoneOffset.UTC) : null;
     }
 }

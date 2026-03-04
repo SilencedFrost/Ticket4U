@@ -161,12 +161,13 @@ public class HomePageController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false, defaultValue = "false") boolean isFreeOnly,
+            @RequestParam(required = false, defaultValue = "0") Integer tzOffset,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
         int validPage = Math.max(page, 0);
         int validSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
-        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, validPage, validSize);
+        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, tzOffset, validPage, validSize);
         return ResponseEntity.ok(events);
     }
 }

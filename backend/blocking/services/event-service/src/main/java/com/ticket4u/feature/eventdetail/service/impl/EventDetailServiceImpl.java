@@ -8,6 +8,7 @@ import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
 import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
+import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class EventDetailServiceImpl implements EventDetailService {
         Integer categoryId = currentEvent.getCategory().getId();
         String city = extractCity(currentEvent.getAddressLine());
 
-        List<Object[]> results = eventRepository.findRelatedEvents(
+        List<EventWithCategoryProjection> results = eventRepository.findRelatedEvents(
                 currentId,
                 categoryId,
                 city,
@@ -59,7 +60,7 @@ public class EventDetailServiceImpl implements EventDetailService {
         );
 
         return results.stream()
-                .map(nativeQueryMapper::toEventCardResponse)
+                .map(nativeQueryMapper::toEventSummaryResponse)
                 .toList();
     }
 

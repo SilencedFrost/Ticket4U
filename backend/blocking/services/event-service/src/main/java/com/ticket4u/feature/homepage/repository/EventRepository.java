@@ -1,6 +1,8 @@
 package com.ticket4u.feature.homepage.repository;
 
 import com.ticket4u.core.Event;
+import com.ticket4u.feature.homepage.projection.EventSummaryProjection;
+import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,16 +12,22 @@ import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
     
-    // Lấy danh sách events với giá thấp nhất từ các zones
+    // Lấy danh sách events với giá thấp nhất từ các zones (paginated)
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date, 
-               MIN(z.price) as min_price
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl, 
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate, 
+               MIN(z.price) AS minPrice
         FROM events e 
         LEFT JOIN zones z ON e.id = z.event_id 
+        WHERE e.status IN ('PLANNED', 'ONGOING')
         GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date
         ORDER BY e.start_date DESC
+        LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
-    List<Object[]> findEventsWithMinPrice();
+    List<EventSummaryProjection> findEventsWithMinPrice(
+        @Param("limit") Integer limit,
+        @Param("offset") Integer offset
+    );
     
     // Hoặc nếu muốn lấy theo event_id cụ thể
     @Query(value = """
@@ -31,8 +39,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     // Featured: Events mới nhất (PLANNED/ONGOING)
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         WHERE e.status IN ('PLANNED', 'ONGOING')
@@ -40,12 +49,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY e.created_at DESC
         LIMIT 10
         """, nativeQuery = true)
-    List<Object[]> findFeaturedEvents();
+    List<EventSummaryProjection> findFeaturedEvents();
 
     // Special: Events sắp diễn ra trong 7 ngày
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice
         FROM events e
         JOIN zones z ON e.id = z.event_id
         WHERE e.status IN ('PLANNED', 'ONGOING')
@@ -54,12 +64,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY e.start_date ASC
         LIMIT 10
         """, nativeQuery = true)
-    List<Object[]> findSpecialEvents();
+    List<EventSummaryProjection> findSpecialEvents();
 
     // Trending: Random 3 PLANNED/ONGOING events
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         WHERE e.status IN ('PLANNED', 'ONGOING')
@@ -67,12 +78,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY RANDOM()
         LIMIT 3
         """, nativeQuery = true)
-    List<Object[]> findTrendingEvents();
+    List<EventSummaryProjection> findTrendingEvents();
 
     // Suggested: Random PLANNED/ONGOING events
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         WHERE e.status IN ('PLANNED', 'ONGOING')
@@ -80,41 +92,13 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY RANDOM()
         LIMIT 10
         """, nativeQuery = true)
-    List<Object[]> findSuggestedEvents();
-
-    // Music: Events với category = 'Music'
-    @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
-        FROM events e
-        LEFT JOIN zones z ON e.id = z.event_id
-        JOIN categories c ON e.category_id = c.id
-        WHERE e.status IN ('PLANNED', 'ONGOING')
-          AND c.name = :categoryName
-        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date
-        ORDER BY e.start_date DESC
-        LIMIT 10
-        """, nativeQuery = true)
-    List<Object[]> findEventsByCategory(@Param("categoryName") String categoryName);
-
-    // Get latest 4 events for a specific category ID
-    @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price
-        FROM events e
-        LEFT JOIN zones z ON e.id = z.event_id
-        WHERE e.status IN ('PLANNED', 'ONGOING')
-          AND e.category_id = :categoryId
-        GROUP BY e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date
-        ORDER BY e.created_at DESC
-        LIMIT 4
-        """, nativeQuery = true)
-    List<Object[]> findLatestEventsByCategoryId(@Param("categoryId") Integer categoryId);
+    List<EventSummaryProjection> findSuggestedEvents();
 
     // Event Display: Filter events WITHOUT category filter (when showing all categories)
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price, c.name as category_name
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice, c.name AS categoryName
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         LEFT JOIN categories c ON e.category_id = c.id
@@ -129,7 +113,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY e.start_date ASC
         LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
-    List<Object[]> findEventsWithoutCategoryFilter(
+    List<EventWithCategoryProjection> findEventsWithoutCategoryFilter(
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
         @Param("isFreeOnly") Boolean isFreeOnly,
@@ -139,8 +123,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     // Event Display: Filter events WITH category filter (when specific categories selected)
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price, c.name as category_name
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice, c.name AS categoryName
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         LEFT JOIN categories c ON e.category_id = c.id
@@ -156,7 +141,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         ORDER BY e.start_date ASC
         LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
-    List<Object[]> findEventsWithCategoryFilter(
+    List<EventWithCategoryProjection> findEventsWithCategoryFilter(
         @Param("startDate") String startDate,
         @Param("endDate") String endDate,
         @Param("categoryIds") List<Integer> categoryIds,

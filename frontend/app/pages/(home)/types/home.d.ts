@@ -7,7 +7,6 @@ export interface Event {
   endDate: string
   minPrice: number
   categoryName?: string
-  status?: string
 }
 
 export interface Place {

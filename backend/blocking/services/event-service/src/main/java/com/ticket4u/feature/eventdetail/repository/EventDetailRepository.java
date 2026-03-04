@@ -1,6 +1,7 @@
 package com.ticket4u.feature.eventdetail.repository;
 
 import com.ticket4u.core.Event;
+import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,10 +16,10 @@ public interface EventDetailRepository extends JpaRepository<Event, UUID> {
     Optional<Event> findWithDetailsById(UUID id);
 
     @Query(value = """
-        SELECT e.id, e.name, e.banner_url, e.address_line, e.start_date, e.end_date,
-               MIN(z.price) as min_price, 
-               c.name as category_name,
-               e.status
+        SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+               e.address_line AS addressLine, e.start_date AS startDate, e.end_date AS endDate,
+               MIN(z.price) AS minPrice, 
+               c.name AS categoryName
         FROM events e
         LEFT JOIN zones z ON e.id = z.event_id
         LEFT JOIN categories c ON e.category_id = c.id 
@@ -32,7 +33,7 @@ public interface EventDetailRepository extends JpaRepository<Event, UUID> {
             e.created_at DESC
         LIMIT :limit
         """, nativeQuery = true)
-    List<Object[]> findRelatedEvents(
+    List<EventWithCategoryProjection> findRelatedEvents(
             @Param("currentId") UUID currentId,
             @Param("categoryId") Integer categoryId,
             @Param("city") String city,

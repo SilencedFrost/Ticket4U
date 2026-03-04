@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import DateRangeFilter from './DateRangeFilter.vue';
 import MainFilter from './MainFilter.vue';
@@ -109,7 +109,11 @@ import { locations, datePresets } from '../data/filters';
 
 // Store
 const eventDisplayStore = useEventDisplayStore();
-const { events, categories, loading, error, currentPage, pageSize, hasMore } = storeToRefs(eventDisplayStore);
+const { events, categories, loading, error, currentPage, pageSize, hasMore } =
+  storeToRefs(eventDisplayStore);
+
+// Route
+const route = useRoute();
 
 // i18n
 const { t } = useI18n();
@@ -142,6 +146,9 @@ const showMainFilter = ref(false);
 
 // Popup style for main filter
 const mainFilterPopupStyle = ref<Record<string, string>>({});
+
+// Guard flag to prevent watcher from double-fetching on programmatic URL updates
+let isInternalNavigation = false;
 
 // Active filters tracking
 interface ActiveFilter {
@@ -229,10 +236,38 @@ const updateURLWithFilters = () => {
 
   // Navigate to update URL (replace to avoid adding to history)
   // Use localePath to preserve language prefix
+  isInternalNavigation = true;
   router.replace({
     path: localePath('/event-display'),
     query: Object.keys(query).length > 0 ? query : undefined,
   });
+};
+
+// Sync filter state from URL query params
+const syncFiltersFromURL = () => {
+  const query = route.query;
+
+  // Sync categoryIds
+  if (query.categoryIds) {
+    const categoryIdsArray = Array.isArray(query.categoryIds)
+      ? query.categoryIds.map((id) => String(id))
+      : String(query.categoryIds)
+          .split(',')
+          .filter((id) => id.trim());
+    selectedCategories.value = categoryIdsArray;
+  } else {
+    selectedCategories.value = [];
+  }
+
+  // Sync date range
+  startDate.value = query.startDate ? String(query.startDate) : '';
+  endDate.value = query.endDate ? String(query.endDate) : '';
+
+  // Sync free event filter
+  isFreeEvent.value = query.isFreeOnly === 'true';
+
+  // Sync location
+  selectedLocation.value = query.location ? String(query.location) : '';
 };
 
 // Remove individual filter
@@ -382,6 +417,21 @@ const updateMobileState = () => {
   }
 };
 
+// Watch route query changes to sync filters when URL changes without remount
+// (e.g. clicking navbar Events link while already on event-display page)
+watch(
+  () => route.query,
+  () => {
+    // Skip if the URL change was triggered internally (e.g. applyMainFilter, removeFilter)
+    if (isInternalNavigation) {
+      isInternalNavigation = false;
+      return;
+    }
+    syncFiltersFromURL();
+    fetchWithFilters();
+  },
+);
+
 onMounted(async () => {
   updateMobileState();
   window.addEventListener('resize', updateMobileState);
@@ -390,20 +440,8 @@ onMounted(async () => {
   // Fetch categories first
   await eventDisplayStore.fetchCategories();
 
-  // Check URL query params for pre-filters
-  const route = useRoute();
-  const urlCategoryIds = route.query.categoryIds;
-
-  if (urlCategoryIds) {
-    // Parse categoryIds from URL (can be single value or comma-separated)
-    const categoryIdsArray = Array.isArray(urlCategoryIds)
-      ? urlCategoryIds.map((id) => String(id))
-      : String(urlCategoryIds)
-          .split(',')
-          .filter((id) => id.trim());
-
-    selectedCategories.value = categoryIdsArray;
-  }
+  // Sync filters from URL query params
+  syncFiltersFromURL();
 
   // Fetch initial data with URL filters applied
   fetchWithFilters();

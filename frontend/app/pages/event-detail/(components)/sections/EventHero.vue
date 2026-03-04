@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
+import { useFormatter } from '@/composables/useFormatter';
+
 const { vFallback: vImgFallback } = useImagePlaceholder();
+const { formatPrice } = useFormatter();
+
 defineProps<{
-  title: string;
-  time: string;
-  date: string;
-  address: string;
-  minPrice: string;
-  heroImage: string;
+  event: EventDetailResponse;
 }>();
 
 const emit = defineEmits(['buyClick']);
@@ -17,7 +17,7 @@ const emit = defineEmits(['buyClick']);
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
       <img
         v-img-fallback="[1200, 600]"
-        :src="heroImage"
+        :src="event.imgEvent.heroUrl"
         class="w-100 h-100 object-fit-cover hero-bg-blur"
       />
     </div>
@@ -28,18 +28,18 @@ const emit = defineEmits(['buyClick']);
             <div class="card d-flex flex-column flex-lg-row shadow-lg mx-auto overflow-hidden">
               <div class="card-body p-4 d-flex flex-column order-2 order-lg-1 col-12 col-lg-3">
                 <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
-                  {{ title }}
+                  {{ event.eventTitle }}
                 </h5>
                 <div class="mb-2 small">
                   <i class="bi bi-calendar-event text-reactive-primary me-1" />
                   <span class="text-primary fw-semibold">
-                    {{ time }},
-                    {{ $d(new Date(date), 'short') }}
+                    {{ event.time }},
+                    {{ $d(new Date(event.date), 'short') }}
                   </span>
                 </div>
                 <div class="mb-2 text-reactive-secondary small">
                   <i class="bi bi-geo-alt-fill text-reactive-primary me-1" />
-                  <span class="text-primary fw-semibold">{{ address }}</span>
+                  <span class="text-primary fw-semibold">{{ event.address }}</span>
                   <!-- <p class="mb-0 small">{{  }}</p> -->
                 </div>
                 <div class="mt-auto">
@@ -47,7 +47,7 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
                     {{ $t('common.price.from') }}
                   </p>
-                  <p class="text-primary fw-bold mb-2 fs-3">{{ minPrice }}</p>
+                  <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
                   <button
                     class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"
                     @click="emit('buyClick')"
@@ -58,7 +58,7 @@ const emit = defineEmits(['buyClick']);
               </div>
               <img
                 v-img-fallback="[1200, 600]"
-                :src="heroImage"
+                :src="event.imgEvent.heroUrl"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
               />
             </div>

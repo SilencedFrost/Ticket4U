@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { Showtime } from '@/pages/event-detail/types/event-detail';
+import { useFormatter } from '@/composables/useFormatter';
+
+const { formatPrice } = useFormatter();
 
 defineProps<{
   showTime: Showtime[];
@@ -90,7 +93,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                     </div>
                     <div class="order-1 order-md-2 flex-shrink-0">
                       <p class="text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
-                        {{ seat.price }}
+                        {{ formatPrice(seat.price) }}
                       </p>
                     </div>
                   </div>

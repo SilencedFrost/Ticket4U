@@ -8,7 +8,7 @@ export interface Organizer {
 interface SeatType {
   id: string;
   name: string;
-  price: string;
+  price: number;
   available: number;
   description?: string;
   image?: string;
@@ -31,8 +31,8 @@ export interface EventDetailResponse {
   eventId: string;
   eventTitle: string;
   address: string;
-  minPrice: string;
-  maxPrice: string;
+  minPrice: number;
+  maxPrice: number;
   categoryId: number;
   description: string;
   imgEvent: EventImages;

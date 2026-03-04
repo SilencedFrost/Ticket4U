@@ -4,22 +4,10 @@ import type { EventCardResponse } from '~/pages/(home)/types/api';
 
 export const useEventStore = defineStore('event', () => {
   const config = useRuntimeConfig();
+  const { formatDateTime } = useFormatter();
 
   const currentEvent = ref<EventDetailResponse | null>(null);
   const relatedEvents = ref<EventCardResponse[]>([]);
-
-  const formatPrice = (price: string | number) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-      typeof price === 'string' ? Number.parseFloat(price) : price,
-    );
-
-  const formatDateTime = (isoString: string) => {
-    const d = new Date(isoString);
-    return {
-      date: d.toISOString().split('T')[0],
-      time: d.toTimeString().slice(0, 5),
-    };
-  };
 
   async function fetchEventDetail(eventId: string) {
     try {
@@ -29,8 +17,8 @@ export const useEventStore = defineStore('event', () => {
         startDate: string;
         addressLine: string;
         description: string;
-        minPrice: string;
-        maxPrice: string;
+        minPrice: number;
+        maxPrice: number;
         categoryId: number;
         bannerUrl: string;
         seatingPlanImageUrl: string;
@@ -41,7 +29,7 @@ export const useEventStore = defineStore('event', () => {
           seatTypes: Array<{
             id: string;
             name: string;
-            price: string;
+            price: number;
             available: number;
             description?: string;
             image?: string;
@@ -61,8 +49,8 @@ export const useEventStore = defineStore('event', () => {
         organizerId: data.organizerId,
         date,
         time,
-        minPrice: formatPrice(data.minPrice),
-        maxPrice: formatPrice(data.maxPrice),
+        minPrice: data.minPrice,
+        maxPrice: data.maxPrice,
         imgEvent: {
           heroUrl: data.bannerUrl,
           seatMapUrl: data.seatingPlanImageUrl,
@@ -76,7 +64,7 @@ export const useEventStore = defineStore('event', () => {
             seatTypes: showtime.seatTypes?.map((seatType) => ({
               id: seatType.id,
               name: seatType.name,
-              price: formatPrice(seatType.price),
+              price: seatType.price,
               available: seatType.available,
               description: seatType.description,
               image: seatType.image,
@@ -86,17 +74,17 @@ export const useEventStore = defineStore('event', () => {
         }),
       } as EventDetailResponse;
 
-      if (data.organizerId) {
-        fetchOrganizer(data.organizerId);
-      }
-
-      fetchRelatedEvents(data.id);
+      // Explicitly fetch related data after main event loaded
+      await Promise.allSettled([
+        data.organizerId ? fetchOrganizer(data.organizerId) : Promise.resolve(),
+        fetchRelatedEvents(data.id),
+      ]);
 
       return currentEvent.value;
-    } catch (error) {
-      console.error('Error fetching event detail:', error);
+    } catch (err) {
       currentEvent.value = null;
-      throw error;
+      console.error('[EventStore] Failed to fetch event detail:', err);
+      throw err;
     }
   }
 
@@ -104,13 +92,10 @@ export const useEventStore = defineStore('event', () => {
     try {
       const data = await $fetch<EventCardResponse[]>(
         `${config.public.eventDetailUrl}/${eventId}/related`,
-        {
-          method: 'GET',
-        },
       );
       relatedEvents.value = data;
-    } catch (error) {
-      console.error('Error fetching related events:', error);
+    } catch (err) {
+      console.error('[EventStore] Failed to fetch related events:', err);
       relatedEvents.value = [];
     }
   }
@@ -123,8 +108,8 @@ export const useEventStore = defineStore('event', () => {
       if (currentEvent.value) {
         currentEvent.value.organizer = organizerData;
       }
-    } catch (error) {
-      console.error('Error fetching organizer:', error);
+    } catch (err) {
+      console.error('[EventStore] Failed to fetch organizer:', err);
       if (currentEvent.value) {
         currentEvent.value.organizer = null;
       }

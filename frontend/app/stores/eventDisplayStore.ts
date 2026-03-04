@@ -7,6 +7,7 @@ interface EventDisplayFilters {
   endDate: string | null
   categoryIds: Array<number | string>
   isFreeOnly: boolean
+  tzOffset: number
   page: number
   size: number
 }
@@ -32,6 +33,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
     endDate: null,
     categoryIds: [],
     isFreeOnly: false,
+    tzOffset: new Date().getTimezoneOffset(),
     page: 0,
     size: 20,
   })
@@ -63,6 +65,8 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       if (appliedFilters.isFreeOnly) {
         params.append('isFreeOnly', 'true')
       }
+      // Send client timezone offset for accurate date boundary conversion
+      params.append('tzOffset', String(appliedFilters.tzOffset ?? new Date().getTimezoneOffset()))
       
       // Add pagination params (with defaults)
       const page = appliedFilters.page ?? 0
@@ -118,6 +122,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       endDate: null,
       categoryIds: [],
       isFreeOnly: false,
+      tzOffset: new Date().getTimezoneOffset(),
       page: 0,
       size: 20,
     }

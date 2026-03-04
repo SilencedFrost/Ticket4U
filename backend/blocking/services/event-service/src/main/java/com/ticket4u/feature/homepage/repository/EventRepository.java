@@ -2,6 +2,7 @@ package com.ticket4u.feature.homepage.repository;
 
 import com.ticket4u.core.Event;
 import com.ticket4u.feature.homepage.projection.EventSummaryProjection;
+import java.time.OffsetDateTime;
 import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -103,8 +104,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         LEFT JOIN zones z ON e.id = z.event_id
         LEFT JOIN categories c ON e.category_id = c.id
         WHERE e.status IN ('PLANNED', 'ONGOING')
-          AND (:startDate IS NULL OR e.start_date >= TO_TIMESTAMP(:startDate, 'YYYY-MM-DD'))
-          AND (:endDate IS NULL OR e.start_date <= TO_TIMESTAMP(:endDate, 'YYYY-MM-DD') + INTERVAL '1 day')
+          AND (CAST(:startOdt AS TIMESTAMPTZ) IS NULL OR e.start_date >= :startOdt)
+          AND (CAST(:endOdt AS TIMESTAMPTZ) IS NULL OR e.start_date < :endOdt)
           AND (:isFreeOnly IS FALSE OR EXISTS (
               SELECT 1 FROM zones z2 
               WHERE z2.event_id = e.id AND (z2.price = 0 OR z2.price IS NULL)
@@ -114,8 +115,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
     List<EventWithCategoryProjection> findEventsWithoutCategoryFilter(
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
+        @Param("startOdt") OffsetDateTime startOdt,
+        @Param("endOdt") OffsetDateTime endOdt,
         @Param("isFreeOnly") Boolean isFreeOnly,
         @Param("limit") Integer limit,
         @Param("offset") Integer offset
@@ -131,8 +132,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         LEFT JOIN categories c ON e.category_id = c.id
         WHERE e.status IN ('PLANNED', 'ONGOING')
           AND e.category_id IN (:categoryIds)
-          AND (:startDate IS NULL OR e.start_date >= TO_TIMESTAMP(:startDate, 'YYYY-MM-DD'))
-          AND (:endDate IS NULL OR e.start_date <= TO_TIMESTAMP(:endDate, 'YYYY-MM-DD') + INTERVAL '1 day')
+          AND (CAST(:startOdt AS TIMESTAMPTZ) IS NULL OR e.start_date >= :startOdt)
+          AND (CAST(:endOdt AS TIMESTAMPTZ) IS NULL OR e.start_date < :endOdt)
           AND (:isFreeOnly IS FALSE OR EXISTS (
               SELECT 1 FROM zones z2 
               WHERE z2.event_id = e.id AND (z2.price = 0 OR z2.price IS NULL)
@@ -142,8 +143,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         LIMIT :limit OFFSET :offset
         """, nativeQuery = true)
     List<EventWithCategoryProjection> findEventsWithCategoryFilter(
-        @Param("startDate") String startDate,
-        @Param("endDate") String endDate,
+        @Param("startOdt") OffsetDateTime startOdt,
+        @Param("endOdt") OffsetDateTime endOdt,
         @Param("categoryIds") List<Integer> categoryIds,
         @Param("isFreeOnly") Boolean isFreeOnly,
         @Param("limit") Integer limit,

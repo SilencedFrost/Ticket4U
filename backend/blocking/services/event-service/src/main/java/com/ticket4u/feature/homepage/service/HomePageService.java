@@ -115,22 +115,31 @@ public class HomePageService {
             LocalDate endDate, 
             List<Integer> categoryIds, 
             boolean isFreeOnly,
+            int tzOffset,
             int page,
             int size
     ) {
         int offset = page * size;
 
-        // Convert LocalDate to String for native query (yyyy-MM-dd format)
-        String startDateStr = (startDate != null) ? startDate.toString() : null;
-        String endDateStr = (endDate != null) ? endDate.toString() : null;
+        // Convert LocalDate to OffsetDateTime using client timezone.
+        // JS getTimezoneOffset() returns inverted sign: UTC+7 → -420, so negate it.
+        ZoneOffset clientZone = ZoneOffset.ofTotalSeconds(-tzOffset * 60);
+
+        OffsetDateTime startOdt = (startDate != null)
+                ? startDate.atStartOfDay().atOffset(clientZone)
+                : null;
+        // endDate: use start-of-next-day so the entire end day is included
+        OffsetDateTime endOdt = (endDate != null)
+                ? endDate.plusDays(1).atStartOfDay().atOffset(clientZone)
+                : null;
         
         // Check if category filter should be applied
         List<EventWithCategoryProjection> results;
         if (categoryIds == null || categoryIds.isEmpty()) {
             // No category filter - get all events
             results = eventRepository.findEventsWithoutCategoryFilter(
-                startDateStr,
-                endDateStr,
+                startOdt,
+                endOdt,
                 isFreeOnly,
                 size,
                 offset
@@ -138,8 +147,8 @@ public class HomePageService {
         } else {
             // Apply category filter
             results = eventRepository.findEventsWithCategoryFilter(
-                startDateStr,
-                endDateStr,
+                startOdt,
+                endOdt,
                 categoryIds,
                 isFreeOnly,
                 size,

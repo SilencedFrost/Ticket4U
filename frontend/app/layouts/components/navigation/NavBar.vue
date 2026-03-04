@@ -34,10 +34,8 @@ const localePath = useLocalePath();
 </script>
 <template>
   <div ref="menuContainer">
-    <nav
-      :class="['bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
-      @click="toggleMenu()"
-    >
+    <nav :class="['bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
+      @click="toggleMenu()">
       <div class="container-fluid p-0 position-relative d-flex">
         <!-- Logo -->
         <div class="nav-container">
@@ -47,30 +45,23 @@ const localePath = useLocalePath();
         </div>
         <!-- Hover buttons -->
         <div class="d-none d-md-flex ms-lg-5">
-          <div class="nav-item">
+          <nuxt-link-locale :to="localePath('/event-display')" class="nav-item">
             <span>Events</span>
-          </div>
+          </nuxt-link-locale>
           <div class="nav-item">
             <span>Contact us</span>
           </div>
         </div>
         <!-- Search bar -->
         <div class="nav-container position-absolute start-50 translate-middle-x">
-          <i class="bi bi-search text-clickable me-2" @click="focusSearch()" /><input
-            ref="searchInput"
-            type="text"
-            class="search-field text-reactive-primary input-underline"
-            :placeholder="$t('placeholder.search')"
-            @blur="clearSearch()"
-          />
+          <i class="bi bi-search text-clickable me-2" @click="focusSearch()" /><input ref="searchInput" type="text"
+            class="search-field text-reactive-primary input-underline" :placeholder="$t('placeholder.search')"
+            @blur="clearSearch()" />
         </div>
         <!-- Function buttons -->
         <div class="d-flex align-items-center ms-auto">
           <!-- Ticket button -->
-          <div
-            v-if="useUser.isLoggedIn === true"
-            class="d-flex text-clickable pe-2 border-end border-2"
-          >
+          <div v-if="useUser.isLoggedIn === true" class="d-flex text-clickable pe-2 border-end border-2">
             <i class="bi bi-ticket" />
             <span class="d-none d-sm-flex ms-2">{{ $t('common.tickets') }}</span>
           </div>
@@ -82,10 +73,8 @@ const localePath = useLocalePath();
                 <span class="ms-2" style="width: 20px">{{ locale.toUpperCase() }}</span>
               </div>
               <!-- Language drop down -->
-              <div
-                v-if="currentMenuKey === 'language'"
-                class="position-absolute top-100 start-50 translate-middle-x mt-3"
-              >
+              <div v-if="currentMenuKey === 'language'"
+                class="position-absolute top-100 start-50 translate-middle-x mt-3">
                 <language-switcher-drop-down @click="toggleMenu()" />
               </div>
             </div>
@@ -108,18 +97,13 @@ const localePath = useLocalePath();
       </div>
     </nav>
     <!-- Burger collapsible menu -->
-    <div
-      :class="[
-        'position-absolute',
-        'w-100',
-        'dropdown-content',
-        { open: currentMenuKey === 'burger' },
-      ]"
-    >
-      <burger-drop-down
-        :parent-menu-open="currentMenuKey === 'burger'"
-        @switched-lang="toggleMenu()"
-      />
+    <div :class="[
+      'position-absolute',
+      'w-100',
+      'dropdown-content',
+      { open: currentMenuKey === 'burger' },
+    ]">
+      <burger-drop-down :parent-menu-open="currentMenuKey === 'burger'" @switched-lang="toggleMenu()" />
     </div>
   </div>
 </template>
@@ -130,7 +114,7 @@ const localePath = useLocalePath();
   align-items: center;
   padding: 0.75rem;
 
-  > * {
+  >* {
     height: 40px;
     align-items: center;
   }
@@ -151,4 +135,16 @@ const localePath = useLocalePath();
   align-items: center;
   justify-content: center;
 }
+
+/* remove underline from nav links and ensure full nav-item clickable */
+.nav-item,
+.nav-item a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.nav-item:hover {
+  text-decoration: none;
+}
+
 </style>

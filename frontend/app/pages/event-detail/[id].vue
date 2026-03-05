@@ -11,7 +11,7 @@
 import EventDetail from './(components)/EventDetail.vue';
 
 definePageMeta({
-  ssr: false,
+  ssr: true,
 });
 
 const route = useRoute();
@@ -23,8 +23,8 @@ const { pending, error } = await useAsyncData(
   `event-${eventId}`,
   () => eventStore.fetchEventDetail(eventId),
   {
-    server: false,
-    lazy: true,
+    server: true,
+    lazy: false,
   },
 );
 </script>

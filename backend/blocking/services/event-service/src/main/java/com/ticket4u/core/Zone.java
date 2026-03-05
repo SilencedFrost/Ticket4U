@@ -23,24 +23,24 @@ public class Zone {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    @Column(length = 255)
+    @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(name = "is_standing")
-    private Boolean isStanding = false;
+    @Column(name = "is_standing", nullable = false)
+    private Boolean isStanding;
 
     @Column
-    private Integer capacity = 0;
+    private Integer capacity;
 
     @Column(name = "quantity_sold")
-    private Integer quantitySold = 0;
+    private Integer quantitySold;
 
     @Column(name = "purchase_limit")
     private Integer purchaseLimit;

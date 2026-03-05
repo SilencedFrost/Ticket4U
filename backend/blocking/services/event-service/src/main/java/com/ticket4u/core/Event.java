@@ -23,7 +23,7 @@ import java.util.UUID;
 public class Event {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private UUID id;
 
     @Column(nullable = false, length = 254)
@@ -33,10 +33,10 @@ public class Event {
     private UUID organizerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "address_line", length = 255)
+    @Column(name = "address_line", nullable = false, length = 255)
     private String addressLine;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
@@ -48,7 +48,7 @@ public class Event {
     private OffsetDateTime endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private EventStatus status;
 
     @Column(name = "banner_url", columnDefinition = "TEXT")

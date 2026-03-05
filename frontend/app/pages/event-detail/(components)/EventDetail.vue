@@ -7,40 +7,26 @@ import EventOrganizer from './sections/EventOrganizer.vue';
 import EventNav from './sections/EventNav.vue';
 import EventRelated from './sections/EventRelated.vue';
 import EventAds from './sections/EventAds.vue';
+
 const eventStore = useEventStore();
+const event = computed(() => eventStore.currentEvent);
 
 useHead({
-  title: () => eventStore.currentEvent?.eventTitle || 'Loading Event...',
+  title: () => event.value?.eventTitle || 'Loading Event...',
   titleTemplate: (title) => `${title}`,
 });
 </script>
 
 <template>
-  <div v-if="eventStore.currentEvent" class="h-auto overflow-x-hidden mw-100">
-    <event-hero
-      :title="eventStore.currentEvent!.eventTitle"
-      :date="eventStore.currentEvent!.date"
-      :time="eventStore.currentEvent!.time"
-      :address="eventStore.currentEvent!.address"
-      :min-price="eventStore.currentEvent!.minPrice"
-      :hero-image="eventStore.currentEvent!.imgEvent.heroUrl"
-    />
+  <div v-if="event" class="h-auto overflow-x-hidden mw-100">
+    <event-hero :event="event" />
     <event-nav />
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
       <div class="col-lg-9">
-        <event-schedule
-          :title="eventStore.currentEvent!.eventTitle"
-          :address="eventStore.currentEvent!.address"
-          :date="eventStore.currentEvent!.date"
-          :time="eventStore.currentEvent!.time"
-          :event-thumb-image="eventStore.currentEvent!.imgEvent.seatMapUrl"
-        />
-        <event-about :description="eventStore.currentEvent!.description" />
-        <event-tickets :show-time="eventStore.currentEvent!.showtimes" />
-        <event-organizer
-          v-if="eventStore.currentEvent!.organizer?.id"
-          :event-data="eventStore.currentEvent!.organizer"
-        />
+        <event-schedule :event="event" />
+        <event-about :description="event.description" />
+        <event-tickets :show-time="event.showtimes" />
+        <event-organizer v-if="event.organizer?.id" :event-data="event.organizer" />
       </div>
       <event-ads />
     </div>

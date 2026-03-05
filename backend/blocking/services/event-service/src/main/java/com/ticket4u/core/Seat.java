@@ -19,14 +19,14 @@ import java.util.UUID;
 public class Seat {
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "zone_id")
+    @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 
-    @Column(length = 255)
+    @Column(length = 254)
     private String name;
 
     @Column(name = "row_name", length = 5)
@@ -39,7 +39,7 @@ public class Seat {
     private String seatCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private SeatStatus status;
 
     @Column(name = "price_override", precision = 10, scale = 2)

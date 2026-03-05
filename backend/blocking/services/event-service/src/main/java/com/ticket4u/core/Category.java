@@ -16,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Category {
     @Id
-    @Column(nullable = false, length = 15)
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_id_seq")
+    @SequenceGenerator(name = "categories_id_seq", sequenceName = "categories_id_seq", allocationSize = 1)
     private Integer id;
 
     @Column(nullable = false, length = 254)

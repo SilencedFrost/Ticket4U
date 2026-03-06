@@ -1,10 +1,9 @@
 package com.ticket4u.feature.eventdetail.service.impl;
 
 import com.ticket4u.core.Event;
+import com.ticket4u.core.EventSession;
 import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.dto.SeatTypeResponse;
-import com.ticket4u.feature.eventdetail.dto.ShowtimeResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
 import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,25 +33,23 @@ public class EventDetailServiceImpl implements EventDetailService {
         Event event = eventRepository.findWithDetailsById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with ID: " + id));
 
-        BigDecimal minPrice = calculateMinPrice(event.getZones());
-        BigDecimal maxPrice = calculateMaxPrice(event.getZones());
-
-        List<ShowtimeResponse> showtimes = buildShowtimes(event);
-
-        return eventDetailMapper.toResponse(event, minPrice, maxPrice, showtimes);
-    }
-
-    private List<ShowtimeResponse> buildShowtimes(Event event) {
-        if (event.getZones() == null || event.getZones().isEmpty()) {
-            return Collections.emptyList();
+        if (event.getSessions() == null || event.getSessions().isEmpty()) {
+            throw new EntityNotFoundException("No sessions found for event ID: " + id);
         }
 
-        List<SeatTypeResponse> seatTypes = zoneMapper.toSeatTypeResponse(event.getZones());
+        List<Zone> allZones = event.getSessions().stream()
+                .flatMap(session -> session.getZones().stream())
+                .toList();
 
-        return List.of(new ShowtimeResponse(
-                event.getId().toString(),
-                event.getStartDate(),
-                seatTypes));
+        BigDecimal minPrice = calculateMinPrice(allZones);
+        BigDecimal maxPrice = calculateMaxPrice(allZones);
+
+        OffsetDateTime startDate = event.getSessions().stream()
+                .findFirst()
+                .map(EventSession::getStartDate)
+                .orElse(null);
+
+        return eventDetailMapper.toResponse(event, startDate, minPrice, maxPrice);
     }
 
     private BigDecimal calculateMinPrice(List<Zone> zones) {
@@ -91,6 +88,7 @@ public class EventDetailServiceImpl implements EventDetailService {
                 .map(nativeQueryMapper::toEventSummaryResponse)
                 .toList();
     }
+
     private String extractCityForSearch(String address) {
         if (address == null || address.isBlank()) {
             return "";

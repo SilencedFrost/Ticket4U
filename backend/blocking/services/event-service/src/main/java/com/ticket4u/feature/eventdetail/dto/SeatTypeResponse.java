@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 public record SeatTypeResponse(
-         UUID id,
-         String name,
-         BigDecimal price,
-         Integer available,
-         String description,
-         String image,
-         List<String>benefits
-) {}
+                UUID id,
+                String name,
+                BigDecimal price,
+                Integer available,
+                String descriptionVi,
+                String descriptionEn,
+                String giftImageUrl,
+                List<String> perks) {
+}

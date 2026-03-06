@@ -31,7 +31,7 @@ class EventDetailIntegrationTest {
 
     @Test
     void shouldReturnEventDetail_WhenIdIsValid() throws Exception {
-        String validEventId = "01000000-0000-748a-828b-72ca099b3bb3";
+        String validEventId = "019cc28b-02b9-7452-91ea-e3ffcac2f08b";
 
         mockMvc.perform(get("/api/v1/public/events/" + validEventId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -42,7 +42,7 @@ class EventDetailIntegrationTest {
 
     @Test
     void shouldReturnExactly8RelatedEvents_WhenRequestIsValid() throws Exception {
-        String validEventId = "01000000-0000-748a-828b-72ca099b3bb3";
+        String validEventId = "019cc28b-02b9-7452-91ea-e3ffcac2f08b";
 
         mockMvc.perform(get("/api/v1/public/events/" + validEventId + "/related")
                         .contentType(MediaType.APPLICATION_JSON))

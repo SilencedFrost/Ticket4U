@@ -2,16 +2,11 @@ DROP TABLE IF EXISTS public.seats;
 DROP TABLE IF EXISTS public.zones;
 DROP TABLE IF EXISTS public.events;
 DROP TABLE IF EXISTS public.categories;
-DROP SEQUENCE IF EXISTS categories_id_seq;
-
--- Sequence for categories.id (managed via @SequenceGenerator in Category entity)
-CREATE SEQUENCE IF NOT EXISTS categories_id_seq START WITH 1 INCREMENT BY 1;
 
 -- Table: categories
 CREATE TABLE IF NOT EXISTS public.categories (
-	id 		INTEGER,
-	name 	VARCHAR(255) NOT NULL UNIQUE,
-	PRIMARY KEY (id)
+	id 		INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name 	VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Table: events
@@ -22,11 +17,12 @@ CREATE TABLE IF NOT EXISTS public.events (
 	organizer_id 			UUID NOT NULL,
 	category_id 			INTEGER, -- null vì có thể chưa phân loại ngay khi tạo sự kiện
 	address_line 			VARCHAR(255) NOT NULL,
-	start_date 				TIMESTAMPTZ,
-	end_date 				TIMESTAMPTZ,
+	start_date 				TIMESTAMPTZ NOT NULL,
+	end_date 				TIMESTAMPTZ NOT NULL,
 	status 					VARCHAR(50) NOT NULL,
-	banner_url 				TEXT,
-	description 			TEXT,
+	banner_url 				TEXT NOT NULL,
+	description_vi 			TEXT,
+	description_en 			TEXT,
 
 	created_at 				TIMESTAMPTZ NOT NULL,
 	updated_at 				TIMESTAMPTZ,
@@ -55,7 +51,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
 	purchase_limit 		INTEGER,
 	price 				DECIMAL(10, 2) NOT NULL,
 
-	description 		TEXT,
+	description_vi 		TEXT,
+	description_en 		TEXT,
 	gift_image_url 		VARCHAR(512),
     perks 				JSONB,
     created_at 			TIMESTAMPTZ NOT NULL,

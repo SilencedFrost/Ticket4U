@@ -36,26 +36,29 @@ public class Event {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "address_line", nullable = false, length = 255)
+    @Column(name = "address_line", nullable = false, length = 254)
     private String addressLine;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "start_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime startDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "end_date", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "end_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private EventStatus status;
 
-    @Column(name = "banner_url", columnDefinition = "TEXT")
+    @Column(name = "banner_url", nullable = false, columnDefinition = "TEXT")
     private String bannerUrl;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "description_vi", columnDefinition = "TEXT")
+    private String descriptionVi;
+
+    @Column(name = "description_en", columnDefinition = "TEXT")
+    private String descriptionEn;
 
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")

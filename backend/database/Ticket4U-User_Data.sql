@@ -7,15 +7,13 @@ insert into public.users(id, email, role_id, username, password_hash, is_active,
 (uuidv7(), 'systemAdmin@gmail.com'   , 4 , 'System Admin', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
 (uuidv7(), 'gatekeeper@gmail.com'    , 10, 'Gate keeper', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
 (uuidv7(), 'supportAgent@gmail.com'  , 11, 'Support Agent', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), 'financeManager@gmail.com', 12, 'Finance Manager', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now())
+(uuidv7(), 'financeManager@gmail.com', 12, 'Finance Manager', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now());
 
 INSERT INTO public.users (id, email, role_id, username, password_hash, is_active, is_deleted, created_at)
-VALUES ('019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'absolute@ticket4u.vn', 2, 'absolute_media', 'hash_pass', true, false, NOW())
-ON CONFLICT (id) DO NOTHING;
+VALUES ('019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'absolute@ticket4u.vn', 2, 'absolute_media', 'hash_pass', true, false, NOW());
 
 INSERT INTO public.users (id, email, role_id, username, password_hash, is_active, is_deleted, created_at)
-VALUES ('019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'catmouse@ticket4u.vn', 2, 'cat_mouse', 'hash_pass', true, false, NOW())
-ON CONFLICT (id) DO NOTHING;
+VALUES ('019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'catmouse@ticket4u.vn', 2, 'cat_mouse', 'hash_pass', true, false, NOW());
 
 INSERT INTO public.organizer (id, name, description, rating, logo_url)
 VALUES 

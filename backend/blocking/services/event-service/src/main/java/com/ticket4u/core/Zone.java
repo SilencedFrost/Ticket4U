@@ -27,8 +27,8 @@ public class Zone {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
+    @JoinColumn(name = "session_id", nullable = false)
+    private EventSession session;
 
     @Column(nullable = false, length = 255)
     private String name;
@@ -36,26 +36,25 @@ public class Zone {
     @Column(name = "is_standing", nullable = false)
     private Boolean isStanding;
 
-    @Column
+    @Column(nullable = true)
     private Integer capacity;
 
-    @Column(name = "quantity_sold")
+    @Column(name = "quantity_sold", nullable = true)
     private Integer quantitySold;
 
-    @Column(name = "purchase_limit")
+    @Column(name = "purchase_limit", nullable = true)
     private Integer purchaseLimit;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    // Zone content fields (gộp từ ZoneContent)
-    @Column(name = "description_vi", columnDefinition = "TEXT")
+    @Column(name = "description_vi", nullable = true, columnDefinition = "TEXT")
     private String descriptionVi;
 
-    @Column(name = "description_en", columnDefinition = "TEXT")
+    @Column(name = "description_en", nullable = true, columnDefinition = "TEXT")
     private String descriptionEn;
 
-    @Column(name = "gift_image_url", length = 512)
+    @Column(name = "gift_image_url", nullable = true, length = 512)
     private String giftImageUrl;
 
     @Column(columnDefinition = "JSONB")
@@ -63,11 +62,11 @@ public class Zone {
     private List<String> perks;
 
     @CreationTimestamp
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "updated_at", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
 
     // Relationships

@@ -16,11 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_id_seq")
-    @SequenceGenerator(name = "categories_id_seq", sequenceName = "categories_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 254)
+    @Column(nullable = false, unique = true, length = 255)
     private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)

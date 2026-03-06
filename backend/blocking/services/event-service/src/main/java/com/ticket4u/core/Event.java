@@ -1,6 +1,5 @@
 package com.ticket4u.core;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -26,26 +26,18 @@ public class Event {
     @Column(updatable = false)
     private UUID id;
 
-    @Column(nullable = false, length = 254)
+    @Column(nullable = false, unique = true, length = 255)
     private String name;
 
     @Column(nullable = false, name = "organizer_id")
     private UUID organizerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
-    @Column(name = "address_line", nullable = false, length = 254)
+    @Column(name = "address_line", nullable = false, length = 255)
     private String addressLine;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "start_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private OffsetDateTime startDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Column(name = "end_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private OffsetDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
@@ -54,42 +46,34 @@ public class Event {
     @Column(name = "banner_url", nullable = false, columnDefinition = "TEXT")
     private String bannerUrl;
 
-    @Column(name = "description_vi", columnDefinition = "TEXT")
-    private String descriptionVi;
-
-    @Column(name = "description_en", columnDefinition = "TEXT")
-    private String descriptionEn;
-
     @CreationTimestamp
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "updated_at", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
 
-    @Column(name = "cancelled_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "cancelled_at", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime cancelledAt;
 
-    // Event content fields (gộp từ EventContent)
-    @Column(name = "about_vi", columnDefinition = "TEXT")
+    @Column(name = "about_vi", nullable = true, columnDefinition = "TEXT")
     private String aboutVi;
 
-    @Column(name = "about_en", columnDefinition = "TEXT")
+    @Column(name = "about_en", nullable = true, columnDefinition = "TEXT")
     private String aboutEn;
 
-    @Column(name = "terms_and_conditions", columnDefinition = "TEXT")
+    @Column(name = "terms_and_conditions", nullable = true, columnDefinition = "TEXT")
     private String termsAndConditions;
 
-    @Column(name = "policy_refund", columnDefinition = "TEXT")
+    @Column(name = "policy_refund", nullable = true, columnDefinition = "TEXT")
     private String policyRefund;
 
-    @Column(name = "seating_plan_image_url", columnDefinition = "TEXT")
+    @Column(name = "seating_plan_image_url", nullable = true, columnDefinition = "TEXT")
     private String seatingPlanImageUrl;
 
-    // Relationships
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Zone> zones;
+    private Set<EventSession> sessions = new LinkedHashSet<>();
 
     public enum EventStatus {
         PLANNED,

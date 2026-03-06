@@ -26,16 +26,16 @@ public class Seat {
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 
-    @Column(length = 254)
+    @Column(nullable = true, length = 255)
     private String name;
 
-    @Column(name = "row_name", length = 5)
+    @Column(name = "row_name", nullable = true, length = 5)
     private String rowName;
 
-    @Column(name = "col_name", length = 5)
+    @Column(name = "col_name", nullable = true, length = 5)
     private String colName;
 
-    @Column(name = "seat_code", length = 20)
+    @Column(name = "seat_code", nullable = true, length = 20)
     private String seatCode;
 
     @Enumerated(EnumType.STRING)

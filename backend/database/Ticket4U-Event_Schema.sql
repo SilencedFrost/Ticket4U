@@ -11,18 +11,15 @@ CREATE TABLE IF NOT EXISTS public.categories (
 
 -- Table: events
 -- status: editing, premier ,selling, paused (stop selling),ongoing ,finished ,cancelled
+-- category_id: null because we can create event without category, and assign category later
 CREATE TABLE IF NOT EXISTS public.events (
 	id 						UUID PRIMARY KEY,
 	name 					VARCHAR(255) NOT NULL UNIQUE,
 	organizer_id 			UUID NOT NULL,
-	category_id 			INTEGER, -- null vì có thể chưa phân loại ngay khi tạo sự kiện
+	category_id 			INTEGER, 
 	address_line 			VARCHAR(255) NOT NULL,
-	start_date 				TIMESTAMPTZ NOT NULL,
-	end_date 				TIMESTAMPTZ NOT NULL,
 	status 					VARCHAR(50) NOT NULL,
 	banner_url 				TEXT NOT NULL,
-	description_vi 			TEXT,
-	description_en 			TEXT,
 
 	created_at 				TIMESTAMPTZ NOT NULL,
 	updated_at 				TIMESTAMPTZ,
@@ -38,12 +35,28 @@ CREATE TABLE IF NOT EXISTS public.events (
 		REFERENCES public.categories (id)
 );
 
+-- Table: event_sessions
+-- This table is created to support events that have multiple performances with different schedules.
+-- status: scheduled, ongoing, finished, cancelled
+CREATE TABLE IF NOT EXISTS public.event_sessions (
+    id          UUID PRIMARY KEY,
+    event_id    UUID NOT NULL,
+    start_date  TIMESTAMPTZ NOT NULL,
+    end_date    TIMESTAMPTZ NOT NULL,
+    status      VARCHAR(50) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+
+	CONSTRAINT session_fk_event FOREIGN KEY (event_id)
+		REFERENCES public.events (id)
+);
+
 -- Table: zones
 -- purchase_limit: null means no limit
 -- perks: Save the perks of each zone in JSON format, for example: ["Free drink", "Lightstick", "Fansign"]
 CREATE TABLE IF NOT EXISTS public.zones (
 	id 					UUID PRIMARY KEY,
-	event_id 			UUID NOT NULL,
+	session_id 			UUID NOT NULL,
 	name 				VARCHAR(255) NOT NULL,
 	is_standing 		BOOLEAN NOT NULL,
 	capacity 			INTEGER,
@@ -58,8 +71,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
     created_at 			TIMESTAMPTZ NOT NULL,
 	updated_at 			TIMESTAMPTZ,
 
-	CONSTRAINT zone_fk_event FOREIGN KEY (event_id)
-		REFERENCES public.events (id)
+	CONSTRAINT zone_fk_session FOREIGN KEY (session_id)
+		REFERENCES public.event_sessions (id)
 );
 
 -- Table: seats
@@ -73,6 +86,7 @@ CREATE TABLE IF NOT EXISTS public.seats (
 	seat_code 		VARCHAR(20),
 	status 			VARCHAR(50) NOT NULL,
 	price_override 	DECIMAL(10, 2),
+
 	CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id)
 		REFERENCES public.zones (id)
 );

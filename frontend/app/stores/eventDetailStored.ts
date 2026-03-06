@@ -16,7 +16,8 @@ export const useEventStore = defineStore('event', () => {
         name: string;
         startDate: string;
         addressLine: string;
-        description: string;
+        aboutVi: string;
+        aboutEn: string;
         minPrice: number;
         maxPrice: number;
         categoryId: number;
@@ -31,9 +32,10 @@ export const useEventStore = defineStore('event', () => {
             name: string;
             price: number;
             available: number;
-            description?: string;
-            image?: string;
-            benefits?: string[] | null;
+            descriptionVi?: string;
+            descriptionEn?: string;
+            giftImageUrl?: string;
+            perks?: string[] | null;
           }>;
         }>;
       }>(`${config.public.eventDetailUrl}/${eventId}`);
@@ -44,7 +46,8 @@ export const useEventStore = defineStore('event', () => {
         eventId: data.id,
         eventTitle: data.name,
         address: data.addressLine,
-        description: data.description,
+        aboutVi: data.aboutVi,
+        aboutEn: data.aboutEn,
         categoryId: data.categoryId,
         organizerId: data.organizerId,
         date,
@@ -66,9 +69,10 @@ export const useEventStore = defineStore('event', () => {
               name: seatType.name,
               price: seatType.price,
               available: seatType.available,
-              description: seatType.description,
-              image: seatType.image,
-              benefits: seatType.benefits,
+              descriptionVi: seatType.descriptionVi,
+              descriptionEn: seatType.descriptionEn,
+              giftImageUrl: seatType.giftImageUrl,
+              perks: seatType.perks,
             })),
           };
         }),

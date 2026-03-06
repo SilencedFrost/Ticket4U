@@ -24,7 +24,7 @@ useHead({
     <div class="row m-0 container-xxl mx-auto flex-column flex-lg-row">
       <div class="col-lg-9">
         <event-schedule :event="event" />
-        <event-about :description="event.description" />
+        <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
         <event-tickets :show-time="event.showtimes" />
         <event-organizer v-if="event.organizer?.id" :event-data="event.organizer" />
       </div>

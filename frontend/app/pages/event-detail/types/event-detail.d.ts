@@ -10,9 +10,10 @@ interface SeatType {
   name: string;
   price: number;
   available: number;
-  description?: string;
-  image?: string;
-  benefits?: string[] | null;
+  descriptionVi?: string;
+  descriptionEn?: string;
+  giftImageUrl?: string;
+  perks?: string[] | null;
 }
 
 interface Showtime {
@@ -34,7 +35,8 @@ export interface EventDetailResponse {
   minPrice: number;
   maxPrice: number;
   categoryId: number;
-  description: string;
+  aboutVi: string;
+  aboutEn: string;
   imgEvent: EventImages;
   organizerId?: string;
   organizer?: Organizer | null;

@@ -2,13 +2,19 @@
 import DOMPurify from 'isomorphic-dompurify';
 
 const props = defineProps<{
-  description: string;
+  aboutVi: string;
+  aboutEn: string;
 }>();
 
+const { locale } = useI18n();
 const expandAbout = ref(false);
 
+const currentDescription = computed(() => {
+  return locale.value === 'vi' ? props.aboutVi : props.aboutEn;
+});
+
 const sanitizedDescription = computed(() => {
-  return DOMPurify.sanitize(props.description, {
+  return DOMPurify.sanitize(currentDescription.value, {
     ALLOWED_TAGS: [
       'p',
       'br',
@@ -30,6 +36,7 @@ const sanitizedDescription = computed(() => {
       'pre',
       'a',
       'img',
+      'div',
     ],
     ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class', 'style'],
   });

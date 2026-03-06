@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { Showtime } from '@/pages/event-detail/types/event-detail';
+import type { Showtime, SeatType } from '@/pages/event-detail/types/event-detail';
 import { useFormatter } from '@/composables/useFormatter';
 
 const { formatPrice } = useFormatter();
+const { locale } = useI18n();
 
 defineProps<{
   showTime: Showtime[];
@@ -20,6 +21,19 @@ const toggleTicketDate = (scheduleId: string) => {
 const toggleSeatDetail = (scheduleId: string, seatName: string) => {
   const key = `${scheduleId}-${seatName}`;
   expandedSeatDetails.value[key] = !expandedSeatDetails.value[key];
+};
+
+const getSeatDescription = (seat: SeatType) => {
+  return locale.value === 'vi' ? seat.descriptionVi : seat.descriptionEn;
+};
+
+const hasSeatDetails = (seat: SeatType) => {
+  return (
+    seat.descriptionVi ||
+    seat.descriptionEn ||
+    seat.giftImageUrl ||
+    (seat.perks && seat.perks.length > 0)
+  );
 };
 </script>
 
@@ -99,11 +113,7 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                   </div>
                   <div class="flex-shrink-0">
                     <button
-                      v-if="
-                        seat.description ||
-                        seat.image ||
-                        (seat.benefits && seat.benefits.length > 0)
-                      "
+                      v-if="hasSeatDetails(seat)"
                       class="btn btn-link text-reactive-primary p-0"
                       @click="toggleSeatDetail(schedule.id, seat.name)"
                     >
@@ -119,36 +129,33 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
                   </div>
                 </div>
                 <div
-                  v-if="
-                    expandedSeatDetails[`${schedule.id}-${seat.name}`] &&
-                    (seat.description || seat.image || (seat.benefits && seat.benefits.length > 0))
-                  "
+                  v-if="expandedSeatDetails[`${schedule.id}-${seat.name}`] && hasSeatDetails(seat)"
                   class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
-                  <p v-if="seat.description" class="text-reactive-primary mb-3 small">
-                    {{ seat.description }}
+                  <p v-if="getSeatDescription(seat)" class="text-reactive-primary mb-3 small">
+                    {{ getSeatDescription(seat) }}
                   </p>
                   <div class="row g-3">
-                    <div v-if="seat.image" class="col-12 col-md-4">
+                    <div v-if="seat.giftImageUrl" class="col-12 col-md-4">
                       <img
-                        :src="seat.image"
+                        :src="seat.giftImageUrl"
                         class="img-fluid rounded object-fit-cover w-100"
                         style="max-height: 150px"
                         alt="Ticket thumbnail"
                       />
                     </div>
                     <div
-                      v-if="seat.benefits && seat.benefits.length > 0"
-                      :class="seat.image ? 'col-12 col-md-8' : 'col-12'"
+                      v-if="seat.perks && seat.perks.length > 0"
+                      :class="seat.giftImageUrl ? 'col-12 col-md-8' : 'col-12'"
                     >
                       <ul class="list-unstyled mb-0">
                         <li
-                          v-for="(benefit, index) in seat.benefits"
+                          v-for="(perk, index) in seat.perks"
                           :key="index"
                           class="text-reactive-primary small mb-1"
                         >
                           <i class="bi bi-check-circle-fill text-success me-1" />
-                          {{ benefit }}
+                          {{ perk }}
                         </li>
                       </ul>
                     </div>

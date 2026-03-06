@@ -7,6 +7,7 @@ import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
+import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.util.CookieExtratorUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class AuthController {
 
     private final CookieExtratorUtil cookieExtratorUtil;
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService;
 
     /**
      * POST /api/v1/auth/refresh
@@ -104,5 +108,17 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
                 .body(loginResult.authResponse());
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        emailVerificationService.verifyToken(token);
+        return ResponseEntity.ok(Map.of("message", "auth.verification.success"));
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerification(@Valid @RequestBody ResendVerificationRequest request) {
+        emailVerificationService.resendVerification(request.email());
+        return ResponseEntity.ok(Map.of("message", "auth.verification.check_email"));
     }
 }

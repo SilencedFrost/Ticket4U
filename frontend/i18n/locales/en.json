@@ -51,6 +51,16 @@
     },
     "session": {
       "invalid": "Invalid session"
+    },
+    "verification": {
+      "verifying": "Verifying your email...",
+      "success": "Your email has been verified. You can now log in.",
+      "success_title": "Verification successful!",
+      "token_expired": "Verification link has expired. Please register again.",
+      "expired_title": "Link expired",
+      "token_invalid": "Invalid verification link.",
+      "error_title": "Verification failed",
+      "already_active": "This account has already been verified."
     }
   },
   "user": {

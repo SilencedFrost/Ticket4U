@@ -28,6 +28,7 @@ public class DaoUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(
                 user.getEmail(),
                 user.getPasswordHash(),
+                Boolean.TRUE.equals(user.getIsActive()),
                 authorities,
                 user.getId(),
                 user.getRole().getId(),

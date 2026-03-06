@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xác thực email - Ticket4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Xin chào <span th:text="${userName}">User</span>!</h1>
+        <p>Cảm ơn bạn đã đăng ký tài khoản tại <strong>Ticket4U</strong>.</p>
+        <p>Vui lòng nhấn vào nút bên dưới để xác thực địa chỉ email và kích hoạt tài khoản của bạn:</p>
+        <p style="text-align: center; margin: 30px 0;">
+            <a th:href="${verificationLink}" class="btn">Xác thực email</a>
+        </p>
+        <p class="note">
+            Link xác thực sẽ hết hạn sau <span th:text="${expiryHours}">24</span> giờ.
+            Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.
+        </p>
+        <div class="footer">
+            <p>&copy; 2026 Ticket4U. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

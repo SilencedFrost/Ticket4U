@@ -51,6 +51,16 @@
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
+    },
+    "verification": {
+      "verifying": "Đang xác thực email...",
+      "success": "Email đã được xác thực thành công. Bạn có thể đăng nhập ngay.",
+      "success_title": "Xác thực thành công!",
+      "token_expired": "Link xác thực đã hết hạn. Vui lòng đăng ký lại.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link xác thực không hợp lệ.",
+      "error_title": "Xác thực thất bại",
+      "already_active": "Tài khoản đã được xác thực trước đó."
     }
   },
   "user": {

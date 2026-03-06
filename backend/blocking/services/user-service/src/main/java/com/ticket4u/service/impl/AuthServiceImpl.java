@@ -23,6 +23,7 @@ import com.ticket4u.exception.TokenCreationException;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.AuthService;
+import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.SessionService;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
@@ -60,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
     private final GoogleTokenValidator googleTokenValidator;
     private final UserMapper userMapper;
     private final EntityManager entityManager;
+    private final EmailVerificationService emailVerificationService;
 
     @Override
     @Transactional
@@ -242,7 +244,7 @@ public class AuthServiceImpl implements AuthService {
         user.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
         User savedUser = userRepository.save(user);
 
-        // TODO: Send verification email
+        emailVerificationService.sendVerificationEmail(savedUser);
 
         log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
         return userMapper.toRegisterResponse(savedUser, "user.registration.check_email");

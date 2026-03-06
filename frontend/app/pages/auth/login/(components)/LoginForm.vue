@@ -3,7 +3,10 @@ import type { FetchError } from 'ofetch';
 
 const localePath = useLocalePath();
 const router = useRouter();
+const route = useRoute();
+const { t } = useI18n();
 const loading = ref<boolean>(false);
+const verified = ref(route.query.verified === 'true');
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
@@ -44,6 +47,7 @@ async function handleGoogleCredential(idToken: string) {
 
 async function login() {
   loading.value = true;
+  verified.value = false;
   Object.assign(error, { email: '', password: '', generic: '' });
   try {
     await useUser.login(formData.email, formData.password, formData.rememberMe);
@@ -81,6 +85,14 @@ function togglePassword() {
 <template>
   <div class="form-width">
     <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}</h3>
+    <div
+      v-if="verified"
+      class="alert alert-success d-flex align-items-center mt-2 mb-0"
+      role="alert"
+    >
+      <i class="bi bi-check-circle-fill me-2" />
+      <span>{{ t('auth.verification.success') }}</span>
+    </div>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">

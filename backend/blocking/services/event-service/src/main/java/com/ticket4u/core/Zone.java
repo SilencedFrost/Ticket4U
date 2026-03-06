@@ -49,8 +49,11 @@ public class Zone {
     private BigDecimal price;
 
     // Zone content fields (gộp từ ZoneContent)
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "description_vi", columnDefinition = "TEXT")
+    private String descriptionVi;
+
+    @Column(name = "description_en", columnDefinition = "TEXT")
+    private String descriptionEn;
 
     @Column(name = "gift_image_url", length = 512)
     private String giftImageUrl;

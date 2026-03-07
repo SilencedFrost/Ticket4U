@@ -33,7 +33,7 @@ public class EventDetailServiceImpl implements EventDetailService {
             throw new EntityNotFoundException("No sessions found for event ID: " + id);
         }
 
-        return eventDetailMapper.toDTO(event);
+        return eventDetailMapper.toResponse(event);
     }
 
     @Override

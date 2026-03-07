@@ -1,7 +1,7 @@
-package com.ticket4u.feature.eventdetail.controller;
+package com.ticket4u.feature.event.controller;
 
-import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.service.EventDetailService;
+import com.ticket4u.feature.event.dto.EventDetailResponse;
+import com.ticket4u.feature.event.service.EventDetailService;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/public/events")
 @RequiredArgsConstructor
-public class EventDetailController {
+public class EventController {
     private final EventDetailService eventDetailService;
 
     /**

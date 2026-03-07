@@ -1,4 +1,4 @@
-package com.ticket4u.feature.eventdetail.dto;
+package com.ticket4u.feature.event.dto;
 
 import java.time.OffsetDateTime;
 import java.util.List;

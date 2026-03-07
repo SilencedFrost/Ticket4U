@@ -1,10 +1,10 @@
-package com.ticket4u.feature.eventdetail.mapper;
+package com.ticket4u.feature.event.mapper;
 
 import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
 import com.ticket4u.core.entity.Zone;
-import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.dto.ShowtimeResponse;
+import com.ticket4u.feature.event.dto.EventDetailResponse;
+import com.ticket4u.feature.event.dto.ShowtimeResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

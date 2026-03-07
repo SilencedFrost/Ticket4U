@@ -1,7 +1,7 @@
-package com.ticket4u.feature.eventdetail.service;
+package com.ticket4u.feature.event.service;
 
 import com.ticket4u.core.dto.EventSummaryResponse;
-import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
+import com.ticket4u.feature.event.dto.EventDetailResponse;
 
 import java.util.List;
 import java.util.UUID;

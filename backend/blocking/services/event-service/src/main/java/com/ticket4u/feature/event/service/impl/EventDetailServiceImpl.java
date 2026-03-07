@@ -1,14 +1,14 @@
-package com.ticket4u.feature.eventdetail.service.impl;
+package com.ticket4u.feature.event.service.impl;
 
 import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.mapper.EventMapper;
-import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
-import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
-import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
+import com.ticket4u.feature.event.dto.EventDetailResponse;
+import com.ticket4u.feature.event.mapper.EventDetailMapper;
+import com.ticket4u.feature.event.mapper.ZoneMapper;
 import com.ticket4u.core.repository.EventRepository;
 import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
-import com.ticket4u.feature.eventdetail.service.EventDetailService;
+import com.ticket4u.feature.event.service.EventDetailService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.ticket4u.core.dto;
 
 import com.ticket4u.core.entity.Event;
-import com.ticket4u.feature.eventdetail.dto.ShowtimeResponse;
+import com.ticket4u.feature.event.dto.ShowtimeResponse;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

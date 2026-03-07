@@ -1,8 +1,7 @@
 package com.ticket4u.core.repository;
 
+import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.entity.Event;
-import com.ticket4u.core.projection.EventSummaryProjection;
-import com.ticket4u.core.projection.EventWithCategoryProjection;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,7 +54,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                 e.created_at DESC
             LIMIT :limit
             """, nativeQuery = true)
-    List<EventWithCategoryProjection> findRelatedEvents(
+    List<EventWithCategoryDto> findRelatedEvents(
             @Param("currentId") UUID currentId,
             @Param("categoryId") Integer categoryId,
             @Param("city") String city,
@@ -71,7 +70,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
                    MIN(es.start_date) AS startDate, MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice
+                   MIN(z.price) AS minPrice, NULL AS categoryName
             FROM events e
             LEFT JOIN event_sessions es ON e.id = es.event_id
             LEFT JOIN zones z ON es.id = z.session_id
@@ -80,7 +79,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY MIN(es.start_date) DESC
             LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
-    List<EventSummaryProjection> findEventsWithMinPrice(
+    List<EventWithCategoryDto> findEventsWithMinPrice(
             @Param("limit") Integer limit,
             @Param("offset") Integer offset);
 
@@ -106,7 +105,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
                    MIN(es.start_date) AS startDate, MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice
+                   MIN(z.price) AS minPrice, NULL AS categoryName
             FROM events e
             LEFT JOIN event_sessions es ON e.id = es.event_id
             LEFT JOIN zones z ON es.id = z.session_id
@@ -115,7 +114,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY e.created_at DESC
             LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findLatestEvents(@Param("limit") int limit);
+    List<EventWithCategoryDto> findLatestEvents(@Param("limit") int limit);
 
     /**
      * Events whose next session falls within [{@code from}, {@code to}], ordered by nearest start date.
@@ -125,7 +124,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
                    MIN(es.start_date) AS startDate, MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice
+                   MIN(z.price) AS minPrice, NULL AS categoryName
             FROM events e
             JOIN event_sessions es ON e.id = es.event_id
             JOIN zones z ON es.id = z.session_id
@@ -135,7 +134,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY MIN(es.start_date) ASC
             LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findEventsStartingBetween(
+    List<EventWithCategoryDto> findEventsStartingBetween(
             @Param("from") OffsetDateTime from,
             @Param("to") OffsetDateTime to,
             @Param("limit") int limit);
@@ -149,7 +148,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
                    MIN(es.start_date) AS startDate, MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice
+                   MIN(z.price) AS minPrice, NULL AS categoryName
             FROM events e
             LEFT JOIN event_sessions es ON e.id = es.event_id
             LEFT JOIN zones z ON es.id = z.session_id
@@ -158,7 +157,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY RANDOM()
             LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findRandomEvents(@Param("limit") int limit);
+    List<EventWithCategoryDto> findRandomEvents(@Param("limit") int limit);
 
     // ─── Homepage: Event Display with Filters ─────────────────────────────────
 
@@ -188,7 +187,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY MIN(es.start_date) ASC
             LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
-    List<EventWithCategoryProjection> findEventsWithoutCategoryFilter(
+    List<EventWithCategoryDto> findEventsWithoutCategoryFilter(
             @Param("startOdt") OffsetDateTime startOdt,
             @Param("endOdt") OffsetDateTime endOdt,
             @Param("isFreeOnly") Boolean isFreeOnly,
@@ -221,7 +220,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             ORDER BY MIN(es.start_date) ASC
             LIMIT :limit OFFSET :offset
             """, nativeQuery = true)
-    List<EventWithCategoryProjection> findEventsWithCategoryFilter(
+    List<EventWithCategoryDto> findEventsWithCategoryFilter(
             @Param("startOdt") OffsetDateTime startOdt,
             @Param("endOdt") OffsetDateTime endOdt,
             @Param("categoryIds") List<Integer> categoryIds,

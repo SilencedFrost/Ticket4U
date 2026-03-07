@@ -1,8 +1,7 @@
 package com.ticket4u.core.repository;
 
+import com.ticket4u.core.dto.CategoryWithEventDto;
 import com.ticket4u.core.entity.Category;
-import com.ticket4u.core.projection.CategoryProjection;
-import com.ticket4u.core.projection.CategoryWithEventProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,14 +18,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
      * Used for populating the category filter chips on the homepage.
      * Used by: homepage feature
      */
-    @Query(value = """
-            SELECT DISTINCT c.id AS id, c.name AS name
-            FROM categories c
-            LEFT JOIN events e ON c.id = e.category_id
-            WHERE e.status IN ('PLANNED', 'ONGOING')
-            ORDER BY c.id
-            """, nativeQuery = true)
-    List<CategoryProjection> findCategoriesWithActiveEvents();
+    @Query("SELECT DISTINCT c FROM Category c JOIN c.events e WHERE e.status IN ('PLANNED', 'ONGOING') ORDER BY c.id")
+    List<Category> findCategoriesWithActiveEvents();
 
     /**
      * Returns all categories with their latest 4 active events as flat (category + event) rows.
@@ -56,5 +49,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             GROUP BY c.id, c.name, e.id, e.name, e.banner_url, e.address_line
             ORDER BY c.id, e.created_at DESC
             """, nativeQuery = true)
-    List<CategoryWithEventProjection> findCategoriesWithLatestEvents();
+    List<CategoryWithEventDto> findCategoriesWithLatestEvents();
 }

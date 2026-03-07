@@ -1,14 +1,13 @@
 package com.ticket4u.feature.homepage.service;
 
+import com.ticket4u.core.dto.CategoryWithEventDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
+import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.mapper.EventSummaryMapper;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.mapper.HomepageMapper;
-import com.ticket4u.core.projection.CategoryWithEventProjection;
-import com.ticket4u.core.projection.EventSummaryProjection;
-import com.ticket4u.core.projection.EventWithCategoryProjection;
 import com.ticket4u.core.repository.CategoryRepository;
 import com.ticket4u.core.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +36,9 @@ public class HomePageService {
     public List<EventSummaryResponse> getAllEventsWithMinPrice(int page, int size) {
         int offset = page * size;
 
-        List<EventSummaryProjection> results = eventRepository.findEventsWithMinPrice(size, offset);
+        List<EventWithCategoryDto> results = eventRepository.findEventsWithMinPrice(size, offset);
         return results.stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +51,7 @@ public class HomePageService {
     // Featured: Events mới nhất (newest 10)
     public List<EventSummaryResponse> getFeaturedEvents() {
         return eventRepository.findLatestEvents(10).stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -60,21 +59,21 @@ public class HomePageService {
     public List<EventSummaryResponse> getSpecialEvents() {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         return eventRepository.findEventsStartingBetween(now, now.plusDays(7), 10).stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Trending: Random 3 events
     public List<EventSummaryResponse> getTrendingEvents() {
         return eventRepository.findRandomEvents(3).stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Suggested: Random 10 events
     public List<EventSummaryResponse> getSuggestedEvents() {
         return eventRepository.findRandomEvents(10).stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -85,19 +84,19 @@ public class HomePageService {
 
     // Get all categories with their latest 4 events (single query, no N+1)
     public List<CategoryWithEventsResponse> getCategoriesWithEvents() {
-        List<CategoryWithEventProjection> rows = categoryRepository.findCategoriesWithLatestEvents();
+        List<CategoryWithEventDto> rows = categoryRepository.findCategoriesWithLatestEvents();
 
         // Group flat rows by category, preserving order from the query (ORDER BY c.id)
         Map<Integer, CategoryWithEventsResponse> categoryMap = new LinkedHashMap<>();
 
-        for (CategoryWithEventProjection row : rows) {
-            Integer categoryId = row.getCategoryId();
-            String categoryName = row.getCategoryName();
+        for (CategoryWithEventDto row : rows) {
+            Integer categoryId = row.categoryId();
+            String categoryName = row.categoryName();
 
             EventSummaryResponse event = new EventSummaryResponse(
-                    row.getEventId(), row.getEventName(), row.getBannerUrl(),
-                    row.getAddressLine(), toOffsetDateTime(row.getStartDate()), toOffsetDateTime(row.getEndDate()),
-                    row.getMinPrice(), null
+                    row.eventId(), row.eventName(), row.bannerUrl(),
+                    row.addressLine(), toOffsetDateTime(row.startDate()), toOffsetDateTime(row.endDate()),
+                    row.minPrice(), null
             );
 
             categoryMap.computeIfAbsent(categoryId,
@@ -133,7 +132,7 @@ public class HomePageService {
                 : null;
         
         // Check if category filter should be applied
-        List<EventWithCategoryProjection> results;
+        List<EventWithCategoryDto> results;
         if (categoryIds == null || categoryIds.isEmpty()) {
             // No category filter - get all events
             results = eventRepository.findEventsWithoutCategoryFilter(
@@ -156,14 +155,14 @@ public class HomePageService {
         }
         
         return results.stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Get all categories (for filter dropdown)
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findCategoriesWithActiveEvents().stream()
-                .map(homepageMapper::toCategoryResponse)
+                .map(homepageMapper::toDTO)
                 .collect(Collectors.toList());
     }
 

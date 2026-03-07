@@ -22,7 +22,7 @@ public abstract class EventDetailMapper {
     @Mapping(target = "minPrice", expression = "java(calculateMinPrice(event))")
     @Mapping(target = "maxPrice", expression = "java(calculateMaxPrice(event))")
     @Mapping(target = "startDate", expression = "java(calculateStartDate(event))")
-    public abstract EventDetailResponse toResponse(Event event);
+    public abstract EventDetailResponse toDTO(Event event);
 
     protected BigDecimal calculateMinPrice(Event event) {
         return event.getSessions().stream()
@@ -44,5 +44,5 @@ public abstract class EventDetailMapper {
                 .min(OffsetDateTime::compareTo).orElse(null);
     }
 
-    public abstract ShowtimeResponse toShowtimeResponse(EventSession session);
+    public abstract ShowtimeResponse toDTO(EventSession session);
 }

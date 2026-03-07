@@ -6,11 +6,11 @@ import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
-import com.ticket4u.feature.eventdetail.repository.EventDetailRepository;
+import com.ticket4u.core.repository.EventRepository;
+import com.ticket4u.core.projection.EventWithCategoryProjection;
+import com.ticket4u.core.dto.EventSummaryResponse;
+import com.ticket4u.core.mapper.EventSummaryMapper;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
-import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
-import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
-import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class EventDetailServiceImpl implements EventDetailService {
-    private final EventDetailRepository eventRepository;
+    private final EventRepository eventRepository;
     private final EventDetailMapper eventDetailMapper;
-    private final NativeQueryMapper nativeQueryMapper;
+    private final EventSummaryMapper eventSummaryMapper;
     private final ZoneMapper zoneMapper;
 
     @Override
@@ -85,7 +85,7 @@ public class EventDetailServiceImpl implements EventDetailService {
                 8);
 
         return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .toList();
     }
 

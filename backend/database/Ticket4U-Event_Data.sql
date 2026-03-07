@@ -1,12 +1,15 @@
 --1. Table: categories 
-TRUNCATE TABLE public.categories RESTART IDENTITY CASCADE;
+TRUNCATE TABLE public.categories CASCADE;
+ALTER SEQUENCE public.categories_id_seq RESTART WITH 1;
 
-INSERT INTO public.categories (name) VALUES 
-('Âm nhạc'), 
-('Hội thảo'), 
-('Sân khấu - Nghệ thuật'), 
-('Thể thao'), 
-('Giải trí về đêm');
+INSERT INTO public.categories (id, name) VALUES 
+(1, 'Âm nhạc'), 
+(2, 'Hội thảo'), 
+(3, 'Sân khấu - Nghệ thuật'), 
+(4, 'Thể thao'), 
+(5, 'Giải trí về đêm');
+
+SELECT setval('public.categories_id_seq', 5);
 
 --2. Table: Events
 INSERT INTO public.events (

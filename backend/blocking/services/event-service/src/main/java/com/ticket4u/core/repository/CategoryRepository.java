@@ -1,16 +1,24 @@
-package com.ticket4u.feature.homepage.repository;
+package com.ticket4u.core.repository;
 
 import com.ticket4u.core.Category;
-import com.ticket4u.feature.homepage.projection.CategoryProjection;
-import com.ticket4u.feature.homepage.projection.CategoryWithEventProjection;
+import com.ticket4u.core.projection.CategoryProjection;
+import com.ticket4u.core.projection.CategoryWithEventProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * Repository for the Category aggregate root.
+ * Lives in core because Category is a shared domain entity, not owned by any single feature.
+ */
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    // Get all categories that have at least one PLANNED or ONGOING event
+    /**
+     * Returns all categories that have at least one active (PLANNED or ONGOING) event.
+     * Used for populating the category filter chips on the homepage.
+     * Used by: homepage feature
+     */
     @Query(value = """
             SELECT DISTINCT c.id AS id, c.name AS name
             FROM categories c
@@ -20,7 +28,11 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             """, nativeQuery = true)
     List<CategoryProjection> findCategoriesWithActiveEvents();
 
-    // Get all categories with their latest 4 events (sửa JOIN qua event_sessions)
+    /**
+     * Returns all categories with their latest 4 active events as flat (category + event) rows.
+     * The service layer groups the flat result by categoryId into a structured response.
+     * Used by: homepage feature — "Browse by Category" section
+     */
     @Query(value = """
             SELECT c.id AS categoryId, c.name AS categoryName,
                    e.id AS eventId, e.name AS eventName, e.banner_url AS bannerUrl,

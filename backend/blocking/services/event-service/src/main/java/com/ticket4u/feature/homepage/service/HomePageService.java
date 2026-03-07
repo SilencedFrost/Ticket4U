@@ -1,15 +1,16 @@
 package com.ticket4u.feature.homepage.service;
 
+import com.ticket4u.core.dto.EventSummaryResponse;
+import com.ticket4u.core.mapper.EventSummaryMapper;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
-import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
-import com.ticket4u.feature.homepage.mapper.NativeQueryMapper;
-import com.ticket4u.feature.homepage.projection.CategoryWithEventProjection;
-import com.ticket4u.feature.homepage.projection.EventSummaryProjection;
-import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
-import com.ticket4u.feature.homepage.repository.CategoryRepository;
-import com.ticket4u.feature.homepage.repository.EventRepository;
+import com.ticket4u.feature.homepage.mapper.HomepageMapper;
+import com.ticket4u.core.projection.CategoryWithEventProjection;
+import com.ticket4u.core.projection.EventSummaryProjection;
+import com.ticket4u.core.projection.EventWithCategoryProjection;
+import com.ticket4u.core.repository.CategoryRepository;
+import com.ticket4u.core.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,8 @@ import java.util.stream.Collectors;
 public class HomePageService {
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
-    private final NativeQueryMapper nativeQueryMapper;
+    private final EventSummaryMapper eventSummaryMapper;
+    private final HomepageMapper homepageMapper;
 
     // Lấy tất cả events với giá thấp nhất (paginated)
     public List<EventSummaryResponse> getAllEventsWithMinPrice(int page, int size) {
@@ -37,7 +39,7 @@ public class HomePageService {
 
         List<EventSummaryProjection> results = eventRepository.findEventsWithMinPrice(size, offset);
         return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
@@ -47,35 +49,32 @@ public class HomePageService {
         return minPrice != null ? minPrice : 0.0;
     }
 
-    // Featured: Events mới nhất
+    // Featured: Events mới nhất (newest 10)
     public List<EventSummaryResponse> getFeaturedEvents() {
-        List<EventSummaryProjection> results = eventRepository.findFeaturedEvents();
-        return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+        return eventRepository.findLatestEvents(10).stream()
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
-    // Special: Events sắp diễn ra trong 7 ngày
+    // Special: Events sắp diễn ra trong 7 ngày tới
     public List<EventSummaryResponse> getSpecialEvents() {
-        List<EventSummaryProjection> results = eventRepository.findSpecialEvents();
-        return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        return eventRepository.findEventsStartingBetween(now, now.plusDays(7), 10).stream()
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
-    // Trending: Random 3 PLANNED/ONGOING events
+    // Trending: Random 3 events
     public List<EventSummaryResponse> getTrendingEvents() {
-        List<EventSummaryProjection> results = eventRepository.findTrendingEvents();
-        return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+        return eventRepository.findRandomEvents(3).stream()
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
-    // Suggested: Random PLANNED/ONGOING events
+    // Suggested: Random 10 events
     public List<EventSummaryResponse> getSuggestedEvents() {
-        List<EventSummaryProjection> results = eventRepository.findSuggestedEvents();
-        return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+        return eventRepository.findRandomEvents(10).stream()
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
@@ -157,14 +156,14 @@ public class HomePageService {
         }
         
         return results.stream()
-                .map(nativeQueryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toEventSummaryResponse)
                 .collect(Collectors.toList());
     }
 
     // Get all categories (for filter dropdown)
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findCategoriesWithActiveEvents().stream()
-                .map(nativeQueryMapper::toCategoryResponse)
+                .map(homepageMapper::toCategoryResponse)
                 .collect(Collectors.toList());
     }
 

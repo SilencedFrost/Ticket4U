@@ -1,19 +1,72 @@
-package com.ticket4u.feature.homepage.repository;
+package com.ticket4u.core.repository;
 
 import com.ticket4u.core.Event;
-import com.ticket4u.feature.homepage.projection.EventSummaryProjection;
-import java.time.OffsetDateTime;
-import com.ticket4u.feature.homepage.projection.EventWithCategoryProjection;
+import com.ticket4u.core.projection.EventSummaryProjection;
+import com.ticket4u.core.projection.EventWithCategoryProjection;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Primary repository for the Event aggregate root.
+ * All event-related database queries live here — features inject this interface directly.
+ */
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    // Lấy danh sách events với giá thấp nhất từ zones qua event_sessions
+    // ─── Event Detail ─────────────────────────────────────────────────────────
+
+    /**
+     * Fetches a single event with its category, sessions, and zones eagerly loaded in one query.
+     * Avoids the N+1 problem when the caller needs the full object graph.
+     * Used by: eventdetail feature
+     */
+    @EntityGraph(attributePaths = {"category", "sessions", "sessions.zones"})
+    Optional<Event> findWithDetailsById(UUID id);
+
+    /**
+     * Returns up to {@code limit} events related to the given event,
+     * ranked by: same category → same city → nearest upcoming session → newest.
+     * Used by: eventdetail feature
+     */
+    @Query(value = """
+            SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
+                   e.address_line AS addressLine,
+                   MIN(es.start_date) AS startDate,
+                   MAX(es.end_date) AS endDate,
+                   MIN(z.price) AS minPrice,
+                   c.name AS categoryName
+            FROM events e
+            LEFT JOIN event_sessions es ON e.id = es.event_id
+            LEFT JOIN zones z ON es.id = z.session_id
+            LEFT JOIN categories c ON e.category_id = c.id
+            WHERE e.id != :currentId
+              AND e.status IN ('PLANNED', 'ONGOING', 'SELLING')
+            GROUP BY e.id, e.name, e.banner_url, e.address_line, c.name
+            ORDER BY
+                (CASE WHEN e.category_id = :categoryId THEN 1 ELSE 0 END) DESC,
+                (CASE WHEN POSITION(LOWER(:city) IN LOWER(e.address_line)) > 0 THEN 1 ELSE 0 END) DESC,
+                MIN(es.start_date) ASC,
+                e.created_at DESC
+            LIMIT :limit
+            """, nativeQuery = true)
+    List<EventWithCategoryProjection> findRelatedEvents(
+            @Param("currentId") UUID currentId,
+            @Param("categoryId") Integer categoryId,
+            @Param("city") String city,
+            @Param("limit") Integer limit);
+
+    // ─── Homepage: List & Pricing ─────────────────────────────────────────────
+
+    /**
+     * Paginated list of PLANNED/ONGOING events with each event's minimum zone price.
+     * Used by: homepage feature
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
@@ -31,7 +84,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             @Param("limit") Integer limit,
             @Param("offset") Integer offset);
 
-    // Lấy giá thấp nhất của 1 event qua event_sessions
+    /**
+     * Returns the cheapest zone price for a single event across all its sessions.
+     * Used by: homepage feature
+     */
     @Query(value = """
             SELECT MIN(z.price)
             FROM event_sessions es
@@ -40,7 +96,12 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             """, nativeQuery = true)
     Double findMinPriceByEventId(@Param("eventId") UUID eventId);
 
-    // Featured: Events mới nhất (PLANNED/ONGOING)
+    // ─── Homepage: Curated Sections ───────────────────────────────────────────
+
+    /**
+     * Events ordered by creation date descending — newest first.
+     * The caller decides what business concept to attach (e.g. "featured" = findLatestEvents(10)).
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
@@ -52,11 +113,14 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             WHERE e.status IN ('PLANNED', 'ONGOING')
             GROUP BY e.id, e.name, e.banner_url, e.address_line
             ORDER BY e.created_at DESC
-            LIMIT 10
+            LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findFeaturedEvents();
+    List<EventSummaryProjection> findLatestEvents(@Param("limit") int limit);
 
-    // Special: Events sắp diễn ra trong 7 ngày
+    /**
+     * Events whose next session falls within [{@code from}, {@code to}], ordered by nearest start date.
+     * The caller decides what business concept to attach (e.g. "special" = next 7 days).
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
@@ -66,14 +130,21 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             JOIN event_sessions es ON e.id = es.event_id
             JOIN zones z ON es.id = z.session_id
             WHERE e.status IN ('PLANNED', 'ONGOING')
-              AND es.start_date BETWEEN CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP + INTERVAL '7 days'
+              AND es.start_date BETWEEN :from AND :to
             GROUP BY e.id, e.name, e.banner_url, e.address_line
             ORDER BY MIN(es.start_date) ASC
-            LIMIT 10
+            LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findSpecialEvents();
+    List<EventSummaryProjection> findEventsStartingBetween(
+            @Param("from") OffsetDateTime from,
+            @Param("to") OffsetDateTime to,
+            @Param("limit") int limit);
 
-    // Trending: Random 3 PLANNED/ONGOING events
+    /**
+     * Randomly sampled PLANNED/ONGOING events.
+     * Reusable for any section needing a random selection — the caller sets the count
+     * (e.g. "trending" = findRandomEvents(3), "suggested" = findRandomEvents(10)).
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
@@ -85,27 +156,17 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             WHERE e.status IN ('PLANNED', 'ONGOING')
             GROUP BY e.id, e.name, e.banner_url, e.address_line
             ORDER BY RANDOM()
-            LIMIT 3
+            LIMIT :limit
             """, nativeQuery = true)
-    List<EventSummaryProjection> findTrendingEvents();
+    List<EventSummaryProjection> findRandomEvents(@Param("limit") int limit);
 
-    // Suggested: Random PLANNED/ONGOING events
-    @Query(value = """
-            SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
-                   e.address_line AS addressLine,
-                   MIN(es.start_date) AS startDate, MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice
-            FROM events e
-            LEFT JOIN event_sessions es ON e.id = es.event_id
-            LEFT JOIN zones z ON es.id = z.session_id
-            WHERE e.status IN ('PLANNED', 'ONGOING')
-            GROUP BY e.id, e.name, e.banner_url, e.address_line
-            ORDER BY RANDOM()
-            LIMIT 10
-            """, nativeQuery = true)
-    List<EventSummaryProjection> findSuggestedEvents();
+    // ─── Homepage: Event Display with Filters ─────────────────────────────────
 
-    // Event Display: Filter events WITHOUT category filter
+    /**
+     * Filtered event list without a category restriction.
+     * Supports optional date-range filter and a free-events-only toggle.
+     * Used by: homepage feature
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,
@@ -134,7 +195,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             @Param("limit") Integer limit,
             @Param("offset") Integer offset);
 
-    // Event Display: Filter events WITH category filter
+    /**
+     * Same as {@link #findEventsWithoutCategoryFilter} but restricted to the given category IDs.
+     * Used by: homepage feature
+     */
     @Query(value = """
             SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
                    e.address_line AS addressLine,

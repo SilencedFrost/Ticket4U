@@ -1,8 +1,6 @@
 package com.ticket4u.feature.eventdetail.service.impl;
 
 import com.ticket4u.core.Event;
-import com.ticket4u.core.EventSession;
-import com.ticket4u.core.Zone;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
@@ -15,8 +13,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,37 +33,7 @@ public class EventDetailServiceImpl implements EventDetailService {
             throw new EntityNotFoundException("No sessions found for event ID: " + id);
         }
 
-        List<Zone> allZones = event.getSessions().stream()
-                .flatMap(session -> session.getZones().stream())
-                .toList();
-
-        BigDecimal minPrice = calculateMinPrice(allZones);
-        BigDecimal maxPrice = calculateMaxPrice(allZones);
-
-        OffsetDateTime startDate = event.getSessions().stream()
-                .findFirst()
-                .map(EventSession::getStartDate)
-                .orElse(null);
-
-        return eventDetailMapper.toResponse(event, startDate, minPrice, maxPrice);
-    }
-
-    private BigDecimal calculateMinPrice(List<Zone> zones) {
-        if (zones == null || zones.isEmpty())
-            return BigDecimal.ZERO;
-        return zones.stream()
-                .map(Zone::getPrice)
-                .min(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
-    }
-
-    private BigDecimal calculateMaxPrice(List<Zone> zones) {
-        if (zones == null || zones.isEmpty())
-            return BigDecimal.ZERO;
-        return zones.stream()
-                .map(Zone::getPrice)
-                .max(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
+        return eventDetailMapper.toResponse(event);
     }
 
     @Override

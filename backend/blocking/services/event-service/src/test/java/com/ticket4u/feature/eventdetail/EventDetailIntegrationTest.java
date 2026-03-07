@@ -31,7 +31,7 @@ class EventDetailIntegrationTest {
 
     @Test
     void shouldReturnEventDetail_WhenIdIsValid() throws Exception {
-        String validEventId = "019cc28b-02b9-7452-91ea-e3ffcac2f08b";
+        String validEventId = "019cc33b-01ff-79f6-91f9-bef96f8f37da";
 
         mockMvc.perform(get("/api/v1/public/events/" + validEventId)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -5,7 +5,7 @@ import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
 import com.ticket4u.core.repository.EventRepository;
-import com.ticket4u.core.projection.EventWithCategoryProjection;
+import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.mapper.EventSummaryMapper;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
@@ -44,14 +44,14 @@ public class EventDetailServiceImpl implements EventDetailService {
         Integer categoryId = currentEvent.getCategory().getId();
         String city = extractCityForSearch(currentEvent.getAddressLine());
 
-        List<EventWithCategoryProjection> results = eventRepository.findRelatedEvents(
+        List<EventWithCategoryDto> results = eventRepository.findRelatedEvents(
                 currentId,
                 categoryId,
                 city,
                 8);
 
         return results.stream()
-                .map(eventSummaryMapper::toEventSummaryResponse)
+                .map(eventSummaryMapper::toDTO)
                 .toList();
     }
 

@@ -1,8 +1,9 @@
 package com.ticket4u.feature.homepage.controller;
 
+import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
-import com.ticket4u.feature.homepage.dto.EventSummaryResponse;
+
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
 import com.ticket4u.feature.homepage.service.HomePageService;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,16 @@
 DROP TABLE IF EXISTS public.seats;
 DROP TABLE IF EXISTS public.zones;
+DROP TABLE IF EXISTS public.event_sessions;
 DROP TABLE IF EXISTS public.events;
 DROP TABLE IF EXISTS public.categories;
+DROP SEQUENCE IF EXISTS public.categories_id_seq;
+
+-- Sequence for categories.id (managed via @SequenceGenerator in Category entity)
+CREATE SEQUENCE IF NOT EXISTS public.categories_id_seq;
 
 -- Table: categories
 CREATE TABLE IF NOT EXISTS public.categories (
-	id 		INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	id 		INTEGER PRIMARY KEY,
 	name 	VARCHAR(255) NOT NULL UNIQUE
 );
 

@@ -1,5 +1,6 @@
 package com.ticket4u.feature.homepage.dto;
 
+import com.ticket4u.core.dto.EventSummaryResponse;
 import java.util.List;
 
 /**

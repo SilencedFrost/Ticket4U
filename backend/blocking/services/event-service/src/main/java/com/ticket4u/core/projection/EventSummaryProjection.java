@@ -1,12 +1,13 @@
-package com.ticket4u.feature.homepage.projection;
+package com.ticket4u.core.projection;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Projection for event queries returning: id, name, banner_url, address_line, start_date, end_date, min_price.
- * Uses Instant because PostgreSQL JDBC driver returns Instant for timestamp columns.
+ * DB projection for event list queries.
+ * Returns: id, name, banner_url, address_line, earliest start_date, latest end_date, cheapest zone price.
+ * Uses Instant because the PostgreSQL JDBC driver maps TIMESTAMPTZ columns to Instant.
  */
 public interface EventSummaryProjection {
     UUID getId();

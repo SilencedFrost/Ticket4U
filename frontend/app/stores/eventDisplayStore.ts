@@ -84,7 +84,9 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       // Update pagination state
       currentPage.value = page
       pageSize.value = size
-      hasMore.value = data.length === size // Nếu trả về đủ size nghĩa là có thể còn data
+      // data.length >= size: nếu trả về >= size items thì có thể còn trang tiếp theo
+      // dùng >= thay vì === để tránh false-negative khi API trả về nhiều hơn size
+      hasMore.value = data.length >= size
       
       events.value = data
     } catch (err) {

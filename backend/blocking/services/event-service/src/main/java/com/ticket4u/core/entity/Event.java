@@ -1,9 +1,7 @@
 package com.ticket4u.core.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,61 +16,84 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "events", schema = "public")
-@AllArgsConstructor
-@NoArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "Event.withSessionsAndZones",
+                attributeNodes = {
+                        @NamedAttributeNode(
+                                value = "sessions",
+                                subgraph = "sessions-subgraph"
+                        )
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "sessions-subgraph",
+                                attributeNodes = {
+                                        @NamedAttributeNode("zones")
+                                }
+                        )
+                }
+        ),
+        @NamedEntityGraph(
+                name = "Event.withSessions",
+                attributeNodes = {
+                        @NamedAttributeNode("sessions")
+                }
+        )
+})
 public class Event {
+
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
-    @Column(updatable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false, name = "organizer_id")
+    @Column(nullable = false)
     private UUID organizerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = true)
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "address_line", nullable = false, length = 255)
+    @Column(nullable = false)
     private String addressLine;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private EventStatus status;
 
-    @Column(name = "banner_url", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "text")
     private String bannerUrl;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(nullable = false, columnDefinition = "timestamptz")
     private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(columnDefinition = "timestamptz")
     private OffsetDateTime updatedAt;
 
-    @Column(name = "cancelled_at", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(columnDefinition = "timestamptz")
     private OffsetDateTime cancelledAt;
 
-    @Column(name = "about_vi", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String aboutVi;
 
-    @Column(name = "about_en", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String aboutEn;
 
-    @Column(name = "terms_and_conditions", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String termsAndConditions;
 
-    @Column(name = "policy_refund", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String policyRefund;
 
-    @Column(name = "seating_plan_image_url", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String seatingPlanImageUrl;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event")
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
     public enum EventStatus {

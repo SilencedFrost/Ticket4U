@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RequestMapping("/api/v1/public/home")
 @RequiredArgsConstructor
 // @RateLimiter(name = "homePageLimiter")
-public class HomePageController {
+public class HomepageController {
 
     private static final int DEFAULT_PAGE_SIZE = 20;
     private static final int MAX_PAGE_SIZE = 100;

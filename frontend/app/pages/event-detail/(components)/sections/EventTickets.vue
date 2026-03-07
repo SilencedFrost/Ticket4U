@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Showtime, SeatType } from '@/pages/event-detail/types/event-detail';
+import type { Showtime, Zone } from '@/pages/event-detail/types/event-detail';
 import { useFormatter } from '@/composables/useFormatter';
 
 const { formatPrice } = useFormatter();
@@ -23,16 +23,16 @@ const toggleSeatDetail = (scheduleId: string, seatName: string) => {
   expandedSeatDetails.value[key] = !expandedSeatDetails.value[key];
 };
 
-const getSeatDescription = (seat: SeatType) => {
-  return locale.value === 'vi' ? seat.descriptionVi : seat.descriptionEn;
+const getZoneDescription = (zone: Zone) => {
+  return locale.value === 'vi' ? zone.descriptionVi : zone.descriptionEn;
 };
 
-const hasSeatDetails = (seat: SeatType) => {
+const hasZoneDetails = (zone: Zone) => {
   return (
-    seat.descriptionVi ||
-    seat.descriptionEn ||
-    seat.giftImageUrl ||
-    (seat.perks && seat.perks.length > 0)
+    zone.descriptionVi ||
+    zone.descriptionEn ||
+    zone.giftImageUrl ||
+    (zone.perks && zone.perks.length > 0)
   );
 };
 </script>
@@ -80,8 +80,8 @@ const hasSeatDetails = (seat: SeatType) => {
 
           <div class="d-flex flex-column gap-2 gap-md-3">
             <div
-              v-for="(seat, seatIdx) in schedule.seatTypes"
-              :key="seatIdx"
+              v-for="(zone, zoneIdx) in schedule.zones"
+              :key="zoneIdx"
               class="card-border overflow-hidden"
             >
               <div class="p-3 p-md-4">
@@ -93,34 +93,34 @@ const hasSeatDetails = (seat: SeatType) => {
                   >
                     <div class="order-2 order-md-1 flex-grow-1 flex-shrink-1">
                       <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2 fs-6">
-                        {{ seat.name }}
+                        {{ zone.name }}
                       </h6>
                       <div
-                        v-if="seat.available === 0"
+                        v-if="zone.available === 0"
                         class="badge rounded-pill bg-danger-subtle text-danger fw-bold px-3 py-2 small"
                       >
                         {{ $t('event_detail.label.sold_out') }}
                       </div>
                       <p v-else class="text-reactive-primary mb-0 small">
-                        {{ seat.available }} {{ $t('event_detail.label.available') }}
+                        {{ zone.available }} {{ $t('event_detail.label.available') }}
                       </p>
                     </div>
                     <div class="order-1 order-md-2 flex-shrink-0">
                       <p class="text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
-                        {{ formatPrice(seat.price) }}
+                        {{ formatPrice(zone.price) }}
                       </p>
                     </div>
                   </div>
                   <div class="flex-shrink-0">
                     <button
-                      v-if="hasSeatDetails(seat)"
+                      v-if="hasZoneDetails(zone)"
                       class="btn btn-link text-reactive-primary p-0"
-                      @click="toggleSeatDetail(schedule.id, seat.name)"
+                      @click="toggleSeatDetail(schedule.id, zone.name)"
                     >
                       <i
                         class="bi fs-5"
                         :class="
-                          expandedSeatDetails[`${schedule.id}-${seat.name}`]
+                          expandedSeatDetails[`${schedule.id}-${zone.name}`]
                             ? 'bi-chevron-up'
                             : 'bi-chevron-down'
                         "
@@ -129,28 +129,28 @@ const hasSeatDetails = (seat: SeatType) => {
                   </div>
                 </div>
                 <div
-                  v-if="expandedSeatDetails[`${schedule.id}-${seat.name}`] && hasSeatDetails(seat)"
+                  v-if="expandedSeatDetails[`${schedule.id}-${zone.name}`] && hasZoneDetails(zone)"
                   class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
-                  <p v-if="getSeatDescription(seat)" class="text-reactive-primary mb-3 small">
-                    {{ getSeatDescription(seat) }}
+                  <p v-if="getZoneDescription(zone)" class="text-reactive-primary mb-3 small">
+                    {{ getZoneDescription(zone) }}
                   </p>
                   <div class="row g-3">
-                    <div v-if="seat.giftImageUrl" class="col-12 col-md-4">
+                    <div v-if="zone.giftImageUrl" class="col-12 col-md-4">
                       <img
-                        :src="seat.giftImageUrl"
+                        :src="zone.giftImageUrl"
                         class="img-fluid rounded object-fit-cover w-100"
                         style="max-height: 150px"
                         alt="Ticket thumbnail"
                       />
                     </div>
                     <div
-                      v-if="seat.perks && seat.perks.length > 0"
-                      :class="seat.giftImageUrl ? 'col-12 col-md-8' : 'col-12'"
+                      v-if="zone.perks && zone.perks.length > 0"
+                      :class="zone.giftImageUrl ? 'col-12 col-md-8' : 'col-12'"
                     >
                       <ul class="list-unstyled mb-0">
                         <li
-                          v-for="(perk, index) in seat.perks"
+                          v-for="(perk, index) in zone.perks"
                           :key="index"
                           class="text-reactive-primary small mb-1"
                         >

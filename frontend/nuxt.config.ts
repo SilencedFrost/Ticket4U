@@ -4,6 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
+  hooks: {
+    ready(nuxt) {
+      if (nuxt.options.dev) {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      }
+    },
+  },
+
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },

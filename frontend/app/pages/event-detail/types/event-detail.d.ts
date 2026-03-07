@@ -5,7 +5,7 @@ export interface Organizer {
   logo_url: string;
 }
 
-interface SeatType {
+interface Zone {
   id: string;
   name: string;
   price: number;
@@ -20,7 +20,7 @@ interface Showtime {
   id: string;
   date: string;
   time: string;
-  seatTypes: SeatType[];
+  zones: Zone[];
 }
 
 interface EventImages {

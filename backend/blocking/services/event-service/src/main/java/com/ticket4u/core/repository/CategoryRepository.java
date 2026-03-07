@@ -1,6 +1,6 @@
 package com.ticket4u.core.repository;
 
-import com.ticket4u.core.Category;
+import com.ticket4u.core.entity.Category;
 import com.ticket4u.core.projection.CategoryProjection;
 import com.ticket4u.core.projection.CategoryWithEventProjection;
 import org.springframework.data.jpa.repository.JpaRepository;

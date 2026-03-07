@@ -1,4 +1,4 @@
-package com.ticket4u.core;
+package com.ticket4u.core.entity;
 
 import com.ticket4u.core.converter.StringListConverter;
 import jakarta.persistence.*;

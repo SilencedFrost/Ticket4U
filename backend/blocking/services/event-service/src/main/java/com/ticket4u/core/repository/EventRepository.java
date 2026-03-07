@@ -1,6 +1,6 @@
 package com.ticket4u.core.repository;
 
-import com.ticket4u.core.Event;
+import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.projection.EventSummaryProjection;
 import com.ticket4u.core.projection.EventWithCategoryProjection;
 import org.springframework.data.jpa.repository.EntityGraph;

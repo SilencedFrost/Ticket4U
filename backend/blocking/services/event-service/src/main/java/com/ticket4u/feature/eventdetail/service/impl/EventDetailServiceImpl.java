@@ -1,6 +1,6 @@
 package com.ticket4u.feature.eventdetail.service.impl;
 
-import com.ticket4u.core.Event;
+import com.ticket4u.core.entity.Event;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;

@@ -1,15 +1,16 @@
 <template>
-  <section
-    class="position-relative"
-    @touchstart="handleTouchStart"
-    @touchmove="handleTouchMove"
-    @touchend="handleTouchEnd"
-  >
-    <TransitionGroup name="list" tag="div" class="row g-3">
-      <div v-for="item in visibleItems" :key="item.id" :class="colClass">
+  <section class="position-relative">
+    <div class="carousel-track row g-3 flex-nowrap m-0" ref="trackRef" @scroll="handleScroll">
+      <!-- We add padding-right directly here or just let the track scroll.  g-3 adds margins so we should add padding or let padding-bottom handle overflow. Note that `m-0` cancels negative margins if we don't want the track to overflow parent sideways. Actually `row g-3` has negative margins. Let's keep `row g-3` but inside a wrapper or just allow the scroll container to be the track. -->
+      <div
+        v-for="(item, index) in items"
+        :key="item.id || index"
+        :class="colClass"
+        class="carousel-slide flex-shrink-0"
+      >
         <slot :item="item" />
       </div>
-    </TransitionGroup>
+    </div>
 
     <button
       v-if="canGoPrev && !isMobile"
@@ -32,8 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { useCarousel } from '../composables/use-carousel';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 
 interface Props {
   items: any[];
@@ -49,45 +49,61 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isMobile = ref(false);
-const touchStartX = ref(0);
-const touchEndX = ref(0);
-const minSwipeDistance = 50;
+const trackRef = ref<HTMLElement | null>(null);
 
-const { currentIndex, totalPages, canGoPrev, canGoNext, visibleItems, goNext, goPrev, goToPage } =
-  useCarousel(props.items, props.itemsPerPage);
+const maxScrollLeft = ref(0);
+const scrollLeft = ref(0);
+
+const canGoPrev = computed(() => scrollLeft.value > 0);
+// Small threshold for visual rounding on varying pixel densities
+const canGoNext = computed(() => scrollLeft.value < maxScrollLeft.value - 2);
 
 const updateViewport = () => {
   if (typeof window !== 'undefined') {
     isMobile.value = window.innerWidth < 768;
+    updateScrollState();
   }
 };
 
-const handleTouchStart = (e: TouchEvent) => {
-  if (e.touches && e.touches[0]) {
-    touchStartX.value = e.touches[0].clientX;
+const updateScrollState = () => {
+  if (trackRef.value) {
+    scrollLeft.value = trackRef.value.scrollLeft;
+    // max scroll left is scrollWidth minus clientWidth
+    maxScrollLeft.value = trackRef.value.scrollWidth - trackRef.value.clientWidth;
   }
 };
 
-const handleTouchMove = (e: TouchEvent) => {
-  if (e.touches && e.touches[0]) {
-    touchEndX.value = e.touches[0].clientX;
-  }
+const handleScroll = () => {
+  updateScrollState();
 };
 
-const handleTouchEnd = () => {
-  const distance = touchStartX.value - touchEndX.value;
-  const isLeftSwipe = distance > minSwipeDistance;
-  const isRightSwipe = distance < -minSwipeDistance;
-
-  if (isLeftSwipe && canGoNext.value) {
-    goNext();
-  } else if (isRightSwipe && canGoPrev.value) {
-    goPrev();
-  }
+const scrollByAmount = () => {
+  if (!trackRef.value) return 0;
+  return trackRef.value.clientWidth;
 };
+
+const goPrev = () => {
+  if (!trackRef.value) return;
+  trackRef.value.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' });
+};
+
+const goNext = () => {
+  if (!trackRef.value) return;
+  trackRef.value.scrollBy({ left: scrollByAmount(), behavior: 'smooth' });
+};
+
+// If items change, we need to update maxScrollState
+watch(
+  () => props.items,
+  () => {
+    setTimeout(updateScrollState, 150);
+  },
+  { deep: true },
+);
 
 onMounted(() => {
   updateViewport();
+  setTimeout(updateScrollState, 100);
   window.addEventListener('resize', updateViewport);
 });
 
@@ -101,6 +117,36 @@ onUnmounted(() => {
 <style scoped>
 section {
   position: relative;
+}
+
+.carousel-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
+  padding-bottom: 10px; /* Prevent box-shadow or content clipping */
+}
+
+/* Include negative margins of bootstrap's row to avoid horizontal scrollbar on body
+   Wait, if carousel-track is overflow-x: auto, the negative margin of `row` might cause issue.
+   To fix, we can ensure the negative margins are handled, but we use them so grid col sizes work correctly.
+ */
+.carousel-track {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.carousel-slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .carousel-nav-btn {
@@ -125,11 +171,21 @@ section {
 }
 
 .carousel-nav-btn.prev {
-  left: 0;
+  left: -20px;
 }
 
 .carousel-nav-btn.next {
-  right: 0;
+  right: -20px;
+}
+
+/* Adjust button placement for smaller screens or normal container */
+@media (max-width: 1200px) {
+  .carousel-nav-btn.prev {
+    left: 0;
+  }
+  .carousel-nav-btn.next {
+    right: 0;
+  }
 }
 
 .carousel-indicators-dots {
@@ -159,26 +215,5 @@ section {
 
 .carousel-indicators-dots .dot.active {
   background-color: rgba(255, 255, 255, 1);
-}
-
-/* Animations cho Event Carousel */
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
-
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-
-.list-leave-active {
-  position: absolute;
 }
 </style>

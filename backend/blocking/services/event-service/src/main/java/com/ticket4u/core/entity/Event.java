@@ -18,6 +18,26 @@ import java.util.UUID;
 @Table(name = "events", schema = "public")
 @NamedEntityGraphs({
         @NamedEntityGraph(
+                name = "Event.withAllEntities",
+                attributeNodes = {
+                        @NamedAttributeNode(
+                                value = "sessions",
+                                subgraph = "sessions-subgraph"
+                        ),
+                        @NamedAttributeNode(
+                                value = "category"
+                        )
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "sessions-subgraph",
+                                attributeNodes = {
+                                        @NamedAttributeNode("zones")
+                                }
+                        )
+                }
+        ),
+        @NamedEntityGraph(
                 name = "Event.withSessionsAndZones",
                 attributeNodes = {
                         @NamedAttributeNode(

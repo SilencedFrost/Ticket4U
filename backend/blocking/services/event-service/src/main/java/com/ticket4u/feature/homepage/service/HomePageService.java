@@ -3,7 +3,7 @@ package com.ticket4u.feature.homepage.service;
 import com.ticket4u.core.dto.CategoryWithEventDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.dto.EventWithCategoryDto;
-import com.ticket4u.core.mapper.EventSummaryMapper;
+import com.ticket4u.core.mapper.EventMapper;
 import com.ticket4u.feature.homepage.constants.Pagination;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
@@ -32,7 +32,7 @@ public class HomePageService {
     private final HomepageMapper homepageMapper;
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
-    private final EventSummaryMapper eventSummaryMapper;
+    private final EventMapper eventMapper;
 
     private int sanitizePage(Integer page) {
         return page == null ? Pagination.DEFAULT_PAGE : Math.max(page, 0);
@@ -50,7 +50,7 @@ public class HomePageService {
 
         List<EventWithCategoryDto> results = eventRepository.findEventsWithMinPrice(sanitizedSize, offset);
         return results.stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +63,7 @@ public class HomePageService {
     // Featured: Events mới nhất (newest 10)
     public List<EventSummaryResponse> getFeaturedEvents() {
         return eventRepository.findLatestEvents(10).stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -71,21 +71,21 @@ public class HomePageService {
     public List<EventSummaryResponse> getSpecialEvents() {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         return eventRepository.findEventsStartingBetween(now, now.plusDays(7), 10).stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Trending: Random 3 events
     public List<EventSummaryResponse> getTrendingEvents() {
         return eventRepository.findRandomEvents(3).stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     // Suggested: Random 10 events
     public List<EventSummaryResponse> getSuggestedEvents() {
         return eventRepository.findRandomEvents(10).stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -170,7 +170,7 @@ public class HomePageService {
         }
         
         return results.stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .collect(Collectors.toList());
     }
 

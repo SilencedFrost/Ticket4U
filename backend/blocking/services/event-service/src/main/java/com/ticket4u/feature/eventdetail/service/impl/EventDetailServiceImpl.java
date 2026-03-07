@@ -1,13 +1,13 @@
 package com.ticket4u.feature.eventdetail.service.impl;
 
 import com.ticket4u.core.entity.Event;
+import com.ticket4u.core.mapper.EventMapper;
 import com.ticket4u.feature.eventdetail.dto.EventDetailResponse;
 import com.ticket4u.feature.eventdetail.mapper.EventDetailMapper;
 import com.ticket4u.feature.eventdetail.mapper.ZoneMapper;
 import com.ticket4u.core.repository.EventRepository;
 import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
-import com.ticket4u.core.mapper.EventSummaryMapper;
 import com.ticket4u.feature.eventdetail.service.EventDetailService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class EventDetailServiceImpl implements EventDetailService {
     private final EventRepository eventRepository;
     private final EventDetailMapper eventDetailMapper;
-    private final EventSummaryMapper eventSummaryMapper;
+    private final EventMapper eventMapper;
     private final ZoneMapper zoneMapper;
 
     @Override
@@ -51,7 +51,7 @@ public class EventDetailServiceImpl implements EventDetailService {
                 8);
 
         return results.stream()
-                .map(eventSummaryMapper::toDTO)
+                .map(eventMapper::toDTO)
                 .toList();
     }
 

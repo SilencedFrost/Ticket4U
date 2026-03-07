@@ -6,21 +6,19 @@ import java.util.UUID;
 
 /**
  * Shared response DTO for a summarized event card (id, name, banner, dates, min price, category).
- *
- * Moved to core because multiple features use this exact shape:
- *   - feature.homepage  : event lists, featured, trending, filter results
- *   - feature.eventdetail : related events sidebar
- *
- * Rule: when a DTO is imported by more than one feature it no longer belongs
- * to any single feature — it belongs to core.
+ * Core DTO used by homepage and event detail features
+ * Use "Event.withAllEntities" entity graph
  */
 public record EventSummaryResponse(
         UUID id,
         String name,
+        UUID organizerId,
+        // Category fields flat mapped from category
+        Integer categoryId,
+        String categoryName,
         String bannerUrl,
-        String addressLine,
+        // Fields flat mapped from sessions
         OffsetDateTime startDate,
         OffsetDateTime endDate,
-        BigDecimal minPrice,
-        String categoryName
+        BigDecimal minPrice
 ) {}

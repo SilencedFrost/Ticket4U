@@ -4,6 +4,7 @@ import com.ticket4u.core.dto.CategoryWithEventDto;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.mapper.EventSummaryMapper;
+import com.ticket4u.feature.homepage.constants.Pagination;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
@@ -27,16 +28,27 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class HomePageService {
+
+    private final HomepageMapper homepageMapper;
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
     private final EventSummaryMapper eventSummaryMapper;
-    private final HomepageMapper homepageMapper;
 
-    // Lấy tất cả events với giá thấp nhất (paginated)
-    public List<EventSummaryResponse> getAllEventsWithMinPrice(int page, int size) {
-        int offset = page * size;
+    private int sanitizePage(Integer page) {
+        return page == null ? Pagination.DEFAULT_PAGE : Math.max(page, 0);
+    }
 
-        List<EventWithCategoryDto> results = eventRepository.findEventsWithMinPrice(size, offset);
+    private int sanitizeSize(Integer size) {
+        return size == null ? Pagination.DEFAULT_SIZE : Math.min(size, Pagination.MAX_SIZE);
+    }
+
+    public List<EventSummaryResponse> getAllEventsWithMinPrice(Integer page, Integer size) {
+        int sanitizedPage = sanitizePage(page);
+        int sanitizedSize = sanitizeSize(size);
+
+        int offset = sanitizedPage * sanitizedSize;
+
+        List<EventWithCategoryDto> results = eventRepository.findEventsWithMinPrice(sanitizedSize, offset);
         return results.stream()
                 .map(eventSummaryMapper::toDTO)
                 .collect(Collectors.toList());
@@ -114,10 +126,13 @@ public class HomePageService {
             List<Integer> categoryIds, 
             boolean isFreeOnly,
             int tzOffset,
-            int page,
-            int size
+            Integer page,
+            Integer size
     ) {
-        int offset = page * size;
+        int sanitizedPage = sanitizePage(page);
+        int sanitizedSize = sanitizeSize(size);
+
+        int offset = sanitizedPage * sanitizedSize;
 
         // Convert LocalDate to OffsetDateTime using client timezone.
         // JS getTimezoneOffset() returns inverted sign: UTC+7 → -420, so negate it.
@@ -139,7 +154,7 @@ public class HomePageService {
                 startOdt,
                 endOdt,
                 isFreeOnly,
-                size,
+                sanitizedSize,
                 offset
             );
         } else {
@@ -149,7 +164,7 @@ public class HomePageService {
                 endOdt,
                 categoryIds,
                 isFreeOnly,
-                size,
+                sanitizedSize,
                 offset
             );
         }

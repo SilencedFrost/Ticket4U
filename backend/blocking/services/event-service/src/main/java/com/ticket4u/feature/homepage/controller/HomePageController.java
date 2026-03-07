@@ -1,6 +1,7 @@
 package com.ticket4u.feature.homepage.controller;
 
 import com.ticket4u.core.dto.EventSummaryResponse;
+import com.ticket4u.feature.homepage.constants.Pagination;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,30 +23,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RequiredArgsConstructor
 // @RateLimiter(name = "homePageLimiter")
 public class HomepageController {
-
-    private static final int DEFAULT_PAGE_SIZE = 20;
-    private static final int MAX_PAGE_SIZE = 100;
-
     private final HomePageService homePageService;
-
 
     /**
      * GET /api/v1/public/home/events
      * Get a paginated list of events with min price
      *
-     * @param page Page number (default: 0)
-     * @param size Number of items per page (default: 20, max: 100)
-     * @return Paginated list of events with minimum ticket price
+     * @param page Page number
+     * @param size Number of items per page
+     * @return Paginated list of events
      */
     @GetMapping("/events")
-    public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice(
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "20") Integer size
-    ) {
-        int validPage = Math.max(page, 0);
-        int validSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
-        List<EventSummaryResponse> events = homePageService.getAllEventsWithMinPrice(validPage, validSize);
-        return ResponseEntity.ok(events);
+    public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        return ResponseEntity.ok(homePageService.getAllEventsWithMinPrice(page, size));
     }
 
     /**
@@ -56,8 +47,7 @@ public class HomepageController {
      */
     @GetMapping("/events/{id}/min-price")
     public ResponseEntity<Double> getMinPriceForEvent(@PathVariable UUID id) {
-        Double minPrice = homePageService.getMinPriceForEvent(id);
-        return ResponseEntity.ok(minPrice);
+        return ResponseEntity.ok(homePageService.getMinPriceForEvent(id));
     }
 
     /**
@@ -68,8 +58,7 @@ public class HomepageController {
      */
     @GetMapping("/featured")
     public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents() {
-        List<EventSummaryResponse> events = homePageService.getFeaturedEvents();
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(homePageService.getFeaturedEvents());
     }
 
     /**
@@ -80,8 +69,7 @@ public class HomepageController {
      */
     @GetMapping("/special")
     public ResponseEntity<List<EventSummaryResponse>> getSpecialEvents() {
-        List<EventSummaryResponse> events = homePageService.getSpecialEvents();
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(homePageService.getSpecialEvents());
     }
 
     /**
@@ -92,8 +80,7 @@ public class HomepageController {
      */
     @GetMapping("/trending")
     public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
-        List<EventSummaryResponse> events = homePageService.getTrendingEvents();
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(homePageService.getTrendingEvents());
     }
 
     /**
@@ -104,8 +91,7 @@ public class HomepageController {
      */
     @GetMapping("/suggested")
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
-        List<EventSummaryResponse> events = homePageService.getSuggestedEvents();
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(homePageService.getSuggestedEvents());
     }
 
     /**
@@ -116,8 +102,7 @@ public class HomepageController {
      */
     @GetMapping("/places")
     public ResponseEntity<List<PlaceResponse>> getPlaces() {
-        List<PlaceResponse> places = homePageService.getPlaces();
-        return ResponseEntity.ok(places);
+        return ResponseEntity.ok(homePageService.getPlaces());
     }
 
     /**
@@ -128,8 +113,7 @@ public class HomepageController {
      */
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryWithEventsResponse>> getCategoriesWithEvents() {
-        List<CategoryWithEventsResponse> categories = homePageService.getCategoriesWithEvents();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(homePageService.getCategoriesWithEvents());
     }
 
     /**
@@ -140,8 +124,7 @@ public class HomepageController {
      */
     @GetMapping("/categories/all")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = homePageService.getAllCategories();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(homePageService.getAllCategories());
     }
 
     /**
@@ -162,14 +145,11 @@ public class HomepageController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) List<Integer> categoryIds,
             @RequestParam(required = false, defaultValue = "false") boolean isFreeOnly,
-            @RequestParam(required = false, defaultValue = "0") Integer tzOffset,
-            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false) Integer tzOffset,
+            @RequestParam(required = false) Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
-        int validPage = Math.max(page, 0);
-        int validSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
-        List<EventSummaryResponse> events = homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, tzOffset, validPage, validSize);
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, tzOffset, page, size));
     }
 }
 

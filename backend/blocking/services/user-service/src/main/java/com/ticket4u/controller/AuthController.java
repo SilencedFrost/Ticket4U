@@ -1,6 +1,5 @@
 package com.ticket4u.controller;
 
-import com.ticket4u.constant.CommonKeys;
 import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.dto.auth.internal.LogoutResult;
@@ -8,6 +7,7 @@ import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.util.CookieExtratorUtil;
+import com.ticket4u.util.HttpRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +53,7 @@ public class AuthController {
     ) {
         String oldRefreshToken = cookieExtratorUtil.getRefreshTokenOrGet(request, null);
 
-        String userAgent = request.getHeader(CommonKeys.USER_AGENT.getKey());
-        String ua = userAgent != null? userAgent : "Undefined";
+        String ua = HttpRequestUtil.getUserAgent(request);
 
         LoginResult loginResult = authService.login(loginRequest, oldRefreshToken, ua);
 
@@ -96,8 +95,7 @@ public class AuthController {
             @Valid @RequestBody OAuth2RegisterRequest request,
             HttpServletRequest httpRequest
     ) {
-        String userAgent = httpRequest.getHeader(CommonKeys.USER_AGENT.getKey());
-        String ua = userAgent != null ? userAgent : "Undefined";
+        String ua = HttpRequestUtil.getUserAgent(httpRequest);
 
         LoginResult loginResult = authService.authenticateWithGoogle(request.idToken(), ua);
 

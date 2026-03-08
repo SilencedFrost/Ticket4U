@@ -74,21 +74,6 @@
                 :category-id="category.id"
                 show-view-all
             />
-
-            <section class="mb-5">
-                <h2 class="text-white fs-4 fw-bold mb-4">{{ $t('home_page.section.places') }}</h2>
-                <div v-if="loading.places" class="text-center">
-                    <div class="spinner-border text-light" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                <div v-else-if="places.length > 0" class="row g-3">
-                    <div v-for="place in places" :key="place.id" class="col-lg-3 col-md-6">
-                        <PlaceCard :place="place" />
-                    </div>
-                </div>
-                <div v-else-if="errors.places" class="alert alert-danger">{{ errors.places }}</div>
-            </section>
         </div>
     </div>
 </template>
@@ -99,7 +84,6 @@ import EventCarousel from './EventCarousel.vue'
 import SpecialEventCard from './SpecialEventCard.vue'
 import TrendingCard from './TrendingCard.vue'
 import EventSection from './EventSection.vue'
-import PlaceCard from './PlaceCard.vue'
 
 import { useHomeStore } from '~/stores/homeStore'
 
@@ -111,7 +95,7 @@ onMounted(() => {
 })
 
 // Use store state directly (reactive)
-const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, places, categories, loading, errors } =
+const { featuredEvents, specialEvents, trendingEvents, suggestedEvents, categories, loading, errors } =
     storeToRefs(homeStore)
 </script>
 

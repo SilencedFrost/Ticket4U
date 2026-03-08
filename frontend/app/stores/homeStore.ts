@@ -116,23 +116,6 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
-
-  async function fetchPlaces() {
-    loading.value.places = true
-    errors.value.places = null
-    try {
-      const data = await $fetch<PlaceResponse[]>(`${config.public.homeApiUrl}/places`, {
-        credentials: 'include',
-      })
-      places.value = data
-    } catch (error) {
-      errors.value.places = 'Failed to load places'
-      console.error('Error fetching places:', error)
-    } finally {
-      loading.value.places = false
-    }
-  }
-
   async function fetchCategories() {
     loading.value.categories = true
     errors.value.categories = null
@@ -159,7 +142,6 @@ export const useHomeStore = defineStore('home', () => {
       fetchSpecialEvents(),
       fetchTrendingEvents(),
       fetchSuggestedEvents(),
-      fetchPlaces(),
       fetchCategories(),
     ])
   }
@@ -179,7 +161,6 @@ export const useHomeStore = defineStore('home', () => {
     fetchSpecialEvents,
     fetchTrendingEvents,
     fetchSuggestedEvents,
-    fetchPlaces,
     fetchCategories,
     fetchAllHomeData,
   }

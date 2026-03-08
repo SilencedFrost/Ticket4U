@@ -3,9 +3,34 @@ import type { FetchError } from 'ofetch';
 
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
+const router = useRouter();
+const userStore = useUserStore();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
 const registerSuccess = ref<boolean>(false);
+const hiddenGoogleBtn = ref<HTMLElement | null>(null);
+
+const {
+  loaded: googleLoaded,
+  scriptError: googleScriptError,
+  clickHiddenButton,
+} = useGoogleAuth({
+  buttonRef: hiddenGoogleBtn,
+  onCredential: handleGoogleCredential,
+  buttonText: 'signup_with',
+});
+async function handleGoogleCredential(idToken: string) {
+  loading.value = true;
+  Object.assign(error, { ...emptyError, password: [] });
+  try {
+    await userStore.loginWithGoogle(idToken);
+    router.push(localePath('/'));
+  } catch (err) {
+    handleError(err as FetchError);
+  } finally {
+    loading.value = false;
+  }
+}
 
 /**======================
  * Reused constants
@@ -307,7 +332,6 @@ watch(
     </div>
 
     <form v-else novalidate @submit.prevent="register">
-      <!-- full name -->
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -337,7 +361,6 @@ watch(
           {{ $t(error.fullName) }}
         </div>
       </div>
-      <!-- email -->
       <div class="mb-2">
         <label for="reg-email" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.email') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -363,7 +386,6 @@ watch(
           {{ $t(error.email) }}
         </div>
       </div>
-      <!-- phone number -->
       <div class="mb-2">
         <label for="reg-phone" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.phone') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -394,7 +416,6 @@ watch(
           {{ $t(error.phoneNumber) }}
         </div>
       </div>
-      <!-- password -->
       <div class="mb-2">
         <label for="reg-password" class="form-label text-reactive-primary user-select-none">
           {{ $t('auth.password') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -451,11 +472,9 @@ watch(
           {{ $t('auth.register.password_hint') }}
         </small>
       </div>
-      <!-- generic error -->
       <div v-if="error.generic" class="invalid-feedback d-block mb-2" aria-live="assertive">
         {{ $t(error.generic) }}
       </div>
-      <!-- buttons -->
       <div class="d-flex flex-column">
         <button
           class="btn btn-primary text-center mb-2"
@@ -465,10 +484,19 @@ watch(
           <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
           {{ $t('auth.register.action') }}
         </button>
-        <button type="button" class="btn btn-reactive-gray" :disabled="loading">
+        <div ref="hiddenGoogleBtn" class="d-none" />
+        <button
+          type="button"
+          class="btn btn-reactive-gray"
+          :disabled="loading || !googleLoaded"
+          @click="clickHiddenButton()"
+        >
           <i class="bi bi-google me-2" />
           <span>{{ $t('auth.register.google') }}</span>
         </button>
+        <small v-if="googleScriptError" class="text-warning mt-1">
+          {{ $t('auth.error.google_unavailable') }}
+        </small>
       </div>
     </form>
     <hr class="my-2" />

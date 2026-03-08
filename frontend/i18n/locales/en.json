@@ -46,7 +46,8 @@
         "full_name": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
-      "validation": "Invalid data"
+      "validation": "Invalid data",
+      "google_unavailable": "Google Sign-In is unavailable. Please use email instead."
     },
     "session": {
       "invalid": "Invalid session"

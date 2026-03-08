@@ -46,7 +46,8 @@
         "full_name": "Họ và tên không được để trống"
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
-      "validation": "Dữ liệu không hợp lệ"
+      "validation": "Dữ liệu không hợp lệ",
+      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế."
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"

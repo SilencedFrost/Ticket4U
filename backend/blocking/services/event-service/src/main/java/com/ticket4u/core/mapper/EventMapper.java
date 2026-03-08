@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = SessionMapper.class)
 public abstract class EventMapper {
 
     /**

@@ -49,7 +49,10 @@ public class EventSession {
     private Set<Zone> zones = new HashSet<>();
 
     public enum SessionStatus {
-        SCHEDULED,
+        EDITING,
+        PREMIERE,
+        SELLING,
+        PAUSED,
         ONGOING,
         FINISHED,
         CANCELLED

@@ -1,7 +1,6 @@
 package com.ticket4u.core.dto;
 
 import com.ticket4u.core.entity.Event;
-import com.ticket4u.feature.event.dto.ShowtimeResponse;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -29,7 +28,7 @@ public record EventResponse(
         String termsAndConditions,
         String policyRefund,
         String seatingPlanImageUrl,
-        Set<ShowtimeResponse> sessions,
+        Set<EventSessionResponse> sessions,
         OffsetDateTime startDate,
         OffsetDateTime endDate,
         BigDecimal minPrice,

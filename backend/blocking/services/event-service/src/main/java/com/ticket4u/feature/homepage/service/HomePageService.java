@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class HomePageService {
+public class HomepageService {
 
     private final HomepageMapper homepageMapper;
     private final EventRepository eventRepository;

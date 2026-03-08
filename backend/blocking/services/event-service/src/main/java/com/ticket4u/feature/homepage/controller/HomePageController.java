@@ -1,19 +1,17 @@
 package com.ticket4u.feature.homepage.controller;
 
 import com.ticket4u.core.dto.EventSummaryResponse;
-import com.ticket4u.feature.homepage.constants.Pagination;
 import com.ticket4u.feature.homepage.dto.CategoryResponse;
 import com.ticket4u.feature.homepage.dto.CategoryWithEventsResponse;
 
 import com.ticket4u.feature.homepage.dto.PlaceResponse;
-import com.ticket4u.feature.homepage.service.HomePageService;
+import com.ticket4u.feature.homepage.service.HomepageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RequiredArgsConstructor
 // @RateLimiter(name = "homePageLimiter")
 public class HomepageController {
-    private final HomePageService homePageService;
+    private final HomepageService homepageService;
 
     /**
      * GET /api/v1/public/home/events
@@ -35,7 +33,7 @@ public class HomepageController {
      */
     @GetMapping("/events")
     public ResponseEntity<List<EventSummaryResponse>> getEventsWithMinPrice(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        return ResponseEntity.ok(homePageService.getAllEventsWithMinPrice(page, size));
+        return ResponseEntity.ok(homepageService.getAllEventsWithMinPrice(page, size));
     }
 
     /**
@@ -47,7 +45,7 @@ public class HomepageController {
      */
     @GetMapping("/events/{id}/min-price")
     public ResponseEntity<Double> getMinPriceForEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(homePageService.getMinPriceForEvent(id));
+        return ResponseEntity.ok(homepageService.getMinPriceForEvent(id));
     }
 
     /**
@@ -58,7 +56,7 @@ public class HomepageController {
      */
     @GetMapping("/featured")
     public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents() {
-        return ResponseEntity.ok(homePageService.getFeaturedEvents());
+        return ResponseEntity.ok(homepageService.getFeaturedEvents());
     }
 
     /**
@@ -69,7 +67,7 @@ public class HomepageController {
      */
     @GetMapping("/special")
     public ResponseEntity<List<EventSummaryResponse>> getSpecialEvents() {
-        return ResponseEntity.ok(homePageService.getSpecialEvents());
+        return ResponseEntity.ok(homepageService.getSpecialEvents());
     }
 
     /**
@@ -80,7 +78,7 @@ public class HomepageController {
      */
     @GetMapping("/trending")
     public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
-        return ResponseEntity.ok(homePageService.getTrendingEvents());
+        return ResponseEntity.ok(homepageService.getTrendingEvents());
     }
 
     /**
@@ -91,7 +89,7 @@ public class HomepageController {
      */
     @GetMapping("/suggested")
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
-        return ResponseEntity.ok(homePageService.getSuggestedEvents());
+        return ResponseEntity.ok(homepageService.getSuggestedEvents());
     }
 
     /**
@@ -102,7 +100,7 @@ public class HomepageController {
      */
     @GetMapping("/places")
     public ResponseEntity<List<PlaceResponse>> getPlaces() {
-        return ResponseEntity.ok(homePageService.getPlaces());
+        return ResponseEntity.ok(homepageService.getPlaces());
     }
 
     /**
@@ -113,7 +111,7 @@ public class HomepageController {
      */
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryWithEventsResponse>> getCategoriesWithEvents() {
-        return ResponseEntity.ok(homePageService.getCategoriesWithEvents());
+        return ResponseEntity.ok(homepageService.getCategoriesWithEvents());
     }
 
     /**
@@ -124,7 +122,7 @@ public class HomepageController {
      */
     @GetMapping("/categories/all")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        return ResponseEntity.ok(homePageService.getAllCategories());
+        return ResponseEntity.ok(homepageService.getAllCategories());
     }
 
     /**
@@ -149,7 +147,7 @@ public class HomepageController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size
     ) {
-        return ResponseEntity.ok(homePageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, tzOffset, page, size));
+        return ResponseEntity.ok(homepageService.getFilteredEvents(startDate, endDate, categoryIds, isFreeOnly, tzOffset, page, size));
     }
 }
 

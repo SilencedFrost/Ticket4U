@@ -1,6 +1,8 @@
 package com.ticket4u.core.repository;
 
 import com.ticket4u.core.entity.Event;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,10 +24,15 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findAll();
 
     @EntityGraph(value = "Event.withAllEntities")
+    Page<Event> findAll(Pageable pageable);
+
+    @EntityGraph(value = "Event.withAllEntities")
     @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
     List<Event> findAllPremiereAndSelling();
 
-    // ─── Homepage: List & Pricing ─────────────────────────────────────────────
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
+    Page<Event> findALlPremiereAndSellingPaginated(Pageable pageable);
 
     /**
      * Paginated list of PLANNED/ONGOING events with each event's minimum zone price.

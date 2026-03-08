@@ -1,11 +1,15 @@
 package com.ticket4u.feature.event.controller;
 
 import com.ticket4u.core.dto.EventResponse;
-import com.ticket4u.core.service.EventService;
 import com.ticket4u.core.dto.EventSummaryResponse;
+import com.ticket4u.core.service.EventService;
+import com.ticket4u.feature.event.service.EventDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class EventController {
 
     private final EventService eventService;
+    private final EventDetailService eventDetailService;
 
     /**
      * GET /api/v1/public/events/{id}
@@ -37,6 +42,6 @@ public class EventController {
      */
     @GetMapping("/{id}/related")
     public ResponseEntity<List<EventSummaryResponse>> getRelatedEvents(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.findRelatedEvents(id));
+        return ResponseEntity.ok(eventDetailService.findRelatedEvents(id));
     }
 }

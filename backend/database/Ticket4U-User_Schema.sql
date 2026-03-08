@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS public.organizer
 	name varchar(64) NOT NULL,
 	description text,
 	rating decimal(3,2) CHECK (rating >= 0 AND rating <= 5),
+	logo_url text,
     CONSTRAINT organizer_fk_user FOREIGN KEY (id) 
         REFERENCES public.users (id)
 );

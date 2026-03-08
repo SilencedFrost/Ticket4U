@@ -26,7 +26,7 @@ public abstract class EventMapper {
     @Mapping(target = "startDate", source = "event", qualifiedByName = "toStartDate")
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
     @Mapping(target = "minPrice", source = "event", qualifiedByName = "toMinPrice")
-    public abstract EventSummaryResponse toDTO(Event event);
+    public abstract EventSummaryResponse toSummaryDTO(Event event);
 
     /**
      * Use "Event.withAllEntities" entity graph
@@ -40,7 +40,7 @@ public abstract class EventMapper {
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
     @Mapping(target = "minPrice", source = "event", qualifiedByName = "toMinPrice")
     @Mapping(target = "maxPrice", source = "event", qualifiedByName = "toMaxPrice")
-    public abstract EventResponse toResponse(Event event);
+    public abstract EventResponse toDTO(Event event);
 
     @Named("toMinPrice")
     protected BigDecimal calculateMinPrice(Event event) {

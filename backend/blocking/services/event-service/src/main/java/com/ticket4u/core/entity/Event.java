@@ -69,13 +69,16 @@ public class Event {
 
     @Column(nullable = false, unique = true)
     private String name;
+    // TODO: implement vector embedding of name
 
     @Column(nullable = false)
     private UUID organizerId;
 
+    // TODO: implement n-n relationship between category and event
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+    // TODO: implement vector embedding of category
 
     @Column(nullable = false)
     private String addressLine;
@@ -117,7 +120,10 @@ public class Event {
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
     public enum EventStatus {
-        PLANNED,
+        EDITING,
+        PREMIERE,
+        SELLING,
+        PAUSED,
         ONGOING,
         FINISHED,
         CANCELLED

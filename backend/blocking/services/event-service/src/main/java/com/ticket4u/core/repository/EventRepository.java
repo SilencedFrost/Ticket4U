@@ -1,6 +1,5 @@
 package com.ticket4u.core.repository;
 
-import com.ticket4u.core.dto.EventWithCategoryDto;
 import com.ticket4u.core.entity.Event;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,53 +11,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Primary repository for the Event aggregate root.
- * All event-related database queries live here — features inject this interface directly.
- */
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    // ─── Event Detail ─────────────────────────────────────────────────────────
+    @Override
+    @EntityGraph(value = "Event.withAllEntities")
+    Optional<Event> findById(UUID id);
 
-    /**
-     * Fetches a single event with its category, sessions, and zones eagerly loaded in one query.
-     * Avoids the N+1 problem when the caller needs the full object graph.
-     * Used by: eventdetail feature
-     */
-    @EntityGraph(attributePaths = {"category", "sessions", "sessions.zones"})
-    Optional<Event> findWithDetailsById(UUID id);
+    @Override
+    @EntityGraph(value = "Event.withAllEntities")
+    List<Event> findAll();
 
-    /**
-     * Returns up to {@code limit} events related to the given event,
-     * ranked by: same category → same city → nearest upcoming session → newest.
-     * Used by: eventdetail feature
-     */
-    @Query(value = """
-            SELECT e.id AS id, e.name AS name, e.banner_url AS bannerUrl,
-                   e.address_line AS addressLine,
-                   MIN(es.start_date) AS startDate,
-                   MAX(es.end_date) AS endDate,
-                   MIN(z.price) AS minPrice,
-                   c.name AS categoryName
-            FROM events e
-            LEFT JOIN event_sessions es ON e.id = es.event_id
-            LEFT JOIN zones z ON es.id = z.session_id
-            LEFT JOIN categories c ON e.category_id = c.id
-            WHERE e.id != :currentId
-              AND e.status IN ('PLANNED', 'ONGOING', 'SELLING')
-            GROUP BY e.id, e.name, e.banner_url, e.address_line, c.name
-            ORDER BY
-                (CASE WHEN e.category_id = :categoryId THEN 1 ELSE 0 END) DESC,
-                (CASE WHEN POSITION(LOWER(:city) IN LOWER(e.address_line)) > 0 THEN 1 ELSE 0 END) DESC,
-                MIN(es.start_date) ASC,
-                e.created_at DESC
-            LIMIT :limit
-            """, nativeQuery = true)
-    List<EventWithCategoryDto> findRelatedEvents(
-            @Param("currentId") UUID currentId,
-            @Param("categoryId") Integer categoryId,
-            @Param("city") String city,
-            @Param("limit") Integer limit);
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
+    List<Event> findAllPremiereAndSelling();
 
     // ─── Homepage: List & Pricing ─────────────────────────────────────────────
 

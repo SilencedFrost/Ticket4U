@@ -1,8 +1,46 @@
 <script setup lang="ts">
-defineProps<{
-  aboutImage: string;
+import DOMPurify from 'isomorphic-dompurify';
+
+const props = defineProps<{
+  aboutVi: string;
+  aboutEn: string;
 }>();
+
+const { locale } = useI18n();
 const expandAbout = ref(false);
+
+const currentDescription = computed(() => {
+  return locale.value === 'vi' ? props.aboutVi : props.aboutEn;
+});
+
+const sanitizedDescription = computed(() => {
+  return DOMPurify.sanitize(currentDescription.value, {
+    ALLOWED_TAGS: [
+      'p',
+      'br',
+      'strong',
+      'em',
+      'u',
+      's',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'ul',
+      'ol',
+      'li',
+      'blockquote',
+      'code',
+      'pre',
+      'a',
+      'img',
+      'div',
+    ],
+    ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class', 'style'],
+  });
+});
 </script>
 <template>
   <section id="about-section" class="p-3 p-md-4 card m-3 mx-auto mw-100">
@@ -16,24 +54,11 @@ const expandAbout = ref(false);
         class="border-dark overflow-hidden mb-4 about-expandable rounded-2"
         :class="{ expanded: expandAbout }"
       >
-        <img :src="aboutImage" alt="About" class="img-fluid rounded-2" />
         <div class="p-3 p-md-4">
-          <h5 class="fw-bold mb-3">1. Giới thiệu chung</h5>
-          <p class="text-reactive-primary">
-            Thông tin giới thiệu về sự kiện sẽ được hiển thị tại đây với chi tiết đầy đủ về chương
-            trình và các điểm nổi bật
-          </p>
-
-          <h5 class="fw-bold mb-3">2. Chi tiết sự kiện</h5>
-          <p class="text-reactive-primary">
-            Chi tiết sự kiện sẽ được hiển thị tại đây bao gồm thông tin về các nghệ sĩ, danh sách
-            chương trình
-          </p>
-
-          <h5 class="fw-bold mb-3">3. Điều Khoản & Điều kiện</h5>
-          <p class="text-reactive-primary">
-            Điều khoản sẽ được hiển thị tại đây cho khách hàng tham khảo trước khi mua vé
-          </p>
+          <div
+            class="description-content overflow-auto text-break w-100"
+            v-html="sanitizedDescription"
+          />
         </div>
       </div>
       <button

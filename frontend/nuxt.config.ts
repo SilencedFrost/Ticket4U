@@ -4,6 +4,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
+  hooks: {
+    ready(nuxt) {
+      if (nuxt.options.dev) {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      }
+    },
+  },
+
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
@@ -28,8 +36,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authUrl: 'https://localhost:8080/api/v1/auth',
+      userServiceUrl: 'https://localhost:8080/api/v1',
       ticketUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
+      eventDetailUrl: 'https://localhost:8083/api/v1/public/events',
+      homeApiUrl: 'https://localhost:8083/api/v1/public/home',
     },
   },
 

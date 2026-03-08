@@ -1,10 +1,12 @@
 export interface Event {
   id: string
-  title: string
-  imageUrl: string
-  price: number
-  date: string
-  location?: string
+  name: string
+  bannerUrl: string
+  addressLine: string
+  startDate: string
+  endDate: string
+  minPrice: number
+  categoryName?: string
 }
 
 export interface Place {
@@ -15,4 +17,10 @@ export interface Place {
 
 export interface TrendingEvent extends Event {
   rank: 1 | 2 | 3
+}
+
+export interface CategoryWithEvents {
+  id: number
+  name: string
+  events: Event[]
 }

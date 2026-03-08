@@ -1,56 +1,46 @@
-interface LocalizedContent {
-  vi: string;
-  en: string;
-}
-
-interface Organizer {
+export interface Organizer {
+  id: string;
   name: string;
   description: string;
-  logo: string;
+  logo_url: string;
 }
 
-interface RelatedEvent {
-  id: number;
-  image: string;
-  title: string;
-  date: string;
-  price: string;
-}
-
-interface SeatType {
+interface Zone {
+  id: string;
   name: string;
-  price: string;
+  price: number;
   available: number;
-  description?: string;
-  image?: string;
-  benefits?: string[];
+  descriptionVi?: string;
+  descriptionEn?: string;
+  giftImageUrl?: string;
+  perks?: string[] | null;
 }
 
 interface Showtime {
   id: string;
   date: string;
   time: string;
-  seatTypes: SeatType[];
+  zones: Zone[];
 }
 
-export interface EventImages {
-  hero: string;
-  location: string;
-  about: string;
-  sidebar?: string;
+interface EventImages {
+  heroUrl: string;
+  seatMapUrl: string;
 }
 
-interface EventDetail {
-  title: string;
+export interface EventDetailResponse {
+  eventId: string;
+  eventTitle: string;
+  address: string;
+  minPrice: number;
+  maxPrice: number;
+  categoryId: number;
+  aboutVi: string;
+  aboutEn: string;
+  imgEvent: EventImages;
+  organizerId?: string;
+  organizer?: Organizer | null;
+  showtimes: Showtime[];
   date: string;
   time: string;
-  venue: LocalizedContent;
-  address: LocalizedContent;
-  minPrice: string;
-  maxPrice: string;
-  images: EventImages;
-  organizer: Organizer;
-  relatedEvents: RelatedEvent[];
 }
-
-export type { LocalizedContent, Organizer, RelatedEvent, SeatType, Showtime, EventDetail };

@@ -62,6 +62,10 @@
     "settings": "Cài đặt",
     "ticket": "Vé",
     "tickets": "Vé",
+    "price": {
+      "from": "Từ",
+      "not_updated": "Chưa cập nhật giá"
+    },
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -71,7 +75,14 @@
       "view": "Xem"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại"
+    "phone": "Số điện thoại",
+    "category": {
+      "1": "Âm nhạc",
+      "2": "Hội thảo",
+      "3": "Sân khấu - Nghệ thuật",
+      "4": "Thể thao",
+      "5": "Giải trí về đêm"
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -86,7 +97,6 @@
   },
   "event_detail": {
     "label": {
-      "price_from": "Giá từ",
       "available": "còn lại",
       "organizer": "Ban tổ chức",
       "sold_out": "Hết vé"
@@ -96,6 +106,41 @@
       "about": "Về sự kiện",
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
+    }
+  },
+  "home_page": {
+    "section": {
+      "special": "Sự kiện đặc biệt",
+      "trending": "Sự kiện xu hướng",
+      "recommended": "Dành cho bạn",
+      "places": "Điểm đến"
+    },
+    "label": {
+      "view_detail": "Xem chi tiết"
+    }
+  },
+  "event_display": {
+    "label": {
+      "search_result": "Kết quả tìm kiếm",
+      "filter": "Bộ lọc",
+      "all_date": "Tất cả các ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "this_weekend": "Cuối tuần này",
+      "this_month": "Tháng này",
+      "free": "Miễn phí",
+      "date_from": "Từ ngày",
+      "date_to": "Đến ngày",
+      "not_found": "Không tìm thấy sự kiện nào"
+    },
+    "button":{
+      "apply": "Áp dụng",
+      "reset": "Thiết lập lại"
+    },
+    "title": {
+      "category": "Thể loại",
+      "price" : "Giá tiền",
+      "place" : "Địa điểm"
     }
   }
 }

@@ -4,10 +4,16 @@
       <component :is="badgeComponent" />
     </div>
 
-    <div class="trendy-card flex-grow-1 rounded-3 overflow-hidden">
+    <div 
+      class="trendy-card flex-grow-1 rounded-3 overflow-hidden cursor-pointer"
+      role="button"
+      tabindex="0"
+      @click="handleClick"
+      @keydown.enter="handleClick"
+    >
       <img
-        :src="event.imageUrl"
-        :alt="event.title"
+        :src="event.bannerUrl"
+        :alt="event.name"
         class="w-100 h-100 object-fit-cover"
       />
     </div>
@@ -17,7 +23,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { TrendBadgeOne, TrendBadgeTwo, TrendBadgeThree } from '~/components/icons'
-import type { TrendingEvent } from '~/types/home'
+import type { TrendingEvent } from '~/pages/(home)/types/home'
 
 interface Props {
   event: TrendingEvent
@@ -37,6 +43,12 @@ const badgeComponent = computed(() => {
       return TrendBadgeOne
   }
 })
+
+const localePath = useLocalePath()
+
+const handleClick = () => {
+  navigateTo(localePath(`/event-detail/${props.event.id}`))
+}
 </script>
 
 <style scoped>
@@ -57,5 +69,15 @@ const badgeComponent = computed(() => {
 
 .trendy-card {
   aspect-ratio: 16 / 9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trendy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

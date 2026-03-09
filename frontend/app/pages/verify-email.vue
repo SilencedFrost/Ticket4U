@@ -43,7 +43,15 @@ onMounted(async () => {
       message.value = t('auth.verification.already_active');
     } else {
       status.value = 'error';
-      message.value = t(serverMessage || 'auth.verification.token_invalid');
+      const knownKeys = [
+        'auth.verification.token_invalid',
+        'auth.verification.token_expired',
+        'auth.verification.already_active',
+      ];
+      const safeKey = knownKeys.includes(serverMessage)
+        ? serverMessage
+        : 'auth.verification.token_invalid';
+      message.value = t(safeKey);
     }
   }
 });

@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -54,8 +56,13 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     }
 
     private void sendMailAfterCommit(String email, String username, String verificationLink, int expiryHours) {
-        mailServiceClient.sendVerificationEmail(email, username, verificationLink, expiryHours);
-        log.info("Verification email queued for user: {}", email);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                mailServiceClient.sendVerificationEmail(email, username, verificationLink, expiryHours);
+                log.info("Verification email queued for user: {}", email);
+            }
+        });
     }
 
     @Override

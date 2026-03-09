@@ -1,4 +1,4 @@
-package com.ticket4u.feature.event.service;
+package com.ticket4u.event.service;
 
 import com.ticket4u.core.dto.EventSummaryResponse;
 

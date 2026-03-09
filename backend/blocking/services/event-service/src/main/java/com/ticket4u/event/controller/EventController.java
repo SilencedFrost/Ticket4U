@@ -1,9 +1,9 @@
-package com.ticket4u.feature.event.controller;
+package com.ticket4u.event.controller;
 
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
-import com.ticket4u.feature.event.service.EventDetailService;
+import com.ticket4u.event.service.EventDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

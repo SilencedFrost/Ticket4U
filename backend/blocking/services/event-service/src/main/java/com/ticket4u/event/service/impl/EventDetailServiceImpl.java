@@ -1,4 +1,4 @@
-package com.ticket4u.feature.event.service.impl;
+package com.ticket4u.event.service.impl;
 
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
@@ -6,8 +6,8 @@ import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.mapper.EventMapper;
 import com.ticket4u.core.repository.EventRepository;
 import com.ticket4u.exception.EventNotFoundException;
-import com.ticket4u.feature.event.constants.RelatedEvents;
-import com.ticket4u.feature.event.service.EventDetailService;
+import com.ticket4u.event.constants.RelatedEvents;
+import com.ticket4u.event.service.EventDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

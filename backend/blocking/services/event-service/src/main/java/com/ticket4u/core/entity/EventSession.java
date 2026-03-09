@@ -50,7 +50,7 @@ public class EventSession {
 
     public enum SessionStatus {
         EDITING,
-        PREMIERE,
+        SCHEDULED,
         SELLING,
         PAUSED,
         ONGOING,

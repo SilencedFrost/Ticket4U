@@ -27,14 +27,21 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
      * @return list of events, sorted by earliest session start date
      */
     @Query("""
-    SELECT DISTINCT e FROM Event e
-    JOIN e.sessions s
-    WHERE s.startDate = (
-        SELECT MIN(s2.startDate) FROM Session s2
-        WHERE s2.event = e
+    SELECT e FROM Event e
+    WHERE EXISTS (
+        SELECT s FROM EventSession s
+        WHERE s.event = e
+        AND s.startDate = (
+            SELECT MIN(s2.startDate) FROM EventSession s2
+            WHERE s2.event = e
+        )
+        AND s.startDate >= CURRENT_TIMESTAMP
     )
-    AND s.startDate >= CURRENT_TIMESTAMP
-    ORDER BY s.startDate ASC
+    ORDER BY (
+        SELECT MIN(s3.startDate) FROM EventSession s3
+        WHERE s3.event = e
+        AND s3.startDate >= CURRENT_TIMESTAMP
+    ) ASC
     """)
     @EntityGraph(value = "Event.withAllEntities")
     List<Event> findAllOrderedByStartDate();

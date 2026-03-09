@@ -50,6 +50,6 @@ public class EventController {
      */
     @GetMapping("/featured")
     public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents(@RequestParam(required = false, name = "limit",  defaultValue = DefaultParams.FEATURED_COUNT_STRING) int limit) {
-        return null;
+        return ResponseEntity.ok(eventDomainService.findUpcomingActiveEventsLimit(limit));
     }
 }

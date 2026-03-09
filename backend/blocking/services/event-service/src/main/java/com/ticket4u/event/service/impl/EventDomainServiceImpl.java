@@ -98,8 +98,12 @@ public class EventDomainServiceImpl implements EventDomainService {
     private record ScoredEvent(Event event, int score) {}
 
     @Override
-    public List<EventSummaryResponse> findLatestEventsLimit(Integer limit) {
+    public List<EventSummaryResponse> findUpcomingActiveEventsLimit(Integer limit) {
         if(limit == null || limit <= 0) return List.of();
-        return eventRepository.findEarliestStartDateLimit(limit).stream().map(eventMapper::toSummaryDTO).toList();
+        return eventRepository.findAllOrderedByStartDate().stream()
+                .filter(e -> List.of(Event.EventStatus.PREMIERE, Event.EventStatus.SELLING).contains(e.getStatus()))
+                .limit(limit)
+                .map(eventMapper::toSummaryDTO)
+                .toList();
     }
 }

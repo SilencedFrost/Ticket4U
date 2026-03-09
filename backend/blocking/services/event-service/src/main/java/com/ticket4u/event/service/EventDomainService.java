@@ -10,5 +10,5 @@ import java.util.UUID;
  */
 public interface EventDomainService {
     List<EventSummaryResponse> findRelatedEvents(UUID id);
-    List<EventSummaryResponse> findLatestEventsLimit(Integer limit);
+    List<EventSummaryResponse> findUpcomingActiveEventsLimit(Integer limit);
 }

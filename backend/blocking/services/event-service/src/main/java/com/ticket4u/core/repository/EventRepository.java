@@ -22,7 +22,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findAll();
 
     @EntityGraph(value = "Event.withAllEntities")
-    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
     List<Event> findAllPurchasable();
 
     /**

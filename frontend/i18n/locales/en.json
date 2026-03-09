@@ -15,7 +15,7 @@
       "google": "Register with Google",
       "password_hint": "8-32 characters, uppercase, lowercase, number, and special char",
       "has_account": "Already have an account? Log in",
-      "success": "Registration successful! Redirecting to login..."
+      "success": "Registration successful! Please check your email to verify your account."
     },
     "password": "Password",
     "create_account": "Create account",

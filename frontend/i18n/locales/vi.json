@@ -15,7 +15,7 @@
       "google": "Đăng ký với Google",
       "password_hint": "8-32 ký tự, chữ hoa, chữ thường, số, và ký tự đặc biệt",
       "has_account": "Đã có tài khoản? Đăng nhập",
-      "success": "Đăng ký thành công! Đang chuyển hướng..."
+      "success": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản."
     },
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",

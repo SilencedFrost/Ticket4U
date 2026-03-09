@@ -213,11 +213,11 @@ async function register() {
       Object.assign(formData, {
         email: '',
         password: '',
-        confirmPassword: '',
         phoneNumber: '',
         fullName: '',
       });
-      setTimeout(() => goToLogin(), 2000);
+      Object.assign(touched, { ...defaultTouched });
+      Object.assign(error, { ...emptyError, password: [] });
     } else {
       error.generic = response.message;
     }
@@ -326,12 +326,12 @@ watch(
     <h3 class="text-center text-reactive-primary">{{ $t('auth.register.title') }}</h3>
     <hr class="my-2" />
 
-    <div v-if="registerSuccess" class="alert alert-success text-center">
-      <i class="bi bi-check-circle me-2" />
+    <div v-if="registerSuccess" class="alert alert-success text-center mb-3">
+      <i class="bi bi-check-circle-fill me-2" />
       {{ $t('auth.register.success') }}
     </div>
 
-    <form v-else novalidate @submit.prevent="register">
+    <form v-if="!registerSuccess" novalidate @submit.prevent="register">
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>

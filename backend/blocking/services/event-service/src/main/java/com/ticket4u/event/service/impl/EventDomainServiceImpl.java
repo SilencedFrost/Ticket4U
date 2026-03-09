@@ -7,7 +7,7 @@ import com.ticket4u.core.mapper.EventMapper;
 import com.ticket4u.core.repository.EventRepository;
 import com.ticket4u.exception.EventNotFoundException;
 import com.ticket4u.event.constants.RelatedEvents;
-import com.ticket4u.event.service.EventDetailService;
+import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EventDetailServiceImpl implements EventDetailService {
+public class EventDomainServiceImpl implements EventDomainService {
 
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
@@ -97,4 +97,13 @@ public class EventDetailServiceImpl implements EventDetailService {
 
     private record ScoredEvent(Event event, int score) {}
 
+    @Override
+    public List<EventSummaryResponse> findUpcomingActiveEventsLimit(Integer limit) {
+        if(limit == null || limit <= 0) return List.of();
+        return eventRepository.findAllOrderedByStartDate().stream()
+                .filter(e -> List.of(Event.EventStatus.PREMIERE, Event.EventStatus.SELLING).contains(e.getStatus()))
+                .limit(limit)
+                .map(eventMapper::toSummaryDTO)
+                .toList();
+    }
 }

@@ -1,4 +1,4 @@
-package com.ticket4u.feature.homepage.constants;
+package com.ticket4u.homepage.constants;
 
 public class Pagination {
     public static final int DEFAULT_PAGE = 0;

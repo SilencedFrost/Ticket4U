@@ -24,7 +24,11 @@ public class UserHelperMapper {
         if (fullName == null || fullName.isBlank()) {
             return null;
         }
-        String[] names = fullName.trim().split("\\s+", 2);
+        String cleaned = stripParenthetical(fullName);
+        if (cleaned.isBlank()) {
+            return null;
+        }
+        String[] names = cleaned.split("\\s+", 2);
         return names[0];
     }
 
@@ -33,7 +37,15 @@ public class UserHelperMapper {
         if (fullName == null || fullName.isBlank()) {
             return null;
         }
-        String[] names = fullName.trim().split("\\s+", 2);
+        String cleaned = stripParenthetical(fullName);
+        if (cleaned.isBlank()) {
+            return null;
+        }
+        String[] names = cleaned.split("\\s+", 2);
         return names.length > 1 ? names[1] : null;
+    }
+
+    private String stripParenthetical(String name) {
+        return name.replaceAll("\\s*\\(.*?\\)", "").trim();
     }
 }

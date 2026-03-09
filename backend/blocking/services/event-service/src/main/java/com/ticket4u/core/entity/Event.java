@@ -121,6 +121,7 @@ public class Event {
 
     public enum EventStatus {
         EDITING,
+        SCHEDULED,
         PREMIERE,
         SELLING,
         PAUSED,

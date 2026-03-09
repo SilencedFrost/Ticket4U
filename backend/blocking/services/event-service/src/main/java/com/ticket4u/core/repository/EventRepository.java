@@ -26,4 +26,22 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @EntityGraph(value = "Event.withAllEntities")
     @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
     List<Event> findAllPremiereAndSelling();
+
+    /**
+     * @param limit total amount of events to get
+     * @return a limited count of events, sorted by earliest session start date
+     */
+    @Query("""
+    SELECT DISTINCT e FROM Event e
+    JOIN e.sessions s
+    WHERE s.startDate = (
+        SELECT MIN(s2.startDate) FROM Session s2
+        WHERE s2.event = e
+    )
+    AND s.startDate >= CURRENT_TIMESTAMP
+    ORDER BY s.startDate ASC
+    LIMIT :limit
+    """)
+    @EntityGraph(value = "Event.withAllEntities")
+    List<Event> findEarliestStartDateLimit(@Param("limit") int limit);
 }

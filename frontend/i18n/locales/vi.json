@@ -47,7 +47,8 @@
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ",
-      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế."
+      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế.",
+      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực."
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
@@ -60,12 +61,11 @@
       "expired_title": "Link đã hết hạn",
       "token_invalid": "Link xác thực không hợp lệ.",
       "error_title": "Xác thực thất bại",
-      "already_active": "Tài khoản đã được xác thực trước đó."
-    }
-  },
-  "user": {
-    "registration": {
-      "check_email": "Vui lòng kiểm tra email để xác thực tài khoản"
+      "already_active": "Tài khoản đã được xác thực trước đó.",
+      "already_active_title": "Đã xác thực",
+      "resend_prompt": "Nhập email để nhận link xác thực mới.",
+      "resend_action": "Gửi lại",
+      "resend_success": "Nếu email đã đăng ký, link xác thực mới đã được gửi."
     }
   },
   "common": {

@@ -47,7 +47,8 @@
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data",
-      "google_unavailable": "Google Sign-In is unavailable. Please use email instead."
+      "google_unavailable": "Google Sign-In is unavailable. Please use email instead.",
+      "account_not_verified": "Your account is not verified. Please check your email for the verification link."
     },
     "session": {
       "invalid": "Invalid session"
@@ -60,12 +61,11 @@
       "expired_title": "Link expired",
       "token_invalid": "Invalid verification link.",
       "error_title": "Verification failed",
-      "already_active": "This account has already been verified."
-    }
-  },
-  "user": {
-    "registration": {
-      "check_email": "Please check your email to verify your account"
+      "already_active": "This account has already been verified.",
+      "already_active_title": "Already verified",
+      "resend_prompt": "Enter your email to receive a new verification link.",
+      "resend_action": "Resend",
+      "resend_success": "If this email is registered, a new verification link has been sent."
     }
   },
   "common": {

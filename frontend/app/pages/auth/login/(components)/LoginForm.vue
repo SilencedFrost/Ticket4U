@@ -68,6 +68,9 @@ async function login() {
       case 401:
         error.generic = 'auth.error.unauthorized';
         break;
+      case 403:
+        error.generic = 'auth.error.account_not_verified';
+        break;
       default:
         error.generic = 'auth.error.unknown';
         break;

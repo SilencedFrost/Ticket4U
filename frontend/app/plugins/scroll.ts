@@ -1,6 +1,8 @@
 import { defineNuxtPlugin, useRouter } from '#app'
 
 export default defineNuxtPlugin(() => {
+  if (!import.meta.client) return
+
   const router = useRouter()
 
   router.afterEach(async () => {

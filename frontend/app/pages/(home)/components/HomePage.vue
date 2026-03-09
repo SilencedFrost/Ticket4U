@@ -68,9 +68,9 @@
             <EventSection
                 v-for="category in categories"
                 :key="category.id"
-                v-show="!loading.categories && category.events.length > 0"
+                v-show="!loading.categories && category.events?.length > 0"
                 :title="$t(`common.category.${category.id}`, category.name)"
-                :events="category.events"
+                :events="category.events ?? []"
                 :category-id="category.id"
                 show-view-all
             />

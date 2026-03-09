@@ -38,7 +38,7 @@ export const useEventStore = defineStore('event', () => {
             perks?: string[] | null;
           }>;
         }>;
-      }>(`${config.public.eventDetailUrl}/${eventId}`);
+      }>(`${config.public.eventServiceUrl}/events/${eventId}`);
 
       const { date, time } = formatDateTime(data.startDate);
 
@@ -95,7 +95,7 @@ export const useEventStore = defineStore('event', () => {
   async function fetchRelatedEvents(eventId: string) {
     try {
       const data = await $fetch<EventCardResponse[]>(
-        `${config.public.eventDetailUrl}/${eventId}/related`,
+        `${config.public.eventServiceUrl}/events/${eventId}/related`,
       );
       relatedEvents.value = data;
     } catch (err) {

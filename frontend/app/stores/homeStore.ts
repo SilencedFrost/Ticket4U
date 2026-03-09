@@ -121,7 +121,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.categories = null
     try {
       const data = await $fetch<CategoryWithEventsResponse[]>(
-        `${config.public.eventServiceUrl}/categories`,
+        `${config.public.eventServiceUrl}/categories/with-events`,
         {
           credentials: 'include',
         }

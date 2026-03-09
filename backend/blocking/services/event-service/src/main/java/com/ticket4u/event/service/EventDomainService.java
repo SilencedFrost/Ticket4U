@@ -8,6 +8,7 @@ import java.util.UUID;
 /**
  * Higher, more business-heavy service than EventService
  */
-public interface EventDetailService {
+public interface EventDomainService {
     List<EventSummaryResponse> findRelatedEvents(UUID id);
+    List<EventSummaryResponse> findUpcomingActiveEventsLimit(Integer limit);
 }

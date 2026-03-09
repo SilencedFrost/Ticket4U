@@ -208,19 +208,15 @@ async function register() {
       },
     );
 
-    if (response.userId) {
-      registerSuccess.value = true;
-      Object.assign(formData, {
-        email: '',
-        password: '',
-        phoneNumber: '',
-        fullName: '',
-      });
-      Object.assign(touched, { ...defaultTouched });
-      Object.assign(error, { ...emptyError, password: [] });
-    } else {
-      error.generic = response.message;
-    }
+    registerSuccess.value = true;
+    Object.assign(formData, {
+      email: '',
+      password: '',
+      phoneNumber: '',
+      fullName: '',
+    });
+    Object.assign(touched, { ...defaultTouched });
+    Object.assign(error, { ...emptyError, password: [] });
   } catch (err) {
     handleError(err as FetchError);
   } finally {

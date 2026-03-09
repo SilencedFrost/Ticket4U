@@ -558,6 +558,33 @@ FROM public.event_sessions es
 JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Ravolution Music Festival: Unite';
 
+-- Zones cho Saigon Tếu (FREE)
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, quantity_sold, price, 
+	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu ngồi chính', false, 200, 0, 0, 
+	NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
+
+-- Zones cho Vietnam Tech Summit (FREE)
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, quantity_sold, price, 
+	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính', false, 500, 0, 0, 
+	NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Vietnam Tech Summit 2025';
+
+-- Zones cho Workshop Marketing (FREE)
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, quantity_sold, price, 
+	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu học viên', false, 100, 0, 0, 
+	NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Workshop: Marketing 0 Đồng cho Startup';
+
 --5. Table: Seats 
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, status)
 SELECT 
@@ -574,5 +601,56 @@ JOIN public.events e ON es.event_id = e.id
 CROSS JOIN generate_series(1, 5) r 
 CROSS JOIN generate_series(1, 10) c 
 WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
+
+-- Seats cho Saigon Tếu (FREE)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, status)
+SELECT 
+    uuidv7(), 
+    z.id, 
+    'Ghế ' || chr(64 + r) || c, 
+    chr(64 + r), 
+    c::text, 
+    chr(64 + r) || c,
+    'AVAILABLE'
+FROM public.zones z
+JOIN public.event_sessions es ON z.session_id = es.id
+JOIN public.events e ON es.event_id = e.id
+CROSS JOIN generate_series(1, 20) r 
+CROSS JOIN generate_series(1, 10) c 
+WHERE z.name = 'Khu ngồi chính' AND e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
+
+-- Seats cho Vietnam Tech Summit (FREE)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, status)
+SELECT 
+    uuidv7(), 
+    z.id, 
+    'Ghế ' || chr(64 + r) || c, 
+    chr(64 + r), 
+    c::text, 
+    chr(64 + r) || c,
+    'AVAILABLE'
+FROM public.zones z
+JOIN public.event_sessions es ON z.session_id = es.id
+JOIN public.events e ON es.event_id = e.id
+CROSS JOIN generate_series(1, 25) r 
+CROSS JOIN generate_series(1, 20) c 
+WHERE z.name = 'Hội trường chính' AND e.name = 'Vietnam Tech Summit 2025';
+
+-- Seats cho Workshop Marketing (FREE)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, status)
+SELECT 
+    uuidv7(), 
+    z.id, 
+    'Ghế ' || chr(64 + r) || c, 
+    chr(64 + r), 
+    c::text, 
+    chr(64 + r) || c,
+    'AVAILABLE'
+FROM public.zones z
+JOIN public.event_sessions es ON z.session_id = es.id
+JOIN public.events e ON es.event_id = e.id
+CROSS JOIN generate_series(1, 10) r 
+CROSS JOIN generate_series(1, 10) c 
+WHERE z.name = 'Khu học viên' AND e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
 

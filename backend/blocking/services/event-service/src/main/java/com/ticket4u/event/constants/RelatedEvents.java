@@ -1,4 +1,4 @@
-package com.ticket4u.feature.event.constants;
+package com.ticket4u.event.constants;
 
 public class RelatedEvents {
     public static final int MAX_COUNT = 8;

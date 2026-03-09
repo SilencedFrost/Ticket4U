@@ -1,15 +1,13 @@
-package com.ticket4u.feature.event.controller;
+package com.ticket4u.event.controller;
 
+import com.ticket4u.constants.DefaultParams;
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
-import com.ticket4u.feature.event.service.EventDetailService;
+import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +22,7 @@ import java.util.UUID;
 public class EventController {
 
     private final EventService eventService;
-    private final EventDetailService eventDetailService;
+    private final EventDomainService eventDomainService;
 
     /**
      * GET /api/v1/public/events/{id}
@@ -42,6 +40,16 @@ public class EventController {
      */
     @GetMapping("/{id}/related")
     public ResponseEntity<List<EventSummaryResponse>> getRelatedEvents(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventDetailService.findRelatedEvents(id));
+        return ResponseEntity.ok(eventDomainService.findRelatedEvents(id));
+    }
+
+    /**
+     * GET /api/v1/public/events/featured?limit={limit}
+     * @param limit the amount of featured events to get, by default is 4
+     * @return a list of featured events with limited count
+     */
+    @GetMapping("/featured")
+    public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents(@RequestParam(required = false, name = "limit",  defaultValue = DefaultParams.FEATURED_COUNT_STRING) int limit) {
+        return null;
     }
 }

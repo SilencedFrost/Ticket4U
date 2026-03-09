@@ -20,7 +20,7 @@ INSERT INTO public.events (
 ) VALUES
 -- Hà Anh Tuấn: Chân Trời Rực Rỡ
 (uuidv7(), 'Hà Anh Tuấn: Chân Trời Rực Rỡ', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Sân Lễ Hội Đền Hùng, Huyện Gia Viễn, Tỉnh Ninh Bình', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -90,7 +90,7 @@ INSERT INTO public.events (
 
 -- Những Thành Phố Mơ Màng
 (uuidv7(), 'Những Thành Phố Mơ Màng - Summer Tour', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -125,7 +125,7 @@ INSERT INTO public.events (
 
 -- Mây Lang Thang
 (uuidv7(), 'Mây Lang Thang: Đêm Nhạc Trịnh', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Mây Lang Thang, Phường 4, Thành phố Đà Lạt, Tỉnh Lâm Đồng', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -160,7 +160,7 @@ INSERT INTO public.events (
 
 -- Kịch Idecaf
 (uuidv7(), 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Nhà Hát Bến Thành, Quận 1, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -195,7 +195,7 @@ INSERT INTO public.events (
 
 -- Ravolution Music Festival
 (uuidv7(), 'Ravolution Music Festival: Unite', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 1, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -230,7 +230,7 @@ INSERT INTO public.events (
 
 -- Saigon Tếu: Hài Độc Thoại
 (uuidv7(), 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Cà phê Tinh Tế, Quận 3, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -265,7 +265,7 @@ INSERT INTO public.events (
 
 -- Vietnam Tech Summit 2025
 (uuidv7(), 'Vietnam Tech Summit 2025', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 2, 'GEM Center, Quận 1, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -300,7 +300,7 @@ INSERT INTO public.events (
 
 -- Workshop Marketing 0 Đồng
 (uuidv7(), 'Workshop: Marketing 0 Đồng cho Startup', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 2, 'Dreamplex Điện Biên Phủ, Quận Bình Thạnh, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -335,7 +335,7 @@ INSERT INTO public.events (
 
 -- Van Gogh Art Experience
 (uuidv7(), 'Van Gogh Art Lighting Experience', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 3, 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
-	'PLANNED', 
+	'PREMIERE', 
 	'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990', 
 	NOW(), NULL,
 	'<div style="max-width: 800px; margin: auto; font-family: ''Open Sans'', sans-serif; text-align: center;">
@@ -371,7 +371,7 @@ INSERT INTO public.events (
 --3. Table: Event Sessions 
 -- Session cho Hà Anh Tuấn
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '30 days', NOW() + INTERVAL '30 days 4 hours', 'SCHEDULED', 'Show chính', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '30 days', NOW() + INTERVAL '30 days 4 hours', 'ONGOING', 'Show chính', NOW()
 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
 -- Session cho Saigon Heat
@@ -381,37 +381,37 @@ FROM public.events WHERE name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
 
 -- Session cho Những Thành Phố Mơ Màng
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '45 days', NOW() + INTERVAL '45 days 6 hours', 'SCHEDULED', 'Đêm diễn Summer Tour', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '45 days', NOW() + INTERVAL '45 days 6 hours', 'ONGOING', 'Đêm diễn Summer Tour', NOW()
 FROM public.events WHERE name = 'Những Thành Phố Mơ Màng - Summer Tour';
 
 -- Session cho Mây Lang Thang
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '25 days', NOW() + INTERVAL '25 days 3 hours', 'SCHEDULED', 'Đêm nhạc Trịnh', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '25 days', NOW() + INTERVAL '25 days 3 hours', 'ONGOING', 'Đêm nhạc Trịnh', NOW()
 FROM public.events WHERE name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
 -- Session cho Kịch Idecaf
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '5 days', NOW() + INTERVAL '5 days 3 hours', 'SCHEDULED', 'Buổi chiều Chủ Nhật', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '5 days', NOW() + INTERVAL '5 days 3 hours', 'ONGOING', 'Buổi chiều Chủ Nhật', NOW()
 FROM public.events WHERE name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
 
 -- Session cho Ravolution
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '60 days', NOW() + INTERVAL '61 days', 'SCHEDULED', 'Festival Day 1', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '60 days', NOW() + INTERVAL '61 days', 'ONGOING', 'Festival Day 1', NOW()
 FROM public.events WHERE name = 'Ravolution Music Festival: Unite';
 
 -- Session cho Saigon Tếu
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '7 days', NOW() + INTERVAL '7 days 2 hours', 'SCHEDULED', 'Đêm hài độc thoại', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '7 days', NOW() + INTERVAL '7 days 2 hours', 'ONGOING', 'Đêm hài độc thoại', NOW()
 FROM public.events WHERE name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
 
 -- Session cho Vietnam Tech Summit
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '10 days', NOW() + INTERVAL '10 days 8 hours', 'SCHEDULED', 'Tech Summit Day 1', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '10 days', NOW() + INTERVAL '10 days 8 hours', 'ONGOING', 'Tech Summit Day 1', NOW()
 FROM public.events WHERE name = 'Vietnam Tech Summit 2025';
 
 -- Session cho Workshop Marketing
 INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '14 days', NOW() + INTERVAL '14 days 4 hours', 'SCHEDULED', 'Workshop Session', NOW()
+SELECT uuidv7(), id, NOW() + INTERVAL '14 days', NOW() + INTERVAL '14 days 4 hours', 'ONGOING', 'Workshop Session', NOW()
 FROM public.events WHERE name = 'Workshop: Marketing 0 Đồng cho Startup';
 
 -- Session cho Van Gogh Art Experience

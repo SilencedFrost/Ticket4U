@@ -15,11 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +25,7 @@ public class EventDomainServiceImpl implements EventDomainService {
 
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     public List<EventSummaryResponse> findRelatedEvents(UUID id) {
@@ -133,5 +132,26 @@ public class EventDomainServiceImpl implements EventDomainService {
         }
 
         return results.stream().limit(limit).toList();
+    }
+
+    /**
+     * @param limit the amount of events to return
+     * @param samplingMultiplier the multiplier to the sample space, for example, if you want 1/5th odds, multiplier = 5
+     * @return a list of randomly picked events
+     */
+    @Override
+    public List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier) {
+        if(limit < 1 || samplingMultiplier < 1) return List.of();
+
+        List<Event> samplingSpace = eventRepository.findAllPurchasable(PageRequest.of(0, limit * samplingMultiplier));
+
+        if(samplingSpace.size() <= limit) return samplingSpace.stream().map(eventMapper::toSummaryDTO).toList();
+
+        Collections.shuffle(samplingSpace, secureRandom);
+
+        return samplingSpace.stream()
+                .limit(Math.min(limit, samplingSpace.size()))
+                .map(eventMapper::toSummaryDTO)
+                .toList();
     }
 }

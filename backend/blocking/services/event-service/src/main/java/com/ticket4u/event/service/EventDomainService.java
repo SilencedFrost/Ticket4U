@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface EventDomainService {
     List<EventSummaryResponse> findRelatedEvents(UUID id);
     List<EventSummaryResponse> findUpcomingPurchasableEventsLimit(Integer limit);
+    List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier);
 }

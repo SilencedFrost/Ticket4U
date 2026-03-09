@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,10 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @EntityGraph(value = "Event.withAllEntities")
     @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
     List<Event> findAllPurchasable();
+
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
+    List<Event> findAllPurchasable(Pageable pageable);
 
     /**
      * @return list of events, sorted by earliest session start date

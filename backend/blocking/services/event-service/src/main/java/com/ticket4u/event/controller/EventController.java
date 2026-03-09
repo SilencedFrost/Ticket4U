@@ -48,8 +48,36 @@ public class EventController {
      * @param limit the amount of featured events to get, by default is 4
      * @return a list of featured events with limited count
      */
+    // TODO: implement better sampling logic based on business values such as large organizers, or paid promotion
     @GetMapping("/featured")
-    public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents(@RequestParam(required = false, name = "limit",  defaultValue = DefaultParams.FEATURED_COUNT_STRING) int limit) {
+    public ResponseEntity<List<EventSummaryResponse>> getFeaturedEvents(@RequestParam(required = false, defaultValue = DefaultParams.FEATURED_COUNT_STRING) int limit) {
         return ResponseEntity.ok(eventDomainService.findUpcomingPurchasableEventsLimit(limit));
+    }
+
+    /**
+     * GET /api/v1/public/events/locational?longitude={longitude}&latitude={latitude}
+     * @param longitude longitude of the user collected from GPS data
+     * @param latitude latitude of the user collected from GPS data
+     * @return events within a specific distance, if no coordinates are provided, use IP coordinates
+     */
+    // TODO: implement event suggestion based on location
+    @GetMapping("/locational")
+    public ResponseEntity<List<EventSummaryResponse>> getLocationalEvents(
+            @RequestParam(required = false) Double longitude,
+            @RequestParam(required = false) Double latitude
+    ) {
+        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+    }
+
+    @GetMapping("/trending")
+    // TODO: implement event suggestion based on purchase count
+    public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
+        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+    }
+
+    @GetMapping("/suggested")
+    // TODO implement event suggestion using ML and user behavior analysis
+    public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
+        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
     }
 }

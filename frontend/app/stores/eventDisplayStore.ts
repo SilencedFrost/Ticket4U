@@ -75,7 +75,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       params.append('size', size.toString())
 
       const queryString = params.toString()
-      const url = `${config.public.homeApiUrl}/events/filter${queryString ? `?${queryString}` : ''}`
+      const url = `${config.public.eventServiceUrl}/events/filter${queryString ? `?${queryString}` : ''}`
 
       const data = await $fetch<Event[]>(url, {
         credentials: 'include',
@@ -102,7 +102,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
     loadingCategories.value = true
     try {
       const data = await $fetch<Array<{ id: number; name: string }>>((
-        `${config.public.homeApiUrl}/categories/all`
+        `${config.public.eventServiceUrl}/categories`
       ), {
         credentials: 'include',
       })

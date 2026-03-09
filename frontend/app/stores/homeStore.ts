@@ -39,7 +39,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.featured = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.homeApiUrl}/featured`,
+        `${config.public.eventServiceUrl}/events/featured`,
         {
           credentials: 'include',
         }
@@ -58,7 +58,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.special = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.homeApiUrl}/special`,
+        `${config.public.eventServiceUrl}/events/special`,
         {
           credentials: 'include',
         }
@@ -77,7 +77,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.trending = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.homeApiUrl}/trending`,
+        `${config.public.eventServiceUrl}/trending`,
         {
           credentials: 'include',
         }
@@ -102,7 +102,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.suggested = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.homeApiUrl}/suggested`,
+        `${config.public.eventServiceUrl}/events/suggested`,
         {
           credentials: 'include',
         }
@@ -121,7 +121,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.categories = null
     try {
       const data = await $fetch<CategoryWithEventsResponse[]>(
-        `${config.public.homeApiUrl}/categories`,
+        `${config.public.eventServiceUrl}/categories`,
         {
           credentials: 'include',
         }

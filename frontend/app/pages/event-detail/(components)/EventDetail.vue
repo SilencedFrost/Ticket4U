@@ -25,7 +25,7 @@ useHead({
       <div class="col-lg-9">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
-        <event-tickets :show-time="event.showtimes" />
+        <event-tickets :show-time="event.sessions" />
         <event-organizer v-if="event.organizer?.id" :event-data="event.organizer" />
       </div>
       <event-ads />

@@ -16,7 +16,7 @@ interface Zone {
   perks?: string[] | null;
 }
 
-interface Showtime {
+interface Session {
   id: string;
   date: string;
   time: string;
@@ -40,7 +40,7 @@ export interface EventDetailResponse {
   imgEvent: EventImages;
   organizerId?: string;
   organizer?: Organizer | null;
-  showtimes: Showtime[];
+  sessions: Session[];
   date: string;
   time: string;
 }

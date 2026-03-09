@@ -51,6 +51,7 @@ const handleClick = () => {
 }
 
 const formatPrice = (price: number) => {
+  if (price === 0) return $t('common.price.from') + ' 0đ';
   return (price !== null) ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
 }
 

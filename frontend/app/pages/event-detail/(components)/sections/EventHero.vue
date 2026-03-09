@@ -45,9 +45,11 @@ const emit = defineEmits(['buyClick']);
                 <div class="mt-auto">
                   <hr class="bg-reactive-secondary my-2" />
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
-                    {{ $t('common.price.from') }}
+                    {{ event.minPrice === 0 ? '' : $t('common.price.from') }}
                   </p>
-                  <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
+                  <p class="fw-bold mb-2 fs-3" :class="event.minPrice === 0 ? 'text-success' : 'text-primary'">
+                    {{ event.minPrice === 0 ? 'Free' : formatPrice(event.minPrice) }}
+                  </p>
                   <button
                     class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"
                     @click="emit('buyClick')"

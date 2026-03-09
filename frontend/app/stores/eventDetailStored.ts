@@ -24,7 +24,7 @@ export const useEventStore = defineStore('event', () => {
         bannerUrl: string;
         seatingPlanImageUrl: string;
         organizerId?: string;
-        showtimes: Array<{
+        sessions: Array<{
           id: string;
           startDate: string;
           zones: Array<{
@@ -58,13 +58,13 @@ export const useEventStore = defineStore('event', () => {
           heroUrl: data.bannerUrl,
           seatMapUrl: data.seatingPlanImageUrl,
         },
-        showtimes: data.showtimes?.map((showtime) => {
-          const { date: sDate, time: sTime } = formatDateTime(showtime.startDate);
+        sessions: data.sessions?.map((session) => {
+          const { date: sDate, time: sTime } = formatDateTime(session.startDate);
           return {
-            id: showtime.id,
+            id: session.id,
             date: sDate,
             time: sTime,
-            zones: showtime.zones?.map((zone) => ({
+            zones: session.zones?.map((zone) => ({
               id: zone.id,
               name: zone.name,
               price: zone.price,

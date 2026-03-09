@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Showtime, Zone } from '@/pages/event-detail/types/event-detail';
+import type { Session, Zone } from '@/pages/event-detail/types/event-detail';
 import { useFormatter } from '@/composables/useFormatter';
 
 const { formatPrice } = useFormatter();
 const { locale } = useI18n();
 
 defineProps<{
-  showTime: Showtime[];
+  showTime: Session[];
 }>();
 
 const emit = defineEmits(['buyClick']);
@@ -106,7 +106,13 @@ const hasZoneDetails = (zone: Zone) => {
                       </p>
                     </div>
                     <div class="order-1 order-md-2 flex-shrink-0">
-                      <p class="text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
+                      <p
+                        v-if="zone.price === 0"
+                        class="mx-1 text-success fw-bold fs-6 fs-md-5 mb-0 text-nowrap"
+                      >
+                        Free
+                      </p>
+                      <p v-else class="mx-1 text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
                         {{ formatPrice(zone.price) }}
                       </p>
                     </div>

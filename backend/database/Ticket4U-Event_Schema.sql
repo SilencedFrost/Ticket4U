@@ -2,8 +2,8 @@ DROP TABLE IF EXISTS public.seats;
 DROP TABLE IF EXISTS public.zones;
 DROP TABLE IF EXISTS public.event_sessions;
 DROP TABLE IF EXISTS public.events;
-DROP TABLE IF EXISTS public.categories;
 DROP TABLE IF EXISTS public.venues;
+DROP TABLE IF EXISTS public.categories;
 
 -- Table: categories
 CREATE TABLE IF NOT EXISTS public.categories (

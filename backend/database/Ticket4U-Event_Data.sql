@@ -1,7 +1,8 @@
---1. Table: categories 
+-- data truncation
 TRUNCATE TABLE public.categories CASCADE;
-ALTER SEQUENCE public.categories_id_seq RESTART WITH 1;
+TRUNCATE TABLE public.venues CASCADE;
 
+-- inserts
 INSERT INTO public.categories (id, name) VALUES 
 (1, 'Âm nhạc'), 
 (2, 'Hội thảo'), 

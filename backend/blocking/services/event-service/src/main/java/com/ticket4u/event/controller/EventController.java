@@ -72,7 +72,7 @@ public class EventController {
     @GetMapping("/trending")
     // TODO: implement event suggestion based on purchase count
     public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
-        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+        return ResponseEntity.ok(eventDomainService.findRandomEvent(3, 5));
     }
 
     @GetMapping("/suggested")

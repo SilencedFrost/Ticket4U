@@ -9,12 +9,15 @@ import com.ticket4u.exception.EventNotFoundException;
 import com.ticket4u.event.constants.RelatedEvents;
 import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.data.autoconfigure.web.DataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +25,13 @@ public class EventDomainServiceImpl implements EventDomainService {
 
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     public List<EventSummaryResponse> findRelatedEvents(UUID id) {
         // Fail fast
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-        List<Event> events = eventRepository.findAllPremiereAndSelling(); // Only include premiering and selling events
+        List<Event> events = eventRepository.findAllPurchasable(); // Only include premiering and selling events
         // Fail fast
         if(events.isEmpty()) return List.of();
 
@@ -98,11 +102,55 @@ public class EventDomainServiceImpl implements EventDomainService {
     private record ScoredEvent(Event event, int score) {}
 
     @Override
-    public List<EventSummaryResponse> findUpcomingActiveEventsLimit(Integer limit) {
-        if(limit == null || limit <= 0) return List.of();
-        return eventRepository.findAllOrderedByStartDate().stream()
-                .filter(e -> List.of(Event.EventStatus.PREMIERE, Event.EventStatus.SELLING).contains(e.getStatus()))
-                .limit(limit)
+    public List<EventSummaryResponse> findUpcomingPurchasableEventsLimit(Integer limit) {
+        if (limit == null || limit <= 0) return List.of();
+
+        List<EventSummaryResponse> results = new ArrayList<>();
+        int page = 0;
+        // Cap batch size
+        int batchSize = Math.min(limit * 2, 50);
+
+        while (results.size() < limit) {
+            Pageable pageable = PageRequest.of(page, batchSize);
+            Page<Event> eventPage = eventRepository.findAllOrderedByStartDate(pageable);
+
+            // Exit if no more events
+            if (eventPage.isEmpty()) break;
+
+            // Filter and map matching events
+            List<EventSummaryResponse> batch = eventPage.stream()
+                    .filter(e -> e.getStatus() == Event.EventStatus.PREMIERE ||
+                            e.getStatus() == Event.EventStatus.SELLING)
+                    .map(eventMapper::toSummaryDTO)
+                    .toList();
+
+            results.addAll(batch);
+            page++;
+
+            // Exit if we've reached the last page
+            if (!eventPage.hasNext()) break;
+        }
+
+        return results.stream().limit(limit).toList();
+    }
+
+    /**
+     * @param limit the amount of events to return
+     * @param samplingMultiplier the multiplier to the sample space, for example, if you want 1/5th odds, multiplier = 5
+     * @return a list of randomly picked events
+     */
+    @Override
+    public List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier) {
+        if(limit < 1 || samplingMultiplier < 1) return List.of();
+
+        List<Event> samplingSpace = eventRepository.findAllPurchasable(PageRequest.of(0, limit * samplingMultiplier));
+
+        if(samplingSpace.size() <= limit) return samplingSpace.stream().map(eventMapper::toSummaryDTO).toList();
+
+        Collections.shuffle(samplingSpace, secureRandom);
+
+        return samplingSpace.stream()
+                .limit(Math.min(limit, samplingSpace.size()))
                 .map(eventMapper::toSummaryDTO)
                 .toList();
     }

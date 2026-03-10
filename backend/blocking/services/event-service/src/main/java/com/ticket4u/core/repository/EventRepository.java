@@ -1,9 +1,12 @@
 package com.ticket4u.core.repository;
 
 import com.ticket4u.core.entity.Event;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +23,12 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     List<Event> findAll();
 
     @EntityGraph(value = "Event.withAllEntities")
-    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SELLING')")
-    List<Event> findAllPremiereAndSelling();
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
+    List<Event> findAllPurchasable();
+
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
+    List<Event> findAllPurchasable(Pageable pageable);
 
     /**
      * @return list of events, sorted by earliest session start date
@@ -44,5 +51,5 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     ) ASC
     """)
     @EntityGraph(value = "Event.withAllEntities")
-    List<Event> findAllOrderedByStartDate();
+    Page<Event> findAllOrderedByStartDate(Pageable pageable);
 }

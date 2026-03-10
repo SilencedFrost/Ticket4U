@@ -533,7 +533,7 @@ function getCellClasses(cell: CalendarCell): string[] {
 }
 
 .calendar-month--right {
-  padding-left: 16px;
+  padding-left: 30px;
   border-left: 1px solid var(--text-reactive-secondary, rgba(128, 128, 128, 0.15));
 }
 

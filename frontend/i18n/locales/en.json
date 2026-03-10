@@ -111,7 +111,7 @@
   },
   "home_page": {
     "section": {
-      "special": "Special Events",
+      "locational": "Locational Events",
       "trending": "Trending Events",
       "recommended": "Recommended for You",
       "places": "Destinations"

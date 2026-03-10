@@ -17,7 +17,7 @@
             </div>
 
             <section class="mb-5">
-                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">{{ $t('home_page.section.special') }}</h2>
+                <h2 class="text-reactive-primary fs-4 fw-bold mb-4">{{ $t('home_page.section.locational') }}</h2>
                 <div v-if="loading.special" class="text-center">
                     <div class="spinner-border text-light" role="status">
                         <span class="visually-hidden">Loading...</span>

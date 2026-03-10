@@ -58,15 +58,15 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.special = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/events/special`,
+        `${config.public.eventServiceUrl}/events/locational`,
         {
           credentials: 'include',
         }
       )
       specialEvents.value = data
     } catch (error) {
-      errors.value.special = 'Failed to load special events'
-      console.error('Error fetching special events:', error)
+      errors.value.special = 'Failed to load locational events'
+      console.error('Error fetching locational events:', error)
     } finally {
       loading.value.special = false
     }
@@ -77,7 +77,7 @@ export const useHomeStore = defineStore('home', () => {
     errors.value.trending = null
     try {
       const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/trending`,
+        `${config.public.eventServiceUrl}/events/trending`,
         {
           credentials: 'include',
         }

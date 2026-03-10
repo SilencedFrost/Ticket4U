@@ -37,6 +37,7 @@ export default defineNuxtConfig({
       homeApiUrl: 'https://localhost:8081/api/v1/public/home',
       ticketUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
+      googleClientId: '',
     },
   },
 

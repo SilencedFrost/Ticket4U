@@ -23,6 +23,14 @@ export const useUserStore = defineStore('user', () => {
     });
   }
 
+  async function loginWithGoogle(idToken: string) {
+    _user.value = await $fetch(`${config.public.authUrl}/google`, {
+      credentials: 'include',
+      method: 'POST',
+      body: { idToken },
+    });
+  }
+
   async function refresh() {
     try {
       _user.value = await $fetch(`${config.public.authUrl}/refresh`, {
@@ -51,6 +59,7 @@ export const useUserStore = defineStore('user', () => {
     user,
     isLoggedIn,
     login,
+    loginWithGoogle,
     refresh,
     logout,
   };

@@ -12,10 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
 
 # Port
 server:
-  port: ${SERVER_PORT:8081}
 
 application:
   security:
@@ -27,7 +27,6 @@ application:
       issuer: ticket4u
     # CORS
     cors:
-      allowed-origins: ${FRONTEND_URL=https://localhost:3000}
 
 # Logging
 logging:

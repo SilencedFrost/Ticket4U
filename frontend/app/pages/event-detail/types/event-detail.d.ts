@@ -18,8 +18,7 @@ interface Zone {
 
 interface Session {
   id: string;
-  date: string;
-  time: string;
+  startDate: string;
   zones: Zone[];
 }
 
@@ -41,6 +40,5 @@ export interface EventDetailResponse {
   organizerId?: string;
   organizer?: Organizer | null;
   sessions: Session[];
-  date: string;
-  time: string;
+  startDate: string;
 }

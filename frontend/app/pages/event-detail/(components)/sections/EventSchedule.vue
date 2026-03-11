@@ -2,6 +2,7 @@
 import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
 
 const { vFallback: vImgFallback } = useImagePlaceholder();
+const { formatDateTime } = useFormatter();
 
 defineProps<{
   event: EventDetailResponse;
@@ -30,11 +31,11 @@ defineProps<{
       </div>
       <div class="border-bottom my-4" />
       <div class="row w-100">
-        <div class="date col-lg-6">
-          <p>{{ $d(new Date(event.date), 'long') }}</p>
-        </div>
-        <div class="time col-lg-6 text-lg-end">
-          <button class="btn btn-primary text-reactive-primary mb-0">{{ event.time }}</button>
+        <div class="col-12">
+          <p class="mb-0">
+            <i class="bi bi-calendar-event text-primary me-2"></i>
+            <strong>{{ formatDateTime(event.startDate).dateTime }}</strong>
+          </p>
         </div>
       </div>
     </div>

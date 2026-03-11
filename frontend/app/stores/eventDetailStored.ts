@@ -33,7 +33,6 @@ interface EventApiResponse {
 
 export const useEventStore = defineStore('event', () => {
   const config = useRuntimeConfig();
-  const { formatDateTime } = useFormatter();
 
   const currentEvent = ref<EventDetailResponse | null>(null);
   const relatedEvents = ref<EventCardResponse[]>([]);
@@ -85,8 +84,6 @@ export const useEventStore = defineStore('event', () => {
   }
 
   function mapEventResponse(data: EventApiResponse): EventDetailResponse {
-    const { date, time } = formatDateTime(data.startDate);
-
     return {
       eventId: data.id,
       eventTitle: data.name,
@@ -95,23 +92,19 @@ export const useEventStore = defineStore('event', () => {
       aboutEn: data.aboutEn,
       categoryId: data.categoryId,
       organizerId: data.organizerId,
-      date,
-      time,
+      startDate: data.startDate || '',
       minPrice: data.minPrice,
       maxPrice: data.maxPrice,
       imgEvent: {
         heroUrl: data.bannerUrl,
         seatMapUrl: data.seatingPlanImageUrl,
       },
-      sessions: data.sessions?.map((s) => {
-        const dateTime = formatDateTime(s.startDate);
-        return {
+      sessions:
+        data.sessions?.map((s) => ({
           id: s.id,
-          date: dateTime.date,
-          time: dateTime.time,
-          zones: s.zones,
-        };
-      }),
+          startDate: s.startDate || '',
+          zones: s.zones || [],
+        })) || [],
     } as EventDetailResponse;
   }
 

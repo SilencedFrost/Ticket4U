@@ -3,7 +3,7 @@ import type { EventDetailResponse } from '@/pages/event-detail/types/event-detai
 import { useFormatter } from '@/composables/useFormatter';
 
 const { vFallback: vImgFallback } = useImagePlaceholder();
-const { formatPrice } = useFormatter();
+const { formatPrice, formatDateTime } = useFormatter();
 
 defineProps<{
   event: EventDetailResponse;
@@ -33,8 +33,7 @@ const emit = defineEmits(['buyClick']);
                 <div class="mb-2 small">
                   <i class="bi bi-calendar-event text-reactive-primary me-1" />
                   <span class="text-primary fw-semibold">
-                    {{ event.time }},
-                    {{ $d(new Date(event.date), 'short') }}
+                    {{ formatDateTime(event.startDate).dateTime }}
                   </span>
                 </div>
                 <div class="mb-2 text-reactive-secondary small">
@@ -47,7 +46,10 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
                     {{ event.minPrice === 0 ? '' : $t('common.price.from') }}
                   </p>
-                  <p class="fw-bold mb-2 fs-3" :class="event.minPrice === 0 ? 'text-success' : 'text-primary'">
+                  <p
+                    class="fw-bold mb-2 fs-3"
+                    :class="event.minPrice === 0 ? 'text-success' : 'text-primary'"
+                  >
                     {{ event.minPrice === 0 ? 'Free' : formatPrice(event.minPrice) }}
                   </p>
                   <button

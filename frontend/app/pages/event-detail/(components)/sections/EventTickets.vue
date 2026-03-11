@@ -2,7 +2,7 @@
 import type { Session, Zone } from '@/pages/event-detail/types/event-detail';
 import { useFormatter } from '@/composables/useFormatter';
 
-const { formatPrice } = useFormatter();
+const { formatPrice, formatDateTime } = useFormatter();
 const { locale } = useI18n();
 
 defineProps<{
@@ -55,9 +55,9 @@ const hasZoneDetails = (zone: Zone) => {
               class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 flex-grow-1"
             >
               <i class="bi bi-calendar-event text-info fs-5" />
-              <span class="text-reactive-primary fw-semibold small"
-                >{{ schedule.time }}, {{ $d(new Date(schedule.date), 'long') }}</span
-              >
+              <span class="text-reactive-primary fw-semibold small">{{
+                formatDateTime(schedule.startDate).dateTimeWithWeekday
+              }}</span>
             </div>
             <div
               class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto"

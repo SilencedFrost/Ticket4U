@@ -9,7 +9,6 @@ import com.ticket4u.exception.EventNotFoundException;
 import com.ticket4u.event.constants.RelatedEvents;
 import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.data.autoconfigure.web.DataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -112,7 +111,7 @@ public class EventDomainServiceImpl implements EventDomainService {
 
         while (results.size() < limit) {
             Pageable pageable = PageRequest.of(page, batchSize);
-            Page<Event> eventPage = eventRepository.findAllOrderedByStartDate(pageable);
+            Page<Event> eventPage = eventRepository.findUpcomingEvents(pageable);
 
             // Exit if no more events
             if (eventPage.isEmpty()) break;

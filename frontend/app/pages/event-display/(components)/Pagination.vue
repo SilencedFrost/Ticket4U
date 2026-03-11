@@ -1,42 +1,3 @@
-<template>
-  <div class="pagination-container d-flex justify-content-center align-items-center gap-3 py-4">
-    <!-- Previous Button -->
-    <button
-      class="btn btn-pagination"
-      :disabled="currentPage === 0 || loading"
-      @click="goToPrevious"
-    >
-      <i class="bi bi-chevron-left"></i>
-      <span class="d-none d-md-inline ms-2">Previous</span>
-    </button>
-
-    <!-- Page Info -->
-    <div class="page-info d-flex align-items-center gap-2">
-      <span class="text-muted">Page</span>
-      <input
-        v-model.number="pageInput"
-        type="number"
-        min="1"
-        class="form-control page-input"
-        :disabled="loading"
-        @keyup.enter="goToPageInput"
-        @blur="goToPageInput"
-      >
-      <span class="text-muted">{{ showingText }}</span>
-    </div>
-
-    <!-- Next Button -->
-    <button
-      class="btn btn-pagination"
-      :disabled="!hasMore || loading"
-      @click="goToNext"
-    >
-      <span class="d-none d-md-inline me-2">Next</span>
-      <i class="bi bi-chevron-right"></i>
-    </button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
@@ -102,6 +63,45 @@ const goToPageInput = () => {
   }
 };
 </script>
+
+<template>
+  <div class="pagination-container d-flex justify-content-center align-items-center gap-3 py-4">
+    <!-- Previous Button -->
+    <button
+      class="btn btn-pagination"
+      :disabled="currentPage === 0 || loading"
+      @click="goToPrevious"
+    >
+      <i class="bi bi-chevron-left"></i>
+      <span class="d-none d-md-inline ms-2">Previous</span>
+    </button>
+
+    <!-- Page Info -->
+    <div class="page-info d-flex align-items-center gap-2">
+      <span class="text-muted">Page</span>
+      <input
+        v-model.number="pageInput"
+        type="number"
+        min="1"
+        class="form-control page-input"
+        :disabled="loading"
+        @keyup.enter="goToPageInput"
+        @blur="goToPageInput"
+      >
+      <span class="text-muted">{{ showingText }}</span>
+    </div>
+
+    <!-- Next Button -->
+    <button
+      class="btn btn-pagination"
+      :disabled="!hasMore || loading"
+      @click="goToNext"
+    >
+      <span class="d-none d-md-inline me-2">Next</span>
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</template>
 
 <style scoped>
 .pagination-container {

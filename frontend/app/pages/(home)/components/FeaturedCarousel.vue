@@ -1,57 +1,3 @@
-<template>
-  <section class="mb-5 position-relative">
-    <div
-      class="carousel-track d-flex"
-      ref="trackRef"
-      @scroll="handleScroll"
-      @touchstart="handleTouchStart"
-      @touchend="handleTouchEnd"
-    >
-      <div
-        v-for="(event, idx) in loopedEvents"
-        :key="`event-${event.id}-${idx}`"
-        class="carousel-slide flex-shrink-0"
-      >
-        <NuxtLinkLocale
-          :to="`/event-detail/${event.id}`"
-          class="event-card-large position-relative rounded-4 overflow-hidden d-block w-100"
-        >
-          <img :src="event.bannerUrl" :alt="event.name" class="w-100 h-100 object-fit-cover" />
-        </NuxtLinkLocale>
-      </div>
-    </div>
-
-    <button
-      v-if="totalSlides > 1 && !isMobile"
-      class="carousel-nav-btn prev"
-      aria-label="Previous"
-      @click="goPrev"
-    >
-      &lt;
-    </button>
-
-    <button
-      v-if="totalSlides > 1 && !isMobile"
-      class="carousel-nav-btn next"
-      aria-label="Next"
-      @click="goNext"
-    >
-      &gt;
-    </button>
-
-    <div v-if="totalSlides > 1" class="carousel-indicators-dots">
-      <button
-        v-for="(_, index) in totalSlides"
-        :key="index"
-        class="dot"
-        :class="{ active: currentSlide === index }"
-        :aria-label="`Go to slide ${index + 1}`"
-        @click="goToSlide(index)"
-      />
-    </div>
-  </section>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import type { Event } from '~/pages/(home)/types/home';
@@ -214,6 +160,60 @@ onUnmounted(() => {
   }
 });
 </script>
+
+<template>
+  <section class="mb-5 position-relative">
+    <div
+      class="carousel-track d-flex"
+      ref="trackRef"
+      @scroll="handleScroll"
+      @touchstart="handleTouchStart"
+      @touchend="handleTouchEnd"
+    >
+      <div
+        v-for="(event, idx) in loopedEvents"
+        :key="`event-${event.id}-${idx}`"
+        class="carousel-slide flex-shrink-0"
+      >
+        <NuxtLinkLocale
+          :to="`/event-detail/${event.id}`"
+          class="event-card-large position-relative rounded-4 overflow-hidden d-block w-100"
+        >
+          <img :src="event.bannerUrl" :alt="event.name" class="w-100 h-100 object-fit-cover" />
+        </NuxtLinkLocale>
+      </div>
+    </div>
+
+    <button
+      v-if="totalSlides > 1 && !isMobile"
+      class="carousel-nav-btn prev"
+      aria-label="Previous"
+      @click="goPrev"
+    >
+      &lt;
+    </button>
+
+    <button
+      v-if="totalSlides > 1 && !isMobile"
+      class="carousel-nav-btn next"
+      aria-label="Next"
+      @click="goNext"
+    >
+      &gt;
+    </button>
+
+    <div v-if="totalSlides > 1" class="carousel-indicators-dots">
+      <button
+        v-for="(_, index) in totalSlides"
+        :key="index"
+        class="dot"
+        :class="{ active: currentSlide === index }"
+        :aria-label="`Go to slide ${index + 1}`"
+        @click="goToSlide(index)"
+      />
+    </div>
+  </section>
+</template>
 
 <style scoped>
 .carousel-track {

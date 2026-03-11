@@ -1,3 +1,30 @@
+<script setup lang="ts">
+import type { Event } from '~/pages/(home)/types/home'
+
+interface Props {
+    events: Event[]
+}
+
+defineProps<Props>()
+
+defineEmits<{
+    'event-click': [id: string]
+}>()
+
+const formatPrice = (price: number): string => {
+    if (price === 0) return $t('common.price.from') + ' 0đ';
+    return price ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
+}
+
+const formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate)
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    return `${day} tháng ${month}, ${year}`
+}
+</script>
+
 <template>
     <div class="row g-3 g-md-4">
         <div v-for="event in events" :key="event.id" class="col-6 col-md-4 col-lg-3">
@@ -29,33 +56,6 @@
         <p class="text-reactive-secondary mb-0">{{ $t('event_display.label.not_found') }}</p>
     </div>
 </template>
-
-<script setup lang="ts">
-import type { Event } from '~/pages/(home)/types/home'
-
-interface Props {
-    events: Event[]
-}
-
-defineProps<Props>()
-
-defineEmits<{
-    'event-click': [id: string]
-}>()
-
-const formatPrice = (price: number): string => {
-    if (price === 0) return $t('common.price.from') + ' 0đ';
-    return price ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
-}
-
-const formatDate = (isoDate: string): string => {
-    const date = new Date(isoDate)
-    const day = date.getDate()
-    const month = date.getMonth() + 1
-    const year = date.getFullYear()
-    return `${day} tháng ${month}, ${year}`
-}
-</script>
 
 <style scoped>
 .event-card-wrapper {

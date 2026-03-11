@@ -1,25 +1,3 @@
-<template>
-  <section class="mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="text-reactive-primary fs-4 fw-bold mb-0">{{ title }}</h2>
-      <NuxtLinkLocale
-        v-if="showViewAll"
-        :to="viewAllLink"
-        class="text-reactive-primary text-decoration-none fw-light"
-      >
-        {{ $t('common.see.more') }} &gt;
-      </NuxtLinkLocale>
-    </div>
-    <EventCarousel :items="events" :items-per-page="4" col-class="col-lg-3 col-md-6 col-sm-12">
-      <template #default="{ item }">
-        <div class="event-card-wrapper">
-          <EventCard :event="item" />
-        </div>
-      </template>
-    </EventCarousel>
-  </section>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Event } from '~/pages/(home)/types/home';
@@ -45,6 +23,28 @@ const viewAllLink = computed(() => {
   return '/event-display';
 });
 </script>
+
+<template>
+  <section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="text-reactive-primary fs-4 fw-bold mb-0">{{ title }}</h2>
+      <NuxtLinkLocale
+        v-if="showViewAll"
+        :to="viewAllLink"
+        class="text-reactive-primary text-decoration-none fw-light"
+      >
+        {{ $t('common.see.more') }} &gt;
+      </NuxtLinkLocale>
+    </div>
+    <EventCarousel :items="events" :items-per-page="4" col-class="col-lg-3 col-md-6 col-sm-12">
+      <template #default="{ item }">
+        <div class="event-card-wrapper">
+          <EventCard :event="item" />
+        </div>
+      </template>
+    </EventCarousel>
+  </section>
+</template>
 
 <style scoped>
 .event-card-wrapper {

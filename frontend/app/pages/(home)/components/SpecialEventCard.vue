@@ -1,6 +1,22 @@
+<script setup lang="ts">
+import type { Event } from '~/pages/(home)/types/home';
+const { vFallback: vImgFallback } = useImagePlaceholder();
+interface Props {
+  event: Event;
+}
+
+const props = defineProps<Props>();
+
+const localePath = useLocalePath();
+
+const handleClick = () => {
+  navigateTo(localePath(`/event-detail/${props.event.id}`));
+};
+</script>
+
 <template>
-  <div 
-    class="special-event-card rounded-4 overflow-hidden cursor-pointer" 
+  <div
+    class="special-event-card rounded-4 overflow-hidden cursor-pointer"
     role="button"
     tabindex="0"
     @click="handleClick"
@@ -15,26 +31,12 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import type { Event } from '~/pages/(home)/types/home'
-const { vFallback: vImgFallback } = useImagePlaceholder();
-interface Props {
-  event: Event
-}
-
-const props = defineProps<Props>()
-
-const localePath = useLocalePath()
-
-const handleClick = () => {
-  navigateTo(localePath(`/event-detail/${props.event.id}`))
-}
-</script>
-
 <style scoped>
 .special-event-card {
   height: 483px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .special-event-card:hover {

@@ -1,129 +1,3 @@
-<template>
-  <div class="position-relative">
-    <button
-      class="btn btn-filter-primary d-flex align-items-center gap-2"
-      :class="isMobile ? 'btn-filter-mobile' : 'btn-filter-desktop'"
-      @click="$emit('toggle')"
-    >
-      <i class="bi bi-calendar-event fs-5"></i>
-      <span class="d-none d-sm-inline">{{ dateRangeLabel }}</span>
-      <span class="d-sm-none">Ngày</span>
-      <i class="bi bi-chevron-down ms-auto"></i>
-    </button>
-
-    <Transition name="dropdown">
-      <div
-        v-if="show"
-        class="dropdown-popup position-absolute bg-reactive-secondary border border-1 rounded-3 shadow"
-      >
-        <div class="p-4">
-          <!-- Preset Options (Chips) -->
-          <div class="preset-chips d-flex flex-wrap gap-2 pb-3 mb-3 border-bottom border-secondary">
-            <button
-              v-for="preset in presets"
-              :key="preset.value"
-              :class="['chip', selectedPreset === preset.value ? 'chip--active' : '']"
-              @click="$emit('select-preset', preset.value)"
-            >
-              {{ $t(`event_display.label.${preset.label}`) }}
-            </button>
-          </div>
-
-          <!-- Shared Year Header -->
-          <div v-if="!isMobile" class="shared-year-header">
-            <span>{{ sharedYearLabel }}</span>
-          </div>
-
-          <!-- Custom Calendar -->
-          <div class="calendar-container" :class="{ 'calendar-dual': !isMobile }">
-            <!-- Left Month -->
-            <div class="calendar-month">
-              <div class="calendar-header">
-                <button class="btn-nav-circle" @click="navigateMonth(-1)">
-                  <i class="bi bi-chevron-left"></i>
-                </button>
-                <span class="calendar-title">{{ formatMonthOnly(leftMonth) }}</span>
-                <button v-if="isMobile" class="btn-nav-circle" @click="navigateMonth(1)">
-                  <i class="bi bi-chevron-right"></i>
-                </button>
-                <span v-else class="btn-nav-placeholder"></span>
-              </div>
-              <div class="calendar-weekdays">
-                <span v-for="day in weekDays" :key="day" class="weekday">{{ day }}</span>
-              </div>
-              <div class="calendar-grid">
-                <button
-                  v-for="(cell, idx) in leftMonthCells"
-                  :key="'l' + idx"
-                  :class="getCellClasses(cell)"
-                  :disabled="!cell.currentMonth"
-                  @click="cell.currentMonth && handleDayClick(cell.date)"
-                  @mouseenter="cell.currentMonth && handleDayHover(cell.date)"
-                  @mouseleave="hoveredDate = ''"
-                >
-                  <span class="day-number">{{ cell.day }}</span>
-                  <span v-if="cell.isToday" class="today-dot"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Right Month (desktop only) -->
-            <div v-if="!isMobile" class="calendar-month calendar-month--right">
-              <div class="calendar-header">
-                <span class="btn-nav-placeholder"></span>
-                <span class="calendar-title">{{ formatMonthOnly(rightMonth) }}</span>
-                <button class="btn-nav-circle" @click="navigateMonth(1)">
-                  <i class="bi bi-chevron-right"></i>
-                </button>
-              </div>
-              <div class="calendar-weekdays">
-                <span v-for="day in weekDays" :key="'r' + day" class="weekday">{{ day }}</span>
-              </div>
-              <div class="calendar-grid">
-                <button
-                  v-for="(cell, idx) in rightMonthCells"
-                  :key="'r' + idx"
-                  :class="getCellClasses(cell)"
-                  :disabled="!cell.currentMonth"
-                  @click="cell.currentMonth && handleDayClick(cell.date)"
-                  @mouseenter="cell.currentMonth && handleDayHover(cell.date)"
-                  @mouseleave="hoveredDate = ''"
-                >
-                  <span class="day-number">{{ cell.day }}</span>
-                  <span v-if="cell.isToday" class="today-dot"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Selected Range Display -->
-          <div v-if="startDate || endDate" class="selected-range-display mt-3 mb-2">
-            <div class="d-flex align-items-center justify-content-center gap-2">
-              <div class="range-badge" :class="{ active: startDate }">
-                {{ startDate ? formatDisplayDate(startDate) : '—' }}
-              </div>
-              <i class="bi bi-arrow-right text-reactive-primary" style="font-size: 12px"></i>
-              <div class="range-badge" :class="{ active: endDate }">
-                {{ endDate ? formatDisplayDate(endDate) : '—' }}
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="d-flex gap-3 pt-3">
-            <button class="btn btn-action-reset flex-fill" @click="$emit('reset')">
-              {{ $t('event_display.button.reset') }}
-            </button>
-            <button class="btn btn-action-apply flex-fill" @click="$emit('apply')">
-              {{ $t('event_display.button.apply') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import type { DatePreset } from '../types/event-display';
@@ -399,6 +273,132 @@ function getCellClasses(cell: CalendarCell): string[] {
   return cls;
 }
 </script>
+
+<template>
+  <div class="position-relative">
+    <button
+      class="btn btn-filter-primary d-flex align-items-center gap-2"
+      :class="isMobile ? 'btn-filter-mobile' : 'btn-filter-desktop'"
+      @click="$emit('toggle')"
+    >
+      <i class="bi bi-calendar-event fs-5"></i>
+      <span class="d-none d-sm-inline">{{ dateRangeLabel }}</span>
+      <span class="d-sm-none">Ngày</span>
+      <i class="bi bi-chevron-down ms-auto"></i>
+    </button>
+
+    <Transition name="dropdown">
+      <div
+        v-if="show"
+        class="dropdown-popup position-absolute bg-reactive-secondary border border-1 rounded-3 shadow"
+      >
+        <div class="p-4">
+          <!-- Preset Options (Chips) -->
+          <div class="preset-chips d-flex flex-wrap gap-2 pb-3 mb-3 border-bottom border-secondary">
+            <button
+              v-for="preset in presets"
+              :key="preset.value"
+              :class="['chip', selectedPreset === preset.value ? 'chip--active' : '']"
+              @click="$emit('select-preset', preset.value)"
+            >
+              {{ $t(`event_display.label.${preset.label}`) }}
+            </button>
+          </div>
+
+          <!-- Shared Year Header -->
+          <div v-if="!isMobile" class="shared-year-header">
+            <span>{{ sharedYearLabel }}</span>
+          </div>
+
+          <!-- Custom Calendar -->
+          <div class="calendar-container" :class="{ 'calendar-dual': !isMobile }">
+            <!-- Left Month -->
+            <div class="calendar-month">
+              <div class="calendar-header">
+                <button class="btn-nav-circle" @click="navigateMonth(-1)">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <span class="calendar-title">{{ formatMonthOnly(leftMonth) }}</span>
+                <button v-if="isMobile" class="btn-nav-circle" @click="navigateMonth(1)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+                <span v-else class="btn-nav-placeholder"></span>
+              </div>
+              <div class="calendar-weekdays">
+                <span v-for="day in weekDays" :key="day" class="weekday">{{ day }}</span>
+              </div>
+              <div class="calendar-grid">
+                <button
+                  v-for="(cell, idx) in leftMonthCells"
+                  :key="'l' + idx"
+                  :class="getCellClasses(cell)"
+                  :disabled="!cell.currentMonth"
+                  @click="cell.currentMonth && handleDayClick(cell.date)"
+                  @mouseenter="cell.currentMonth && handleDayHover(cell.date)"
+                  @mouseleave="hoveredDate = ''"
+                >
+                  <span class="day-number">{{ cell.day }}</span>
+                  <span v-if="cell.isToday" class="today-dot"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Month (desktop only) -->
+            <div v-if="!isMobile" class="calendar-month calendar-month--right">
+              <div class="calendar-header">
+                <span class="btn-nav-placeholder"></span>
+                <span class="calendar-title">{{ formatMonthOnly(rightMonth) }}</span>
+                <button class="btn-nav-circle" @click="navigateMonth(1)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+              <div class="calendar-weekdays">
+                <span v-for="day in weekDays" :key="'r' + day" class="weekday">{{ day }}</span>
+              </div>
+              <div class="calendar-grid">
+                <button
+                  v-for="(cell, idx) in rightMonthCells"
+                  :key="'r' + idx"
+                  :class="getCellClasses(cell)"
+                  :disabled="!cell.currentMonth"
+                  @click="cell.currentMonth && handleDayClick(cell.date)"
+                  @mouseenter="cell.currentMonth && handleDayHover(cell.date)"
+                  @mouseleave="hoveredDate = ''"
+                >
+                  <span class="day-number">{{ cell.day }}</span>
+                  <span v-if="cell.isToday" class="today-dot"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected Range Display -->
+          <div v-if="startDate || endDate" class="selected-range-display mt-3 mb-2">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <div class="range-badge" :class="{ active: startDate }">
+                {{ startDate ? formatDisplayDate(startDate) : '—' }}
+              </div>
+              <i class="bi bi-arrow-right text-reactive-primary" style="font-size: 12px"></i>
+              <div class="range-badge" :class="{ active: endDate }">
+                {{ endDate ? formatDisplayDate(endDate) : '—' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-3 pt-3">
+            <button class="btn btn-action-reset flex-fill" @click="$emit('reset')">
+              {{ $t('event_display.button.reset') }}
+            </button>
+            <button class="btn btn-action-apply flex-fill" @click="$emit('apply')">
+              {{ $t('event_display.button.apply') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </div>
+</template>
 
 <style scoped>
 .btn-filter-primary {

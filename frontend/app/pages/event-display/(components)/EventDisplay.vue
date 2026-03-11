@@ -1,100 +1,3 @@
-<template>
-  <div class="event-display bg-reactive-primary" style="min-height: 100vh">
-    <div class="container-xxl py-5">
-      <!-- Header section with filters -->
-      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <h2 class="text-primary fw-normal mb-0 d-none d-md-block" style="font-size: 20px">
-          {{ $t('event_display.label.search_result') }}
-        </h2>
-
-        <div class="d-flex gap-2 gap-md-3 ms-auto">
-          <DateRangeFilter
-            :show="showDateFilter"
-            :start-date="startDate"
-            :end-date="endDate"
-            :selected-preset="selectedPreset"
-            :date-range-label="formatDateRange()"
-            :presets="datePresets"
-            :is-mobile="isMobile"
-            @toggle="toggleDateFilter"
-            @select-preset="selectPreset"
-            @update:start-date="startDate = $event"
-            @update:end-date="endDate = $event"
-            @reset="resetDateFilter"
-            @apply="applyDateFilter"
-          />
-
-          <MainFilter
-            :show="showMainFilter"
-            :selected-location="selectedLocation"
-            :is-free-event="isFreeEvent"
-            :selected-categories="selectedCategories"
-            :locations="locations"
-            :categories="categories"
-            :is-mobile="isMobile"
-            :popup-style="mainFilterPopupStyle"
-            @toggle="toggleMainFilter"
-            @update:selected-location="selectedLocation = $event"
-            @update:is-free-event="isFreeEvent = $event"
-            @toggle-category="toggleCategory"
-            @reset="resetMainFilter"
-            @apply="applyMainFilter"
-          />
-        </div>
-      </div>
-
-      <!-- Active Filters Tags -->
-      <div v-if="activeFilters.length > 0" class="active-filters-section mb-4">
-        <div class="d-flex flex-wrap gap-2 align-items-center">
-          <div
-            v-for="filter in activeFilters"
-            :key="filter.key"
-            class="filter-tag d-flex align-items-center gap-2"
-          >
-            <button
-              type="button"
-              class="btn-remove-filter"
-              :aria-label="`Xóa bộ lọc ${filter.label}`"
-              @click="removeFilter(filter.key, filter.value)"
-            >
-              <i class="bi bi-x-circle-fill" />
-            </button>
-            <span class="filter-label">{{ filter.label }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Loading State -->
-      <div v-if="loading" class="text-center py-5">
-        <div class="spinner-border text-light" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-
-      <!-- Error State -->
-      <div v-else-if="error" class="alert alert-danger">
-        {{ error }}
-      </div>
-
-      <!-- Events Grid -->
-      <EventGrid v-else :events="events" @event-click="handleEventClick" />
-
-      <!-- Pagination -->
-      <Pagination
-        v-if="!loading && !error && events.length > 0"
-        :current-page="currentPage"
-        :page-size="pageSize"
-        :has-more="hasMore"
-        :loading="loading"
-        :total-displayed="events.length"
-        @previous="handlePreviousPage"
-        @next="handleNextPage"
-        @go-to-page="handleGoToPage"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -452,6 +355,103 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
 });
 </script>
+
+<template>
+  <div class="event-display bg-reactive-primary" style="min-height: 100vh">
+    <div class="container-xxl py-5">
+      <!-- Header section with filters -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="text-primary fw-normal mb-0 d-none d-md-block" style="font-size: 20px">
+          {{ $t('event_display.label.search_result') }}
+        </h2>
+
+        <div class="d-flex gap-2 gap-md-3 ms-auto">
+          <DateRangeFilter
+            :show="showDateFilter"
+            :start-date="startDate"
+            :end-date="endDate"
+            :selected-preset="selectedPreset"
+            :date-range-label="formatDateRange()"
+            :presets="datePresets"
+            :is-mobile="isMobile"
+            @toggle="toggleDateFilter"
+            @select-preset="selectPreset"
+            @update:start-date="startDate = $event"
+            @update:end-date="endDate = $event"
+            @reset="resetDateFilter"
+            @apply="applyDateFilter"
+          />
+
+          <MainFilter
+            :show="showMainFilter"
+            :selected-location="selectedLocation"
+            :is-free-event="isFreeEvent"
+            :selected-categories="selectedCategories"
+            :locations="locations"
+            :categories="categories"
+            :is-mobile="isMobile"
+            :popup-style="mainFilterPopupStyle"
+            @toggle="toggleMainFilter"
+            @update:selected-location="selectedLocation = $event"
+            @update:is-free-event="isFreeEvent = $event"
+            @toggle-category="toggleCategory"
+            @reset="resetMainFilter"
+            @apply="applyMainFilter"
+          />
+        </div>
+      </div>
+
+      <!-- Active Filters Tags -->
+      <div v-if="activeFilters.length > 0" class="active-filters-section mb-4">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+          <div
+            v-for="filter in activeFilters"
+            :key="filter.key"
+            class="filter-tag d-flex align-items-center gap-2"
+          >
+            <button
+              type="button"
+              class="btn-remove-filter"
+              :aria-label="`Xóa bộ lọc ${filter.label}`"
+              @click="removeFilter(filter.key, filter.value)"
+            >
+              <i class="bi bi-x-circle-fill" />
+            </button>
+            <span class="filter-label">{{ filter.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-5">
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Events Grid -->
+      <EventGrid v-else :events="events" @event-click="handleEventClick" />
+
+      <!-- Pagination -->
+      <Pagination
+        v-if="!loading && !error && events.length > 0"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :has-more="hasMore"
+        :loading="loading"
+        :total-displayed="events.length"
+        @previous="handlePreviousPage"
+        @next="handleNextPage"
+        @go-to-page="handleGoToPage"
+      />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 /* Active Filters Section */

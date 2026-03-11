@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import type { LocationOption, CategoryOption } from '../types/event-display';
+
+interface Props {
+  show: boolean;
+  selectedLocation: string;
+  isFreeEvent: boolean;
+  selectedCategories: string[];
+  locations: LocationOption[];
+  categories: CategoryOption[];
+  isMobile: boolean;
+  popupStyle?: Record<string, string>;
+}
+
+withDefaults(defineProps<Props>(), {
+  popupStyle: () => ({}),
+});
+
+defineEmits<{
+  toggle: [];
+  'update:selectedLocation': [value: string];
+  'update:isFreeEvent': [value: boolean];
+  'toggle-category': [value: string];
+  reset: [];
+  apply: [];
+}>();
+</script>
+
 <template>
   <div class="position-relative">
     <button
@@ -101,34 +129,6 @@
     </Transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { LocationOption, CategoryOption } from '../types/event-display';
-
-interface Props {
-  show: boolean;
-  selectedLocation: string;
-  isFreeEvent: boolean;
-  selectedCategories: string[];
-  locations: LocationOption[];
-  categories: CategoryOption[];
-  isMobile: boolean;
-  popupStyle?: Record<string, string>;
-}
-
-withDefaults(defineProps<Props>(), {
-  popupStyle: () => ({}),
-});
-
-defineEmits<{
-  toggle: [];
-  'update:selectedLocation': [value: string];
-  'update:isFreeEvent': [value: boolean];
-  'toggle-category': [value: string];
-  reset: [];
-  apply: [];
-}>();
-</script>
 
 <style scoped>
 .btn-filter-secondary {

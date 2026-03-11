@@ -1,17 +1,47 @@
+<script setup lang="ts">
+import type { Event } from '~/pages/(home)/types/home';
+
+interface Props {
+  event: Event;
+  showDetails?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  showDetails: true,
+});
+
+const localePath = useLocalePath();
+
+const handleClick = () => {
+  navigateTo(localePath(`/event-detail/${props.event.id}`));
+};
+
+const formatPrice = (price: number) => {
+  if (price === 0) return $t('common.price.from') + ' 0đ';
+  return price !== null
+    ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ`
+    : $t('common.price.not_updated');
+};
+
+const formatDate = (isoDate: string) => {
+  const date = new Date(isoDate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return `${day} tháng ${month}, ${year}`; //07 tháng 02, 2026
+};
+</script>
+
 <template>
-  <div 
-    class="event-card cursor-pointer" 
+  <div
+    class="event-card cursor-pointer"
     role="button"
     tabindex="0"
     @click="handleClick"
     @keydown.enter="handleClick"
   >
     <div class="event-card-img mb-3 position-relative overflow-hidden rounded-4">
-      <img
-        :src="event.bannerUrl"
-        :alt="event.name"
-        class="w-100 h-100 object-fit-cover"
-      />
+      <img :src="event.bannerUrl" :alt="event.name" class="w-100 h-100 object-fit-cover" />
     </div>
 
     <div v-if="showDetails">
@@ -29,40 +59,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  import type { Event } from '~/pages/(home)/types/home'
-  
-
-
-interface Props {
-  event: Event
-  showDetails?: boolean
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  showDetails: true,
-})
-
-const localePath = useLocalePath()
-
-const handleClick = () => {
-  navigateTo(localePath(`/event-detail/${props.event.id}`))
-}
-
-const formatPrice = (price: number) => {
-  if (price === 0) return $t('common.price.from') + ' 0đ';
-  return (price !== null) ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ` : $t('common.price.not_updated');
-}
-
-const formatDate = (isoDate: string) => {
-  const date = new Date(isoDate)
-  const day = date.getDate()
-  const month = date.getMonth() + 1
-  const year = date.getFullYear()
-  return `${day} tháng ${month}, ${year}` //07 tháng 02, 2026
-}
-</script>
 
 <style scoped>
 .event-card-img {

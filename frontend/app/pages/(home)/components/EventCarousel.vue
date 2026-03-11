@@ -1,37 +1,3 @@
-<template>
-  <section class="position-relative">
-    <div class="carousel-track row g-3 flex-nowrap m-0" ref="trackRef" @scroll="handleScroll">
-      <!-- We add padding-right directly here or just let the track scroll.  g-3 adds margins so we should add padding or let padding-bottom handle overflow. Note that `m-0` cancels negative margins if we don't want the track to overflow parent sideways. Actually `row g-3` has negative margins. Let's keep `row g-3` but inside a wrapper or just allow the scroll container to be the track. -->
-      <div
-        v-for="(item, index) in items"
-        :key="item.id || index"
-        :class="colClass"
-        class="carousel-slide flex-shrink-0"
-      >
-        <slot :item="item" />
-      </div>
-    </div>
-
-    <button
-      v-if="canGoPrev && !isMobile"
-      class="carousel-nav-btn prev"
-      @click="goPrev"
-      aria-label="Previous"
-    >
-      &lt;
-    </button>
-
-    <button
-      v-if="canGoNext && !isMobile"
-      class="carousel-nav-btn next"
-      @click="goNext"
-      aria-label="Next"
-    >
-      &gt;
-    </button>
-  </section>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 
@@ -113,6 +79,40 @@ onUnmounted(() => {
   }
 });
 </script>
+
+<template>
+  <section class="position-relative">
+    <div class="carousel-track row g-3 flex-nowrap m-0" ref="trackRef" @scroll="handleScroll">
+      <!-- We add padding-right directly here or just let the track scroll.  g-3 adds margins so we should add padding or let padding-bottom handle overflow. Note that `m-0` cancels negative margins if we don't want the track to overflow parent sideways. Actually `row g-3` has negative margins. Let's keep `row g-3` but inside a wrapper or just allow the scroll container to be the track. -->
+      <div
+        v-for="(item, index) in items"
+        :key="item.id || index"
+        :class="colClass"
+        class="carousel-slide flex-shrink-0"
+      >
+        <slot :item="item" />
+      </div>
+    </div>
+
+    <button
+      v-if="canGoPrev && !isMobile"
+      class="carousel-nav-btn prev"
+      @click="goPrev"
+      aria-label="Previous"
+    >
+      &lt;
+    </button>
+
+    <button
+      v-if="canGoNext && !isMobile"
+      class="carousel-nav-btn next"
+      @click="goNext"
+      aria-label="Next"
+    >
+      &gt;
+    </button>
+  </section>
+</template>
 
 <style scoped>
 section {

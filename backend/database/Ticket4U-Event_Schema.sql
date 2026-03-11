@@ -14,10 +14,11 @@ CREATE TABLE IF NOT EXISTS public.categories (
 -- Table: venues
 CREATE TABLE IF NOT EXISTS public.venues (
 	id 				UUID PRIMARY KEY,
+	name varchar(64) NOT NULL,
 	address_line 	VARCHAR(255) NOT NULL,
 	longitude 		DECIMAL(10, 7) NOT NULL,
 	latitude 		DECIMAL(10, 7) NOT NULL,
-	json_layout 	JSONB,
+	layout 	JSONB,
 	image_url 		TEXT,
 	created_at 		TIMESTAMPTZ NOT NULL,
 	updated_at 		TIMESTAMPTZ

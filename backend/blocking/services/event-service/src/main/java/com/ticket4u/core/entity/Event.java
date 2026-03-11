@@ -27,6 +27,9 @@ import java.util.UUID;
                         ),
                         @NamedAttributeNode(
                                 value = "category"
+                        ),
+                        @NamedAttributeNode(
+                                value = "venue"
                         )
                 },
                 subgraphs = {

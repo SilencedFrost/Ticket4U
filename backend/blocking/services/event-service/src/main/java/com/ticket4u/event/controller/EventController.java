@@ -1,6 +1,6 @@
 package com.ticket4u.event.controller;
 
-import com.ticket4u.constants.DefaultParams;
+import com.ticket4u.core.constants.DefaultParams;
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
@@ -72,7 +72,7 @@ public class EventController {
     @GetMapping("/trending")
     // TODO: implement event suggestion based on purchase count
     public ResponseEntity<List<EventSummaryResponse>> getTrendingEvents() {
-        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+        return ResponseEntity.ok(eventDomainService.findRandomEvent(3, 5));
     }
 
     @GetMapping("/suggested")

@@ -51,5 +51,26 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     ) ASC
     """)
     @EntityGraph(value = "Event.withAllEntities")
-    Page<Event> findAllOrderedByStartDate(Pageable pageable);
+    Page<Event> findUpcomingEvents(Pageable pageable);
+
+    @Query("""
+    SELECT e FROM Event e
+    WHERE e.category.id = :categoryId
+    AND EXISTS (
+        SELECT s FROM EventSession s
+        WHERE s.event = e
+        AND s.startDate = (
+            SELECT MIN(s2.startDate) FROM EventSession s2
+            WHERE s2.event = e
+        )
+        AND s.startDate >= CURRENT_TIMESTAMP
+    )
+    ORDER BY (
+        SELECT MIN(s3.startDate) FROM EventSession s3
+        WHERE s3.event = e
+        AND s3.startDate >= CURRENT_TIMESTAMP
+    ) ASC
+    """)
+    @EntityGraph(value = "Event.withAllEntities")
+    Page<Event> findUpcomingEventsByCategory(@Param("categoryId") Integer categoryId, Pageable pageable);
 }

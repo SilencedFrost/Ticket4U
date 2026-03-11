@@ -1,4 +1,4 @@
-package com.ticket4u.constants;
+package com.ticket4u.core.constants;
 
 public class DefaultParams {
     public static final int FEATURED_COUNT = 10;

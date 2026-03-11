@@ -1,21 +1,22 @@
-import type { Directive, DirectiveBinding } from 'vue';
+import type { Directive } from 'vue';
 
-export const useImagePlaceholder = () => {
-  const getPlaceholder = (width: number = 500, height: number = 500): string => {
+type PlaceholderSize = [number, number];
+
+export function useImagePlaceholder() {
+  function getPlaceholder(width: number = 500, height: number = 500): string {
     return `https://placehold.co/${width}x${height}/webp?text=${width}x${height}`;
-  };
+  }
 
-  const vFallback: Directive<HTMLImageElement, [number, number] | undefined> = {
-    mounted(el: HTMLImageElement, binding: DirectiveBinding<[number, number] | undefined>) {
-      const width = binding.value?.[0] ?? 500;
-      const height = binding.value?.[1] ?? 500;
+  const vFallback: Directive<HTMLImageElement, PlaceholderSize | undefined> = {
+    mounted(el, binding) {
+      const [width, height] = binding.value ?? [500, 500];
 
-      const setPlaceholder = () => {
+      function setPlaceholder() {
         const placeholder = getPlaceholder(width, height);
         if (el.src !== placeholder) {
           el.src = placeholder;
         }
-      };
+      }
 
       if (!el.src || el.src === window.location.href) {
         setPlaceholder();
@@ -23,10 +24,13 @@ export const useImagePlaceholder = () => {
 
       el.addEventListener('error', setPlaceholder);
     },
+    unmounted(el) {
+      el.removeEventListener('error', () => {});
+    },
   };
 
   return {
     getPlaceholder,
     vFallback,
   };
-};
+}

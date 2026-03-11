@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+torch
+transformers>=4.56.0
+Pillow
+requests
+python-dotenv
+torchvision
+accelerate

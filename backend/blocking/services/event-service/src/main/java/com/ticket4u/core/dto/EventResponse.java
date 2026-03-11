@@ -1,6 +1,7 @@
 package com.ticket4u.core.dto;
 
 import com.ticket4u.core.entity.Event;
+import com.ticket4u.core.entity.Venue;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -28,6 +29,9 @@ public record EventResponse(
         String termsAndConditions,
         String policyRefund,
         String seatingPlanImageUrl,
+        VenueSummaryResponse venue,
+        BigDecimal longitude,
+        BigDecimal latitude,
         Set<EventSessionResponse> sessions,
         OffsetDateTime startDate,
         OffsetDateTime endDate,

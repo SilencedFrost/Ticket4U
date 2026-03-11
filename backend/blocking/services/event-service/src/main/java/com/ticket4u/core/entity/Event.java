@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -115,6 +116,16 @@ public class Event {
 
     @Column(columnDefinition = "text")
     private String seatingPlanImageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "venue_id")
+    private Venue venue;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal longitude;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal latitude;
 
     @OneToMany(mappedBy = "event")
     private Set<EventSession> sessions = new LinkedHashSet<>();

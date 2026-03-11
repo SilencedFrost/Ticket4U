@@ -19,6 +19,7 @@
     "@vueuse/core": "^14.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "dayjs": "^1.11.19",
     "eslint": "^9.39.1",
     "i18n-unused": "^0.19.0",
     "isomorphic-dompurify": "^3.0.0",

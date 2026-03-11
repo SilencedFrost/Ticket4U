@@ -37,9 +37,15 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public CategoryResponse findTopUpcomingEventsInCategory(Integer id, Integer limit) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         List<Event> events = eventRepository.findUpcomingEventsByCategory(id, limit == null || limit <= 0 ? Pageable.unpaged() : PageRequest.of(0, limit)).getContent();
 
-        return categoryMapper.toDTO(category, events); // Return category with list of events
+        // Fallback if not found any
+        if (events.isEmpty()) {
+            Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+            return categoryMapper.toDTO(category, List.of());
+        }
+
+        // Optimized path, skips query for category
+        return categoryMapper.toDTO(events.getFirst().getCategory(), events); // Return category with list of events
     }
 }

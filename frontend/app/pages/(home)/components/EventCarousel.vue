@@ -100,7 +100,7 @@ onUnmounted(() => {
       @click="goPrev"
       aria-label="Previous"
     >
-      &lt;
+      &#10094;
     </button>
 
     <button
@@ -109,7 +109,7 @@ onUnmounted(() => {
       @click="goNext"
       aria-label="Next"
     >
-      &gt;
+      &#10095;
     </button>
   </section>
 </template>
@@ -147,45 +147,6 @@ section {
 .carousel-slide {
   scroll-snap-align: start;
   scroll-snap-stop: always;
-}
-
-.carousel-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 70px;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  z-index: 100;
-  transition: background-color 0.3s;
-  cursor: pointer;
-}
-
-.carousel-nav-btn:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.carousel-nav-btn.prev {
-  left: -20px;
-}
-
-.carousel-nav-btn.next {
-  right: -20px;
-}
-
-/* Adjust button placement for smaller screens or normal container */
-@media (max-width: 1200px) {
-  .carousel-nav-btn.prev {
-    left: 0;
-  }
-  .carousel-nav-btn.next {
-    right: 0;
-  }
 }
 
 .carousel-indicators-dots {

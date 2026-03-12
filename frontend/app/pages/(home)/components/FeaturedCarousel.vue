@@ -190,7 +190,7 @@ onUnmounted(() => {
       aria-label="Previous"
       @click="goPrev"
     >
-      &lt;
+      &#10094;
     </button>
 
     <button
@@ -199,7 +199,7 @@ onUnmounted(() => {
       aria-label="Next"
       @click="goNext"
     >
-      &gt;
+      &#10095;
     </button>
 
     <div v-if="totalSlides > 1" class="carousel-indicators-dots">
@@ -266,35 +266,6 @@ onUnmounted(() => {
   .event-card-large {
     aspect-ratio: 4 / 3;
   }
-}
-
-.carousel-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 70px;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  z-index: 100;
-  transition: background-color 0.3s;
-  cursor: pointer;
-}
-
-.carousel-nav-btn:hover {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.carousel-nav-btn.prev {
-  left: 0;
-}
-
-.carousel-nav-btn.next {
-  right: 0;
 }
 
 .carousel-indicators-dots {

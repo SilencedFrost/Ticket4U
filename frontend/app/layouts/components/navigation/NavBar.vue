@@ -153,4 +153,5 @@ const localePath = useLocalePath();
   align-items: center;
   justify-content: center;
 }
+
 </style>

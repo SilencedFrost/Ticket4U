@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home'
-import type { PlaceResponse, CategoryWithEventsResponse } from '~/pages/(home)/types/api'
+import type { PlaceResponse, CategoryResponse, CategoryWithEventsResponse } from '~/pages/(home)/types/api'
 
 export const useHomeStore = defineStore('home', () => {
   const config = useRuntimeConfig()
@@ -116,20 +116,42 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
-  async function fetchCategories() {
-    loading.value.categories = true
-    errors.value.categories = null
+  async function fetchCategories(): Promise<CategoryResponse[]> {
     try {
-      const data = await $fetch<CategoryWithEventsResponse[]>(
-        `${config.public.eventServiceUrl}/categories/{category-id}/events/upcoming?limit=4`,
+      const data = await $fetch<CategoryResponse[]>(
+        `${config.public.eventServiceUrl}/categories`,
         {
           credentials: 'include',
         }
       )
+      return data
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      throw new Error('Failed to load categories')
+    }
+  }
+  async function fetchCategoriesWithEvents() {
+    loading.value.categories = true
+    errors.value.categories = null
+    try {
+      const categoriesList = await fetchCategories()
+      if (!categoriesList || categoriesList.length === 0) {
+        categories.value = []
+        return
+      }
+      const data = await Promise.all( //Promise.all: để chạy song song call API
+        categoriesList.map((category) =>
+          $fetch<CategoryWithEventsResponse>(
+            `${config.public.eventServiceUrl}/categories/${category.id}/events/upcoming?limit=4`,
+            { credentials: 'include' }
+          )
+        )
+      )
       categories.value = data
+
     } catch (error) {
       errors.value.categories = 'Failed to load categories'
-      console.error('Error fetching categories:', error)
+      console.error('Error fetching events in categories:', error)
     } finally {
       loading.value.categories = false
     }
@@ -142,7 +164,7 @@ export const useHomeStore = defineStore('home', () => {
       fetchSpecialEvents(),
       fetchTrendingEvents(),
       fetchSuggestedEvents(),
-      fetchCategories(),
+      fetchCategoriesWithEvents(),
     ])
   }
 
@@ -161,7 +183,7 @@ export const useHomeStore = defineStore('home', () => {
     fetchSpecialEvents,
     fetchTrendingEvents,
     fetchSuggestedEvents,
-    fetchCategories,
+    fetchCategories: fetchCategoriesWithEvents,
     fetchAllHomeData,
   }
 })

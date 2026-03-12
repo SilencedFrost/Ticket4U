@@ -1,6 +1,12 @@
 // Backend response types
 // Note: EventCardResponse matches the Event interface in home.d.ts
 // No mapping needed - frontend uses backend field names directly
+
+export interface CategoryResponse {
+  id: number
+  name: string
+}
+
 export interface EventCardResponse {
   id: string // UUID as string
   name: string

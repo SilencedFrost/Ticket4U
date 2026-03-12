@@ -29,3 +29,6 @@
 
 ### Java/Spring Binaries ###
 **/bin/
+
+### Python ###
+__pycache__

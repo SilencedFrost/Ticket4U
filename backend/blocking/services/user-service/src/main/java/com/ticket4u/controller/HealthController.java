@@ -1,4 +1,4 @@
-package com.ticket4u.core.controller;
+package com.ticket4u.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO: implement JWK and user auth status check
 @RestController
 @RequestMapping("/health")
 @RequiredArgsConstructor

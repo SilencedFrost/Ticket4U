@@ -86,7 +86,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="card d-flex p-3 m-2">
+    <div class="card d-flex p-3">
       <!-- Header -->
       <div>
         <h4 class="d-flex align-items-center justify-content-center">

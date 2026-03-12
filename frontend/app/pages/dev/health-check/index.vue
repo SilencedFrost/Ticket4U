@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import EventService from './(components)/event-service.vue';
 import TicketService from './(components)/ticket-service.vue';
 
 const pollRate = ref<number>(5000);
@@ -18,8 +19,13 @@ const pollRate = ref<number>(5000);
       />
     </div>
     <!-- Services -->
-    <div class="row">
-      <ticket-service :poll-rate="pollRate" />
+    <div class="row g-2 p-2">
+      <div class="col">
+        <ticket-service :poll-rate="pollRate" />
+      </div>
+      <div class="col">
+        <event-service :poll-rate="pollRate" />
+      </div>
     </div>
   </div>
 </template>

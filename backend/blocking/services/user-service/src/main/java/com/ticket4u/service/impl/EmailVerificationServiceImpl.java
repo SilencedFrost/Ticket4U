@@ -50,7 +50,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         tokenRepository.save(verificationToken);
 
         String verificationLink = verificationProperties.getFrontendBaseUrl()
-                + "/verify-email?token=" + plainToken;
+                + "/auth/verify-email?token=" + plainToken;
 
         sendMailAfterCommit(user.getEmail(), user.getUsername(), verificationLink, expiryHours);
     }

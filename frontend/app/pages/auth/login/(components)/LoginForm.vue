@@ -4,7 +4,6 @@ import type { FetchError } from 'ofetch';
 const localePath = useLocalePath();
 const router = useRouter();
 const route = useRoute();
-const { t } = useI18n();
 const loading = ref<boolean>(false);
 const verified = ref(route.query.verified === 'true');
 const useUser = useUserStore();
@@ -94,7 +93,7 @@ function togglePassword() {
       role="alert"
     >
       <i class="bi bi-check-circle-fill me-2" />
-      <span>{{ t('auth.verification.success') }}</span>
+      <span>{{ $t('auth.verification.success') }}</span>
     </div>
     <hr class="my-2" />
     <form novalidate>

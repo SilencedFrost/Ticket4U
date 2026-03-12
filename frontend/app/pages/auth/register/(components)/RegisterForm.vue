@@ -209,12 +209,7 @@ async function register() {
     );
 
     registerSuccess.value = true;
-    Object.assign(formData, {
-      email: '',
-      password: '',
-      phoneNumber: '',
-      fullName: '',
-    });
+    Object.assign(formData, { ...emptyForm });
     Object.assign(touched, { ...defaultTouched });
     Object.assign(error, { ...emptyError, password: [] });
   } catch (err) {

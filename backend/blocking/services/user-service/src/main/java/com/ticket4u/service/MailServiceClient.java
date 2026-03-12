@@ -16,15 +16,27 @@ public class MailServiceClient {
     private final RestClient mailServiceRestClient;
 
     public void sendVerificationEmail(String to, String userName, String verificationLink, int expiryHours) {
+        sendMail(to, "Xác thực email - Ticket4U", "EMAIL_VERIFICATION", Map.of(
+                "userName", userName,
+                "verificationLink", verificationLink,
+                "expiryHours", String.valueOf(expiryHours)
+        ));
+    }
+
+    public void sendPasswordResetEmail(String to, String userName, String resetLink, int expiryHours) {
+        sendMail(to, "Đặt lại mật khẩu - Ticket4U", "PASSWORD_RESET", Map.of(
+                "userName", userName,
+                "resetLink", resetLink,
+                "expiryHours", String.valueOf(expiryHours)
+        ));
+    }
+
+    private void sendMail(String to, String subject, String templateCode, Map<String, String> templateData) {
         Map<String, Object> body = Map.of(
                 "to", to,
-                "subject", "Xác thực email - Ticket4U",
-                "templateCode", "EMAIL_VERIFICATION",
-                "templateData", Map.of(
-                        "userName", userName,
-                        "verificationLink", verificationLink,
-                        "expiryHours", String.valueOf(expiryHours)
-                ),
+                "subject", subject,
+                "templateCode", templateCode,
+                "templateData", templateData,
                 "async", true
         );
 
@@ -35,9 +47,9 @@ public class MailServiceClient {
                     .body(body)
                     .retrieve()
                     .toBodilessEntity();
-            log.info("Verification email sent to {}", to);
+            log.info("{} email sent to {}", templateCode, to);
         } catch (Exception e) {
-            log.warn("Failed to send verification email to {}: {}", to, e.getMessage(), e);
+            log.warn("Failed to send {} email to {}: {}", templateCode, to, e.getMessage(), e);
         }
     }
 }

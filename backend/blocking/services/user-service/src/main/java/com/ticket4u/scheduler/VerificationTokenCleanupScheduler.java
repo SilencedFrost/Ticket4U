@@ -1,6 +1,6 @@
 package com.ticket4u.scheduler;
 
-import com.ticket4u.repository.EmailVerificationTokenRepository;
+import com.ticket4u.repository.VerificationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,9 +14,9 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 public class VerificationTokenCleanupScheduler {
 
-    private final EmailVerificationTokenRepository tokenRepository;
+    private final VerificationTokenRepository tokenRepository;
 
-    @Scheduled(fixedDelay = 86400000, initialDelay = 10000)
+    @Scheduled(fixedDelay = 3600000, initialDelay = 10000)
     @Transactional
     public void cleanupExpiredTokens() {
         log.info("Starting scheduled verification token cleanup");

@@ -11,7 +11,8 @@ public enum TemplateType {
     OTP_CUSTOM_B("email/custom/otp-custom-b", "OTP Custom B"),
     WELCOME("email/welcome", "Chào mừng"),
     WELCOME_CUSTOM("email/custom/welcome-custom", "Welcome Custom"),
-    EMAIL_VERIFICATION("email/email-verification", "Xác thực email");
+    EMAIL_VERIFICATION("email/email-verification", "Xác thực email"),
+    PASSWORD_RESET("email/password-reset", "Đặt lại mật khẩu");
 
 
     private final String templatePath;

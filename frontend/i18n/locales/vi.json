@@ -66,6 +66,21 @@
       "resend_prompt": "Nhập email để nhận link xác thực mới.",
       "resend_action": "Gửi lại",
       "resend_success": "Nếu email đã đăng ký, link xác thực mới đã được gửi."
+    },
+    "password_reset": {
+      "title": "Đặt lại mật khẩu",
+      "instruction": "Nhập email của bạn, chúng tôi sẽ gửi link đặt lại mật khẩu.",
+      "send_action": "Gửi link đặt lại",
+      "check_email": "Nếu email đã đăng ký, link đặt lại mật khẩu đã được gửi.",
+      "new_password_hint": "Nhập mật khẩu mới của bạn.",
+      "action": "Đặt lại mật khẩu",
+      "success": "Mật khẩu đã được đặt lại. Bạn có thể đăng nhập với mật khẩu mới.",
+      "success_title": "Đặt lại mật khẩu thành công!",
+      "token_expired": "Link đặt lại mật khẩu đã hết hạn.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",
+      "error_title": "Đặt lại thất bại",
+      "request_again": "Yêu cầu link mới"
     }
   },
   "common": {

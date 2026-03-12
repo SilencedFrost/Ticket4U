@@ -191,9 +191,11 @@ function togglePassword() {
         >{{ $t('auth.create_account') }}</NuxtLink
       >
       |
-      <a href="" class="text-decoration-none text-reactive-secondary">{{
-        $t('auth.forgot_password')
-      }}</a>
+      <NuxtLink
+        :to="localePath('/auth/forgot-password')"
+        class="text-decoration-none text-reactive-secondary"
+        >{{ $t('auth.forgot_password') }}</NuxtLink
+      >
     </div>
   </div>
 </template>

@@ -16,6 +16,8 @@ public interface SessionRepository extends JpaRepository <Session, UUID> {
     Optional<Session> findBySessionHash(String sessionTokenHash);
     void deleteBySessionHash(String sessionTokenHash);
 
+    void deleteAllByUserId(UUID userId);
+
     @Modifying
     @Query("DELETE FROM Session s WHERE s.expiresAt < :expirationTime")
     int deleteByExpiresAtBefore(@Param("expirationTime") OffsetDateTime expirationTime);

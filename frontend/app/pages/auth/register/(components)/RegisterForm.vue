@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
+const { validatePasswordValue } = usePasswordValidation();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const router = useRouter();
@@ -38,10 +39,6 @@ async function handleGoogleCredential(idToken: string) {
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
-const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
-const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
-const PASSWORD_DIGIT_REGEX = /\d+/;
 
 /**===========
  * Interfaces
@@ -171,16 +168,8 @@ function validatePassword(): boolean {
     error.password = ['auth.error.blank.password'];
     return false;
   }
-  const errors: string[] = [];
-  if (val.length < 8) errors.push('auth.error.format.password.length.short');
-  if (val.length > 32) errors.push('auth.error.format.password.length.long');
-  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.format.password.lowercase');
-  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.format.password.uppercase');
-  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val))
-    errors.push('auth.error.format.password.special_char');
-  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.format.password.digit');
-  error.password = errors;
-  return errors.length === 0;
+  error.password = validatePasswordValue(val);
+  return error.password.length === 0;
 }
 
 // Validate the form, return status
@@ -195,18 +184,15 @@ async function register() {
   loading.value = true;
 
   try {
-    const response = await $fetch<{ userId: string | null; message: string }>(
-      `${config.public.authUrl}/register`,
-      {
-        method: 'POST',
-        body: {
-          email: formData.email.trim(),
-          password: formData.password.trim(),
-          phoneNumber: formData.phoneNumber.trim(),
-          fullName: formData.fullName.trim(),
-        },
+    await $fetch<{ userId: string | null; message: string }>(`${config.public.authUrl}/register`, {
+      method: 'POST',
+      body: {
+        email: formData.email.trim(),
+        password: formData.password.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
+        fullName: formData.fullName.trim(),
       },
-    );
+    });
 
     registerSuccess.value = true;
     Object.assign(formData, { ...emptyForm });

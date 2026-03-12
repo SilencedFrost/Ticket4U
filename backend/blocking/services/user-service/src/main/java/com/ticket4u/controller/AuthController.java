@@ -7,6 +7,7 @@ import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.service.EmailVerificationService;
+import com.ticket4u.service.PasswordResetService;
 import com.ticket4u.util.CookieExtratorUtil;
 import com.ticket4u.util.HttpRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class AuthController {
     private final CookieExtratorUtil cookieExtratorUtil;
     private final AuthService authService;
     private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     /**
      * POST /api/v1/auth/refresh
@@ -118,5 +120,17 @@ public class AuthController {
     public ResponseEntity<?> resendVerification(@Valid @RequestBody ResendVerificationRequest request) {
         emailVerificationService.resendVerification(request.email());
         return ResponseEntity.ok(Map.of("message", "auth.verification.check_email"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.sendPasswordResetEmail(request.email());
+        return ResponseEntity.ok(Map.of("message", "auth.password_reset.check_email"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.token(), request.password());
+        return ResponseEntity.ok(Map.of("message", "auth.password_reset.success"));
     }
 }

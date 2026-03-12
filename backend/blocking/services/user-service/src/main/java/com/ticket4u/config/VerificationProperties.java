@@ -11,5 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "application.verification")
 public class VerificationProperties {
     private int tokenExpiryHours = 24;
+    private int resetTokenExpiryHours = 1;
     private String frontendBaseUrl;
 }

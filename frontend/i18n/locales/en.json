@@ -66,6 +66,21 @@
       "resend_prompt": "Enter your email to receive a new verification link.",
       "resend_action": "Resend",
       "resend_success": "If this email is registered, a new verification link has been sent."
+    },
+    "password_reset": {
+      "title": "Reset password",
+      "instruction": "Enter your email address and we'll send you a link to reset your password.",
+      "send_action": "Send reset link",
+      "check_email": "If this email is registered, a password reset link has been sent.",
+      "new_password_hint": "Enter your new password.",
+      "action": "Reset password",
+      "success": "Your password has been reset. You can now log in with your new password.",
+      "success_title": "Password reset successful!",
+      "token_expired": "Password reset link has expired.",
+      "expired_title": "Link expired",
+      "token_invalid": "Invalid password reset link.",
+      "error_title": "Reset failed",
+      "request_again": "Request new link"
     }
   },
   "common": {

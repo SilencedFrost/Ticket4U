@@ -45,14 +45,14 @@ public class AuthExceptionHandler {
                 .body(Map.of("message", e.getMessage()));
     }
 
-    // 400 - Token xác thực email không tồn tại hoặc không hợp lệ
+    // 400 - Token xác thực không tồn tại hoặc không hợp lệ (email verification, password reset)
     @ExceptionHandler(VerificationTokenNotFoundException.class)
     public ResponseEntity<?> handleTokenNotFound(VerificationTokenNotFoundException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("message", e.getMessage()));
     }
 
-    // 410 - Token xác thực email đã hết hạn
+    // 410 - Token xác thực đã hết hạn (email verification, password reset)
     @ExceptionHandler(VerificationTokenExpiredException.class)
     public ResponseEntity<?> handleTokenExpired(VerificationTokenExpiredException e) {
         return ResponseEntity.status(HttpStatus.GONE)

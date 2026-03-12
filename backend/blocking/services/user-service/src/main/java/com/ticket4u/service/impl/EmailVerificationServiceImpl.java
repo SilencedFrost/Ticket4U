@@ -1,12 +1,13 @@
 package com.ticket4u.service.impl;
 
 import com.ticket4u.config.VerificationProperties;
-import com.ticket4u.entity.EmailVerificationToken;
+import com.ticket4u.constant.TokenType;
+import com.ticket4u.entity.VerificationToken;
 import com.ticket4u.entity.User;
 import com.ticket4u.exception.AccountAlreadyActiveException;
 import com.ticket4u.exception.VerificationTokenExpiredException;
 import com.ticket4u.exception.VerificationTokenNotFoundException;
-import com.ticket4u.repository.EmailVerificationTokenRepository;
+import com.ticket4u.repository.VerificationTokenRepository;
 import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.MailServiceClient;
@@ -27,18 +28,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmailVerificationServiceImpl implements EmailVerificationService {
 
-    private static final int EXPECTED_TOKEN_LENGTH = 43;
-
     private final TokenUtil tokenUtil;
     private final VerificationProperties verificationProperties;
-    private final EmailVerificationTokenRepository tokenRepository;
+    private final VerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final MailServiceClient mailServiceClient;
 
     @Override
     @Transactional
     public void sendVerificationEmail(User user) {
-        tokenRepository.deleteAllByUserId(user.getId());
+        tokenRepository.deleteAllByUserIdAndTokenType(user.getId(), TokenType.EMAIL_VERIFICATION);
 
         String plainToken = tokenUtil.generateToken();
         String tokenHash = DigestUtils.sha256Hex(plainToken);
@@ -46,7 +45,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         int expiryHours = verificationProperties.getTokenExpiryHours();
         OffsetDateTime expiresAt = OffsetDateTime.now().plusHours(expiryHours);
 
-        EmailVerificationToken verificationToken = new EmailVerificationToken(tokenHash, user, expiresAt);
+        VerificationToken verificationToken = new VerificationToken(tokenHash, TokenType.EMAIL_VERIFICATION, user, expiresAt);
         tokenRepository.save(verificationToken);
 
         String verificationLink = verificationProperties.getFrontendBaseUrl()
@@ -68,13 +67,13 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     @Transactional
     public void verifyToken(String plainToken) {
-        if (plainToken == null || plainToken.length() != EXPECTED_TOKEN_LENGTH) {
+        if (plainToken == null || plainToken.length() != TokenUtil.EXPECTED_TOKEN_LENGTH) {
             throw new VerificationTokenNotFoundException("auth.verification.token_invalid");
         }
 
         String tokenHash = DigestUtils.sha256Hex(plainToken);
 
-        EmailVerificationToken verificationToken = tokenRepository.findByTokenHash(tokenHash)
+        VerificationToken verificationToken = tokenRepository.findByTokenHashAndTokenType(tokenHash, TokenType.EMAIL_VERIFICATION)
                 .orElseThrow(() -> new VerificationTokenNotFoundException("auth.verification.token_invalid"));
 
         if (verificationToken.isExpired()) {
@@ -91,7 +90,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
 
         user.setIsActive(true);
         userRepository.save(user);
-        tokenRepository.deleteAllByUserId(user.getId());
+        tokenRepository.deleteAllByUserIdAndTokenType(user.getId(), TokenType.EMAIL_VERIFICATION);
 
         log.info("Email verified and account activated for user: {}", user.getEmail());
     }

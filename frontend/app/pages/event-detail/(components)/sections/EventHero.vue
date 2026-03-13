@@ -39,7 +39,6 @@ const emit = defineEmits(['buyClick']);
                 <div class="mb-2 text-reactive-secondary small">
                   <i class="bi bi-geo-alt-fill text-reactive-primary me-1" />
                   <span class="text-primary fw-semibold">{{ event.address }}</span>
-                  <!-- <p class="mb-0 small">{{  }}</p> -->
                 </div>
                 <div class="mt-auto">
                   <hr class="bg-reactive-secondary my-2" />
@@ -63,7 +62,7 @@ const emit = defineEmits(['buyClick']);
               <img
                 v-img-fallback="[1200, 600]"
                 :src="event.imgEvent.heroUrl"
-                class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
+                class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover my-dashed-line"
               />
             </div>
           </div>

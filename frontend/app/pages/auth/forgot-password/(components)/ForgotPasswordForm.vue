@@ -7,22 +7,46 @@ const config = useRuntimeConfig();
 const localePath = useLocalePath();
 
 const loading = ref(false);
-const submitted = ref(false);
 const email = ref('');
+const touched = reactive({ email: false });
 const error = reactive({ email: '', generic: '' });
 
-async function submit() {
-  Object.assign(error, { email: '', generic: '' });
-
+function validateEmail(): boolean {
   const trimmed = email.value.trim();
+
   if (!trimmed) {
     error.email = 'auth.error.blank.email';
-    return;
+    return false;
   }
+
   if (!EMAIL_FORMAT_REGEX.test(trimmed)) {
     error.email = 'auth.error.format.email';
-    return;
+    return false;
   }
+
+  error.email = '';
+  return true;
+}
+
+function onEmailBlur() {
+  if (touched.email) return;
+  touched.email = true;
+  validateEmail();
+}
+
+watch(
+  () => (email.value.trim().length > 0 ? email.value : null),
+  () => {
+    touched.email = true;
+    validateEmail();
+  },
+);
+
+async function submit() {
+  touched.email = true;
+  error.generic = '';
+
+  if (!validateEmail()) return;
 
   loading.value = true;
   try {
@@ -30,7 +54,10 @@ async function submit() {
       method: 'POST',
       body: { email: email.value.trim() },
     });
-    submitted.value = true;
+    await navigateTo(
+      { path: localePath('/auth/login'), query: { passwordResetRequested: 'true' } },
+      { replace: true },
+    );
   } catch (err) {
     const fetchError = err as FetchError;
     if (!fetchError.statusCode) {
@@ -49,62 +76,56 @@ async function submit() {
 </script>
 
 <template>
-  <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh">
-    <div class="form-width">
-      <h3 class="text-center text-reactive-primary">{{ $t('auth.forgot_password') }}</h3>
-      <hr class="my-2" />
+  <div class="form-width">
+    <h3 class="text-center text-reactive-primary">{{ $t('auth.forgot_password') }}</h3>
+    <hr class="my-2" />
 
-      <template v-if="!submitted">
-        <p class="text-reactive-secondary mb-3">{{ $t('auth.password_reset.instruction') }}</p>
-        <form novalidate @submit.prevent="submit">
-          <div class="mb-3">
-            <label for="email" class="form-label text-reactive-primary user-select-none">
-              {{ $t('common.email') }}:
-            </label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              :class="[
-                'form-control',
-                'bg-reactive-primary',
-                'text-reactive-primary',
-                { 'is-invalid': error.email },
-              ]"
-            />
-            <div v-if="error.email" class="invalid-feedback">
-              {{ $t(error.email) }}
-            </div>
-          </div>
-          <div v-if="error.generic" class="invalid-feedback d-block mb-2">
-            {{ $t(error.generic) }}
-          </div>
-          <button class="btn btn-primary w-100" :disabled="loading">
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
-            {{ $t('auth.password_reset.send_action') }}
-          </button>
-        </form>
-      </template>
-
-      <template v-else>
-        <div class="text-center">
-          <i
-            class="bi bi-envelope-check text-success"
-            style="font-size: 3.5rem; display: block; margin-bottom: 1rem"
-          />
-          <p class="text-reactive-secondary">{{ $t('auth.password_reset.check_email') }}</p>
+    <p class="text-reactive-secondary mb-3">{{ $t('auth.password_reset.instruction') }}</p>
+    <form novalidate @submit.prevent="submit">
+      <div class="mb-3">
+        <label for="email" class="form-label text-reactive-primary user-select-none">
+          {{ $t('common.email') }}:
+        </label>
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          :class="[
+            'form-control',
+            'bg-reactive-primary',
+            'text-reactive-primary',
+            { 'is-invalid': error.email },
+          ]"
+          @blur="onEmailBlur"
+        />
+        <div v-if="error.email" class="invalid-feedback">
+          {{ $t(error.email) }}
         </div>
-      </template>
-
-      <hr class="my-2" />
-      <div class="text-center form-text">
-        <NuxtLink
-          :to="localePath('/auth/login')"
-          class="text-decoration-none text-reactive-secondary"
-        >
-          {{ $t('auth.login.action') }}
-        </NuxtLink>
       </div>
+      <div v-if="error.generic" class="invalid-feedback d-block mb-2">
+        {{ $t(error.generic) }}
+      </div>
+      <button class="btn btn-primary w-100" :disabled="loading">
+        <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
+        {{ $t('auth.password_reset.send_action') }}
+      </button>
+    </form>
+
+    <hr class="my-2" />
+    <div class="text-center form-text">
+      <NuxtLink
+        :to="localePath('/auth/register')"
+        class="text-decoration-none text-reactive-secondary"
+      >
+        {{ $t('auth.create_account') }}
+      </NuxtLink>
+      |
+      <NuxtLink
+        :to="localePath('/auth/login')"
+        class="text-decoration-none text-reactive-secondary"
+      >
+        {{ $t('auth.login.action') }}
+      </NuxtLink>
     </div>
   </div>
 </template>

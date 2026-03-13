@@ -5,6 +5,7 @@ const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
 const status = ref<'loading' | 'expired' | 'already_active' | 'error'>('loading');
 const message = ref('');
@@ -12,9 +13,24 @@ const resendEmail = ref('');
 const resending = ref(false);
 const resendSuccess = ref(false);
 
-onMounted(async () => {
+function resolveToken(): string | undefined {
   const rawToken = route.query.token;
-  const token = Array.isArray(rawToken) ? rawToken[0] : rawToken;
+  const queryToken = Array.isArray(rawToken) ? rawToken[0] : rawToken;
+
+  if (queryToken) return queryToken;
+
+  if (import.meta.client) {
+    const tokenFromSearch = new URLSearchParams(window.location.search).get('token');
+    if (tokenFromSearch) return tokenFromSearch;
+  }
+
+  return undefined;
+}
+
+onMounted(async () => {
+  await router.isReady();
+
+  const token = resolveToken();
 
   if (!token) {
     status.value = 'error';
@@ -30,6 +46,9 @@ onMounted(async () => {
     navigateTo({ path: localePath('/auth/login'), query: { verified: 'true' } }, { replace: true });
   } catch (err) {
     const fetchError = err as FetchError;
+
+    if (fetchError.name === 'AbortError') return;
+
     const serverMessage = fetchError.data?.message ?? '';
 
     if (fetchError.statusCode === 410 || serverMessage === 'auth.verification.token_expired') {

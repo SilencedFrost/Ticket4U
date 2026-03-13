@@ -8,7 +8,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
-const registerSuccess = ref<boolean>(false);
 const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 
 const {
@@ -194,10 +193,7 @@ async function register() {
       },
     });
 
-    registerSuccess.value = true;
-    Object.assign(formData, { ...emptyForm });
-    Object.assign(touched, { ...defaultTouched });
-    Object.assign(error, { ...emptyError, password: [] });
+    await navigateTo({ path: localePath('/auth/login'), query: { registered: 'true' } });
   } catch (err) {
     handleError(err as FetchError);
   } finally {
@@ -242,11 +238,6 @@ function handleError(fetchError: FetchError) {
 // Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
-}
-
-// Helper function to go to login
-function goToLogin() {
-  navigateTo(localePath('/auth/login'));
 }
 
 /**===================
@@ -303,12 +294,7 @@ watch(
     <h3 class="text-center text-reactive-primary">{{ $t('auth.register.title') }}</h3>
     <hr class="my-2" />
 
-    <div v-if="registerSuccess" class="alert alert-success text-center mb-3">
-      <i class="bi bi-check-circle-fill me-2" />
-      {{ $t('auth.register.success') }}
-    </div>
-
-    <form v-if="!registerSuccess" novalidate @submit.prevent="register">
+    <form novalidate @submit.prevent="register">
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -478,9 +464,12 @@ watch(
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <a href="#" class="text-decoration-none text-reactive-secondary" @click.prevent="goToLogin">
+      <NuxtLink
+        :to="localePath('/auth/login')"
+        class="text-decoration-none text-reactive-secondary"
+      >
         {{ $t('auth.register.has_account') }}
-      </a>
+      </NuxtLink>
     </div>
   </div>
 </template>

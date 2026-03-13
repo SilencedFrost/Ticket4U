@@ -45,10 +45,11 @@ export const useEventStore = defineStore('event', () => {
 
       currentEvent.value = mapEventResponse(data);
 
-      await Promise.allSettled([
-        data.organizerId ? fetchOrganizer(data.organizerId) : Promise.resolve(),
-        fetchRelatedEvents(data.id),
-      ]);
+      if (data.organizerId) {
+        void fetchOrganizer(data.organizerId);
+      }
+
+      fetchRelatedEvents(data.id);
 
       return currentEvent.value;
     } catch (err) {

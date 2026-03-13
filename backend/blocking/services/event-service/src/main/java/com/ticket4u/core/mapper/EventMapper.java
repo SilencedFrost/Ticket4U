@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@Mapper(componentModel = "spring", uses = SessionMapper.class)
+@Mapper(componentModel = "spring", uses = {SessionMapper.class, VenueMapper.class})
 public abstract class EventMapper {
 
     /**
@@ -22,6 +22,7 @@ public abstract class EventMapper {
      */
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "categoryName", source = "category.name")
+    @Mapping(target = "venueName", source = "venue.name")
     // Mappings that require helper method
     @Mapping(target = "startDate", source = "event", qualifiedByName = "toStartDate")
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
@@ -33,6 +34,7 @@ public abstract class EventMapper {
      * @param event The input entity
      * @return EventSummaryResponse
      */
+    // TODO: longitude, latitude, layout custom mappers
     @Mapping(source = "category.id", target = "categoryId")
     @Mapping(target = "categoryName", source = "category.name")
     // Mappings that require helper method

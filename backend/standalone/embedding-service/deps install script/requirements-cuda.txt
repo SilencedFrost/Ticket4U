@@ -1,0 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cu128
+fastapi
+uvicorn
+transformers>=4.56.0
+Pillow
+requests
+python-dotenv
+accelerate
+torch
+torchvision

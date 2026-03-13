@@ -4,11 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
-  ignore: [
-    'pages/**/*.type.ts',
-    'pages/**/*.types.ts',
-  ],
-
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
@@ -33,10 +28,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       authUrl: 'https://localhost:8080/api/v1/auth',
-      eventDetailUrl: 'https://localhost:8081/api/v1/public/events',
-      homeApiUrl: 'https://localhost:8081/api/v1/public/home',
+      userHealthUrl: 'https://localhost:8080/health',
       ticketUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
+      eventHealthUrl: 'https://localhost:8083/health',
       googleClientId: '',
     },
   },
@@ -60,13 +55,4 @@ export default defineNuxtConfig({
       ],
     },
   },
-  nitro: {
-    devProxy: {
-      '/api': {
-        target: 'https://localhost:8081',
-        changeOrigin: true,
-        secure: false
-      }
-    }
-  }
 });

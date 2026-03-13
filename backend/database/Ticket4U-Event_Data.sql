@@ -1,7 +1,8 @@
---1. Table: categories 
+-- data truncation
 TRUNCATE TABLE public.categories CASCADE;
-ALTER SEQUENCE public.categories_id_seq RESTART WITH 1;
+TRUNCATE TABLE public.venues CASCADE;
 
+-- inserts
 INSERT INTO public.categories (id, name) VALUES 
 (1, 'Âm nhạc'), 
 (2, 'Hội thảo'), 
@@ -11,12 +12,26 @@ INSERT INTO public.categories (id, name) VALUES
 
 SELECT setval('public.categories_id_seq', 5);
 
---2. Table: Events
+--2. Table: Venues
+INSERT INTO public.venues (id, name,           address_line,                                                 latitude,  longitude, layout, image_url, created_at, updated_at) VALUES
+(uuidv7(), 'CIS Arena',                        '7, Đường số 23, Phú Mỹ Hưng, Phường Tân Mỹ, TP.Hồ Chí Minh', 10.713750, 106.728750, NULL, 'https://s.inyourpocket.com/gallery/178413.jpg', NOW(), NULL),
+(uuidv7(), 'Nhà Hát Bến Thành',                '6 Đường Mạc Đĩnh Chi, Phường Sài Gòn, TP.Hồ Chí Minh',       10.784246, 106.700877, NULL, 'http://vietlandmarks.com/upload/142582138454fc4ec85a5d2.jpg', NOW(), NULL),
+(uuidv7(), 'Mây in The Nest',                  '519 Thôn Măng Lin, P. Langbiang, Đà Lạt, Tỉnh Lâm Đồng',     11.978842, 108.393794, NULL, 'https://media2.gody.vn/public/images/place/may-lang-thang-da-lat/614c498b500ff-1632389515.jpeg', NOW(), NULL),
+(uuidv7(), 'GEM Center',                       '8 Đường Nguyễn Bỉnh Khiêm, Phường Sài Gòn, TP.Hồ Chí Minh',  10.790146, 106.702379, NULL, 'https://images2.thanhnien.vn/528068263637045248/2023/2/22/1-gem-center-16770590914701989789155.jpg', NOW(), NULL),
+(uuidv7(), 'Tinh Tế Cafe',                     '351/56 Đ. Lê Văn Sỹ, Phường Nhiêu Lộc, TP.Hồ Chí Minh',      10.785960, 106.676488, NULL, 'https://ik.imagekit.io/tvlk/blog/2022/10/quan-cafe-nhieu-cay-xanh-tphcm-1.jpeg?tr=q-70,c-at_max,w-500,h-300,dpr-2', NOW(), NULL),
+(uuidv7(), 'Dreamplex Điện Biên Phủ',          '195 Đường Điện Biên Phủ, Phường Gia Định, TP.Hồ Chí Minh',   10.799603, 106.705507, NULL, 'https://maisonoffice.vn/wp-content/uploads/2021/09/van-phong-cho-thue-dreamplex-195-dien-bien-phu.jpg', NOW(), NULL),
+(uuidv7(), 'Gigamall Thủ Đức',                 '240-242 Phạm Văn Đồng, Phường Hiệp Bình, TP.Hồ Chí Minh',    10.828149, 106.721385, NULL, 'https://bidiland.vn/dataweb/images/tin-tuc/tong-hop-nhung-sieu-thi-va-cho-khu-vuc-quan-9-quan-2-quan-thu-duc-thanh-pho-thu-duc-coop-extra-gigamall-bidiland(1).jpg', NOW(), NULL),
+(uuidv7(), 'Sân Lễ Hội Đền Vua Đinh - Vua Lê', 'Xã Trường Yên, Huyện Hoa Lư, Tỉnh Ninh Bình',                20.284638, 105.905315, NULL, 'https://mtcs.1cdn.vn/2023/02/16/le-hoi-den-hung.jpg', NOW(), NULL),
+(uuidv7(), 'Công viên Yên Sở',                 'QL1A, Gamuda Central, Thủ đô Hà Nội',                        20.964741, 105.854647, NULL, 'https://gamudagardens.vn/wp-content/uploads/2016/09/ho-yen-so.jpg', NOW(), NULL),
+(uuidv7(), 'Khu đô thị Vạn Phúc',              '375, Quốc lộ 13, Phường Hiệp Bình, TPHCM',                   10.846066, 106.709149, NULL, 'https://khudothivanphuc.vn/wp-content/uploads/2021/07/cong-vien-ocean-world-van-phuc.jpg', NOW(), NULL);
+
+--3. Table: Events
 INSERT INTO public.events (
 	id, name, organizer_id, category_id, address_line, 
 	status, banner_url,
 	created_at, updated_at,
-	about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url
+	about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url,
+	venue_id, longitude, latitude
 ) VALUES
 -- Hà Anh Tuấn: Chân Trời Rực Rỡ
 (uuidv7(), 'Hà Anh Tuấn: Chân Trời Rực Rỡ', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Sân Lễ Hội Đền Hùng, Huyện Gia Viễn, Tỉnh Ninh Bình', 
@@ -51,7 +66,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Cấm trẻ em dưới 6 tuổi. Không ảnh hưởng đến khán giả khác.</p>', 
 	'<p>Không hoàn tiền sau khi mua. Chỉ hỗ trợ đổi vé trong trường hợp đặc biệt.</p>', 
-	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
+	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a',
+	(SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê'), 105.945023, 20.317891),
 
 -- VBA 2025: Saigon Heat
 (uuidv7(), 'VBA 2025: Saigon Heat vs Hanoi Buffaloes', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 4, 'CIS Arena, Quận 7, TP. Hồ Chí Minh', 
@@ -86,7 +102,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Không gây rối, không ảnh hưởng đến người khác.</p>', 
 	'<p>Hoàn vé theo quy định của BTC trong trường hợp trận đấu bị hủy.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'),
+	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg',
+	(SELECT id FROM public.venues WHERE name = 'CIS Arena'), 106.719368, 10.731490),
 
 -- Những Thành Phố Mơ Màng
 (uuidv7(), 'Những Thành Phố Mơ Màng - Summer Tour', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội', 
@@ -121,7 +138,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Vui lòng mang theo CCCD khi check-in. Trang phục thoải mái.</p>', 
 	'<p>Không hoàn trả vé sau khi mua.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
+	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png',
+	(SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở'), 105.850234, 20.976543),
 
 -- Mây Lang Thang
 (uuidv7(), 'Mây Lang Thang: Đêm Nhạc Trịnh', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Mây Lang Thang, Phường 4, Thành phố Đà Lạt, Tỉnh Lâm Đồng', 
@@ -156,7 +174,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Nên mang theo áo khoác ấm do thời tiết Đà Lạt se lạnh.</p>', 
 	'<p>Không hoàn tiền vé.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
+	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png',
+	(SELECT id FROM public.venues WHERE name = 'Mây in The Nest'), 108.436867, 11.934155),
 
 -- Kịch Idecaf
 (uuidv7(), 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Nhà Hát Bến Thành, Quận 1, TP. Hồ Chí Minh', 
@@ -191,7 +210,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Mỗi vé dành cho một người, trẻ em cần có người lớn đi kèm.</p>', 
 	'<p>Không hoàn tiền.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
+	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png',
+	(SELECT id FROM public.venues WHERE name = 'Nhà Hát Bến Thành'), 106.690864, 10.769444),
 
 -- Ravolution Music Festival
 (uuidv7(), 'Ravolution Music Festival: Unite', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 1, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
@@ -226,7 +246,8 @@ INSERT INTO public.events (
 	</div>', 
 	'<p>Trang phục tự do, không mang chất cấm. Cấm trẻ em dưới 16 tuổi.</p>', 
 	'<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg'),
+	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg',
+	(SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc'), 106.781234, 10.853456),
 
 -- Saigon Tếu: Hài Độc Thoại
 (uuidv7(), 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Cà phê Tinh Tế, Quận 3, TP. Hồ Chí Minh', 
@@ -261,7 +282,8 @@ INSERT INTO public.events (
 	</div>',
 	'<p>Vui lòng không quay phim trong buổi diễn.</p>', 
 	'<p>Không hoàn trả vé.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png'),
+	'https://salt.tkbcdn.com/ts/ds/3d/50/7e/6c4edb2e7de908c144c81189ef0e3a2c.png',
+	(SELECT id FROM public.venues WHERE name = 'Tinh Tế Cafe'), 106.686500, 10.786200),
 
 -- Vietnam Tech Summit 2025
 (uuidv7(), 'Vietnam Tech Summit 2025', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 2, 'GEM Center, Quận 1, TP. Hồ Chí Minh', 
@@ -296,7 +318,8 @@ INSERT INTO public.events (
 	</div>',
 	'<p>Khuyến khích mang theo laptop cá nhân.</p>', 
 	'<p>Hoàn tiền 50% nếu hủy trước 5 ngày.</p>', 
-	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
+	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a',
+	(SELECT id FROM public.venues WHERE name = 'GEM Center'), 106.697150, 10.772510),
 
 -- Workshop Marketing 0 Đồng
 (uuidv7(), 'Workshop: Marketing 0 Đồng cho Startup', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 2, 'Dreamplex Điện Biên Phủ, Quận Bình Thạnh, TP. Hồ Chí Minh', 
@@ -331,7 +354,8 @@ INSERT INTO public.events (
 	</div>',
 	'<p>Khuyến khích mang theo laptop cá nhân.</p>', 
 	'<p>Hoàn tiền 50% nếu hủy trước 3 ngày.</p>', 
-	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a'),
+	'https://firebasestorage.googleapis.com/v0/b/cticket-prod.appspot.com/o/event_images%2Fseatmap_brothers_revised4%20-%20pro.svg?alt=media&token=7105d904-546b-4046-8fa0-f5625e533b1a',
+	(SELECT id FROM public.venues WHERE name = 'Dreamplex Điện Biên Phủ'), 106.707300, 10.799800),
 
 -- Van Gogh Art Experience
 (uuidv7(), 'Van Gogh Art Lighting Experience', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 3, 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
@@ -366,7 +390,8 @@ INSERT INTO public.events (
 	</div>',
 	'<p>Mỗi lượt tham quan tối đa 60 phút.</p>', 
 	'<p>Không hỗ trợ hoàn tiền.</p>', 
-	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg');
+	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg',
+	(SELECT id FROM public.venues WHERE name = 'Gigamall Thủ Đức'), 106.761789, 10.847910);
 
 --3. Table: Event Sessions 
 -- Session cho Hà Anh Tuấn

@@ -49,7 +49,7 @@ export const useEventStore = defineStore('event', () => {
         void fetchOrganizer(data.organizerId);
       }
 
-      fetchRelatedEvents(data.id);
+      await fetchRelatedEvents(data.id);
 
       return currentEvent.value;
     } catch (err) {

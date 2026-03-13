@@ -8,6 +8,9 @@ const props = defineProps<{
 
 const { locale } = useI18n();
 const expandAbout = ref(false);
+const COLLAPSED_HEIGHT = 250;
+const aboutContainerRef = ref<HTMLElement | null>(null);
+const animatedMaxHeight = ref(`${COLLAPSED_HEIGHT}px`);
 
 const currentDescription = computed(() => {
   return locale.value === 'vi' ? props.aboutVi : props.aboutEn;
@@ -41,6 +44,23 @@ const sanitizedDescription = computed(() => {
     ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class', 'style'],
   });
 });
+
+const updateAnimatedMaxHeight = () => {
+  if (!aboutContainerRef.value || !expandAbout.value) {
+    animatedMaxHeight.value = `${COLLAPSED_HEIGHT}px`;
+    return;
+  }
+  animatedMaxHeight.value = `${Math.max(aboutContainerRef.value.scrollHeight, COLLAPSED_HEIGHT)}px`;
+};
+
+watch([expandAbout, sanitizedDescription], async () => {
+  await nextTick();
+  updateAnimatedMaxHeight();
+});
+
+onMounted(() => {
+  updateAnimatedMaxHeight();
+});
 </script>
 <template>
   <section id="about-section" class="p-3 p-md-4 card m-3 mx-auto mw-100">
@@ -52,13 +72,10 @@ const sanitizedDescription = computed(() => {
       </div>
       <div
         class="border-dark overflow-hidden mb-4 about-expandable rounded-2"
-        :class="{ expanded: expandAbout }"
+        :style="{ maxHeight: animatedMaxHeight }"
       >
-        <div class="p-3 p-md-4">
-          <div
-            class="description-content overflow-auto text-break w-100"
-            v-html="sanitizedDescription"
-          />
+        <div ref="aboutContainerRef" class="p-3 p-md-4">
+          <div class="text-break w-100" v-html="sanitizedDescription" />
         </div>
       </div>
       <button
@@ -74,10 +91,7 @@ const sanitizedDescription = computed(() => {
 <style scoped>
 .about-expandable {
   max-height: 250px;
-  transition: max-height 2s;
-}
-
-.about-expandable.expanded {
-  max-height: 5000px;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: max-height;
 }
 </style>

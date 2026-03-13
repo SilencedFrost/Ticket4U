@@ -48,7 +48,7 @@ const {
         <h2 class="text-reactive-primary fs-4 fw-bold mb-4">
           {{ $t('home_page.section.locational') }}
         </h2>
-        <div v-if="loading.special" class="text-center">
+        <div v-if="loading.locational" class="text-center">
           <div class="spinner-border text-light" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
@@ -64,7 +64,7 @@ const {
             <SpecialEventCard :event="item" />
           </template>
         </EventCarousel>
-        <div v-else-if="errors.special" class="alert alert-danger">{{ errors.special }}</div>
+        <div v-else-if="errors.locational" class="alert alert-danger">{{ errors.locational }}</div>
       </section>
 
       <section class="mb-5">

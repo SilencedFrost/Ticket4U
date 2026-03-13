@@ -24,10 +24,35 @@ const canGoPrev = computed(() => scrollLeft.value > 0);
 // Small threshold for visual rounding on varying pixel densities
 const canGoNext = computed(() => scrollLeft.value < maxScrollLeft.value - 2);
 
+const buttonTopOffset = ref<number | null>(null);
+
+// Calculate button position based on carousel height
+const updateButtonPosition = () => {
+   if (!trackRef.value) return;
+
+   // Get the parent element of the track (the section) to calculate relative position
+   const sectionEl = trackRef.value.parentElement;
+   // Find the first image element
+   const firstImage = trackRef.value.querySelector('img');
+
+   if (sectionEl && firstImage) {
+      // Lấy tọa độ thực tế của thẻ section và thẻ ảnh trên màn hình
+      const sectionRect = sectionEl.getBoundingClientRect();
+      const imgRect = firstImage.getBoundingClientRect();
+
+      // Công thức: (Khoảng cách từ đỉnh section đến đỉnh ảnh) + (Một nửa chiều cao ảnh)
+      const exactCenterOffset = (imgRect.top - sectionRect.top) + (imgRect.height / 2);
+
+      if (exactCenterOffset > 0) {
+         buttonTopOffset.value = exactCenterOffset;
+      }
+   }
+};
 const updateViewport = () => {
   if (typeof window !== 'undefined') {
     isMobile.value = window.innerWidth < 768;
     updateScrollState();
+    updateButtonPosition();
   }
 };
 
@@ -62,7 +87,10 @@ const goNext = () => {
 watch(
   () => props.items,
   () => {
-    setTimeout(updateScrollState, 150);
+    setTimeout(() => {
+      updateScrollState();
+      updateButtonPosition();
+    }, 150); // Delay to allow DOM to update with new items
   },
   { deep: true },
 );
@@ -70,6 +98,7 @@ watch(
 onMounted(() => {
   updateViewport();
   setTimeout(updateScrollState, 100);
+  setTimeout(updateButtonPosition, 500); // Đảm bảo ảnh đã kịp render
   window.addEventListener('resize', updateViewport);
 });
 
@@ -82,8 +111,7 @@ onUnmounted(() => {
 
 <template>
   <section class="position-relative">
-    <div class="carousel-track row g-3 flex-nowrap m-0" ref="trackRef" @scroll="handleScroll">
-      <!-- We add padding-right directly here or just let the track scroll.  g-3 adds margins so we should add padding or let padding-bottom handle overflow. Note that `m-0` cancels negative margins if we don't want the track to overflow parent sideways. Actually `row g-3` has negative margins. Let's keep `row g-3` but inside a wrapper or just allow the scroll container to be the track. -->
+    <div class="carousel-track row g-3 flex-nowrap" ref="trackRef" @scroll="handleScroll">
       <div
         v-for="(item, index) in items"
         :key="item.id || index"
@@ -97,6 +125,7 @@ onUnmounted(() => {
     <button
       v-if="canGoPrev && !isMobile"
       class="carousel-nav-btn prev"
+      :style="buttonTopOffset ? { top: `${buttonTopOffset}px` } : {}"
       @click="goPrev"
       aria-label="Previous"
     >
@@ -106,6 +135,7 @@ onUnmounted(() => {
     <button
       v-if="canGoNext && !isMobile"
       class="carousel-nav-btn next"
+      :style="buttonTopOffset ? { top: `${buttonTopOffset}px` } : {}"
       @click="goNext"
       aria-label="Next"
     >
@@ -133,10 +163,10 @@ section {
    Wait, if carousel-track is overflow-x: auto, the negative margin of `row` might cause issue.
    To fix, we can ensure the negative margins are handled, but we use them so grid col sizes work correctly.
  */
-.carousel-track {
+/* .carousel-track {
   margin-left: 0;
   margin-right: 0;
-}
+} */
 
 .carousel-track::-webkit-scrollbar {
   display: none;

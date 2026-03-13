@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { Event } from '../types/event-display'
 
 export function useDateRange() {

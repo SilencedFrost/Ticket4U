@@ -7,7 +7,7 @@ export const useHomeStore = defineStore('home', () => {
 
   // State
   const featuredEvents = ref<Event[]>([])
-  const specialEvents = ref<Event[]>([])
+  const locationalEvents = ref<Event[]>([])
   const trendingEvents = ref<TrendingEvent[]>([])
   const suggestedEvents = ref<Event[]>([])
   const places = ref<Place[]>([])
@@ -16,7 +16,7 @@ export const useHomeStore = defineStore('home', () => {
   // Loading states
   const loading = ref({
     featured: false,
-    special: false,
+    locational: false,
     trending: false,
     suggested: false,
     places: false,
@@ -26,7 +26,7 @@ export const useHomeStore = defineStore('home', () => {
   // Error states
   const errors = ref({
     featured: null as string | null,
-    special: null as string | null,
+    locational: null as string | null,
     trending: null as string | null,
     suggested: null as string | null,
     places: null as string | null,
@@ -54,8 +54,8 @@ export const useHomeStore = defineStore('home', () => {
   }
 
   async function fetchSpecialEvents() {
-    loading.value.special = true
-    errors.value.special = null
+    loading.value.locational = true
+    errors.value.locational = null
     try {
       const data = await $fetch<Event[]>(
         `${config.public.eventServiceUrl}/events/locational`,
@@ -63,12 +63,12 @@ export const useHomeStore = defineStore('home', () => {
           credentials: 'include',
         }
       )
-      specialEvents.value = data
+      locationalEvents.value = data
     } catch (error) {
-      errors.value.special = 'Failed to load locational events'
+      errors.value.locational = 'Failed to load locational events'
       console.error('Error fetching locational events:', error)
     } finally {
-      loading.value.special = false
+      loading.value.locational = false
     }
   }
 
@@ -171,7 +171,7 @@ export const useHomeStore = defineStore('home', () => {
   return {
     // State
     featuredEvents,
-    specialEvents,
+    specialEvents: locationalEvents,
     trendingEvents,
     suggestedEvents,
     places,

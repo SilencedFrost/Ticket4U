@@ -48,9 +48,7 @@ const localePath = useLocalePath();
         <!-- Hover buttons -->
         <div class="d-none d-md-flex ms-lg-5">
           <div class="nav-item">
-            <nuxt-link-locale :to="localePath('/event-display')">
               <span>Events</span>
-            </nuxt-link-locale>
           </div>
           <div class="nav-item">
             <span>Contact us</span>

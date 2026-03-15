@@ -49,7 +49,8 @@ public class MailServiceClient {
                     .toBodilessEntity();
             log.info("{} email sent to {}", templateCode, to);
         } catch (Exception e) {
-            log.warn("Failed to send {} email to {}: {}", templateCode, to, e.getMessage(), e);
+            log.error("Failed to send {} email to {}: {}", templateCode, to, e.getMessage(), e);
+            throw new IllegalStateException("Failed to send " + templateCode + " email", e);
         }
     }
 }

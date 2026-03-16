@@ -1,17 +1,17 @@
-import { defineNuxtPlugin, useRouter } from '#app'
+import { defineNuxtPlugin, useRouter } from '#app';
 
 export default defineNuxtPlugin(() => {
-  if (!import.meta.client) return
+  if (!import.meta.client) return;
 
-  const router = useRouter()
+  const router = useRouter();
 
   router.afterEach(async () => {
-    // Đợi Vue cập nhật DOM của trang mới xong
-    await nextTick() 
-    
-    const c = document.querySelector('.overflow-auto')
-    if (c instanceof HTMLElement) {
-      c.scrollTo({ top: 0, behavior: 'smooth' })
+    // Await vue DOM update
+    await nextTick();
+
+    const component = document.querySelector('.auto-scrollable');
+    if (component instanceof HTMLElement) {
+      component.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  })
-})
+  });
+});

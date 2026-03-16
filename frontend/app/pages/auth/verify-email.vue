@@ -13,6 +13,8 @@ const resendEmail = ref('');
 const resending = ref(false);
 const resendSuccess = ref(false);
 const resendError = ref('');
+const verifyRequestController = ref<AbortController | null>(null);
+const isActive = ref(true);
 
 function resolveToken(): string | undefined {
   const rawToken = route.query.token;
@@ -31,6 +33,8 @@ function resolveToken(): string | undefined {
 onMounted(async () => {
   await router.isReady();
 
+  if (!isActive.value) return;
+
   const token = resolveToken();
 
   if (!token) {
@@ -40,15 +44,19 @@ onMounted(async () => {
   }
 
   try {
+    verifyRequestController.value = new AbortController();
     await $fetch(`${config.public.authUrl}/verify-email`, {
       method: 'GET',
       params: { token },
+      signal: verifyRequestController.value.signal,
     });
+    if (!isActive.value) return;
     navigateTo({ path: localePath('/auth/login'), query: { verified: 'true' } }, { replace: true });
   } catch (err) {
     const fetchError = err as FetchError;
 
     if (fetchError.name === 'AbortError') return;
+    if (!isActive.value) return;
 
     const serverMessage = fetchError.data?.message ?? '';
 
@@ -73,7 +81,14 @@ onMounted(async () => {
         : 'auth.verification.token_invalid';
       message.value = t(safeKey);
     }
+  } finally {
+    verifyRequestController.value = null;
   }
+});
+
+onBeforeUnmount(() => {
+  isActive.value = false;
+  verifyRequestController.value?.abort();
 });
 
 async function resendVerification() {

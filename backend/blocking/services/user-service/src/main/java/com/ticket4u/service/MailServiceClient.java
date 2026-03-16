@@ -40,16 +40,12 @@ public class MailServiceClient {
                 "async", true
         );
 
-        try {
-            mailServiceRestClient.post()
-                    .uri("/api/v1/mail/send")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(body)
-                    .retrieve()
-                    .toBodilessEntity();
-            log.info("{} email sent to {}", templateCode, to);
-        } catch (Exception e) {
-            log.error("Failed to send {} email to {}: {}", templateCode, to, e.getMessage(), e);
-        }
+        mailServiceRestClient.post()
+                .uri("/api/v1/mail/send")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+        log.info("{} email sent to {}", templateCode, to);
     }
 }

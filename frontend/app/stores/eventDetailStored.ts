@@ -40,7 +40,7 @@ export const useEventStore = defineStore('event', () => {
   async function fetchEventDetail(eventId: string) {
     try {
       const data = await $fetch<EventApiResponse>(
-        `${config.public.eventServiceUrl}/events/${eventId}`,
+        `${config.public.eventServiceUrl}/public/events/${eventId}`,
       );
 
       currentEvent.value = mapEventResponse(data);
@@ -62,7 +62,7 @@ export const useEventStore = defineStore('event', () => {
   async function fetchRelatedEvents(eventId: string) {
     try {
       relatedEvents.value = await $fetch<EventCardResponse[]>(
-        `${config.public.eventServiceUrl}/events/${eventId}/related`,
+        `${config.public.eventServiceUrl}/public/events/${eventId}/related`,
       );
     } catch (err) {
       console.error('Failed to fetch related events:', err);

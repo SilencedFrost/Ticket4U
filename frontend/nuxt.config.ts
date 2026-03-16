@@ -27,12 +27,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      authUrl: 'https://localhost:8080/api/v1/auth',
       userHealthUrl: 'https://localhost:8080/health',
       userServiceUrl: 'https://localhost:8080/api/v1',
-      ticketUrl: 'https://localhost:8081/api/v1',
+      ticketServiceUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
-      eventServiceUrl: 'https://localhost:8083/api/v1/public',
+      eventServiceUrl: 'https://localhost:8083/api/v1',
       eventHealthUrl: 'https://localhost:8083/health',
       googleClientId: '',
     },

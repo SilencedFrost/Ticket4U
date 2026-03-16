@@ -196,7 +196,7 @@ async function register() {
 
   try {
     const response = await $fetch<{ userId: string | null; message: string }>(
-      `${config.public.authUrl}/register`,
+      `${config.public.userServiceUrl}/auth/register`,
       {
         method: 'POST',
         body: {

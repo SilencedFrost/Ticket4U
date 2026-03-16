@@ -25,6 +25,7 @@ spring:
             client-secret: <<Client Secret>>
             scope: openid,profile,email
 
+# Port
 server:
   port: 8080
   ssl:

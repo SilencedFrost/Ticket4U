@@ -25,12 +25,12 @@ spring:
             client-secret: <<Client Secret>>
             scope: openid,profile,email
 
-# Port
 server:
   port: 8080
   ssl:
-    certificate: classpath:keys/localhost+2.pem
-    certificate-private-key: classpath:keys/localhost+2-key.pem
+    enabled: true
+    certificate: "classpath:keys/localhost+2.pem"
+    certificate-private-key: "classpath:keys/localhost+2-key.pem"
 
 application:
   security:

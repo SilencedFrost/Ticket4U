@@ -19,8 +19,9 @@ spring:
 server:
   port: 8083
   ssl:
-    certificate: classpath:keys/localhost+2.pem
-    certificate-private-key: classpath:keys/localhost+2-key.pem
+    enabled: true
+    certificate: "classpath:keys/localhost+2.pem"
+    certificate-private-key: "classpath:keys/localhost+2-key.pem"
 
 application:
   security:

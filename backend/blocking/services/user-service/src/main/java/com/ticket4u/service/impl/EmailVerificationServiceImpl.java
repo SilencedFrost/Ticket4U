@@ -33,13 +33,17 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
         );
 
         verificationTokenService.runAfterCommit(() -> {
-            mailServiceClient.sendVerificationEmail(
-                    user.getEmail(),
-                    user.getUsername(),
-                    issuedToken.link(),
-                    issuedToken.expiryHours()
-            );
-            log.info("Verification email queued for user: {}", user.getEmail());
+            try {
+                mailServiceClient.sendVerificationEmail(
+                        user.getEmail(),
+                        user.getUsername(),
+                        issuedToken.link(),
+                        issuedToken.expiryHours()
+                );
+                log.info("Verification email queued for user: {}", user.getEmail());
+            } catch (Exception ex) {
+                log.error("Failed to send verification email for user: {}", user.getEmail(), ex);
+            }
         });
     }
 

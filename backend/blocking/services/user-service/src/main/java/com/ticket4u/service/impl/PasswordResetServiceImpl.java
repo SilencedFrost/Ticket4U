@@ -44,13 +44,17 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         );
 
         verificationTokenService.runAfterCommit(() -> {
-            mailServiceClient.sendPasswordResetEmail(
-                    user.getEmail(),
-                    user.getUsername(),
-                    issuedToken.link(),
-                    issuedToken.expiryHours()
-            );
-            log.info("Password reset email queued for user: {}", user.getEmail());
+            try {
+                mailServiceClient.sendPasswordResetEmail(
+                        user.getEmail(),
+                        user.getUsername(),
+                        issuedToken.link(),
+                        issuedToken.expiryHours()
+                );
+                log.info("Password reset email queued for user: {}", user.getEmail());
+            } catch (Exception ex) {
+                log.error("Failed to send password reset email for user: {}", user.getEmail(), ex);
+            }
         });
     }
 

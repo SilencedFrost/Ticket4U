@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import FeaturedCarousel from './FeaturedCarousel.vue';
+import InfiniteEventCarousel from './InfiniteEventCarousel.vue';
 import EventCarousel from './EventCarousel.vue';
-import SpecialEventCard from './SpecialEventCard.vue';
+import LocationalEventCard from './LocationalEventCard.vue';
 import TrendingCard from './TrendingCard.vue';
 import EventSection from './EventSection.vue';
 
@@ -17,7 +17,7 @@ onMounted(() => {
 // Use store state directly (reactive)
 const {
   featuredEvents,
-  specialEvents,
+  locationalEvents,
   trendingEvents,
   suggestedEvents,
   categories,
@@ -37,7 +37,7 @@ const {
       </div>
 
       <!-- Featured Carousel -->
-      <FeaturedCarousel v-else-if="featuredEvents.length > 0" :events="featuredEvents" />
+      <InfiniteEventCarousel v-else-if="featuredEvents.length > 0" :events="featuredEvents" />
 
       <!-- Error state for featured -->
       <div v-else-if="errors.featured" class="alert alert-danger">
@@ -54,14 +54,14 @@ const {
           </div>
         </div>
         <EventCarousel
-          v-else-if="specialEvents.length > 0"
-          :items="specialEvents"
+          v-else-if="locationalEvents.length > 0"
+          :items="locationalEvents"
           :items-per-page="4"
           col-class="col-lg-3 col-md-6"
           show-dots
         >
           <template #default="{ item }">
-            <SpecialEventCard :event="item" />
+            <LocationalEventCard :event="item" />
           </template>
         </EventCarousel>
         <div v-else-if="errors.locational" class="alert alert-danger">{{ errors.locational }}</div>

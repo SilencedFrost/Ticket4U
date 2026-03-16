@@ -16,7 +16,7 @@ const handleClick = () => {
 
 <template>
   <div
-    class="special-event-card rounded-4 overflow-hidden cursor-pointer"
+    class="locational-event-card rounded-4 overflow-hidden cursor-pointer"
     role="button"
     tabindex="0"
     @click="handleClick"
@@ -32,14 +32,14 @@ const handleClick = () => {
 </template>
 
 <style scoped>
-.special-event-card {
+.locational-event-card {
   height: 483px;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
 }
 
-.special-event-card:hover {
+.locational-event-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
@@ -49,7 +49,7 @@ const handleClick = () => {
 }
 
 @media (max-width: 767.98px) {
-  .special-event-card {
+  .locational-event-card {
     height: 320px;
   }
 }

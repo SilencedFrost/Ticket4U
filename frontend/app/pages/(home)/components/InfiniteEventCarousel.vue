@@ -216,23 +216,12 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+@import '../styles/carousel.css';
+
 .carousel-track {
   gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
   position: relative;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
   padding-bottom: 5px; /* Prevent box-shadow or content clipping on mobile */
-}
-
-/* Ensure completely invisible scrollbar across all webkit browsers */
-.carousel-track::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
 }
 
 .carousel-slide {
@@ -269,24 +258,11 @@ onUnmounted(() => {
 }
 
 .carousel-indicators-dots {
-  position: absolute;
   bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 100;
 }
 
 .carousel-indicators-dots .dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
   background-color: var(--bg-reactive-gray);
-  cursor: pointer;
-  transition: background-color 0.3s;
-  border: none;
-  padding: 0;
 }
 
 .carousel-indicators-dots .dot:hover {
@@ -296,4 +272,5 @@ onUnmounted(() => {
 .carousel-indicators-dots .dot.active {
   background-color: #07b3df;
 }
+
 </style>

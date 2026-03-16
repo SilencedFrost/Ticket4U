@@ -53,7 +53,7 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
-  async function fetchSpecialEvents() {
+  async function fetchLocationalEvents() {
     loading.value.locational = true
     errors.value.locational = null
     try {
@@ -161,7 +161,7 @@ export const useHomeStore = defineStore('home', () => {
   async function fetchAllHomeData() {
     await Promise.all([
       fetchFeaturedEvents(),
-      fetchSpecialEvents(),
+      fetchLocationalEvents(),
       fetchTrendingEvents(),
       fetchSuggestedEvents(),
       fetchCategoriesWithEvents(),
@@ -171,7 +171,7 @@ export const useHomeStore = defineStore('home', () => {
   return {
     // State
     featuredEvents,
-    specialEvents: locationalEvents,
+    locationalEvents,
     trendingEvents,
     suggestedEvents,
     places,
@@ -180,7 +180,7 @@ export const useHomeStore = defineStore('home', () => {
     errors,
     // Actions
     fetchFeaturedEvents,
-    fetchSpecialEvents,
+    fetchLocationalEvents,
     fetchTrendingEvents,
     fetchSuggestedEvents,
     fetchCategories: fetchCategoriesWithEvents,

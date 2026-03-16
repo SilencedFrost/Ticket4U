@@ -68,6 +68,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     }
 
     @Override
+    @Transactional
     public void resendVerification(String email) {
         Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
 

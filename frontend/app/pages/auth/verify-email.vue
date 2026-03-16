@@ -12,6 +12,7 @@ const message = ref('');
 const resendEmail = ref('');
 const resending = ref(false);
 const resendSuccess = ref(false);
+const resendError = ref('');
 
 function resolveToken(): string | undefined {
   const rawToken = route.query.token;
@@ -77,15 +78,29 @@ onMounted(async () => {
 
 async function resendVerification() {
   if (!resendEmail.value.trim()) return;
+
   resending.value = true;
   resendSuccess.value = false;
+  resendError.value = '';
+
   try {
     await $fetch(`${config.public.authUrl}/resend-verification`, {
       method: 'POST',
       body: { email: resendEmail.value.trim() },
     });
     resendSuccess.value = true;
-  } catch {
+  } catch (err) {
+    const fetchError = err as FetchError;
+    if (!fetchError.statusCode || fetchError.statusCode >= 500) {
+      resendError.value = 'auth.error.network';
+      return;
+    }
+
+    if (fetchError.statusCode === 400) {
+      resendError.value = 'auth.error.format.email';
+      return;
+    }
+
     resendSuccess.value = true;
   } finally {
     resending.value = false;
@@ -126,6 +141,9 @@ async function resendVerification() {
               <span v-if="resending" class="spinner-border spinner-border-sm me-1" role="status" />
               {{ $t('auth.verification.resend_action') }}
             </button>
+          </div>
+          <div v-if="resendError" class="invalid-feedback d-block mt-2">
+            {{ $t(resendError) }}
           </div>
         </template>
 

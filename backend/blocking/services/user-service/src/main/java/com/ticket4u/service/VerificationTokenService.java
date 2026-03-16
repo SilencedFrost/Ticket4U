@@ -9,6 +9,7 @@ import com.ticket4u.exception.VerificationTokenNotFoundException;
 import com.ticket4u.repository.VerificationTokenRepository;
 import com.ticket4u.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -17,6 +18,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VerificationTokenService {
@@ -69,10 +71,23 @@ public class VerificationTokenService {
     }
 
     public void runAfterCommit(Runnable callback) {
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+            try {
+                callback.run();
+            } catch (RuntimeException e) {
+                log.error("Post-commit callback failed without active transaction synchronization", e);
+            }
+            return;
+        }
+
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                callback.run();
+                try {
+                    callback.run();
+                } catch (RuntimeException e) {
+                    log.error("Post-commit callback failed", e);
+                }
             }
         });
     }

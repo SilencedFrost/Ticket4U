@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
+const { isEmailFormatValid } = useEmailValidation();
 const { validatePasswordValue } = usePasswordValidation();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
@@ -37,7 +38,6 @@ async function handleGoogleCredential(idToken: string) {
  =======================*/
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
-const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 /**===========
  * Interfaces
@@ -137,7 +137,7 @@ function validateEmail(): boolean {
     return false;
   }
 
-  if (!EMAIL_FORMAT_REGEX.test(val)) {
+  if (!isEmailFormatValid(val)) {
     error.email = 'auth.error.format.email';
     return false;
   }

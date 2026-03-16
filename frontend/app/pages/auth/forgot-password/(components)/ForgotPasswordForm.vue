@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-
-const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const { isEmailFormatValid } = useEmailValidation();
 
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
@@ -19,7 +18,7 @@ function validateEmail(): boolean {
     return false;
   }
 
-  if (!EMAIL_FORMAT_REGEX.test(trimmed)) {
+  if (!isEmailFormatValid(trimmed)) {
     error.email = 'auth.error.format.email';
     return false;
   }

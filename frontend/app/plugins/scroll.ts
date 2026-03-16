@@ -5,7 +5,14 @@ export default defineNuxtPlugin(() => {
 
   const router = useRouter();
 
-  router.afterEach(async () => {
+  router.afterEach(async (to, from) => {
+    const toBaseName = to.name?.toString().split('___')[0];
+    const fromBaseName = from.name?.toString().split('___')[0];
+
+    if (toBaseName === fromBaseName && toBaseName !== undefined) {
+      return;
+    }
+
     // Await vue DOM update
     await nextTick();
 

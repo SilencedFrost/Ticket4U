@@ -1,17 +1,21 @@
-import { defineStore } from 'pinia'
-import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home'
-import type { PlaceResponse, CategoryResponse, CategoryWithEventsResponse } from '~/pages/(home)/types/api'
+import { defineStore } from 'pinia';
+import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home';
+import type {
+  PlaceResponse,
+  CategoryResponse,
+  CategoryWithEventsResponse,
+} from '~/pages/(home)/types/api';
 
 export const useHomeStore = defineStore('home', () => {
-  const config = useRuntimeConfig()
+  const config = useRuntimeConfig();
 
   // State
-  const featuredEvents = ref<Event[]>([])
-  const locationalEvents = ref<Event[]>([])
-  const trendingEvents = ref<TrendingEvent[]>([])
-  const suggestedEvents = ref<Event[]>([])
-  const places = ref<Place[]>([])
-  const categories = ref<CategoryWithEvents[]>([])
+  const featuredEvents = ref<Event[]>([]);
+  const locationalEvents = ref<Event[]>([]);
+  const trendingEvents = ref<TrendingEvent[]>([]);
+  const suggestedEvents = ref<Event[]>([]);
+  const places = ref<Place[]>([]);
+  const categories = ref<CategoryWithEvents[]>([]);
 
   // Loading states
   const loading = ref({
@@ -21,7 +25,7 @@ export const useHomeStore = defineStore('home', () => {
     suggested: false,
     places: false,
     categories: false,
-  })
+  });
 
   // Error states
   const errors = ref({
@@ -31,129 +35,112 @@ export const useHomeStore = defineStore('home', () => {
     suggested: null as string | null,
     places: null as string | null,
     categories: null as string | null,
-  })
+  });
 
   // Actions
   async function fetchFeaturedEvents() {
-    loading.value.featured = true
-    errors.value.featured = null
+    loading.value.featured = true;
+    errors.value.featured = null;
     try {
-      const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/events/featured`,
-        {
-          credentials: 'include',
-        }
-      )
-      featuredEvents.value = data
+      const data = await $fetch<Event[]>(`${config.public.eventServiceUrl}/events/featured`, {
+        credentials: 'include',
+      });
+      featuredEvents.value = data;
     } catch (error) {
-      errors.value.featured = 'Failed to load featured events'
-      console.error('Error fetching featured events:', error)
+      errors.value.featured = 'Failed to load featured events';
+      console.error('Error fetching featured events:', error);
     } finally {
-      loading.value.featured = false
+      loading.value.featured = false;
     }
   }
 
   async function fetchLocationalEvents() {
-    loading.value.locational = true
-    errors.value.locational = null
+    loading.value.locational = true;
+    errors.value.locational = null;
     try {
-      const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/events/locational`,
-        {
-          credentials: 'include',
-        }
-      )
-      locationalEvents.value = data
+      const data = await $fetch<Event[]>(`${config.public.eventServiceUrl}/events/locational`, {
+        credentials: 'include',
+      });
+      locationalEvents.value = data;
     } catch (error) {
-      errors.value.locational = 'Failed to load locational events'
-      console.error('Error fetching locational events:', error)
+      errors.value.locational = 'Failed to load locational events';
+      console.error('Error fetching locational events:', error);
     } finally {
-      loading.value.locational = false
+      loading.value.locational = false;
     }
   }
 
   async function fetchTrendingEvents() {
-    loading.value.trending = true
-    errors.value.trending = null
+    loading.value.trending = true;
+    errors.value.trending = null;
     try {
-      const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/events/trending`,
-        {
-          credentials: 'include',
-        }
-      )
+      const data = await $fetch<Event[]>(`${config.public.eventServiceUrl}/events/trending`, {
+        credentials: 'include',
+      });
       // Backend returns top 3, assign ranks
-      trendingEvents.value = data
-        .slice(0, 3)
-        .map((event, index) => ({
-          ...event,
-          rank: (index + 1) as 1 | 2 | 3,
-        }))
+      trendingEvents.value = data.slice(0, 3).map((event, index) => ({
+        ...event,
+        rank: (index + 1) as 1 | 2 | 3,
+      }));
     } catch (error) {
-      errors.value.trending = 'Failed to load trending events'
-      console.error('Error fetching trending events:', error)
+      errors.value.trending = 'Failed to load trending events';
+      console.error('Error fetching trending events:', error);
     } finally {
-      loading.value.trending = false
+      loading.value.trending = false;
     }
   }
 
   async function fetchSuggestedEvents() {
-    loading.value.suggested = true
-    errors.value.suggested = null
+    loading.value.suggested = true;
+    errors.value.suggested = null;
     try {
-      const data = await $fetch<Event[]>(
-        `${config.public.eventServiceUrl}/events/suggested`,
-        {
-          credentials: 'include',
-        }
-      )
-      suggestedEvents.value = data
+      const data = await $fetch<Event[]>(`${config.public.eventServiceUrl}/events/suggested`, {
+        credentials: 'include',
+      });
+      suggestedEvents.value = data;
     } catch (error) {
-      errors.value.suggested = 'Failed to load suggested events'
-      console.error('Error fetching suggested events:', error)
+      errors.value.suggested = 'Failed to load suggested events';
+      console.error('Error fetching suggested events:', error);
     } finally {
-      loading.value.suggested = false
+      loading.value.suggested = false;
     }
   }
 
   async function fetchCategories(): Promise<CategoryResponse[]> {
     try {
-      const data = await $fetch<CategoryResponse[]>(
-        `${config.public.eventServiceUrl}/categories`,
-        {
-          credentials: 'include',
-        }
-      )
-      return data
+      const data = await $fetch<CategoryResponse[]>(`${config.public.eventServiceUrl}/categories`, {
+        credentials: 'include',
+      });
+      return data;
     } catch (error) {
-      console.error('Error fetching categories:', error)
-      throw new Error('Failed to load categories')
+      console.error('Error fetching categories:', error);
+      throw new Error('Failed to load categories');
     }
   }
   async function fetchCategoriesWithEvents() {
-    loading.value.categories = true
-    errors.value.categories = null
+    loading.value.categories = true;
+    errors.value.categories = null;
     try {
-      const categoriesList = await fetchCategories()
+      const categoriesList = await fetchCategories();
       if (!categoriesList || categoriesList.length === 0) {
-        categories.value = []
-        return
+        categories.value = [];
+        return;
       }
-      const data = await Promise.all( //Promise.all: để chạy song song call API
+      const data = await Promise.all(
+        //Promise.all: để chạy song song call API
         categoriesList.map((category) =>
           $fetch<CategoryWithEventsResponse>(
             `${config.public.eventServiceUrl}/categories/${category.id}/events/upcoming?limit=4`,
-            { credentials: 'include' }
-          )
-        )
-      )
-      categories.value = data
-
+            { credentials: 'include' },
+          ),
+        ),
+      );
+      categories.value = data;
     } catch (error) {
-      errors.value.categories = 'Failed to load categories'
-      console.error('Error fetching events in categories:', error)
+      errors.value.categories = 'Failed to load categories';
+      console.error('Error fetching events in categories:', error);
     } finally {
-      loading.value.categories = false
+      loading.value.categories = false;
     }
   }
 
@@ -165,7 +152,7 @@ export const useHomeStore = defineStore('home', () => {
       fetchTrendingEvents(),
       fetchSuggestedEvents(),
       fetchCategoriesWithEvents(),
-    ])
+    ]);
   }
 
   return {
@@ -185,5 +172,5 @@ export const useHomeStore = defineStore('home', () => {
     fetchSuggestedEvents,
     fetchCategories: fetchCategoriesWithEvents,
     fetchAllHomeData,
-  }
-})
+  };
+});

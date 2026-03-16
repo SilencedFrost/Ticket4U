@@ -26,9 +26,12 @@ const emit = defineEmits<{
 const pageInput = ref(props.currentPage + 1);
 
 // Watch for external page changes
-watch(() => props.currentPage, (newPage) => {
-  pageInput.value = newPage + 1;
-});
+watch(
+  () => props.currentPage,
+  (newPage) => {
+    pageInput.value = newPage + 1;
+  },
+);
 
 // Computed text showing range
 const showingText = computed(() => {
@@ -87,16 +90,12 @@ const goToPageInput = () => {
         :disabled="loading"
         @keyup.enter="goToPageInput"
         @blur="goToPageInput"
-      >
+      />
       <span class="text-muted">{{ showingText }}</span>
     </div>
 
     <!-- Next Button -->
-    <button
-      class="btn btn-pagination"
-      :disabled="!hasMore || loading"
-      @click="goToNext"
-    >
+    <button class="btn btn-pagination" :disabled="!hasMore || loading" @click="goToNext">
       <span class="d-none d-md-inline me-2">Next</span>
       <i class="bi bi-chevron-right"></i>
     </button>
@@ -155,7 +154,7 @@ const goToPageInput = () => {
   margin: 0;
 }
 
-.page-input[type="number"] {
+.page-input[type='number'] {
   appearance: textfield;
   -moz-appearance: textfield;
 }

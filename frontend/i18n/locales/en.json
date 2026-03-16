@@ -133,19 +133,15 @@
       "date_from": "From",
       "date_to": "To",
       "not_found": "No events found"
-
-      
     },
-    "button":{
+    "button": {
       "apply": "Apply",
       "reset": "Reset"
     },
     "title": {
       "category": "Category",
-      "price" : "Price",
-      "place" : "Place"
+      "price": "Price",
+      "place": "Place"
     }
   }
-
-  
 }

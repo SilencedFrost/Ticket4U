@@ -272,5 +272,4 @@ onUnmounted(() => {
 .carousel-indicators-dots .dot.active {
   background-color: #07b3df;
 }
-
 </style>

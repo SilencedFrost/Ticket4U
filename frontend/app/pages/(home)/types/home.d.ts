@@ -1,26 +1,26 @@
 export interface Event {
-  id: string
-  name: string
-  bannerUrl: string
-  addressLine: string
-  startDate: string
-  endDate: string
-  minPrice: number
-  categoryName?: string
+  id: string;
+  name: string;
+  bannerUrl: string;
+  addressLine: string;
+  startDate: string;
+  endDate: string;
+  minPrice: number;
+  categoryName?: string;
 }
 
 export interface Place {
-  id: string
-  name: string
-  imageUrl: string
+  id: string;
+  name: string;
+  imageUrl: string;
 }
 
 export interface TrendingEvent extends Event {
-  rank: 1 | 2 | 3
+  rank: 1 | 2 | 3;
 }
 
 export interface CategoryWithEvents {
-  id: number
-  name: string
-  events: Event[]
+  id: number;
+  name: string;
+  events: Event[];
 }

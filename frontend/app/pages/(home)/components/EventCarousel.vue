@@ -28,25 +28,25 @@ const buttonTopOffset = ref<number | null>(null);
 
 // Calculate button position based on carousel height
 const updateButtonPosition = () => {
-   if (!trackRef.value) return;
+  if (!trackRef.value) return;
 
-   // Get the parent element of the track (the section) to calculate relative position
-   const sectionEl = trackRef.value.parentElement;
-   // Find the first image element
-   const firstImage = trackRef.value.querySelector('img');
+  // Get the parent element of the track (the section) to calculate relative position
+  const sectionEl = trackRef.value.parentElement;
+  // Find the first image element
+  const firstImage = trackRef.value.querySelector('img');
 
-   if (sectionEl && firstImage) {
-      // Lấy tọa độ thực tế của thẻ section và thẻ ảnh trên màn hình
-      const sectionRect = sectionEl.getBoundingClientRect();
-      const imgRect = firstImage.getBoundingClientRect();
+  if (sectionEl && firstImage) {
+    // Lấy tọa độ thực tế của thẻ section và thẻ ảnh trên màn hình
+    const sectionRect = sectionEl.getBoundingClientRect();
+    const imgRect = firstImage.getBoundingClientRect();
 
-      // Công thức: (Khoảng cách từ đỉnh section đến đỉnh ảnh) + (Một nửa chiều cao ảnh)
-      const exactCenterOffset = (imgRect.top - sectionRect.top) + (imgRect.height / 2);
+    // Công thức: (Khoảng cách từ đỉnh section đến đỉnh ảnh) + (Một nửa chiều cao ảnh)
+    const exactCenterOffset = imgRect.top - sectionRect.top + imgRect.height / 2;
 
-      if (exactCenterOffset > 0) {
-         buttonTopOffset.value = exactCenterOffset;
-      }
-   }
+    if (exactCenterOffset > 0) {
+      buttonTopOffset.value = exactCenterOffset;
+    }
+  }
 };
 const updateViewport = () => {
   if (typeof window !== 'undefined') {

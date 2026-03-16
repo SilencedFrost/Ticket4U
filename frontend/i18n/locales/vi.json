@@ -134,14 +134,14 @@
       "date_to": "Đến ngày",
       "not_found": "Không tìm thấy sự kiện nào"
     },
-    "button":{
+    "button": {
       "apply": "Áp dụng",
       "reset": "Thiết lập lại"
     },
     "title": {
       "category": "Thể loại",
-      "price" : "Giá tiền",
-      "place" : "Địa điểm"
+      "price": "Giá tiền",
+      "place": "Địa điểm"
     }
   }
 }

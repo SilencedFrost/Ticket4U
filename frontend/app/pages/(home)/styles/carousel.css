@@ -1,58 +1,58 @@
 .carousel-track {
-	overflow-x: auto;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* IE/Edge */
-	scroll-behavior: smooth;
-	-webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Momentum scrolling on iOS */
 }
 
 .carousel-track::-webkit-scrollbar {
-	display: none;
-	width: 0;
-	height: 0;
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .carousel-nav-btn {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 40px;
-	height: 70px;
-	border-radius: 10px;
-	background-color: rgba(0, 0, 0, 0);
-	color: white;
-	border: none;
-	font-size: 3rem;
-	font-weight: bold;
-	z-index: 100;
-	transition: background-color 0.3s;
-	cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 70px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: none;
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 100;
+  transition: background-color 0.3s;
+  cursor: pointer;
 }
 
 .carousel-nav-btn.prev {
-	left: 0;
+  left: 0;
 }
 
 .carousel-nav-btn.next {
-	right: 0;
+  right: 0;
 }
 
 .carousel-indicators-dots {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	display: flex;
-	gap: 10px;
-	z-index: 100;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
 }
 
 .carousel-indicators-dots .dot {
-	width: 15px;
-	height: 15px;
-	border-radius: 50%;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	border: none;
-	padding: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  padding: 0;
 }

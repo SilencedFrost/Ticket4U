@@ -48,7 +48,7 @@ const localePath = useLocalePath();
         <!-- Hover buttons -->
         <div class="d-none d-md-flex ms-lg-5">
           <div class="nav-item">
-              <span>Events</span>
+            <span>Events</span>
           </div>
           <div class="nav-item">
             <span>Contact us</span>
@@ -151,5 +151,4 @@ const localePath = useLocalePath();
   align-items: center;
   justify-content: center;
 }
-
 </style>

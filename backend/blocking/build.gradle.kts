@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.springframework.boot") version "4.0.0" apply false
+    id("org.springframework.boot") version "4.0.3" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
     id("org.owasp.dependencycheck") version "12.1.9" apply false
 }
@@ -20,12 +20,6 @@ subprojects {
 
     group = "org.example"
     version = "1.0-SNAPSHOT"
-
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
-        }
-    }
     
     repositories {
         mavenCentral()
@@ -33,7 +27,7 @@ subprojects {
 
     dependencies {
         // Spring boot
-        implementation("org.springframework.boot:spring-boot-starter-web")
+        implementation("org.springframework.boot:spring-boot-starter-webmvc")
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
         implementation("org.springframework.boot:spring-boot-starter-validation")
         implementation("org.springframework.boot:spring-boot-starter-security")

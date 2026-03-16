@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
 
-const { vFallback: vImgFallback } = useImagePlaceholder();
 const { formatDateTime } = useFormatter();
 
 defineProps<{
@@ -23,7 +22,6 @@ defineProps<{
 
       <div class="mb-4">
         <img
-          v-img-fallback="[900, 1000]"
           :src="event.imgEvent.seatMapUrl"
           alt=""
           class="w-auto rounded-2 object-fit-cover img-fluid mh-100"

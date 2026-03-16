@@ -2,7 +2,6 @@
 import type { EventDetailResponse } from '@/pages/event-detail/types/event-detail';
 import { useFormatter } from '@/composables/useFormatter';
 
-const { vFallback: vImgFallback } = useImagePlaceholder();
 const { formatPrice, formatDateTime } = useFormatter();
 
 defineProps<{
@@ -15,11 +14,7 @@ const emit = defineEmits(['buyClick']);
 <template>
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
-      <img
-        v-img-fallback="[1200, 600]"
-        :src="event.imgEvent.heroUrl"
-        class="w-100 h-100 object-fit-cover hero-bg-blur"
-      />
+      <img :src="event.imgEvent.heroUrl" class="w-100 h-100 object-fit-cover hero-bg-blur" />
     </div>
     <div class="position-relative z-1">
       <div class="container-xxl pb-4">
@@ -60,7 +55,6 @@ const emit = defineEmits(['buyClick']);
                 </div>
               </div>
               <img
-                v-img-fallback="[1200, 600]"
                 :src="event.imgEvent.heroUrl"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover my-dashed-line"
               />

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Organizer } from '@/pages/event-detail/types/event-detail';
-const { vFallback: vImgFallback } = useImagePlaceholder();
 defineProps<{
   eventData: Organizer;
 }>();
@@ -15,7 +14,6 @@ defineProps<{
       <div class="row g-4 align-items-start">
         <div class="col-6 col-md-4">
           <img
-            v-img-fallback="[400, 400]"
             :src="eventData.logo_url"
             alt="Organizer"
             class="img-fluid rounded-2 ratio ratio-1x1 object-fit-cover"

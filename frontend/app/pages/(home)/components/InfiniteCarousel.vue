@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { Event } from '~/pages/(home)/types/home';
 
 interface Props {
-  events: Event[];
+  events: EventSummary[];
+  style: string;
 }
 
 const props = defineProps<Props>();
@@ -175,12 +175,12 @@ onUnmounted(() => {
         :key="`event-${event.id}-${idx}`"
         class="carousel-slide flex-shrink-0"
       >
-        <NuxtLinkLocale
+        <nuxt-link-locale
           :to="`/event-detail/${event.id}`"
           class="event-card-large position-relative rounded-4 overflow-hidden d-block w-100"
         >
           <img :src="event.bannerUrl" :alt="event.name" class="w-100 h-100 object-fit-cover" />
-        </NuxtLinkLocale>
+        </nuxt-link-locale>
       </div>
     </div>
 

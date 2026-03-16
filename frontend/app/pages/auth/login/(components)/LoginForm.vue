@@ -171,10 +171,10 @@ function togglePassword() {
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <NuxtLink
-        :to="localePath('/auth/register')"
+      <nuxt-link-locale
+        :to="'/auth/register'"
         class="text-decoration-none text-reactive-secondary"
-        >{{ $t('auth.create_account') }}</NuxtLink
+        >{{ $t('auth.create_account') }}</nuxt-link-locale
       >
       |
       <a href="" class="text-decoration-none text-reactive-secondary">{{

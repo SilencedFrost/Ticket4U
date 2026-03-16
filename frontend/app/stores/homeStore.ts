@@ -1,21 +1,15 @@
 import { defineStore } from 'pinia';
-import type { Event, Place, TrendingEvent, CategoryWithEvents } from '~/pages/(home)/types/home';
-import type {
-  PlaceResponse,
-  CategoryResponse,
-  CategoryWithEventsResponse,
-} from '~/pages/(home)/types/api';
 
 export const useHomeStore = defineStore('home', () => {
   const config = useRuntimeConfig();
 
   // State
-  const featuredEvents = ref<Event[]>([]);
-  const locationalEvents = ref<Event[]>([]);
-  const trendingEvents = ref<TrendingEvent[]>([]);
-  const suggestedEvents = ref<Event[]>([]);
-  const places = ref<Place[]>([]);
-  const categories = ref<CategoryWithEvents[]>([]);
+  const featuredEvents = ref<EventSummary[]>([]);
+  const locationalEvents = ref<EventSummary[]>([]);
+  const trendingEvents = ref<EventSummary[]>([]);
+  const suggestedEvents = ref<EventSummary[]>([]);
+  const places = ref<VenueSummary[]>([]);
+  const categories = ref<Category[]>([]);
 
   // Loading states
   const loading = ref({
@@ -42,7 +36,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.featured = true;
     errors.value.featured = null;
     try {
-      const data = await $fetch<Event[]>(
+      const data = await $fetch<EventSummary[]>(
         `${config.public.eventServiceUrl}/public/events/featured`,
         {
           credentials: 'include',
@@ -61,7 +55,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.locational = true;
     errors.value.locational = null;
     try {
-      const data = await $fetch<Event[]>(
+      const data = await $fetch<EventSummary[]>(
         `${config.public.eventServiceUrl}/public/events/locational`,
         {
           credentials: 'include',
@@ -80,7 +74,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.trending = true;
     errors.value.trending = null;
     try {
-      const data = await $fetch<Event[]>(
+      const data = await $fetch<EventSummary[]>(
         `${config.public.eventServiceUrl}/public/events/trending`,
         {
           credentials: 'include',
@@ -103,7 +97,7 @@ export const useHomeStore = defineStore('home', () => {
     loading.value.suggested = true;
     errors.value.suggested = null;
     try {
-      const data = await $fetch<Event[]>(
+      const data = await $fetch<EventSummary[]>(
         `${config.public.eventServiceUrl}/public/events/suggested`,
         {
           credentials: 'include',
@@ -118,9 +112,9 @@ export const useHomeStore = defineStore('home', () => {
     }
   }
 
-  async function fetchCategories(): Promise<CategoryResponse[]> {
+  async function fetchCategories(): Promise<CategorySummary[]> {
     try {
-      const data = await $fetch<CategoryResponse[]>(
+      const data = await $fetch<CategorySummary[]>(
         `${config.public.eventServiceUrl}/public/categories`,
         {
           credentials: 'include',
@@ -144,7 +138,7 @@ export const useHomeStore = defineStore('home', () => {
       const data = await Promise.all(
         //Promise.all: để chạy song song call API
         categoriesList.map((category) =>
-          $fetch<CategoryWithEventsResponse>(
+          $fetch<Category>(
             `${config.public.eventServiceUrl}/public/categories/${category.id}/events/upcoming?limit=4`,
             { credentials: 'include' },
           ),

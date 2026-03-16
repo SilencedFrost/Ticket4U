@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InfiniteEventCarousel from './InfiniteEventCarousel.vue';
+import InfiniteCarousel from './InfiniteCarousel.vue';
 import EventCarousel from './EventCarousel.vue';
 import LocationalEventCard from './LocationalEventCard.vue';
 import TrendingCard from './TrendingCard.vue';
@@ -37,7 +37,11 @@ const {
       </div>
 
       <!-- Featured Carousel -->
-      <InfiniteEventCarousel v-else-if="featuredEvents.length > 0" :events="featuredEvents" />
+      <infinite-carousel
+        v-else-if="featuredEvents.length > 0"
+        :events="featuredEvents"
+        :style="'lg'"
+      />
 
       <!-- Error state for featured -->
       <div v-else-if="errors.featured" class="alert alert-danger">
@@ -99,8 +103,8 @@ const {
       <!-- Dynamic category sections -->
       <EventSection
         v-for="category in categories"
-        :key="category.id"
         v-show="!loading.categories && category.events?.length > 0"
+        :key="category.id"
         :title="$t(`common.category.${category.id}`, category.name)"
         :events="category.events ?? []"
         :category-id="category.id"

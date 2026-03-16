@@ -3,7 +3,6 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/vi';
 import 'dayjs/locale/en';
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -23,9 +22,9 @@ export function useFormatter() {
     if (!isoString || typeof isoString !== 'string' || isoString.trim() === '') {
       return { date: '', time: '', dateTime: '', dateTimeWithWeekday: '' };
     }
-
     try {
-      const userTimezone = dayjs.tz.guess() || 'Asia/Ho_Chi_Minh';
+      const userTimezone = dayjs.tz.guess();
+
       const isVietnamese = locale?.value?.startsWith('vi');
       const d = dayjs(isoString.trim())
         .tz(userTimezone)
@@ -37,9 +36,8 @@ export function useFormatter() {
       }
 
       const dateFormat = isVietnamese ? 'DD/MM/YYYY' : 'MM/DD/YYYY';
-      const dateText = isVietnamese
-        ? `${d.date()} tháng ${d.month() + 1} năm ${d.year()}`
-        : d.format('MMMM D, YYYY');
+
+      const dateText = isVietnamese ? d.format('D MMMM YYYY') : d.format('MMMM D, YYYY');
 
       const weekday = d.format('dddd');
       const time = d.format('HH:mm');

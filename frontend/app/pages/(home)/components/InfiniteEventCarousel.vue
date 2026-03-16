@@ -70,7 +70,7 @@ const scrollToSlide = (index: number) => {
 };
 
 const goPrev = () => {
-  let tempIndex = currentSlide.value - 1;
+  const tempIndex = currentSlide.value - 1;
   scrollToSlide(tempIndex);
 
   if (tempIndex < 0) {
@@ -84,7 +84,7 @@ const goPrev = () => {
 };
 
 const goNext = () => {
-  let tempIndex = currentSlide.value + 1;
+  const tempIndex = currentSlide.value + 1;
   scrollToSlide(tempIndex);
 
   if (tempIndex >= totalSlides.value) {
@@ -164,8 +164,8 @@ onUnmounted(() => {
 <template>
   <section class="mb-5 position-relative">
     <div
-      class="carousel-track d-flex"
       ref="trackRef"
+      class="carousel-track d-flex"
       @scroll="handleScroll"
       @touchstart="handleTouchStart"
       @touchend="handleTouchEnd"

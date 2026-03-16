@@ -1,5 +1,6 @@
 package com.ticket4u.core.dto;
 
+import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.Venue;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ public record EventSummaryResponse(
         // Category fields flat mapped from category
         Integer categoryId,
         String categoryName,
+        Event.EventStatus status,
         String bannerUrl,
         // Venue field flat mapped from venue
         String venueName,

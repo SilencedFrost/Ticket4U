@@ -56,7 +56,6 @@
     "verification": {
       "verifying": "Verifying your email...",
       "success": "Your email has been verified. You can now log in.",
-      "success_title": "Verification successful!",
       "token_expired": "Verification link has expired. Please register again.",
       "expired_title": "Link expired",
       "token_invalid": "Invalid verification link.",
@@ -75,7 +74,6 @@
       "new_password_hint": "Enter your new password.",
       "action": "Reset password",
       "success": "Your password has been reset. You can now log in with your new password.",
-      "success_title": "Password reset successful!",
       "token_expired": "Password reset link has expired.",
       "expired_title": "Link expired",
       "token_invalid": "Invalid password reset link.",

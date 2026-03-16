@@ -56,7 +56,6 @@
     "verification": {
       "verifying": "Đang xác thực email...",
       "success": "Email đã được xác thực thành công. Bạn có thể đăng nhập ngay.",
-      "success_title": "Xác thực thành công!",
       "token_expired": "Link xác thực đã hết hạn. Vui lòng đăng ký lại.",
       "expired_title": "Link đã hết hạn",
       "token_invalid": "Link xác thực không hợp lệ.",
@@ -75,7 +74,6 @@
       "new_password_hint": "Nhập mật khẩu mới của bạn.",
       "action": "Đặt lại mật khẩu",
       "success": "Mật khẩu đã được đặt lại. Bạn có thể đăng nhập với mật khẩu mới.",
-      "success_title": "Đặt lại mật khẩu thành công!",
       "token_expired": "Link đặt lại mật khẩu đã hết hạn.",
       "expired_title": "Link đã hết hạn",
       "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",

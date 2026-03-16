@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Xác thực email - Ticket4U</title>
+    <title th:text="${title}">Ticket4U</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,14 +48,13 @@
 <body>
     <div class="container">
         <h1>Xin chào <span th:text="${userName}">User</span>!</h1>
-        <p>Cảm ơn bạn đã đăng ký tài khoản tại <strong>Ticket4U</strong>.</p>
-        <p>Vui lòng nhấn vào nút bên dưới để xác thực địa chỉ email và kích hoạt tài khoản của bạn:</p>
+        <p th:text="${introText}">Nội dung email.</p>
         <p style="text-align: center; margin: 30px 0;">
-            <a th:href="${verificationLink}" style="color: #fff !important" class="btn">Xác thực email</a>
+            <a th:href="${actionLink}" style="color: #fff !important" class="btn" th:text="${actionText}">Hành động</a>
         </p>
         <p class="note">
-            Link xác thực sẽ hết hạn sau <span th:text="${expiryHours}">24</span> giờ.
-            Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.
+            <span th:text="${expiryLabel}">Link sẽ hết hạn sau</span> <span th:text="${expiryHours}">24</span> giờ.
+            <span th:text="${ignoreText}">Nếu bạn không yêu cầu thao tác này, vui lòng bỏ qua email này.</span>
         </p>
         <div class="footer">
             <p>&copy; 2026 Ticket4U. All rights reserved.</p>

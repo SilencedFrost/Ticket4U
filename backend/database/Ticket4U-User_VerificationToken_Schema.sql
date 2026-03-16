@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS public.verification_token;
 CREATE TABLE IF NOT EXISTS public.verification_token (
     id uuid PRIMARY KEY,
     token_hash char(64) NOT NULL,
-    token_type varchar(32) NOT NULL,
+    token_type varchar(32) NOT NULL, -- EMAIL_VERIFICATION, PASSWORD_RESET
     user_id uuid NOT NULL,
     expires_at timestamptz NOT NULL,
     created_at timestamptz NOT NULL,

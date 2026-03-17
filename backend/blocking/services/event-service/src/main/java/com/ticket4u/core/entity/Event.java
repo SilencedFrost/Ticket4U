@@ -3,6 +3,7 @@ package com.ticket4u.core.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -66,16 +67,13 @@ public class Event {
 
     @Column(nullable = false, unique = true)
     private String name;
-    // TODO: implement vector embedding of name
 
     @Column(nullable = false)
     private UUID organizerId;
 
-    // TODO: implement n-n relationship between category and event
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    // TODO: implement vector embedding of category
 
     @Column(nullable = false)
     private String addressLine;
@@ -126,7 +124,9 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
-    @Column(name = "layout", columnDefinition = "JSONB")
+    // Custom event layout — null means use venue default layout
+    @Column(name = "layout", columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private String layout;
 
     public enum EventStatus {

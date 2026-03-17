@@ -1,11 +1,11 @@
-package com.ticket4u.eventmanagement.dto;
+package com.ticket4u.management.dto;
 
 import com.ticket4u.core.entity.Event;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record OrganizerEventResponse(
+public record ManagementEventResponse(
         UUID id,
         String name,
         String addressLine,

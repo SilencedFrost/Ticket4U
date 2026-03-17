@@ -1,40 +1,40 @@
-package com.ticket4u.eventmanagement.service;
+package com.ticket4u.management.service;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
-import com.ticket4u.eventmanagement.dto.*;
+import com.ticket4u.management.dto.*;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface EventManagementService {
+public interface ManagementService {
 
     // Profile
     OrganizerProfileResponse getProfile(UUID organizerId);
 
-    // Categories — reuses core.dto.CategorySummaryResponse
+    // Categories
     List<CategorySummaryResponse> getCategories();
 
     // Events
-    List<OrganizerEventResponse> getEvents(UUID organizerId);
-    OrganizerEventResponse getEvent(UUID organizerId, UUID eventId);
-    OrganizerEventResponse createEvent(UUID organizerId, OrganizerEventRequest request);
-    OrganizerEventResponse updateEvent(UUID organizerId, UUID eventId, OrganizerEventRequest request);
+    List<ManagementEventResponse> getEvents(UUID organizerId);
+    ManagementEventResponse getEvent(UUID organizerId, UUID eventId);
+    ManagementEventResponse createEvent(UUID organizerId, ManagementEventRequest request);
+    ManagementEventResponse updateEvent(UUID organizerId, UUID eventId, ManagementEventRequest request);
     void deleteEvent(UUID organizerId, UUID eventId);
 
-    // Sessions — reuses core.dto.EventSessionResponse
+    // Sessions
     List<EventSessionResponse> getSessions(UUID organizerId, UUID eventId);
     EventSessionResponse updateSession(UUID organizerId, UUID eventId, UUID sessionId, EventSessionRequest request);
 
     // Zones
-    List<ZoneManagementResponse> getZones(UUID organizerId, UUID sessionId);
-    ZoneManagementResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
-    ZoneManagementResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
+    List<ManagementZoneResponse> getZones(UUID organizerId, UUID sessionId);
+    ManagementZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
+    ManagementZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
     void deleteZone(UUID organizerId, UUID sessionId, UUID zoneId);
 
     // Layout
-    EventLayoutResponse applyLayout(UUID organizerId, UUID eventId, EventLayoutRequest request);
     EventLayoutResponse getLayout(UUID organizerId, UUID eventId);
+    EventLayoutResponse applyLayout(UUID organizerId, UUID eventId, EventLayoutRequest request);
 
     // Seats
     List<SeatResponse> getSeats(UUID organizerId, UUID sessionId, UUID zoneId);

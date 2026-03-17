@@ -1,4 +1,4 @@
-package com.ticket4u.eventmanagement.service.impl;
+package com.ticket4u.management.service.impl;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -6,10 +6,10 @@ import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
-import com.ticket4u.eventmanagement.client.OrganizerProfileClient;
-import com.ticket4u.eventmanagement.dto.*;
-import com.ticket4u.eventmanagement.repository.*;
-import com.ticket4u.eventmanagement.service.EventManagementService;
+import com.ticket4u.management.client.OrganizerProfileClient;
+import com.ticket4u.management.dto.*;
+import com.ticket4u.management.repository.*;
+import com.ticket4u.management.service.ManagementService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,25 +26,25 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EventManagementServiceImpl implements EventManagementService {
+public class ManagementServiceImpl implements ManagementService {
 
-    private final EventManagementRepository eventRepository;
+    private final EventManagementRepository       eventRepository;
     private final EventManagementSessionRepository sessionRepository;
-    private final EventManagementZoneRepository zoneRepository;
-    private final EventManagementSeatRepository seatRepository;
-    private final EventManagementVenueRepository venueRepository;
-    private final CategoryRepository    categoryRepository;
-    private final OrganizerProfileClient profileClient;
-    private final ObjectMapper          objectMapper;
+    private final EventManagementZoneRepository    zoneRepository;
+    private final EventManagementSeatRepository    seatRepository;
+    private final EventManagementVenueRepository   venueRepository;
+    private final CategoryRepository          categoryRepository;
+    private final OrganizerProfileClient          profileClient;
+    private final ObjectMapper                objectMapper;
 
-    // Profile
+    // ── Profile ────────────────────────────────────────────
 
     @Override
     public OrganizerProfileResponse getProfile(UUID organizerId) {
         return profileClient.getOrganizerProfile(organizerId);
     }
 
-    // Categories
+    // ── Categories ─────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -54,11 +54,11 @@ public class EventManagementServiceImpl implements EventManagementService {
                 .collect(Collectors.toList());
     }
 
-    // Events
+    // ── Events ─────────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizerEventResponse> getEvents(UUID organizerId) {
+    public List<ManagementEventResponse> getEvents(UUID organizerId) {
         return eventRepository.findAllByOrganizerIdOrderByFirstSessionStartDesc(organizerId)
                 .stream()
                 .map(e -> mapEventToResponse(e, true))
@@ -67,13 +67,13 @@ public class EventManagementServiceImpl implements EventManagementService {
 
     @Override
     @Transactional(readOnly = true)
-    public OrganizerEventResponse getEvent(UUID organizerId, UUID eventId) {
+    public ManagementEventResponse getEvent(UUID organizerId, UUID eventId) {
         return mapEventToResponse(findEvent(organizerId, eventId), true);
     }
 
     @Override
     @Transactional
-    public OrganizerEventResponse createEvent(UUID organizerId, OrganizerEventRequest request) {
+    public ManagementEventResponse createEvent(UUID organizerId, ManagementEventRequest request) {
         Event event = new Event();
         event.setOrganizerId(organizerId);
         applyRequestToEvent(event, request);
@@ -96,7 +96,7 @@ public class EventManagementServiceImpl implements EventManagementService {
 
     @Override
     @Transactional
-    public OrganizerEventResponse updateEvent(UUID organizerId, UUID eventId, OrganizerEventRequest request) {
+    public ManagementEventResponse updateEvent(UUID organizerId, UUID eventId, ManagementEventRequest request) {
         Event event = findEvent(organizerId, eventId);
         applyRequestToEvent(event, request);
         if (request.status() != null) {
@@ -125,7 +125,7 @@ public class EventManagementServiceImpl implements EventManagementService {
         eventRepository.save(event);
     }
 
-    // Sessions
+    // ── Sessions ───────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -144,20 +144,17 @@ public class EventManagementServiceImpl implements EventManagementService {
         EventSession session = sessionRepository
                 .findByIdAndEventIdAndOrganizerId(sessionId, eventId, organizerId)
                 .orElseThrow(() -> new EntityNotFoundException("Session not found: " + sessionId));
-
-        if (request.name() != null && !request.name().isBlank()) {
-            session.setName(request.name());
-        }
+        if (request.name() != null && !request.name().isBlank()) session.setName(request.name());
         session.setStartDate(request.startDate());
         session.setEndDate(request.endDate());
         return mapSessionToResponse(sessionRepository.save(session));
     }
 
-    // Zones
+    // ── Zones ──────────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
-    public List<ZoneManagementResponse> getZones(UUID organizerId, UUID sessionId) {
+    public List<ManagementZoneResponse> getZones(UUID organizerId, UUID sessionId) {
         findSession(organizerId, sessionId);
         return zoneRepository.findAllBySessionId(sessionId)
                 .stream()
@@ -167,7 +164,7 @@ public class EventManagementServiceImpl implements EventManagementService {
 
     @Override
     @Transactional
-    public ZoneManagementResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
+    public ManagementZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
         EventSession session = findSession(organizerId, sessionId);
         Zone zone = new Zone();
         zone.setSession(session);
@@ -177,7 +174,7 @@ public class EventManagementServiceImpl implements EventManagementService {
 
     @Override
     @Transactional
-    public ZoneManagementResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
+    public ManagementZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
         findSession(organizerId, sessionId);
         Zone zone = zoneRepository.findByIdAndSessionId(zoneId, sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
@@ -194,7 +191,7 @@ public class EventManagementServiceImpl implements EventManagementService {
         zoneRepository.delete(zone);
     }
 
-    // Layout
+    // ── Layout ─────────────────────────────────────────────
 
     @Override
     @Transactional
@@ -215,7 +212,8 @@ public class EventManagementServiceImpl implements EventManagementService {
             layoutJson = request.customLayoutJson();
         }
 
-        event.setLayout(layoutJson);
+        // layout = null means use venue default; only set if custom
+        event.setLayout(request.useVenueLayout() ? null : layoutJson);
         eventRepository.save(event);
 
         // Generate seats for all sessions from the layout
@@ -231,6 +229,7 @@ public class EventManagementServiceImpl implements EventManagementService {
     @Transactional(readOnly = true)
     public EventLayoutResponse getLayout(UUID organizerId, UUID eventId) {
         Event event = findEvent(organizerId, eventId);
+        // eventLayout takes priority; fall back to venue layout
         String layoutJson = event.getLayout();
         if (layoutJson == null && event.getVenue() != null) {
             layoutJson = event.getVenue().getLayout();
@@ -238,7 +237,7 @@ public class EventManagementServiceImpl implements EventManagementService {
         return new EventLayoutResponse(eventId, layoutJson);
     }
 
-    // Seats
+    // ── Seats ──────────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -260,7 +259,8 @@ public class EventManagementServiceImpl implements EventManagementService {
             String prefix = row.prefix() != null ? row.prefix() : "A";
             for (int col = 1; col <= row.count(); col++) {
                 String colStr   = String.valueOf(col);
-                String seatCode = prefix + "-" + col;
+                // Format: A1, A2, B1 — matches seed data pattern
+                String seatCode = prefix + col;
                 if (seatCode.length() > 20) seatCode = seatCode.substring(0, 20);
 
                 Seat seat = new Seat();
@@ -296,7 +296,7 @@ public class EventManagementServiceImpl implements EventManagementService {
         seatRepository.deleteAllByZoneId(zone.getId());
     }
 
-    // Layout seat generation
+    // ── Seat generation from layout JSON ───────────────────
     //
     // Handles two JSON formats:
     //
@@ -306,26 +306,20 @@ public class EventManagementServiceImpl implements EventManagementService {
     // 2. Custom multi-floor layout:
     //    { "floors": [ { "zones": [ { "zone_name": "VIP", "seats": [...] } ] } ] }
     //
-    // In both cases: seat_code = seat_id from JSON (stable bridge to seats table)
+    // seat_code = seat_id from JSON — stable bridge to seats table
 
     private void generateSeatsFromLayout(EventSession session, String layoutJson) {
         try {
             JsonNode root = objectMapper.readTree(layoutJson);
             List<Zone> sessionZones = zoneRepository.findAllBySessionId(session.getId());
 
-            // Collect all zone nodes regardless of format
             List<JsonNode> zoneNodes = new ArrayList<>();
-
             if (root.has("floors") && root.path("floors").isArray()) {
-                // Custom multi-floor layout — extract zones from each floor
                 for (JsonNode floor : root.path("floors")) {
                     JsonNode zones = floor.path("zones");
-                    if (zones.isArray()) {
-                        for (JsonNode z : zones) zoneNodes.add(z);
-                    }
+                    if (zones.isArray()) for (JsonNode z : zones) zoneNodes.add(z);
                 }
             } else if (root.has("zones") && root.path("zones").isArray()) {
-                // Venue default layout — zones at root level
                 for (JsonNode z : root.path("zones")) zoneNodes.add(z);
             }
 
@@ -367,7 +361,7 @@ public class EventManagementServiceImpl implements EventManagementService {
         }
     }
 
-    // Private Helpers
+    // ── Private helpers ────────────────────────────────────
 
     private Event findEvent(UUID organizerId, UUID eventId) {
         return eventRepository.findByIdAndOrganizerId(eventId, organizerId)
@@ -385,11 +379,10 @@ public class EventManagementServiceImpl implements EventManagementService {
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
     }
 
-    private void applyRequestToEvent(Event event, OrganizerEventRequest req) {
+    private void applyRequestToEvent(Event event, ManagementEventRequest req) {
         event.setName(req.name());
         event.setAddressLine(req.addressLine());
         event.setBannerUrl(req.bannerUrl() != null ? req.bannerUrl() : "");
-
         if (req.venueId() != null) {
             Venue venue = venueRepository.findById(req.venueId())
                     .orElseThrow(() -> new EntityNotFoundException("Venue not found: " + req.venueId()));
@@ -420,10 +413,10 @@ public class EventManagementServiceImpl implements EventManagementService {
         if (zone.getQuantitySold() == null) zone.setQuantitySold(0);
     }
 
-    private OrganizerEventResponse mapEventToResponse(Event event, boolean includeStats) {
-        Integer ticketsSold   = includeStats ? eventRepository.sumTicketsSoldByEventId(event.getId()) : 0;
-        Integer totalCapacity = includeStats ? eventRepository.sumCapacityByEventId(event.getId()) : 0;
-        BigDecimal revenue    = includeStats ? eventRepository.sumRevenueByEventId(event.getId()) : BigDecimal.ZERO;
+    private ManagementEventResponse mapEventToResponse(Event event, boolean includeStats) {
+        Integer    ticketsSold   = includeStats ? eventRepository.sumTicketsSoldByEventId(event.getId()) : 0;
+        Integer    totalCapacity = includeStats ? eventRepository.sumCapacityByEventId(event.getId()) : 0;
+        BigDecimal revenue       = includeStats ? eventRepository.sumRevenueByEventId(event.getId()) : BigDecimal.ZERO;
 
         OffsetDateTime firstSessionStart = event.getSessions() == null ? null :
                 event.getSessions().stream()
@@ -432,7 +425,7 @@ public class EventManagementServiceImpl implements EventManagementService {
                         .min(OffsetDateTime::compareTo)
                         .orElse(null);
 
-        return new OrganizerEventResponse(
+        return new ManagementEventResponse(
                 event.getId(),
                 event.getName(),
                 event.getAddressLine(),
@@ -468,10 +461,10 @@ public class EventManagementServiceImpl implements EventManagementService {
         );
     }
 
-    private ZoneManagementResponse mapZoneToResponse(Zone zone) {
+    private ManagementZoneResponse mapZoneToResponse(Zone zone) {
         int seatCount = Boolean.TRUE.equals(zone.getIsStanding()) ? 0
                 : seatRepository.countByZoneId(zone.getId());
-        return new ZoneManagementResponse(
+        return new ManagementZoneResponse(
                 zone.getId(),
                 zone.getSession() != null ? zone.getSession().getId() : null,
                 zone.getName(),

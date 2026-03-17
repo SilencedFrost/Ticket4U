@@ -1,11 +1,11 @@
-package com.ticket4u.eventmanagement.dto;
+package com.ticket4u.management.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record OrganizerEventRequest(
+public record ManagementEventRequest(
         @NotBlank String name,
         @NotNull  UUID venueId,
         Integer categoryId,

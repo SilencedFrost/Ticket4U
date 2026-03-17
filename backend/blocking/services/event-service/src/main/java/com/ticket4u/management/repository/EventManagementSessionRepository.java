@@ -1,4 +1,4 @@
-package com.ticket4u.eventmanagement.repository;
+package com.ticket4u.management.repository;
 
 import com.ticket4u.core.entity.EventSession;
 import org.springframework.data.jpa.repository.JpaRepository;

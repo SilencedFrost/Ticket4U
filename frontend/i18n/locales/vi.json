@@ -98,5 +98,152 @@
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
     }
+  },
+  "organizer": {
+    "nav": {
+      "home": "Trang chủ",
+      "events": "Sự kiện",
+      "reports": "Báo cáo",
+      "archived": "Sự kiện lưu trữ",
+      "collapse": "Thu gọn thanh bên",
+      "logout": "Đăng xuất"
+    },
+    "home": {
+      "greeting": "Chào mừng, {name}",
+      "subtitle": "Quản lý sự kiện và theo dõi hiệu suất",
+      "quick_actions": "Thao tác nhanh",
+      "view_events": "Xem tất cả sự kiện",
+      "view_reports": "Xem báo cáo",
+      "stats": {
+        "total_events": "Tổng sự kiện",
+        "tickets_sold": "Vé đã bán",
+        "revenue": "Doanh thu",
+        "rating": "Đánh giá TB",
+        "upcoming": "{n} sắp diễn ra",
+        "this_month": "Tháng này",
+        "from_reviews": "Từ {n} đánh giá"
+      }
+    },
+    "events": {
+      "title": "Sự kiện",
+      "subtitle": "Quản lý tất cả sự kiện của bạn",
+      "create": "Tạo sự kiện",
+      "search": "Tìm kiếm",
+      "search_placeholder": "Tìm theo tên hoặc địa điểm...",
+      "filter_status": "Trạng thái",
+      "all_statuses": "Tất cả trạng thái",
+      "reset": "Đặt lại",
+      "empty": "Không tìm thấy sự kiện",
+      "empty_sub": "Tạo sự kiện đầu tiên của bạn để bắt đầu",
+      "col": {
+        "event": "Sự kiện",
+        "date": "Ngày",
+        "status": "Trạng thái",
+        "tickets": "Vé đã bán",
+        "revenue": "Doanh thu",
+        "actions": "Thao tác"
+      },
+      "status": {
+        "editing": "Đang soạn thảo",
+        "premier": "Ra mắt",
+        "selling": "Đang bán",
+        "paused": "Tạm dừng",
+        "ongoing": "Đang diễn ra",
+        "finished": "Đã kết thúc",
+        "cancelled": "Đã hủy"
+      },
+      "action": {
+        "edit": "Chỉnh sửa sự kiện",
+        "preview": "Xem trang công khai",
+        "delete": "Xóa sự kiện",
+        "restore": "Khôi phục sự kiện"
+      },
+      "delete": {
+        "title": "Xóa sự kiện",
+        "confirm": "Bạn có chắc muốn xóa \"{name}\"? Hành động này không thể hoàn tác.",
+        "confirm_btn": "Xác nhận xóa"
+      }
+    },
+    "archived": {
+      "title": "Sự kiện lưu trữ",
+      "subtitle": "Các sự kiện đã kết thúc và đã hủy",
+      "empty": "Không có sự kiện lưu trữ",
+      "empty_sub": "Các sự kiện đã kết thúc và đã hủy sẽ xuất hiện ở đây"
+    },
+    "event_form": {
+      "create_title": "Tạo sự kiện mới",
+      "edit_title": "Chỉnh sửa sự kiện",
+      "draft_saved": "Đã lưu bản nháp",
+      "back": "Quay lại",
+      "save_next": "Lưu & Tiếp tục",
+      "finish": "Hoàn tất & Xuất bản",
+      "step1": {
+        "title": "Thông tin cơ bản",
+        "name": "Tên sự kiện",
+        "name_placeholder": "VD: Hà Anh Tuấn: Chân Trời Rực Rỡ",
+        "category": "Danh mục",
+        "category_placeholder": "Chọn danh mục",
+        "status": "Trạng thái",
+        "session_hint": "Ngày bắt đầu và kết thúc xác định phiên chính. Bạn có thể thêm phiên khác ở Bước 3.",
+        "start_date": "Ngày & giờ bắt đầu",
+        "end_date": "Ngày & giờ kết thúc",
+        "address": "Địa điểm tổ chức",
+        "address_placeholder": "VD: GEM Center, TP. Hồ Chí Minh",
+        "banner_url": "URL ảnh banner",
+        "banner_placeholder": "https://..."
+      },
+      "step2": {
+        "title": "Nội dung sự kiện",
+        "about": "Về sự kiện",
+        "about_vi_placeholder": "Mô tả chi tiết về sự kiện bằng tiếng Việt...",
+        "about_en_placeholder": "Detailed description of the event in English...",
+        "terms": "Điều khoản & Điều kiện",
+        "terms_placeholder": "Nhập điều khoản và điều kiện...",
+        "refund": "Chính sách hoàn vé",
+        "refund_placeholder": "Nhập chính sách hoàn vé..."
+      },
+      "step3": {
+        "title": "Khu vực vé",
+        "add_zone": "Thêm khu vực",
+        "edit_zone": "Chỉnh sửa khu vực",
+        "empty": "Chưa có khu vực nào. Thêm khu vực để bắt đầu bán vé.",
+        "zone_name": "Tên khu vực",
+        "type": "Loại khu vực",
+        "seated": "Có ghế ngồi",
+        "standing": "Đứng",
+        "capacity": "Sức chứa",
+        "price": "Giá vé",
+        "purchase_limit": "Giới hạn mua (mỗi người)",
+        "description_vi": "Mô tả khu vực (Tiếng Việt)",
+        "description_en": "Mô tả khu vực (Tiếng Anh)",
+        "perks": "Quyền lợi đi kèm",
+        "perk_placeholder": "VD: Nước uống miễn phí, Lightstick...",
+        "delete_title": "Xóa khu vực",
+        "delete_confirm": "Bạn có chắc muốn xóa khu vực \"{name}\"?"
+      },
+      "step4": {
+        "title": "Sơ đồ chỗ ngồi",
+        "venue_mode": "Dùng sơ đồ mặc định của địa điểm",
+        "custom_mode": "Vẽ sơ đồ tùy chỉnh",
+        "venue_no_layout": "Địa điểm này chưa có sơ đồ mặc định. Hãy dùng sơ đồ tùy chỉnh.",
+        "venue_hint": "Đang dùng sơ đồ mặc định của địa điểm. Tên khu vực sẽ được khớp với khu vực vé theo tên.",
+        "add_floor": "Thêm tầng",
+        "remove_floor": "Xóa tầng",
+        "floor_name_placeholder": "Tên tầng",
+        "snap": "Căn chỉnh",
+        "clear": "Xóa tất cả",
+        "stage": "Sân khấu",
+        "place_zone": "Bấm để đặt khu vực:",
+        "no_zones_warning": "Vui lòng thêm khu vực vé ở Bước 3 trước khi thiết lập sơ đồ chỗ ngồi.",
+        "hint": "Bấm vào hình để chọn. Kéo để di chuyển, tay nắm để thay đổi kích thước, tay nắm tròn để xoay. Liên kết hình với khu vực để hiển thị ghế. Bấm vào ghế để chọn — sau đó kéo, xoay, thay đổi kích thước hoặc đặt giá.",
+        "seat_size": "Kích thước ghế",
+        "per_zone_size": "Kích thước ghế theo khu vực",
+        "no_zone_linked": "Chưa liên kết khu vực",
+        "rotation": "Xoay",
+        "price_override": "Giá tùy chỉnh",
+        "reset": "Đặt lại",
+        "color": "Màu sắc"
+      }
+    }
   }
 }

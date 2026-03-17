@@ -42,27 +42,11 @@
           <i class="bi bi-info-circle me-2 text-primary"/>{{ $t('organizer.event_form.step1.title') }}
         </h5>
         <div class="row g-4">
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.name') }} <span class="text-danger">*</span></label>
             <input v-model="form.name" type="text" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.name }" :placeholder="$t('organizer.event_form.step1.name_placeholder')"/>
             <div class="invalid-feedback">{{ errors.name }}</div>
           </div>
-
-          <!-- Venue picker -->
-          <div class="col-12">
-            <label class="form-label small fw-semibold text-reactive-secondary">Venue <span class="text-danger">*</span></label>
-            <select v-model="form.venueId" class="form-select bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.venueId }">
-              <option value="">— Select a venue —</option>
-              <option v-for="v in venues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
-            </select>
-            <div class="invalid-feedback">{{ errors.venueId }}</div>
-            <div v-if="selectedVenue" class="mt-2 d-flex align-items-center gap-2">
-              <img v-if="selectedVenue.imageUrl" :src="selectedVenue.imageUrl" class="rounded" style="width:48px;height:32px;object-fit:cover;"/>
-              <small class="text-reactive-secondary"><i class="bi bi-geo-alt me-1"/>{{ selectedVenue.addressLine }}</small>
-            </div>
-          </div>
-
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.category') }} <span class="text-danger">*</span></label>
             <select v-model="form.categoryId" class="form-select bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.categoryId }">
@@ -71,7 +55,6 @@
             </select>
             <div class="invalid-feedback">{{ errors.categoryId }}</div>
           </div>
-
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.status') }}</label>
             <select v-model="form.status" class="form-select bg-reactive-primary border-0 text-reactive-primary">
@@ -84,31 +67,26 @@
               <option value="CANCELLED">{{ $t('organizer.events.status.cancelled') }}</option>
             </select>
           </div>
-
           <div class="col-12">
             <div class="alert alert-info py-2 small mb-0">
               <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step1.session_hint') }}
             </div>
           </div>
-
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.start_date') }} <span class="text-danger">*</span></label>
             <input v-model="form.startDate" type="datetime-local" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.startDate }"/>
             <div class="invalid-feedback">{{ errors.startDate }}</div>
           </div>
-
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.end_date') }} <span class="text-danger">*</span></label>
             <input v-model="form.endDate" type="datetime-local" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.endDate }"/>
             <div class="invalid-feedback">{{ errors.endDate }}</div>
           </div>
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.address') }} <span class="text-danger">*</span></label>
             <input v-model="form.addressLine" type="text" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.addressLine }" :placeholder="$t('organizer.event_form.step1.address_placeholder')"/>
             <div class="invalid-feedback">{{ errors.addressLine }}</div>
           </div>
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step1.banner_url') }}</label>
             <input v-model="form.bannerUrl" type="url" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step1.banner_placeholder')"/>
@@ -116,7 +94,6 @@
               <img :src="form.bannerUrl" class="rounded" style="max-height:160px;object-fit:cover;width:100%;"/>
             </div>
           </div>
-
         </div>
       </div>
       <div class="d-flex justify-content-end">
@@ -134,7 +111,6 @@
           <i class="bi bi-file-text me-2 text-primary"/>{{ $t('organizer.event_form.step2.title') }}
         </h5>
         <div class="row g-4">
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary mb-2">{{ $t('organizer.event_form.step2.about') }}</label>
             <ul class="nav nav-tabs mb-3 border-0">
@@ -147,7 +123,6 @@
               <template #fallback><div class="form-control bg-reactive-primary border-0" style="min-height:240px;"/></template>
             </ClientOnly>
           </div>
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary mb-2">{{ $t('organizer.event_form.step2.terms') }}</label>
             <ClientOnly>
@@ -155,7 +130,6 @@
               <template #fallback><div class="form-control bg-reactive-primary border-0" style="min-height:180px;"/></template>
             </ClientOnly>
           </div>
-
           <div class="col-12">
             <label class="form-label small fw-semibold text-reactive-secondary mb-2">{{ $t('organizer.event_form.step2.refund') }}</label>
             <ClientOnly>
@@ -163,7 +137,6 @@
               <template #fallback><div class="form-control bg-reactive-primary border-0" style="min-height:180px;"/></template>
             </ClientOnly>
           </div>
-
         </div>
       </div>
       <div class="d-flex justify-content-between gap-2">
@@ -182,16 +155,13 @@
           <h5 class="fw-semibold text-reactive-primary mb-0"><i class="bi bi-grid me-2 text-primary"/>{{ $t('organizer.event_form.step3.title') }}</h5>
           <button class="btn btn-sm btn-primary" @click="openZoneModal(null)"><i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step3.add_zone') }}</button>
         </div>
-
         <div v-if="!savedSessionId" class="alert alert-warning py-2 small mb-4">
           <i class="bi bi-exclamation-triangle me-1"/>Session not yet created. Please complete Step 1 first.
         </div>
-
         <div v-if="zones.length === 0" class="text-center py-5 text-reactive-secondary">
           <i class="bi bi-grid fs-1 d-block mb-3"/>
           <p>{{ $t('organizer.event_form.step3.empty') }}</p>
         </div>
-
         <div v-else class="row g-3">
           <div v-for="zone in zones" :key="zone.id" class="col-md-6 col-xl-4">
             <div class="zone-card card border-0 p-3 h-100">
@@ -222,7 +192,6 @@
           </div>
         </div>
       </div>
-
       <div class="d-flex justify-content-between gap-2">
         <button class="btn btn-outline-secondary px-4" @click="currentStep = 1"><i class="bi bi-arrow-left me-1"/>{{ $t('organizer.event_form.back') }}</button>
         <button class="btn btn-primary px-4" @click="currentStep = 3">{{ $t('organizer.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/></button>
@@ -231,15 +200,27 @@
 
     <!-- ── STEP 4: Layout ────────────────────────────────── -->
     <div v-if="currentStep === 3">
-
       <div v-if="zones.length === 0" class="alert alert-warning d-flex align-items-center gap-2 mb-4">
         <i class="bi bi-exclamation-triangle-fill"/>
         <span>Please add ticket zones in Step 3 before setting up the seating layout.</span>
       </div>
 
-      <!-- Layout mode toggle -->
       <div class="card bg-reactive-secondary border-0 p-4 mb-4">
         <h5 class="fw-semibold text-reactive-primary mb-3"><i class="bi bi-layers me-2 text-primary"/>Seating Layout</h5>
+
+        <!-- Venue picker -->
+        <div class="mb-4">
+          <label class="form-label small fw-semibold text-reactive-secondary">Venue <span class="text-danger">*</span></label>
+          <select v-model="form.venueId" class="form-select bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.venueId }">
+            <option value="">— Select a venue —</option>
+            <option v-for="v in venues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
+          </select>
+          <div class="invalid-feedback">{{ errors.venueId }}</div>
+          <div v-if="selectedVenue" class="mt-2 d-flex align-items-center gap-2">
+            <img v-if="selectedVenue.imageUrl" :src="selectedVenue.imageUrl" class="rounded" style="width:48px;height:32px;object-fit:cover;"/>
+            <small class="text-reactive-secondary"><i class="bi bi-geo-alt me-1"/>{{ selectedVenue.addressLine }}</small>
+          </div>
+        </div>
 
         <div class="btn-group mb-4">
           <button class="btn" :class="layoutMode === 'venue' ? 'btn-primary' : 'btn-outline-secondary'" @click="layoutMode = 'venue'">
@@ -268,15 +249,13 @@
               <template #fallback><div class="bg-reactive-primary rounded" style="height:300px;"/></template>
             </ClientOnly>
             <div class="alert alert-info py-2 small mt-3">
-              <i class="bi bi-info-circle me-1"/>
-              Using the venue's default layout. Zone names in the layout will be matched to your ticket zones by name.
+              <i class="bi bi-info-circle me-1"/>Using the venue's default layout. Zone names in the layout will be matched to your ticket zones by name.
             </div>
           </div>
         </div>
 
-        <!-- CUSTOM MODE: multi-floor canvas editor -->
+        <!-- CUSTOM MODE -->
         <div v-if="layoutMode === 'custom'">
-
           <!-- Floor tabs -->
           <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
             <div class="d-flex gap-1 flex-wrap">
@@ -302,16 +281,10 @@
           <!-- Active floor editor -->
           <div v-if="activeFloor" class="card bg-reactive-primary border-0">
 
-            <!-- Floor name + toolbar -->
+            <!-- Toolbar -->
             <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
               <div class="d-flex align-items-center gap-2 flex-wrap">
-                <input
-                  v-model="activeFloor.floorName"
-                  type="text"
-                  class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary fw-semibold"
-                  style="max-width:180px;"
-                  placeholder="Floor name"
-                />
+                <input v-model="activeFloor.floorName" type="text" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary fw-semibold" style="max-width:180px;" placeholder="Floor name"/>
                 <div class="btn-group btn-group-sm">
                   <button v-for="tool in tools" :key="tool.id" class="btn" :class="activeFloor.activeTool === tool.id ? 'btn-primary' : 'btn-outline-secondary'" :title="tool.label" @click="activeFloor.activeTool = tool.id">
                     <i :class="tool.icon"/>
@@ -327,12 +300,23 @@
                 <button class="btn btn-sm btn-outline-warning" @click="addStageShape(activeFloorIdx, 'rect')"><i class="bi bi-collection-play me-1"/>Stage</button>
                 <input type="color" v-model="activeFloor.selectedColor" class="form-control form-control-sm border-0 p-0" style="width:32px;height:32px;cursor:pointer;background:none;"/>
                 <button class="btn btn-sm btn-outline-danger" @click="clearFloor(activeFloorIdx)"><i class="bi bi-trash me-1"/>Clear</button>
+                <!-- Global seat size -->
+                <div class="d-flex align-items-center gap-1 ms-1">
+                  <i class="bi bi-circle text-reactive-secondary" style="font-size:0.7rem;"/>
+                  <input type="range" min="6" max="32" step="1"
+                    :value="activeFloor.globalSeatSize"
+                    class="form-range"
+                    style="width:72px;"
+                    @input="(e) => { activeFloor!.globalSeatSize = +(e.target as HTMLInputElement).value; rebuildAndDraw() }"
+                  />
+                  <small class="text-reactive-secondary" style="min-width:22px;">{{ activeFloor.globalSeatSize }}</small>
+                </div>
               </div>
               <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-sm" :class="activeFloor.snapEnabled ? 'btn-primary' : 'btn-outline-secondary'" @click="activeFloor.snapEnabled = !activeFloor.snapEnabled">
                   <i class="bi bi-magnet me-1"/>Snap
                 </button>
-                <button class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1" @click="activeFloor.showJsonPanel = !activeFloor.showJsonPanel">
+                <button class="btn btn-sm btn-outline-secondary" @click="activeFloor.showJsonPanel = !activeFloor.showJsonPanel">
                   <i class="bi" :class="activeFloor.showJsonPanel ? 'bi-code-slash' : 'bi-code'"/>JSON
                 </button>
               </div>
@@ -349,7 +333,7 @@
             <!-- Canvas area -->
             <div class="d-flex" style="height:520px;">
               <!-- JSON panel -->
-              <div v-if="activeFloor.showJsonPanel" class="border-end border-secondary overflow-auto flex-shrink-0 position-relative" style="width:300px;background:#0d1117;font-family:monospace;font-size:11px;">
+              <div v-if="activeFloor.showJsonPanel" class="border-end border-secondary overflow-auto flex-shrink-0" style="width:300px;background:#0d1117;font-family:monospace;font-size:11px;">
                 <div class="d-flex justify-content-between align-items-center px-2 py-1 border-bottom border-secondary sticky-top" style="background:#161b22;">
                   <span class="text-success fw-semibold" style="font-size:11px;">floor_layout_json</span>
                   <button class="btn btn-sm p-0 px-1 text-secondary" @click="copyFloorJson(activeFloorIdx)"><i class="bi bi-clipboard"/></button>
@@ -363,20 +347,16 @@
                 class="position-relative overflow-hidden flex-grow-1"
                 style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
               >
-                <!-- Ghost from floor 0 for reference on upper floors -->
-                <canvas
-                  v-if="activeFloorIdx > 0"
+                <canvas v-if="activeFloorIdx > 0"
                   :ref="el => { if (el) activeFloor!.ghostCanvasRef = el as HTMLCanvasElement }"
                   class="position-absolute top-0 start-0"
-                  :width="activeFloor.stageSize.width"
-                  :height="activeFloor.stageSize.height"
+                  :width="activeFloor.stageSize.width" :height="activeFloor.stageSize.height"
                   style="z-index:1; pointer-events:none; opacity:1;"
                 />
                 <canvas
                   :ref="el => setFloorCanvasRef(el, activeFloorIdx)"
                   class="position-absolute top-0 start-0"
-                  :width="activeFloor.stageSize.width"
-                  :height="activeFloor.stageSize.height"
+                  :width="activeFloor.stageSize.width" :height="activeFloor.stageSize.height"
                   style="z-index:5; cursor:crosshair;"
                   @mousedown="(e) => onCanvasMouseDown(e, activeFloorIdx)"
                   @mousemove="(e) => onCanvasMouseMove(e, activeFloorIdx)"
@@ -384,20 +364,18 @@
                   @mouseleave="(e) => onCanvasMouseUp(e, activeFloorIdx)"
                   @wheel.prevent="(e) => onCanvasWheel(e, activeFloorIdx)"
                 />
-                <!-- Seat overlay -->
-                <canvas
-                  v-if="!loadingSeats"
+                <canvas v-if="!loadingSeats"
                   :ref="el => { if (el) activeFloor!.seatCanvasRef = el as HTMLCanvasElement }"
                   class="position-absolute top-0 start-0"
-                  :width="activeFloor.stageSize.width"
-                  :height="activeFloor.stageSize.height"
+                  :width="activeFloor.stageSize.width" :height="activeFloor.stageSize.height"
                   style="z-index:10; pointer-events:none;"
                 />
               </div>
             </div>
 
-            <!-- Shape property bar -->
+            <!-- Property bar -->
             <div class="p-3 border-top border-secondary">
+              <!-- Shape selected -->
               <template v-if="activeFloor.selectedShapeId && activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                   <small class="text-reactive-secondary fw-semibold">Zone:</small>
@@ -409,6 +387,20 @@
                     <input type="number" min="30" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary text-center" style="width:72px;" :value="Math.round(activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.height)" @change="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.height = Math.max(30, +(e.target as HTMLInputElement).value); drawFloor(activeFloorIdx) }"/>
                   </div>
                   <input type="color" :value="activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.color" class="form-control form-control-sm border-0 p-0" style="width:36px;height:32px;" @change="(e) => { activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.color = (e.target as HTMLInputElement).value; drawFloor(activeFloorIdx) }"/>
+                  <!-- Per-zone seat size override -->
+                  <div class="d-flex align-items-center gap-1 ms-1" v-if="!activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.isStage">
+                    <i class="bi bi-circle text-reactive-secondary" style="font-size:0.7rem;"/>
+                    <input type="range" min="6" max="32" step="1"
+                      :value="activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.seatSize ?? activeFloor.globalSeatSize"
+                      class="form-range" style="width:72px;"
+                      @input="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.seatSize = +(e.target as HTMLInputElement).value; rebuildAndDraw() }"
+                    />
+                    <small class="text-reactive-secondary" style="min-width:22px;">{{ activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.seatSize ?? activeFloor.globalSeatSize }}</small>
+                    <button class="btn btn-sm btn-outline-secondary p-0 px-1" title="Reset to global size"
+                      @click="() => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.seatSize = undefined; rebuildAndDraw() }">
+                      <i class="bi bi-arrow-counterclockwise" style="font-size:0.7rem;"/>
+                    </button>
+                  </div>
                   <!-- Link to zone -->
                   <select
                     :value="activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.zoneId ?? ''"
@@ -432,6 +424,62 @@
                   <button class="btn btn-sm btn-outline-secondary" @click="() => { activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.rotation = 0; drawFloor(activeFloorIdx) }">Reset</button>
                 </div>
               </template>
+
+              <!-- Seat selected -->
+              <template v-else-if="activeFloor.selectedSeatId">
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  <small class="text-reactive-secondary fw-semibold">
+                    <i class="bi bi-circle me-1"/>{{ selectedSeatInfo?.seatCode ?? 'Seat' }}
+                  </small>
+                  <div class="vr mx-1 opacity-25"/>
+
+                  <!-- Price override -->
+                  <small class="text-reactive-secondary"><i class="bi bi-tag me-1"/>Price:</small>
+                  <div class="input-group input-group-sm" style="width:160px;">
+                    <input
+                      type="number" min="0"
+                      :value="selectedSeatInfo?.priceOverride ?? ''"
+                      class="form-control bg-reactive-secondary border-0 text-reactive-primary"
+                      :placeholder="selectedSeatZonePrice !== null ? `Default (${formatPrice(selectedSeatZonePrice)})` : 'Default'"
+                      @change="(e) => saveSeatPriceInline((e.target as HTMLInputElement).value)"
+                    />
+                    <span class="input-group-text bg-reactive-secondary border-0 text-reactive-secondary">₫</span>
+                  </div>
+                  <button v-if="selectedSeatInfo?.priceOverride !== null" class="btn btn-sm btn-outline-secondary" @click="saveSeatPriceInline('')" title="Clear override">
+                    <i class="bi bi-x"/>
+                  </button>
+                  <div class="vr mx-1 opacity-25"/>
+
+                  <!-- Rotate -->
+                  <small class="text-reactive-secondary"><i class="bi bi-arrow-clockwise me-1"/>Rot:</small>
+                  <input type="range" min="-180" max="180" step="1"
+                    :value="Math.round((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.rotation ?? 0) * 180 / Math.PI)"
+                    class="form-range" style="width:80px;"
+                    @input="(e) => { ensureSeatTransform(activeFloorIdx, activeFloor!.selectedSeatId!); activeFloor!.seatTransforms[activeFloor!.selectedSeatId!].rotation = +(e.target as HTMLInputElement).value * Math.PI / 180; drawSeatsOnCanvas(activeFloorIdx) }"
+                  />
+                  <small class="text-reactive-secondary" style="min-width:32px;">{{ Math.round((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.rotation ?? 0) * 180 / Math.PI) }}°</small>
+                  <div class="vr mx-1 opacity-25"/>
+
+                  <!-- Size -->
+                  <small class="text-reactive-secondary"><i class="bi bi-arrows-angle-expand me-1"/>Size:</small>
+                  <input type="range" min="0.3" max="3" step="0.05"
+                    :value="activeFloor.seatTransforms[activeFloor.selectedSeatId]?.scale ?? 1"
+                    class="form-range" style="width:70px;"
+                    @input="(e) => { ensureSeatTransform(activeFloorIdx, activeFloor!.selectedSeatId!); activeFloor!.seatTransforms[activeFloor!.selectedSeatId!].scale = +(e.target as HTMLInputElement).value; rebuildAndDraw() }"
+                  />
+                  <small class="text-reactive-secondary" style="min-width:30px;">{{ ((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.scale ?? 1) * 100).toFixed(0) }}%</small>
+                  <div class="vr mx-1 opacity-25"/>
+
+                  <button class="btn btn-sm btn-outline-secondary" @click="() => { delete activeFloor!.seatTransforms[activeFloor!.selectedSeatId!]; rebuildAndDraw() }">
+                    <i class="bi bi-arrow-counterclockwise me-1"/>Reset
+                  </button>
+                  <button class="btn btn-sm btn-outline-secondary ms-auto" @click="activeFloor.selectedSeatId = null; drawSeatsOnCanvas(activeFloorIdx)">
+                    <i class="bi bi-x-lg"/>
+                  </button>
+                </div>
+              </template>
+
+              <!-- Stage selected -->
               <template v-else-if="activeFloor.editingStage">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                   <small class="text-reactive-secondary fw-semibold"><i class="bi bi-tv me-1"/>Stage / Screen:</small>
@@ -444,22 +492,19 @@
                   <button class="btn btn-sm btn-outline-secondary ms-auto" @click="activeFloor.editingStage = false; drawFloor(activeFloorIdx)"><i class="bi bi-x-lg"/></button>
                 </div>
               </template>
+
+              <!-- Nothing selected -->
               <template v-else>
-                <small class="text-reactive-secondary"><i class="bi bi-info-circle me-1"/>Click a shape to select. Drag to move, handles to resize, circle handle to rotate. Link a shape to a zone to overlay seats. <span v-if="activeFloor.snapEnabled" class="text-primary ms-1"><i class="bi bi-magnet me-1"/>Snap on</span></small>
+                <small class="text-reactive-secondary">
+                  <i class="bi bi-info-circle me-1"/>
+                  Click a shape to select. Drag to move, handles to resize, circle handle to rotate.
+                  Link a shape to a zone to overlay seats. <strong>Click a seat</strong> to select it — then drag to reposition, rotate, resize, or set price override.
+                  <span v-if="activeFloor.snapEnabled" class="text-primary ms-1"><i class="bi bi-magnet me-1"/>Snap on</span>
+                </small>
               </template>
             </div>
           </div>
 
-          <!-- Seat price popover -->
-          <SeatPricePopover
-            :seat="selectedSeat"
-            :pos="seatPopoverPos"
-            :zone-price="selectedSeat ? (zones.find(z => z.id === selectedSeat!.zoneId)?.price ?? 0) : 0"
-            :session-id="savedSessionId ?? ''"
-            :api-url="config.public.apiUrl"
-            @close="selectedSeat = null"
-            @updated="onSeatPriceUpdated"
-          />
         </div>
       </div>
 
@@ -479,14 +524,7 @@
     </div>
 
     <!-- Zone Modal -->
-    <ZoneModal
-      v-if="showZoneModal"
-      :zone="editingZone"
-      :session-id="savedSessionId!"
-      :api-url="config.public.apiUrl"
-      @close="showZoneModal = false"
-      @saved="onZoneSaved"
-    />
+    <ZoneModal v-if="showZoneModal" :zone="editingZone" :session-id="savedSessionId!" :api-url="config.public.apiUrl" @close="showZoneModal = false" @saved="onZoneSaved"/>
 
     <!-- Delete Zone Confirm -->
     <div v-if="deleteZoneTarget" class="modal-backdrop-custom" @click.self="deleteZoneTarget = null">
@@ -510,7 +548,6 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import RichTextEditor from '~/components/crud-event/RichTextEditor.vue'
 import LayoutPreview from '~/components/crud-event/LayoutPreview.vue'
 import ZoneModal from '~/components/crud-event/ZoneModal.vue'
-import SeatPricePopover from '~/components/crud-event/SeatPricePopover.vue'
 
 definePageMeta({ layout: 'organizer', middleware: 'organizer' })
 
@@ -519,16 +556,11 @@ const route  = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
 
-// ── Route ──────────────────────────────────────────────────
-const eventId = computed(() => {
-  const id = route.params.id as string
-  return id === 'new' ? null : id
-})
+const eventId = computed(() => { const id = route.params.id as string; return id === 'new' ? null : id })
 const isNew          = computed(() => !eventId.value)
 const savedEventId   = ref<string | null>(eventId.value)
 const savedSessionId = ref<string | null>(null)
 
-// ── Steps ──────────────────────────────────────────────────
 const currentStep = ref(0)
 const steps = computed(() => [
   { label: $t('organizer.event_form.step1.title') },
@@ -544,15 +576,11 @@ const globalError = ref('')
 // ── Venues ─────────────────────────────────────────────────
 interface Venue { id: string; name: string; addressLine: string; imageUrl?: string; layout?: string }
 const venues = ref<Venue[]>([])
-
 const selectedVenue = computed(() => venues.value.find(v => v.id === form.value.venueId) ?? null)
 const selectedVenueLayout = computed(() => selectedVenue.value?.layout ?? null)
-
 const fetchVenues = async () => {
-  try {
-    // Fetch venues from a public or internal endpoint
-    venues.value = await $fetch<Venue[]>(`${config.public.apiUrl}/venues`, { credentials: 'include' })
-  } catch { venues.value = [] }
+  try { venues.value = await $fetch<Venue[]>(`${config.public.apiUrl}/venues`, { credentials: 'include' }) }
+  catch { venues.value = [] }
 }
 
 // ── Categories ─────────────────────────────────────────────
@@ -563,18 +591,13 @@ const fetchCategories = async () => {
   catch { categories.value = [] }
 }
 
-// ── Step 1 form ────────────────────────────────────────────
-const form = ref({
-  name: '', venueId: '', categoryId: '' as any,
-  addressLine: '', startDate: '', endDate: '',
-  bannerUrl: '', status: 'EDITING',
-})
+// ── Form ───────────────────────────────────────────────────
+const form = ref({ name: '', venueId: '', categoryId: '' as any, addressLine: '', startDate: '', endDate: '', bannerUrl: '', status: 'EDITING' })
 const errors = ref<Record<string, string>>({})
 
 const validateStep1 = () => {
   errors.value = {}
   if (!form.value.name.trim())        errors.value.name        = 'Name is required'
-  if (!form.value.venueId)            errors.value.venueId     = 'Venue is required'
   if (!form.value.categoryId)         errors.value.categoryId  = 'Category is required'
   if (!form.value.addressLine.trim()) errors.value.addressLine = 'Address is required'
   if (!form.value.startDate)          errors.value.startDate   = 'Start date is required'
@@ -589,37 +612,19 @@ const saveStep1 = async () => {
   saving.value = true; globalError.value = ''
   try {
     const payload = {
-      name:        form.value.name,
-      venueId:     form.value.venueId,
-      categoryId:  Number(form.value.categoryId),
-      addressLine: form.value.addressLine,
-      bannerUrl:   form.value.bannerUrl || null,
-      status:      form.value.status,
-      startDate:   new Date(form.value.startDate).toISOString(),
-      endDate:     new Date(form.value.endDate).toISOString(),
-      // include content fields so they persist across saves
-      aboutVi:             content.value.aboutVi || null,
-      aboutEn:             content.value.aboutEn || null,
-      termsAndConditions:  content.value.termsAndConditions || null,
-      policyRefund:        content.value.policyRefund || null,
+      name: form.value.name, venueId: form.value.venueId, categoryId: Number(form.value.categoryId),
+      addressLine: form.value.addressLine, bannerUrl: form.value.bannerUrl || null, status: form.value.status,
+      startDate: new Date(form.value.startDate).toISOString(), endDate: new Date(form.value.endDate).toISOString(),
+      aboutVi: content.value.aboutVi || null, aboutEn: content.value.aboutEn || null,
+      termsAndConditions: content.value.termsAndConditions || null, policyRefund: content.value.policyRefund || null,
     }
-
     if (savedEventId.value) {
       await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}`, { method: 'PUT', body: payload, credentials: 'include' })
-      // Update session dates
-      if (savedSessionId.value) {
-        await $fetch(
-          `${config.public.apiUrl}/organizer/events/${savedEventId.value}/sessions/${savedSessionId.value}`,
-          { method: 'PUT', body: { startDate: payload.startDate, endDate: payload.endDate }, credentials: 'include' }
-        )
-      }
+      if (savedSessionId.value)
+        await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/sessions/${savedSessionId.value}`, { method: 'PUT', body: { startDate: payload.startDate, endDate: payload.endDate }, credentials: 'include' })
     } else {
-      const res = await $fetch<{ id: string; sessions: { id: string }[] }>(
-        `${config.public.apiUrl}/organizer/events`,
-        { method: 'POST', body: payload, credentials: 'include' }
-      )
-      savedEventId.value   = res.id
-      savedSessionId.value = res.sessions?.[0]?.id ?? null
+      const res = await $fetch<{ id: string; sessions: { id: string }[] }>(`${config.public.apiUrl}/organizer/events`, { method: 'POST', body: payload, credentials: 'include' })
+      savedEventId.value = res.id; savedSessionId.value = res.sessions?.[0]?.id ?? null
       history.replaceState({}, '', `/organizer/events/${res.id}`)
     }
     currentStep.value = 1
@@ -627,32 +632,17 @@ const saveStep1 = async () => {
   finally { saving.value = false }
 }
 
-// ── Step 2: Content ────────────────────────────────────────
-// Content is inlined on the event — no separate /content endpoint
-const content     = ref({ aboutVi: '', aboutEn: '', termsAndConditions: '', policyRefund: '' })
+// ── Content ────────────────────────────────────────────────
+const content = ref({ aboutVi: '', aboutEn: '', termsAndConditions: '', policyRefund: '' })
 const contentLang = ref<'vi' | 'en'>('vi')
 
 const saveStep2 = async () => {
   if (!savedEventId.value) return
   saving.value = true; globalError.value = ''
   try {
-    // Content fields are part of the event — PUT the full event with updated content
     await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}`, {
       method: 'PUT',
-      body: {
-        name:                form.value.name,
-        venueId:             form.value.venueId,
-        categoryId:          Number(form.value.categoryId),
-        addressLine:         form.value.addressLine,
-        bannerUrl:           form.value.bannerUrl || null,
-        status:              form.value.status,
-        startDate:           new Date(form.value.startDate).toISOString(),
-        endDate:             new Date(form.value.endDate).toISOString(),
-        aboutVi:             content.value.aboutVi || null,
-        aboutEn:             content.value.aboutEn || null,
-        termsAndConditions:  content.value.termsAndConditions || null,
-        policyRefund:        content.value.policyRefund || null,
-      },
+      body: { name: form.value.name, venueId: form.value.venueId, categoryId: Number(form.value.categoryId), addressLine: form.value.addressLine, bannerUrl: form.value.bannerUrl || null, status: form.value.status, startDate: new Date(form.value.startDate).toISOString(), endDate: new Date(form.value.endDate).toISOString(), aboutVi: content.value.aboutVi || null, aboutEn: content.value.aboutEn || null, termsAndConditions: content.value.termsAndConditions || null, policyRefund: content.value.policyRefund || null },
       credentials: 'include',
     })
     currentStep.value = 2
@@ -666,28 +656,23 @@ interface Zone {
   purchaseLimit?: number | null; descriptionVi?: string; descriptionEn?: string
   perks?: string | string[]; quantitySold?: number; seatCount?: number
 }
-
-const zones            = ref<Zone[]>([])
-const showZoneModal    = ref(false)
-const editingZone      = ref<Zone | null>(null)
+const zones = ref<Zone[]>([])
+const showZoneModal = ref(false)
+const editingZone = ref<Zone | null>(null)
 const deleteZoneTarget = ref<Zone | null>(null)
-const zoneSaving       = ref(false)
+const zoneSaving = ref(false)
 
 const openZoneModal = (zone: Zone | null) => { editingZone.value = zone ? { ...zone } : null; showZoneModal.value = true }
-
 const onZoneSaved = (savedZone: Zone) => {
   const idx = zones.value.findIndex(z => z.id === savedZone.id)
-  if (idx >= 0) zones.value[idx] = savedZone
-  else zones.value.push(savedZone)
+  if (idx >= 0) zones.value[idx] = savedZone; else zones.value.push(savedZone)
   showZoneModal.value = false
 }
-
 const fetchZones = async () => {
   if (!savedSessionId.value) return
   try { zones.value = await $fetch<Zone[]>(`${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones`, { credentials: 'include' }) }
   catch { zones.value = [] }
 }
-
 const confirmDeleteZone = (zone: Zone) => { deleteZoneTarget.value = zone }
 const doDeleteZone = async () => {
   if (!deleteZoneTarget.value?.id || !savedSessionId.value) return
@@ -700,11 +685,7 @@ const doDeleteZone = async () => {
   finally { zoneSaving.value = false }
 }
 
-// ── Step 4: Layout ─────────────────────────────────────────
-// layoutMode: 'venue' = use venue default, 'custom' = draw per-event layout
-// Multiple floors are supported in custom mode — stored as an array in the JSON:
-// { floors: [ { floorName, floorOrder, stage, zones, stage_shapes }, ... ] }
-
+// ── Layout types ───────────────────────────────────────────
 type LayoutMode = 'venue' | 'custom'
 const layoutMode = ref<LayoutMode>('venue')
 
@@ -712,22 +693,23 @@ interface CanvasShape {
   id: string; type: 'rect' | 'ellipse'; x: number; y: number
   width: number; height: number; label: string; color: string
   accessible: boolean; zoneId?: string; rotation?: number; isStage?: boolean
+  seatSize?: number   // per-zone seat size override (frontend only)
+}
+
+interface SeatTransform {
+  seatId: string; dx: number; dy: number; rotation: number; scale: number
 }
 
 interface LayoutFloor {
-  floorId:        string
-  floorName:      string
-  floorOrder:     number
-  canvasShapes:   CanvasShape[]
-  selectedShapeId: string | null
-  activeTool:     'select' | 'move'
-  selectedColor:  string
-  scale:          number
-  stageSize:      { width: number; height: number }
-  stageBox:       { x: number; y: number; width: number; height: number }
-  editingStage:   boolean
-  showJsonPanel:  boolean
-  snapEnabled:    boolean
+  floorId: string; floorName: string; floorOrder: number
+  canvasShapes: CanvasShape[]; selectedShapeId: string | null
+  activeTool: 'select' | 'move'; selectedColor: string; scale: number
+  stageSize: { width: number; height: number }
+  stageBox: { x: number; y: number; width: number; height: number }
+  editingStage: boolean; showJsonPanel: boolean; snapEnabled: boolean
+  globalSeatSize: number                              // floor-wide default seat size
+  seatTransforms: Record<string, SeatTransform>       // keyed by seatId
+  selectedSeatId: string | null
   layoutCanvasRef: HTMLCanvasElement | null
   seatCanvasRef:   HTMLCanvasElement | null
   ghostCanvasRef:  HTMLCanvasElement | null
@@ -737,27 +719,61 @@ const SNAP_THRESHOLD = 8
 const CANVAS_W = 900
 const CANVAS_H = 520
 const HANDLE_R = 5
+const DEFAULT_SEAT_SIZE = 14
 
 const tools = [
   { id: 'select', icon: 'bi bi-cursor',      label: 'Select' },
   { id: 'move',   icon: 'bi bi-arrows-move', label: 'Pan' },
 ]
 
-const layoutFloors    = ref<LayoutFloor[]>([])
-const activeFloorIdx  = ref(0)
-const activeFloor     = computed(() => layoutFloors.value[activeFloorIdx.value] ?? null)
+const layoutFloors   = ref<LayoutFloor[]>([])
+const activeFloorIdx = ref(0)
+const activeFloor    = computed(() => layoutFloors.value[activeFloorIdx.value] ?? null)
 const canvasContainerRefs: Record<number, HTMLElement> = {}
 
 // ── Seat overlay ───────────────────────────────────────────
 interface SeatInfo { id: string; seatCode: string; priceOverride: number | null; zoneId: string }
 interface SeatsByZone { [zoneId: string]: SeatInfo[] }
-const seatsByZone    = ref<SeatsByZone>({})
-const selectedSeat   = ref<SeatInfo | null>(null)
-const seatPopoverPos = ref({ x: 0, y: 0 })
-const loadingSeats   = ref(false)
-const seatHitMap     = ref<Array<Array<{ seatId: string; seat: SeatInfo; cx: number; cy: number; r: number }>>>([])
+const seatsByZone   = ref<SeatsByZone>({})
+const loadingSeats  = ref(false)
 
-// ── Drag state — plain JS, never reactive ──────────────────
+// Hit map for seat click detection — pixel space
+const seatHitMap = ref<Array<Array<{ seatId: string; seat: SeatInfo; cx: number; cy: number; r: number }>>>([])
+
+// ── Inline seat price helpers ──────────────────────────────
+const selectedSeatInfo = computed(() => {
+  const fi    = activeFloorIdx.value
+  const floor = layoutFloors.value[fi]
+  if (!floor?.selectedSeatId) return null
+  for (const zoneId in seatsByZone.value) {
+    const seat = seatsByZone.value[zoneId].find(s => s.id === floor.selectedSeatId)
+    if (seat) return seat
+  }
+  return null
+})
+
+const selectedSeatZonePrice = computed(() => {
+  if (!selectedSeatInfo.value) return null
+  return zones.value.find(z => z.id === selectedSeatInfo.value!.zoneId)?.price ?? null
+})
+
+const saveSeatPriceInline = async (val: string) => {
+  if (!selectedSeatInfo.value || !savedSessionId.value) return
+  const seat          = selectedSeatInfo.value
+  const priceOverride = val === '' ? null : Number(val)
+  try {
+    await $fetch(
+      `${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones/${seat.zoneId}/seats/${seat.id}/price`,
+      { method: 'PATCH', body: { priceOverride }, credentials: 'include' }
+    )
+    seat.priceOverride = priceOverride
+    nextTick(() => layoutFloors.value.forEach((_, fi) => drawSeatsOnCanvas(fi)))
+  } catch (err: any) {
+    globalError.value = err?.data?.message ?? 'Failed to update seat price'
+  }
+}
+
+// ── Drag state ─────────────────────────────────────────────
 const drag = {
   active: false, fi: -1, targetId: '' as string,
   startX: 0, startY: 0, origX: 0, origY: 0,
@@ -765,6 +781,11 @@ const drag = {
   resizeHandle: null as string | null, resizeOrigW: 0, resizeOrigH: 0,
   panOffsetX: 0, panOffsetY: 0,
   rotatingShape: false, rotOrigAngle: 0, rotCx: 0, rotCy: 0,
+  // seat drag
+  seatMode: '' as '' | 'move' | 'rotate' | 'resize',
+  seatId: '' as string,
+  seatOrigDx: 0, seatOrigDy: 0, seatOrigRot: 0, seatOrigScale: 1,
+  seatCx: 0, seatCy: 0,
 }
 
 const floorPan: Record<string, { x: number; y: number; scale: number }> = {}
@@ -783,6 +804,8 @@ const makeFloor = (order: number): LayoutFloor => ({
   stageSize: { width: 0, height: 0 },
   stageBox: { x: CANVAS_W / 2 - 120, y: order === 1 ? 20 : -200, width: 240, height: 44 },
   editingStage: false, showJsonPanel: false, snapEnabled: true,
+  globalSeatSize: DEFAULT_SEAT_SIZE,
+  seatTransforms: {}, selectedSeatId: null,
   layoutCanvasRef: null, seatCanvasRef: null, ghostCanvasRef: null,
 })
 
@@ -803,7 +826,7 @@ const removeFloor = (fi: number) => {
   activeFloorIdx.value = Math.min(fi, layoutFloors.value.length - 1)
 }
 
-// ── Canvas ref management ──────────────────────────────────
+// ── Canvas refs ────────────────────────────────────────────
 const setCanvasContainerRef = (el: any, fi: number) => {
   if (!el) return
   canvasContainerRefs[fi] = el
@@ -847,12 +870,10 @@ const getSnapEdges = (fi: number, excludeId: string) => {
   }
   return { x, y }
 }
-
 const trySnap = (val: number, list: number[]): number | null => {
   for (const c of list) if (Math.abs(val - c) < SNAP_THRESHOLD) return c
   return null
 }
-
 const snapPosition = (fi: number, excludeId: string, rawX: number, rawY: number, w: number, h: number) => {
   const floor = layoutFloors.value[fi]
   if (!floor.snapEnabled) { drag.snapGuideX = null; drag.snapGuideY = null; return { x: rawX, y: rawY } }
@@ -864,9 +885,9 @@ const snapPosition = (fi: number, excludeId: string, rawX: number, rawY: number,
   else if (sC !== null) { finalX = sC - w/2; drag.snapGuideX = sC }
   else if (sR !== null) { finalX = sR - w;   drag.snapGuideX = sR }
   const sT = trySnap(rawY, edges.y), sMid = trySnap(rawY + h/2, edges.y), sB = trySnap(rawY + h, edges.y)
-  if      (sT   !== null) { finalY = sT;        drag.snapGuideY = sT }
-  else if (sMid !== null) { finalY = sMid - h/2; drag.snapGuideY = sMid }
-  else if (sB   !== null) { finalY = sB - h;    drag.snapGuideY = sB }
+  if      (sT   !== null) { finalY = sT;         drag.snapGuideY = sT }
+  else if (sMid !== null) { finalY = sMid - h/2;  drag.snapGuideY = sMid }
+  else if (sB   !== null) { finalY = sB - h;     drag.snapGuideY = sB }
   return { x: finalX, y: finalY }
 }
 
@@ -903,23 +924,18 @@ const drawFloor = (fi: number) => {
   const scaleY = (H / CANVAS_H) * pan.scale
 
   ctx.clearRect(0, 0, W, H)
-  ctx.save()
-  ctx.translate(pan.x, pan.y)
-  ctx.scale(scaleX, scaleY)
+  ctx.save(); ctx.translate(pan.x, pan.y); ctx.scale(scaleX, scaleY)
 
-  // Stage
+  // Stage bar
   const sb = floor.stageBox
-  ctx.fillStyle = '#f59e0b'
-  roundRect(ctx, sb.x, sb.y, sb.width, sb.height, 6); ctx.fill()
+  ctx.fillStyle = '#f59e0b'; roundRect(ctx, sb.x, sb.y, sb.width, sb.height, 6); ctx.fill()
   if (floor.editingStage) {
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 / scaleX
     roundRect(ctx, sb.x, sb.y, sb.width, sb.height, 6); ctx.stroke()
     drawResizeHandles(ctx, sb.x, sb.y, sb.width, sb.height, scaleX)
   }
-  ctx.save()
-  ctx.setTransform(1, 0, 0, 1, 0, 0)
-  ctx.font = '500 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-  ctx.fillStyle = '#1a1a1a'
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0)
+  ctx.font = '500 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#1a1a1a'
   ctx.fillText('Stage / Screen', (sb.x + sb.width / 2) * scaleX + pan.x, (sb.y + sb.height / 2) * scaleY + pan.y)
   ctx.restore()
 
@@ -928,14 +944,10 @@ const drawFloor = (fi: number) => {
     const isSelected = floor.selectedShapeId === shape.id
     const rot = shape.rotation ?? 0
     const cx  = shape.x + shape.width / 2, cy = shape.y + shape.height / 2
-
     ctx.globalAlpha = shape.isStage ? 0.92 : 1
-    ctx.save()
-    ctx.translate(cx, cy); ctx.rotate(rot); ctx.translate(-cx, -cy)
-
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot); ctx.translate(-cx, -cy)
     const fillColor   = shape.isStage ? '#f59e0b' : shape.color + '44'
     const strokeColor = shape.isStage ? (isSelected ? '#fff' : '#d97706') : (isSelected ? '#ffffff' : shape.color)
-
     if (shape.type === 'rect') {
       ctx.fillStyle = fillColor; roundRect(ctx, shape.x, shape.y, shape.width, shape.height, 6); ctx.fill()
       ctx.strokeStyle = strokeColor; ctx.lineWidth = (isSelected ? 2.5 : 1.5) / scaleX
@@ -945,16 +957,13 @@ const drawFloor = (fi: number) => {
       ctx.strokeStyle = strokeColor; ctx.lineWidth = (isSelected ? 2.5 : 1.5) / scaleX
       ctx.beginPath(); ctx.ellipse(cx, cy, shape.width / 2, shape.height / 2, 0, 0, Math.PI * 2); ctx.stroke()
     }
-
     ctx.globalAlpha = 1
-    ctx.save()
-    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.fillStyle = shape.isStage ? '#1a1a1a' : '#ffffff'
     ctx.font = '500 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.translate(cx * scaleX + pan.x, cy * scaleY + pan.y); ctx.rotate(rot)
     ctx.fillText(shape.label, 0, 0)
     ctx.restore()
-
     if (isSelected) {
       drawResizeHandles(ctx, shape.x, shape.y, shape.width, shape.height, scaleX)
       const rHandleY = shape.y - 28 / scaleX
@@ -974,29 +983,23 @@ const drawFloor = (fi: number) => {
   ctx.setLineDash([]); ctx.globalAlpha = 1
   ctx.restore()
 
-  // Ghost on upper floors
   if (fi === 0) layoutFloors.value.forEach((_, ui) => { if (ui > 0) drawGhostCanvas(ui) })
   else drawGhostCanvas(fi)
 }
 
 const drawGhostCanvas = (fi: number) => {
   if (fi === 0) return
-  const floor  = layoutFloors.value[fi]
+  const floor = layoutFloors.value[fi]
   const canvas = floor?.ghostCanvasRef
   if (!canvas || floor.stageSize.width === 0) return
   const src = layoutFloors.value[0]
   if (!src || src.stageSize.width === 0) return
-
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
-
+  const ctx = canvas.getContext('2d'); if (!ctx) return
   const W = floor.stageSize.width, H = floor.stageSize.height
-  const pan    = getFloorPan(floor.floorId)
+  const pan = getFloorPan(floor.floorId)
   const scaleX = (W / CANVAS_W) * pan.scale, scaleY = (H / CANVAS_H) * pan.scale
-
   ctx.clearRect(0, 0, W, H)
   ctx.save(); ctx.translate(pan.x, pan.y); ctx.scale(scaleX, scaleY); ctx.globalAlpha = 0.22
-
   const sb = src.stageBox
   ctx.fillStyle = '#f59e0b'; roundRect(ctx, sb.x, sb.y, sb.width, sb.height, 6); ctx.fill()
   for (const s of src.canvasShapes) {
@@ -1018,7 +1021,6 @@ const checkHandles = (lx: number, ly: number, x: number, y: number, w: number, h
     if (Math.hypot(lx - hx, ly - hy) <= r * 1.5) return name
   return null
 }
-
 const checkHandlesRotated = (lx: number, ly: number, x: number, y: number, w: number, h: number, rot: number, r: number): string | null => {
   const cx = x + w / 2, cy = y + h / 2
   for (const [name, hx, hy] of [['nw', x, y], ['ne', x+w, y], ['se', x+w, y+h], ['sw', x, y+h], ['n', x+w/2, y], ['e', x+w, y+h/2], ['s', x+w/2, y+h], ['w', x, y+h/2]] as [string, number, number][]) {
@@ -1034,7 +1036,6 @@ const hitTest = (fi: number, lx: number, ly: number): HitTarget => {
   const pan    = getFloorPan(floor.floorId)
   const scaleX = (floor.stageSize.width / CANVAS_W) * pan.scale
   const HR     = HANDLE_R / scaleX
-
   const selShape = floor.canvasShapes.find(s => s.id === floor.selectedShapeId)
   if (selShape) {
     const rot = selShape.rotation ?? 0, cx = selShape.x + selShape.width / 2, cy = selShape.y + selShape.height / 2
@@ -1061,6 +1062,13 @@ const hitTest = (fi: number, lx: number, ly: number): HitTarget => {
   return null
 }
 
+// ── Seat transform helper ──────────────────────────────────
+const ensureSeatTransform = (fi: number, seatId: string) => {
+  const floor = layoutFloors.value[fi]
+  if (!floor.seatTransforms[seatId])
+    floor.seatTransforms[seatId] = { seatId, dx: 0, dy: 0, rotation: 0, scale: 1 }
+}
+
 // ── Mouse handlers ─────────────────────────────────────────
 const onCanvasMouseDown = (e: MouseEvent, fi: number) => {
   if (e.button !== 0) return
@@ -1076,6 +1084,41 @@ const onCanvasMouseDown = (e: MouseEvent, fi: number) => {
     drag.panOffsetX = getFloorPan(floor.floorId).x; drag.panOffsetY = getFloorPan(floor.floorId).y
     canvas.style.cursor = 'grabbing'; return
   }
+
+  // ── Seat hit test (pixel space) ────────────────────────
+  const hits = seatHitMap.value[fi] ?? []
+  const seatHit = hits.find(s => Math.hypot(s.cx - px, s.cy - py) <= s.r + 4)
+  if (seatHit) {
+    const tf = floor.seatTransforms[seatHit.seatId] ?? { seatId: seatHit.seatId, dx: 0, dy: 0, rotation: 0, scale: 1 }
+    // Check rotate handle
+    const rot = tf.rotation, r = seatHit.r
+    const rHx = seatHit.cx + Math.sin(rot) * -(r + 13), rHy = seatHit.cy - Math.cos(rot) * (r + 13)
+    if (floor.selectedSeatId === seatHit.seatId && Math.hypot(px - rHx, py - rHy) <= 8) {
+      drag.active = true; drag.fi = fi; drag.seatMode = 'rotate'; drag.seatId = seatHit.seatId
+      drag.startX = px; drag.startY = py; drag.seatCx = seatHit.cx; drag.seatCy = seatHit.cy
+      drag.seatOrigRot = tf.rotation; return
+    }
+    // Check resize handle
+    const bRx = seatHit.cx + Math.cos(rot) * r + Math.sin(rot) * r * -1
+    const bRy = seatHit.cy + Math.sin(rot) * r + Math.cos(rot) * r
+    if (floor.selectedSeatId === seatHit.seatId && Math.hypot(px - bRx, py - bRy) <= 7) {
+      drag.active = true; drag.fi = fi; drag.seatMode = 'resize'; drag.seatId = seatHit.seatId
+      drag.startX = px; drag.startY = py; drag.seatCx = seatHit.cx; drag.seatCy = seatHit.cy
+      drag.seatOrigScale = tf.scale; return
+    }
+    // Select and start move
+    floor.selectedSeatId = seatHit.seatId
+    floor.selectedShapeId = null; floor.editingStage = false
+    ensureSeatTransform(fi, seatHit.seatId)
+    drag.active = true; drag.fi = fi; drag.seatMode = 'move'; drag.seatId = seatHit.seatId
+    drag.startX = px; drag.startY = py
+    drag.seatOrigDx = floor.seatTransforms[seatHit.seatId].dx
+    drag.seatOrigDy = floor.seatTransforms[seatHit.seatId].dy
+    drawFloor(fi); drawSeatsOnCanvas(fi); return
+  }
+
+  // Deselect seat
+  if (floor.selectedSeatId !== null) { floor.selectedSeatId = null; drawSeatsOnCanvas(fi) }
 
   const hit = hitTest(fi, lx, ly)
   if (!hit) {
@@ -1132,23 +1175,38 @@ const onCanvasMouseMove = (e: MouseEvent, fi: number) => {
     drawFloor(fi); if (fi > 0) drawGhostCanvas(fi); return
   }
 
+  // ── Seat interactions ──────────────────────────────────
+  if (drag.seatMode === 'move') {
+    const tf = floor.seatTransforms[drag.seatId]
+    if (tf) { tf.dx = drag.seatOrigDx + (px - drag.startX); tf.dy = drag.seatOrigDy + (py - drag.startY); rebuildAndDraw(); return }
+  }
+  if (drag.seatMode === 'rotate') {
+    const angle = Math.atan2(py - drag.seatCy, px - drag.seatCx)
+    const startAngle = Math.atan2(drag.startY - drag.seatCy, drag.startX - drag.seatCx)
+    const tf = floor.seatTransforms[drag.seatId]
+    if (tf) { tf.rotation = drag.seatOrigRot + (angle - startAngle); drawSeatsOnCanvas(fi); return }
+  }
+  if (drag.seatMode === 'resize') {
+    const dist = Math.hypot(px - drag.seatCx, py - drag.seatCy)
+    const origDist = Math.hypot(drag.startX - drag.seatCx, drag.startY - drag.seatCy)
+    const tf = floor.seatTransforms[drag.seatId]
+    if (tf && origDist > 0) { tf.scale = Math.max(0.3, Math.min(4, drag.seatOrigScale * (dist / origDist))); rebuildAndDraw(); return }
+  }
+
   const { x: lx, y: ly } = toLogical(fi, px, py)
   const dx = lx - drag.startX, dy = ly - drag.startY
 
   if (drag.rotatingShape) {
     const shape = floor.canvasShapes.find(s => s.id === drag.targetId)
     if (shape) {
-      const angle = Math.atan2(ly - drag.rotCy, lx - drag.rotCx)
-      const startAngle = Math.atan2(drag.startY - drag.rotCy, drag.startX - drag.rotCx)
-      shape.rotation = drag.rotOrigAngle + (angle - startAngle); drawFloor(fi)
+      shape.rotation = drag.rotOrigAngle + (Math.atan2(ly - drag.rotCy, lx - drag.rotCx) - Math.atan2(drag.startY - drag.rotCy, drag.startX - drag.rotCx))
+      drawFloor(fi)
     }
     return
   }
-
   if (drag.resizeHandle) {
     const isStage = drag.targetId === '__stageResize__'
-    const target  = isStage ? floor.stageBox : floor.canvasShapes.find(s => s.id === drag.targetId)!
-    applyResize(target, drag.resizeHandle, drag.origX, drag.origY, drag.resizeOrigW, drag.resizeOrigH, dx, dy)
+    applyResize(isStage ? floor.stageBox : floor.canvasShapes.find(s => s.id === drag.targetId)!, drag.resizeHandle, drag.origX, drag.origY, drag.resizeOrigW, drag.resizeOrigH, dx, dy)
     drawFloor(fi); return
   }
   if (drag.targetId === '__stage__') {
@@ -1165,24 +1223,21 @@ const onCanvasMouseMove = (e: MouseEvent, fi: number) => {
 const onCanvasMouseUp = (_e: MouseEvent, fi: number) => {
   if (!drag.active || drag.fi !== fi) return
   drag.active = false; drag.snapGuideX = null; drag.snapGuideY = null
-  drag.resizeHandle = null; drag.rotatingShape = false
+  drag.resizeHandle = null; drag.rotatingShape = false; drag.seatMode = ''
   const floor = layoutFloors.value[fi]
   if (floor.layoutCanvasRef) floor.layoutCanvasRef.style.cursor = 'crosshair'
-  drawFloor(fi)
+  drawFloor(fi); drawSeatsOnCanvas(fi)
 }
 
 const onCanvasWheel = (e: WheelEvent, fi: number) => {
   const floor = layoutFloors.value[fi]
   const pan   = getFloorPan(floor.floorId)
   pan.scale   = Math.min(4, Math.max(0.25, pan.scale + (e.deltaY > 0 ? -0.1 : 0.1)))
-  floor.scale = pan.scale; drawFloor(fi)
-  if (fi > 0) drawGhostCanvas(fi)
+  floor.scale = pan.scale; drawFloor(fi); if (fi > 0) drawGhostCanvas(fi)
 }
 
-const applyResize = (
-  target: { x: number; y: number; width: number; height: number },
-  handle: string, ox: number, oy: number, ow: number, oh: number, dx: number, dy: number
-) => {
+
+const applyResize = (target: { x: number; y: number; width: number; height: number }, handle: string, ox: number, oy: number, ow: number, oh: number, dx: number, dy: number) => {
   const MIN_W = 40, MIN_H = 30
   let newX = ox, newY = oy, newW = ow, newH = oh
   switch (handle) {
@@ -1201,128 +1256,43 @@ const applyResize = (
 // ── Shape actions ──────────────────────────────────────────
 const addCustomShape = (fi: number, type: 'rect' | 'ellipse') => {
   const floor = layoutFloors.value[fi]
-  const shape: CanvasShape = {
-    id: crypto.randomUUID(), type, x: CANVAS_W / 2 - 100, y: CANVAS_H / 2 - 60,
-    width: 200, height: 120, label: `Zone ${floor.canvasShapes.length + 1}`,
-    color: floor.selectedColor, accessible: true,
-  }
-  floor.canvasShapes.push(shape); floor.selectedShapeId = shape.id; drawFloor(fi)
+  floor.canvasShapes.push({ id: crypto.randomUUID(), type, x: CANVAS_W / 2 - 100, y: CANVAS_H / 2 - 60, width: 200, height: 120, label: `Zone ${floor.canvasShapes.length + 1}`, color: floor.selectedColor, accessible: true })
+  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id; drawFloor(fi)
 }
-
 const addStageShape = (fi: number, type: 'rect' | 'ellipse') => {
   const floor = layoutFloors.value[fi]
   const stageCount = floor.canvasShapes.filter(s => s.isStage).length
-  floor.canvasShapes.push({
-    id: crypto.randomUUID(), type, x: CANVAS_W / 2 - 100, y: 20 + stageCount * 70,
-    width: 200, height: 50, label: stageCount === 0 ? 'Stage' : `Stage ${stageCount + 1}`,
-    color: '#f59e0b', accessible: false, isStage: true,
-  })
-  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id
-  drawFloor(fi)
+  floor.canvasShapes.push({ id: crypto.randomUUID(), type, x: CANVAS_W / 2 - 100, y: 20 + stageCount * 70, width: 200, height: 50, label: stageCount === 0 ? 'Stage' : `Stage ${stageCount + 1}`, color: '#f59e0b', accessible: false, isStage: true })
+  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id; drawFloor(fi)
 }
-
 const addZoneShapeToFloor = (fi: number, zone: Zone) => {
   const floor = layoutFloors.value[fi]
   const already = floor.canvasShapes.find(s => s.label === zone.name)
   if (already) { floor.selectedShapeId = already.id; drawFloor(fi); return }
-  floor.canvasShapes.push({
-    id: crypto.randomUUID(), type: 'rect',
-    x: CANVAS_W / 2 - 120, y: Math.min(80 + floor.canvasShapes.length * 30, CANVAS_H - 140),
-    width: 240, height: 120, label: zone.name, color: '#6366f1', accessible: true,
-  })
-  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id
-  drawFloor(fi)
+  floor.canvasShapes.push({ id: crypto.randomUUID(), type: 'rect', x: CANVAS_W / 2 - 120, y: Math.min(80 + floor.canvasShapes.length * 30, CANVAS_H - 140), width: 240, height: 120, label: zone.name, color: '#6366f1', accessible: true })
+  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id; drawFloor(fi)
 }
-
 const clearFloor = (fi: number) => {
   const floor = layoutFloors.value[fi]
   floor.canvasShapes = []; floor.selectedShapeId = null; floor.editingStage = false
   drag.snapGuideX = null; drag.snapGuideY = null; drawFloor(fi)
 }
-
 const deleteSelectedShape = (fi: number) => {
   const floor = layoutFloors.value[fi]
-  floor.canvasShapes    = floor.canvasShapes.filter(s => s.id !== floor.selectedShapeId)
+  floor.canvasShapes = floor.canvasShapes.filter(s => s.id !== floor.selectedShapeId)
   floor.selectedShapeId = null; drawFloor(fi)
 }
 
-// ── Build layout JSON ──────────────────────────────────────
-// Multiple floors are stored as an array under a "floors" key:
-// { "floors": [ { "floor_name", "floor_order", "stage", "zones", "stage_shapes" }, ... ] }
-
-const buildFloorJson = (floor: LayoutFloor) => {
-  const w = CANVAS_W, h = CANVAS_H, sb = floor.stageBox
-  const zoneShapes  = floor.canvasShapes.filter(s => !s.isStage)
-  const stageShapes = floor.canvasShapes.filter(s => s.isStage)
-  return {
-    floor_name:  floor.floorName,
-    floor_order: floor.floorOrder,
-    stage: { x1: toNorm(sb.x, w), y1: toNorm(sb.y, h), x2: toNorm(sb.x + sb.width, w), y2: toNorm(sb.y + sb.height, h) },
-    zones: zoneShapes.map(s => ({
-      zone_name:  s.label,
-      zone_type:  s.accessible ? 'standing' : 'non_public',
-      accessible: s.accessible,
-      color:      s.color,
-      zone_id:    s.zoneId ?? null,
-      rotation:   s.rotation ?? 0,
-      shape_type: s.type,
-      corner1: { x: toNorm(s.x, w),           y: toNorm(s.y, h) },
-      corner2: { x: toNorm(s.x + s.width, w), y: toNorm(s.y, h) },
-      corner3: { x: toNorm(s.x + s.width, w), y: toNorm(s.y + s.height, h) },
-      corner4: { x: toNorm(s.x, w),           y: toNorm(s.y + s.height, h) },
-      seats: [],
-    })),
-    stage_shapes: stageShapes.map(s => ({
-      label: s.label, type: s.type, rotation: s.rotation ?? 0,
-      corner1: { x: toNorm(s.x, w),           y: toNorm(s.y, h) },
-      corner2: { x: toNorm(s.x + s.width, w), y: toNorm(s.y, h) },
-      corner4: { x: toNorm(s.x, w),           y: toNorm(s.y + s.height, h) },
-    })),
-  }
+// ── Seat canvas renderer ───────────────────────────────────
+// Seats render in pixel space (already translated by pan) using the transform offsets
+const getSeatBaseRadius = (fi: number, shape: CanvasShape) => {
+  const floor = layoutFloors.value[fi]
+  const pan   = getFloorPan(floor.floorId)
+  const scaleX = (floor.stageSize.width / CANVAS_W) * pan.scale
+  const seatSize = shape.seatSize ?? floor.globalSeatSize
+  return Math.max(4, (seatSize / 2) * scaleX)
 }
 
-const buildFullLayoutJson = () => JSON.stringify({
-  floors: layoutFloors.value.map(floor => buildFloorJson(floor))
-})
-
-const floorJsonPreviews = computed(() =>
-  layoutFloors.value.map(floor => {
-    try { return JSON.stringify(buildFloorJson(floor), null, 2) } catch { return '{}' }
-  })
-)
-
-const copyFloorJson = (fi: number) => {
-  navigator.clipboard?.writeText(floorJsonPreviews.value[fi])
-}
-
-// ── Seat overlay ───────────────────────────────────────────
-const loadSeatsForStep4 = async () => {
-  if (!savedSessionId.value || zones.value.length === 0) return
-  loadingSeats.value = true
-  try {
-    const seatedZones = zones.value.filter(z => !z.isStanding && z.id)
-    const results = await Promise.all(seatedZones.map(async (zone) => {
-      const seats = await $fetch<SeatInfo[]>(
-        `${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones/${zone.id}/seats`,
-        { credentials: 'include' }
-      )
-      return { zoneId: zone.id!, seats }
-    }))
-    const next: SeatsByZone = {}
-    for (const { zoneId, seats } of results) next[zoneId] = seats
-    seatsByZone.value = next
-  } catch (err) { console.error(err) }
-  finally { loadingSeats.value = false }
-}
-
-const onSeatPriceUpdated = (seatId: string, priceOverride: number | null) => {
-  for (const zoneId in seatsByZone.value) {
-    const seat = seatsByZone.value[zoneId].find(s => s.id === seatId)
-    if (seat) { seat.priceOverride = priceOverride; break }
-  }
-}
-
-// Simple seat canvas renderer (no transforms — just zone overlays)
 const drawSeatsOnCanvas = (fi: number) => {
   const floor = layoutFloors.value[fi]
   const canvas = floor?.seatCanvasRef; if (!canvas) return
@@ -1340,12 +1310,12 @@ const drawSeatsOnCanvas = (fi: number) => {
     const seats = seatsByZone.value[shape.zoneId]
     if (!seats || seats.length === 0) continue
 
-    const baseR    = Math.max(4, 14 * scaleX)
-    const gap      = baseR * 2 + 2
-    const shapeW   = shape.width * scaleX
-    const shapeH   = shape.height * scaleY
+    const baseR  = getSeatBaseRadius(fi, shape)
+    const gap    = baseR * 2 + 3
+    const shapeW = shape.width  * scaleX
+    const shapeH = shape.height * scaleY
 
-    // Group seats by row
+    // Group seats by row prefix
     const rowMap = new Map<string, SeatInfo[]>()
     for (const seat of seats) {
       const m = (seat.seatCode ?? '').match(/^([A-Za-z]+)/)
@@ -1353,56 +1323,215 @@ const drawSeatsOnCanvas = (fi: number) => {
       if (!rowMap.has(row)) rowMap.set(row, [])
       rowMap.get(row)!.push(seat)
     }
+    // Sort each row numerically
+    for (const arr of rowMap.values())
+      arr.sort((a, b) => parseInt((a.seatCode ?? '').replace(/\D/g, '') || '0') - parseInt((b.seatCode ?? '').replace(/\D/g, '') || '0'))
+
     const seatRows = [...rowMap.keys()].sort().map(k => rowMap.get(k)!)
-    const gridH    = seatRows.length * gap - 2
-    const originY  = shape.y * scaleY + (shapeH - gridH) / 2 + baseR
+    const totalRows = seatRows.length
+    const gridH     = totalRows * gap - gap + baseR * 2
+    // Center seats within shape with padding
+    const PADDING   = baseR * 1.5
+    const originY   = shape.y * scaleY + PADDING + Math.max(0, (shapeH - PADDING * 2 - gridH) / 2)
 
     seatRows.forEach((rowSeats, rowIdx) => {
-      const rowGridW   = rowSeats.length * gap - 2
-      const rowOriginX = shape.x * scaleX + (shapeW - rowGridW) / 2 + baseR
+      const rowGridW   = rowSeats.length * gap - gap + baseR * 2
+      const rowOriginX = shape.x * scaleX + PADDING + Math.max(0, (shapeW - PADDING * 2 - rowGridW) / 2)
+      const baseCy     = originY + rowIdx * gap
+
       rowSeats.forEach((seat, colIdx) => {
-        const cx = rowOriginX + colIdx * gap
-        const cy = originY + rowIdx * gap
+        const baseCx = rowOriginX + colIdx * gap
+        const tf     = floor.seatTransforms[seat.id]
+        const cx     = baseCx + (tf?.dx ?? 0)
+        const cy     = baseCy + (tf?.dy ?? 0)
+        const rot    = tf?.rotation ?? 0
+        const r      = baseR * (tf?.scale ?? 1)
+
+        const isSelectedSeat   = floor.selectedSeatId === seat.id
+        const isSelectedGlobal = selectedSeat.value?.id === seat.id
+
+        ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot)
+
         ctx.fillStyle   = seat.priceOverride !== null ? '#f59e0b' : (shape.color + 'dd')
         ctx.globalAlpha = 0.9
-        ctx.beginPath(); ctx.arc(cx, cy, baseR, 0, Math.PI * 2); ctx.fill()
-        if (baseR >= 8) {
+        ctx.strokeStyle = isSelectedSeat ? '#ffffff' : (isSelectedGlobal ? '#f59e0b' : 'transparent')
+        ctx.lineWidth   = isSelectedSeat || isSelectedGlobal ? 2 : 0
+
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill()
+        if (isSelectedSeat || isSelectedGlobal) ctx.stroke()
+
+        // Label
+        if (r >= 8) {
           ctx.globalAlpha = 0.92; ctx.fillStyle = '#ffffff'
-          ctx.font = `500 ${Math.max(7, Math.min(11, baseR * 0.72))}px sans-serif`
+          ctx.font = `500 ${Math.max(7, Math.min(11, r * 0.72))}px sans-serif`
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-          ctx.fillText(seat.seatCode ?? '', cx, cy)
+          ctx.fillText(seat.seatCode ?? '', 0, 0)
         }
+
+        // Handles for selected seat
+        if (isSelectedSeat) {
+          ctx.globalAlpha = 1
+          // Rotate handle
+          ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1
+          ctx.beginPath(); ctx.moveTo(0, -r); ctx.lineTo(0, -r - 10); ctx.stroke()
+          ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.fill()
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.stroke()
+          // Resize handle (bottom-right)
+          ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.fill()
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.stroke()
+        }
+
+        ctx.restore()
       })
     })
   }
   ctx.globalAlpha = 1; ctx.restore()
 }
 
+// ── Rebuild hit map and redraw ─────────────────────────────
 const rebuildAndDraw = () => {
+  const newMap: typeof seatHitMap.value = []
+
+  layoutFloors.value.forEach((floor, fi) => {
+    const entries: typeof seatHitMap.value[0] = []
+    const pan    = getFloorPan(floor.floorId)
+    const scaleX = (floor.stageSize.width  / CANVAS_W) * pan.scale
+    const scaleY = (floor.stageSize.height / CANVAS_H) * pan.scale
+
+    for (const shape of floor.canvasShapes) {
+      if (!shape.zoneId) continue
+      const seats = seatsByZone.value[shape.zoneId]
+      if (!seats || seats.length === 0) continue
+
+      const baseR  = getSeatBaseRadius(fi, shape)
+      const gap    = baseR * 2 + 3
+      const shapeW = shape.width  * scaleX
+      const shapeH = shape.height * scaleY
+
+      const rowMap = new Map<string, SeatInfo[]>()
+      for (const seat of seats) {
+        const m = (seat.seatCode ?? '').match(/^([A-Za-z]+)/)
+        const row = m ? m[1].toUpperCase() : '__'
+        if (!rowMap.has(row)) rowMap.set(row, [])
+        rowMap.get(row)!.push(seat)
+      }
+      for (const arr of rowMap.values())
+        arr.sort((a, b) => parseInt((a.seatCode ?? '').replace(/\D/g, '') || '0') - parseInt((b.seatCode ?? '').replace(/\D/g, '') || '0'))
+
+      const seatRows  = [...rowMap.keys()].sort().map(k => rowMap.get(k)!)
+      const totalRows = seatRows.length
+      const gridH     = totalRows * gap - gap + baseR * 2
+      const PADDING   = baseR * 1.5
+      const originY   = shape.y * scaleY + PADDING + Math.max(0, (shapeH - PADDING * 2 - gridH) / 2)
+
+      seatRows.forEach((rowSeats, rowIdx) => {
+        const rowGridW   = rowSeats.length * gap - gap + baseR * 2
+        const rowOriginX = shape.x * scaleX + PADDING + Math.max(0, (shapeW - PADDING * 2 - rowGridW) / 2)
+        const baseCy     = originY + rowIdx * gap
+
+        rowSeats.forEach((seat, colIdx) => {
+          const baseCx = rowOriginX + colIdx * gap
+          const tf     = floor.seatTransforms[seat.id]
+          const r      = baseR * (tf?.scale ?? 1)
+          entries.push({
+            seatId: seat.id, seat,
+            cx: pan.x + baseCx + (tf?.dx ?? 0),
+            cy: pan.y + baseCy + (tf?.dy ?? 0),
+            r
+          })
+        })
+      })
+    }
+    newMap[fi] = entries
+  })
+
+  seatHitMap.value = newMap
   nextTick(() => layoutFloors.value.forEach((_, fi) => drawSeatsOnCanvas(fi)))
 }
+
+// ── Build layout JSON ──────────────────────────────────────
+const buildFloorJson = (floor: LayoutFloor) => {
+  const w = CANVAS_W, h = CANVAS_H, sb = floor.stageBox
+  const zoneShapes  = floor.canvasShapes.filter(s => !s.isStage)
+  const stageShapes = floor.canvasShapes.filter(s => s.isStage)
+  return {
+    floor_name:       floor.floorName,
+    floor_order:      floor.floorOrder,
+    global_seat_size: floor.globalSeatSize,
+    stage: { x1: toNorm(sb.x, w), y1: toNorm(sb.y, h), x2: toNorm(sb.x + sb.width, w), y2: toNorm(sb.y + sb.height, h) },
+    zones: zoneShapes.map(s => ({
+      zone_name:  s.label, zone_type: s.accessible ? 'standing' : 'non_public',
+      accessible: s.accessible, color: s.color, zone_id: s.zoneId ?? null,
+      rotation: s.rotation ?? 0, shape_type: s.type,
+      seat_size: s.seatSize ?? null,
+      corner1: { x: toNorm(s.x, w),           y: toNorm(s.y, h) },
+      corner2: { x: toNorm(s.x + s.width, w), y: toNorm(s.y, h) },
+      corner3: { x: toNorm(s.x + s.width, w), y: toNorm(s.y + s.height, h) },
+      corner4: { x: toNorm(s.x, w),           y: toNorm(s.y + s.height, h) },
+      // Save per-seat transforms for seats in this zone
+      seat_transforms: s.zoneId
+        ? Object.fromEntries(
+            Object.entries(floor.seatTransforms)
+              .filter(([seatId]) => seatsByZone.value[s.zoneId!]?.some(seat => seat.id === seatId))
+              .map(([seatId, tf]) => [seatId, { dx: tf.dx, dy: tf.dy, rotation: tf.rotation, scale: tf.scale }])
+          )
+        : {},
+      seats: [],
+    })),
+    stage_shapes: stageShapes.map(s => ({
+      label: s.label, type: s.type, rotation: s.rotation ?? 0,
+      corner1: { x: toNorm(s.x, w), y: toNorm(s.y, h) },
+      corner2: { x: toNorm(s.x + s.width, w), y: toNorm(s.y, h) },
+      corner4: { x: toNorm(s.x, w), y: toNorm(s.y + s.height, h) },
+    })),
+  }
+}
+
+const buildFullLayoutJson = () => JSON.stringify({ floors: layoutFloors.value.map(floor => buildFloorJson(floor)) })
+
+const floorJsonPreviews = computed(() =>
+  layoutFloors.value.map(floor => {
+    try { return JSON.stringify(buildFloorJson(floor), null, 2) } catch { return '{}' }
+  })
+)
+
+const copyFloorJson = (fi: number) => { navigator.clipboard?.writeText(floorJsonPreviews.value[fi]) }
+
+// ── Load seats ─────────────────────────────────────────────
+const loadSeatsForStep4 = async () => {
+  if (!savedSessionId.value || zones.value.length === 0) return
+  loadingSeats.value = true
+  try {
+    const seatedZones = zones.value.filter(z => !z.isStanding && z.id)
+    const results = await Promise.all(seatedZones.map(async (zone) => {
+      const seats = await $fetch<SeatInfo[]>(`${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones/${zone.id}/seats`, { credentials: 'include' })
+      return { zoneId: zone.id!, seats }
+    }))
+    const next: SeatsByZone = {}
+    for (const { zoneId, seats } of results) next[zoneId] = seats
+    seatsByZone.value = next
+  } catch (err) { console.error(err) }
+  finally { loadingSeats.value = false }
+}
+
 
 // ── Save layout ────────────────────────────────────────────
 const saveLayout = async () => {
   if (!savedEventId.value) return
+  // Validate venue selection
+  if (!form.value.venueId) {
+    errors.value.venueId = 'Venue is required'
+    globalError.value = 'Please select a venue before saving the layout.'
+    return
+  }
+  errors.value = {}
   saving.value = true; globalError.value = ''
   try {
     if (layoutMode.value === 'venue') {
-      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, {
-        method: 'PUT',
-        body: { useVenueLayout: true },
-        credentials: 'include',
-      })
+      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, { method: 'PUT', body: { useVenueLayout: true, venueId: form.value.venueId }, credentials: 'include' })
     } else {
-      if (layoutFloors.value.length === 0) {
-        globalError.value = 'Please add at least one floor in the custom layout.'; saving.value = false; return
-      }
-      const customLayoutJson = buildFullLayoutJson()
-      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, {
-        method: 'PUT',
-        body: { useVenueLayout: false, customLayoutJson },
-        credentials: 'include',
-      })
+      if (layoutFloors.value.length === 0) { globalError.value = 'Please add at least one floor.'; saving.value = false; return }
+      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, { method: 'PUT', body: { useVenueLayout: false, customLayoutJson: buildFullLayoutJson() }, credentials: 'include' })
     }
     router.push('/organizer/events')
   } catch (err: any) { globalError.value = err?.data?.message ?? 'Failed to save layout' }
@@ -1420,42 +1549,31 @@ const loadEvent = async () => {
     ])
 
     form.value = {
-      name:        event.name ?? '',
-      venueId:     event.venueId ?? '',
-      categoryId:  event.categoryId ?? '',
-      addressLine: event.addressLine ?? '',
-      bannerUrl:   event.bannerUrl ?? '',
-      status:      event.status ?? 'EDITING',
-      startDate:   eventSessions[0]?.startDate ? eventSessions[0].startDate.slice(0, 16) : '',
-      endDate:     eventSessions[0]?.endDate   ? eventSessions[0].endDate.slice(0, 16)   : '',
+      name: event.name ?? '', venueId: event.venueId ?? '', categoryId: event.categoryId ?? '',
+      addressLine: event.addressLine ?? '', bannerUrl: event.bannerUrl ?? '',
+      status: event.status ?? 'EDITING',
+      startDate: eventSessions[0]?.startDate ? eventSessions[0].startDate.slice(0, 16) : '',
+      endDate:   eventSessions[0]?.endDate   ? eventSessions[0].endDate.slice(0, 16)   : '',
     }
-
     content.value = {
-      aboutVi:            event.aboutVi ?? '',
-      aboutEn:            event.aboutEn ?? '',
-      termsAndConditions: event.termsAndConditions ?? '',
-      policyRefund:       event.policyRefund ?? '',
+      aboutVi: event.aboutVi ?? '', aboutEn: event.aboutEn ?? '',
+      termsAndConditions: event.termsAndConditions ?? '', policyRefund: event.policyRefund ?? '',
     }
 
     if (eventSessions.length > 0) {
       savedSessionId.value = eventSessions[0].id
-      zones.value = await $fetch<Zone[]>(
-        `${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones`,
-        { credentials: 'include' }
-      ).catch(() => [])
+      zones.value = await $fetch<Zone[]>(`${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones`, { credentials: 'include' }).catch(() => [])
     }
 
-    // Restore layout
     if (layoutData?.eventLayout) {
       try {
         const parsed = JSON.parse(layoutData.eventLayout)
         if (parsed.floors && Array.isArray(parsed.floors)) {
-          // Custom multi-floor layout
-          layoutMode.value  = 'custom'
+          layoutMode.value = 'custom'
           layoutFloors.value = parsed.floors.map((fl: any) => {
             const floor = makeFloor(fl.floor_order ?? 1)
-            floor.floorName = fl.floor_name ?? floor.floorName
-
+            floor.floorName      = fl.floor_name ?? floor.floorName
+            floor.globalSeatSize = fl.global_seat_size ?? DEFAULT_SEAT_SIZE
             const toPixel = (n: number, total: number) => ((n + 1) / 2) * total
             floor.canvasShapes = (fl.zones ?? []).map((z: any) => {
               const x = toPixel(z.corner1?.x ?? -0.3, CANVAS_W), y = toPixel(z.corner1?.y ?? -0.5, CANVAS_H)
@@ -1463,28 +1581,28 @@ const loadEvent = async () => {
                 id: crypto.randomUUID(), type: (z.shape_type ?? 'rect') as 'rect' | 'ellipse', x, y,
                 width:  Math.max(toPixel(z.corner2?.x ?? 0.3, CANVAS_W) - x, 80),
                 height: Math.max(toPixel(z.corner4?.y ?? 0.5, CANVAS_H) - y, 60),
-                label:  z.zone_name ?? 'Zone', color: z.color ?? '#6366f1',
+                label: z.zone_name ?? 'Zone', color: z.color ?? '#6366f1',
                 accessible: z.accessible !== false,
                 zoneId: z.zone_id ? (zones.value.find(zn => zn.id === z.zone_id)?.id ?? zones.value.find(zn => zn.name === z.zone_name)?.id) : undefined,
                 rotation: z.rotation ?? 0,
+                seatSize: z.seat_size ?? undefined,
               }
             })
+            // Restore seat transforms — stored per-zone keyed by seatId
+            for (const z of (fl.zones ?? [])) {
+              if (z.seat_transforms) {
+                for (const [seatId, tf] of Object.entries(z.seat_transforms as Record<string, any>)) {
+                  floor.seatTransforms[seatId] = { seatId, dx: tf.dx ?? 0, dy: tf.dy ?? 0, rotation: tf.rotation ?? 0, scale: tf.scale ?? 1 }
+                }
+              }
+            }
             const stageShapes = (fl.stage_shapes ?? []).map((s: any) => {
               const x = toPixel(s.corner1?.x ?? -0.1, CANVAS_W), y = toPixel(s.corner1?.y ?? -0.5, CANVAS_H)
-              return {
-                id: crypto.randomUUID(), type: (s.type ?? 'rect') as 'rect' | 'ellipse', x, y,
-                width: Math.max(toPixel(s.corner2?.x ?? 0.1, CANVAS_W) - x, 60),
-                height: Math.max(toPixel(s.corner4?.y ?? -0.3, CANVAS_H) - y, 30),
-                label: s.label ?? 'Stage', color: '#f59e0b', accessible: false, isStage: true, rotation: s.rotation ?? 0,
-              }
+              return { id: crypto.randomUUID(), type: (s.type ?? 'rect') as 'rect' | 'ellipse', x, y, width: Math.max(toPixel(s.corner2?.x ?? 0.1, CANVAS_W) - x, 60), height: Math.max(toPixel(s.corner4?.y ?? -0.3, CANVAS_H) - y, 30), label: s.label ?? 'Stage', color: '#f59e0b', accessible: false, isStage: true, rotation: s.rotation ?? 0 }
             })
             floor.canvasShapes = [...floor.canvasShapes, ...stageShapes]
             if (fl.stage) {
-              floor.stageBox = {
-                x: toPixel(fl.stage.x1, CANVAS_W), y: toPixel(fl.stage.y1, CANVAS_H),
-                width: Math.round(toPixel(fl.stage.x2, CANVAS_W) - toPixel(fl.stage.x1, CANVAS_W)),
-                height: Math.round(toPixel(fl.stage.y2, CANVAS_H) - toPixel(fl.stage.y1, CANVAS_H)),
-              }
+              floor.stageBox = { x: toPixel(fl.stage.x1, CANVAS_W), y: toPixel(fl.stage.y1, CANVAS_H), width: Math.round(toPixel(fl.stage.x2, CANVAS_W) - toPixel(fl.stage.x1, CANVAS_W)), height: Math.round(toPixel(fl.stage.y2, CANVAS_H) - toPixel(fl.stage.y1, CANVAS_H)) }
             }
             return floor
           })
@@ -1492,7 +1610,6 @@ const loadEvent = async () => {
         }
       } catch { /* leave default */ }
     } else {
-      // No custom layout — default to venue mode
       layoutMode.value = 'venue'
     }
   } catch { globalError.value = 'Failed to load event data' }
@@ -1502,20 +1619,19 @@ const loadEvent = async () => {
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchVenues()])
   if (!isNew.value) await loadEvent()
-  // Initialize with one floor if custom mode and no floors
   if (layoutFloors.value.length === 0) layoutFloors.value.push(makeFloor(1))
 })
 
 watch(currentStep, async (step) => {
   if (step === 2 && savedSessionId.value) await fetchZones()
   if (step === 3 && savedSessionId.value) {
-    await fetchZones()
-    await loadSeatsForStep4()
+    await fetchZones(); await loadSeatsForStep4()
     nextTick(() => layoutFloors.value.forEach((_, fi) => drawFloor(fi)))
   }
 })
 
 watch(seatsByZone, rebuildAndDraw, { deep: false })
+watch(() => layoutFloors.value.map(f => f.selectedSeatId).join(','), () => nextTick(() => layoutFloors.value.forEach((_, fi) => drawSeatsOnCanvas(fi))))
 
 // ── Helpers ────────────────────────────────────────────────
 const parsedPerks = (perks: string | string[] | undefined): string[] => {
@@ -1523,18 +1639,13 @@ const parsedPerks = (perks: string | string[] | undefined): string[] => {
   if (Array.isArray(perks)) return perks
   try { return JSON.parse(perks) } catch { return [] }
 }
-
 const formatPrice = (p: number) => p === 0 ? 'Free' : new Intl.NumberFormat('vi-VN').format(p) + ' ₫'
 </script>
 
 <style scoped>
 .step-bar { align-items: center; }
 .step-item { cursor: pointer; min-width: 0; }
-.step-dot {
-  width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
-  background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary);
-  transition: background 0.2s, color 0.2s;
-}
+.step-dot { width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary); transition: background 0.2s, color 0.2s; }
 .step-item.active .step-dot    { background: var(--bs-primary); color: #fff; }
 .step-item.completed .step-dot { background: #22c55e; color: #fff; }
 .step-label { color: var(--bs-secondary); transition: color 0.2s; }

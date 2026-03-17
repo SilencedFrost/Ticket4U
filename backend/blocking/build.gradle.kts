@@ -71,10 +71,6 @@ subprojects {
 
         // Bouncy Castle Java APIs, for pem key parsing
         implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
-
-        // Jackson (comes with spring-boot-starter-web, but explicit for JSONB)
-        implementation ("com.fasterxml.jackson.core:jackson-databind")
-        implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     }
 
     tasks.withType<Test> {

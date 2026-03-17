@@ -1,13 +1,13 @@
-package com.ticket4u.organizer.service;
+package com.ticket4u.eventmanagement.service;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
-import com.ticket4u.organizer.dto.*;
+import com.ticket4u.eventmanagement.dto.*;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface OrganizerService {
+public interface EventManagementService {
 
     // Profile
     OrganizerProfileResponse getProfile(UUID organizerId);
@@ -27,9 +27,9 @@ public interface OrganizerService {
     EventSessionResponse updateSession(UUID organizerId, UUID eventId, UUID sessionId, EventSessionRequest request);
 
     // Zones
-    List<OrganizerZoneResponse> getZones(UUID organizerId, UUID sessionId);
-    OrganizerZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
-    OrganizerZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
+    List<ZoneManagementResponse> getZones(UUID organizerId, UUID sessionId);
+    ZoneManagementResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
+    ZoneManagementResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
     void deleteZone(UUID organizerId, UUID sessionId, UUID zoneId);
 
     // Layout

@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.repository;
+package com.ticket4u.eventmanagement.repository;
 
 import com.ticket4u.core.entity.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrganizerSeatRepository extends JpaRepository<Seat, UUID> {
+public interface EventManagementSeatRepository extends JpaRepository<Seat, UUID> {
 
     List<Seat> findAllByZoneIdOrderByRowNameAscColNameAsc(UUID zoneId);
 

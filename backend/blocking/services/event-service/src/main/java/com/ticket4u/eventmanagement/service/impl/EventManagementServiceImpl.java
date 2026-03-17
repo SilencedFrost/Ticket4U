@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.service.impl;
+package com.ticket4u.eventmanagement.service.impl;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -6,10 +6,10 @@ import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
-import com.ticket4u.organizer.client.OrganizerProfileClient;
-import com.ticket4u.organizer.dto.*;
-import com.ticket4u.organizer.repository.*;
-import com.ticket4u.organizer.service.OrganizerService;
+import com.ticket4u.eventmanagement.client.OrganizerProfileClient;
+import com.ticket4u.eventmanagement.dto.*;
+import com.ticket4u.eventmanagement.repository.*;
+import com.ticket4u.eventmanagement.service.EventManagementService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrganizerServiceImpl implements OrganizerService {
+public class EventManagementServiceImpl implements EventManagementService {
 
-    private final OrganizerEventRepository eventRepository;
-    private final OrganizerSessionRepository sessionRepository;
-    private final OrganizerZoneRepository zoneRepository;
-    private final OrganizerSeatRepository seatRepository;
-    private final OrganizerVenueRepository venueRepository;
+    private final EventManagementRepository eventRepository;
+    private final EventManagementSessionRepository sessionRepository;
+    private final EventManagementZoneRepository zoneRepository;
+    private final EventManagementSeatRepository seatRepository;
+    private final EventManagementVenueRepository venueRepository;
     private final CategoryRepository    categoryRepository;
     private final OrganizerProfileClient profileClient;
     private final ObjectMapper          objectMapper;
@@ -157,7 +157,7 @@ public class OrganizerServiceImpl implements OrganizerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizerZoneResponse> getZones(UUID organizerId, UUID sessionId) {
+    public List<ZoneManagementResponse> getZones(UUID organizerId, UUID sessionId) {
         findSession(organizerId, sessionId);
         return zoneRepository.findAllBySessionId(sessionId)
                 .stream()
@@ -167,7 +167,7 @@ public class OrganizerServiceImpl implements OrganizerService {
 
     @Override
     @Transactional
-    public OrganizerZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
+    public ZoneManagementResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
         EventSession session = findSession(organizerId, sessionId);
         Zone zone = new Zone();
         zone.setSession(session);
@@ -177,7 +177,7 @@ public class OrganizerServiceImpl implements OrganizerService {
 
     @Override
     @Transactional
-    public OrganizerZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
+    public ZoneManagementResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
         findSession(organizerId, sessionId);
         Zone zone = zoneRepository.findByIdAndSessionId(zoneId, sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
@@ -468,10 +468,10 @@ public class OrganizerServiceImpl implements OrganizerService {
         );
     }
 
-    private OrganizerZoneResponse mapZoneToResponse(Zone zone) {
+    private ZoneManagementResponse mapZoneToResponse(Zone zone) {
         int seatCount = Boolean.TRUE.equals(zone.getIsStanding()) ? 0
                 : seatRepository.countByZoneId(zone.getId());
-        return new OrganizerZoneResponse(
+        return new ZoneManagementResponse(
                 zone.getId(),
                 zone.getSession() != null ? zone.getSession().getId() : null,
                 zone.getName(),

@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.repository;
+package com.ticket4u.eventmanagement.repository;
 
 import com.ticket4u.core.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrganizerEventRepository extends JpaRepository<Event, UUID> {
+public interface EventManagementRepository extends JpaRepository<Event, UUID> {
 
     @Query("""
         SELECT e FROM Event e

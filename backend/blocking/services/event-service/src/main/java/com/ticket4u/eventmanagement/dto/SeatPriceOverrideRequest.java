@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.dto;
+package com.ticket4u.eventmanagement.dto;
 
 import java.math.BigDecimal;
 

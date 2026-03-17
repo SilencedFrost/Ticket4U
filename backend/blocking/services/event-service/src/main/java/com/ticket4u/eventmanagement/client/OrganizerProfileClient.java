@@ -1,6 +1,6 @@
-package com.ticket4u.organizer.client;
+package com.ticket4u.eventmanagement.client;
 
-import com.ticket4u.organizer.dto.OrganizerProfileResponse;
+import com.ticket4u.eventmanagement.dto.OrganizerProfileResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

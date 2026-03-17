@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.dto;
+package com.ticket4u.eventmanagement.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

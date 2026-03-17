@@ -1,4 +1,4 @@
-package com.ticket4u.organizer.repository;
+package com.ticket4u.eventmanagement.repository;
 
 import com.ticket4u.core.entity.EventSession;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrganizerSessionRepository extends JpaRepository<EventSession, UUID> {
+public interface EventManagementSessionRepository extends JpaRepository<EventSession, UUID> {
 
     List<EventSession> findAllByEventIdOrderByStartDateAsc(UUID eventId);
 

@@ -1,10 +1,10 @@
-package com.ticket4u.organizer.dto;
+package com.ticket4u.eventmanagement.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-public record OrganizerZoneResponse(
+public record ZoneManagementResponse(
         UUID id,
         UUID sessionId,
         String name,

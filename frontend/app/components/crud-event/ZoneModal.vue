@@ -43,6 +43,15 @@
           <input v-model.number="form.purchaseLimit" type="number" min="1" class="form-control bg-reactive-primary border-0 text-reactive-primary"/>
         </div>
 
+        <!-- Seated zone hint -->
+        <div v-if="!form.isStanding" class="col-12">
+          <div class="alert alert-info py-2 small mb-0">
+            <i class="bi bi-info-circle me-1"/>
+            Seats for this zone will be generated automatically when you apply a layout in Step 4.
+            Individual seat prices can be fine-tuned there as well.
+          </div>
+        </div>
+
         <!-- Description bilingual -->
         <div class="col-12">
           <label class="form-label small text-reactive-secondary mb-1">Description</label>
@@ -68,37 +77,6 @@
           </div>
         </div>
 
-        <!-- Seated zone: seat grid builder -->
-        <div v-if="!form.isStanding" class="col-12">
-          <div class="seat-section rounded-2 p-3">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <div class="fw-semibold text-reactive-primary small">
-                <i class="bi bi-grid-3x3 me-2 text-primary"/>Seat Configuration
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <span v-if="zone?.id && hasSavedSeats" class="badge bg-success bg-opacity-20 text-success small">
-                  <i class="bi bi-check2 me-1"/>{{ savedSeatCount }} seats saved
-                </span>
-                <button v-if="zone?.id" type="button" class="btn btn-sm btn-outline-danger" :disabled="clearing" @click="clearSeats">
-                  <span v-if="clearing" class="spinner-border spinner-border-sm me-1"/>
-                  <i v-else class="bi bi-trash me-1"/>Clear Seats
-                </button>
-              </div>
-            </div>
-
-            <SeatGridBuilder
-              v-model="seatGrid"
-              :zone-price="form.price || 0"
-              zone-color="#6366f1"
-            />
-
-            <div class="alert alert-info py-2 small mt-3 mb-0">
-              <i class="bi bi-info-circle me-1"/>
-              Seats will be generated when you save. You can fine-tune individual seat prices in Step 4.
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <!-- Error -->
@@ -120,12 +98,11 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import SeatGridBuilder, { type SeatGridConfig } from './SeatGridBuilder.vue'
 
 interface Zone {
   id?: string; name: string; isStanding: boolean; capacity: number; price: number
   purchaseLimit?: number | null; descriptionVi?: string; descriptionEn?: string
-  perks?: string | string[]; seatCount?: number
+  perks?: string | string[]
 }
 
 const props = defineProps<{
@@ -152,21 +129,12 @@ const form = reactive({
   perks: [] as string[],
 })
 
-const seatGrid = ref<SeatGridConfig>({
-  seatShape: 'circle',
-  seatSize: 28,
-  rows: [],
-})
+const descLang = ref<'vi' | 'en'>('vi')
+const newPerk  = ref('')
+const saving   = ref(false)
+const errors   = ref<Record<string, string>>({})
 
-const descLang       = ref<'vi' | 'en'>('vi')
-const newPerk        = ref('')
-const saving         = ref(false)
-const clearing       = ref(false)
-const hasSavedSeats  = ref(false)
-const savedSeatCount = ref(0)
-const errors         = ref<Record<string, string>>({})
-
-onMounted(async () => {
+onMounted(() => {
   if (props.zone) {
     Object.assign(form, {
       name:          props.zone.name,
@@ -178,10 +146,6 @@ onMounted(async () => {
       descriptionEn: props.zone.descriptionEn ?? '',
       perks:         parsedPerks(props.zone.perks),
     })
-    if (props.zone.id && !props.zone.isStanding) {
-      savedSeatCount.value = props.zone.seatCount ?? 0
-      hasSavedSeats.value  = savedSeatCount.value > 0
-    }
   }
 })
 
@@ -197,11 +161,9 @@ const addPerk = () => {
 
 const validate = () => {
   errors.value = {}
-  if (!form.name.trim())                   errors.value.name     = 'Name is required'
-  if (!form.capacity || form.capacity < 1) errors.value.capacity = 'Capacity must be > 0'
-  if (form.price == null || form.price < 0) errors.value.price   = 'Price is required'
-  if (!form.isStanding && !hasSavedSeats.value && seatGrid.value.rows.length === 0)
-    errors.value.global = 'Please add at least one seat row for a seated zone'
+  if (!form.name.trim())                    errors.value.name     = 'Name is required'
+  if (!form.capacity || form.capacity < 1)  errors.value.capacity = 'Capacity must be > 0'
+  if (form.price == null || form.price < 0) errors.value.price    = 'Price is required'
   return Object.keys(errors.value).length === 0
 }
 
@@ -212,12 +174,12 @@ const handleSave = async () => {
     const payload = {
       name:          form.name,
       isStanding:    form.isStanding,
-      capacity:      form.isStanding ? form.capacity : seatGrid.value.rows.reduce((s, r) => s + r.count, 0),
+      capacity:      form.capacity,
       price:         form.price,
       purchaseLimit: form.purchaseLimit,
       descriptionVi: form.descriptionVi || null,
       descriptionEn: form.descriptionEn || null,
-      perks:         form.perks.length > 0 ? JSON.stringify(form.perks) : null,
+      perks: form.perks.length > 0 ? form.perks : null,
     }
 
     let savedZone: Zone
@@ -233,39 +195,11 @@ const handleSave = async () => {
       )
     }
 
-    // Generate seats for seated zones
-    if (!form.isStanding && seatGrid.value.rows.length > 0) {
-      await $fetch(
-        `${props.apiUrl}/organizer/sessions/${props.sessionId}/zones/${savedZone.id}/seats/generate`,
-        {
-          method: 'POST',
-          body: { rows: seatGrid.value.rows.map(r => ({ prefix: r.prefix, count: r.count, priceOverride: r.priceOverride || null })) },
-          credentials: 'include',
-        }
-      )
-    }
-
     emit('saved', savedZone)
   } catch (err: any) {
     errors.value.global = err?.data?.message ?? 'Failed to save zone'
   } finally {
     saving.value = false
-  }
-}
-
-const clearSeats = async () => {
-  if (!props.zone?.id) return
-  clearing.value = true
-  try {
-    await $fetch(
-      `${props.apiUrl}/organizer/sessions/${props.sessionId}/zones/${props.zone.id}/seats`,
-      { method: 'DELETE', credentials: 'include' }
-    )
-    hasSavedSeats.value = false; savedSeatCount.value = 0; seatGrid.value.rows = []
-  } catch (err: any) {
-    errors.value.global = err?.data?.message ?? 'Failed to clear seats'
-  } finally {
-    clearing.value = false
   }
 }
 </script>
@@ -276,11 +210,10 @@ const clearSeats = async () => {
   z-index: 1050; display: flex; align-items: center;
   justify-content: center; padding: 1rem; overflow-y: auto;
 }
-.modal-box { max-width: 640px; width: 100%; max-height: 92vh; overflow-y: auto; }
+.modal-box { max-width: 560px; width: 100%; max-height: 92vh; overflow-y: auto; }
 .nav-link {
   color: var(--bs-secondary); background: none; border: none;
   border-bottom: 2px solid transparent; border-radius: 0; padding: 0.4rem 1rem; cursor: pointer;
 }
 .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
-.seat-section { background: rgba(var(--bs-primary-rgb), 0.04); border: 1px solid rgba(var(--bs-primary-rgb), 0.15); }
 </style>

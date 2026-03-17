@@ -215,7 +215,7 @@ public class CrudServiceImpl implements CrudService {
             layoutJson = request.customLayoutJson();
         }
 
-        event.setEventLayout(layoutJson);
+        event.setLayout(layoutJson);
         eventRepository.save(event);
 
         // Generate seats for all sessions from the layout
@@ -231,7 +231,7 @@ public class CrudServiceImpl implements CrudService {
     @Transactional(readOnly = true)
     public EventLayoutResponse getLayout(UUID organizerId, UUID eventId) {
         Event event = findEvent(organizerId, eventId);
-        String layoutJson = event.getEventLayout();
+        String layoutJson = event.getLayout();
         if (layoutJson == null && event.getVenue() != null) {
             layoutJson = event.getVenue().getLayout();
         }
@@ -441,7 +441,7 @@ public class CrudServiceImpl implements CrudService {
                 event.getBannerUrl(),
                 event.getVenue() != null ? event.getVenue().getId() : null,
                 event.getVenue() != null ? event.getVenue().getName() : null,
-                event.getEventLayout(),
+                event.getLayout(),
                 event.getAboutVi(),
                 event.getAboutEn(),
                 event.getTermsAndConditions(),

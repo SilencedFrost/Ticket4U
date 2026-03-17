@@ -71,9 +71,6 @@ subprojects {
 
         // Bouncy Castle Java APIs, for pem key parsing
         implementation("org.bouncycastle:bcpkix-jdk18on:1.82")
-
-        // Jackson Datatype JSR-310, not bundled by default in Jackson 3.x (Spring Boot 4.x) unlike Jackson 2.x
-        implementation("tools.jackson.datatype:jackson-datatype-jsr310:3.0.2")
     }
 
     tasks.withType<Test> {

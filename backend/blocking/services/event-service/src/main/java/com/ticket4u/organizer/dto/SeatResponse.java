@@ -1,4 +1,4 @@
-package com.ticket4u.crud.dto;
+package com.ticket4u.organizer.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;

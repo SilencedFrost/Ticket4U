@@ -1,6 +1,6 @@
-package com.ticket4u.crud.client;
+package com.ticket4u.organizer.client;
 
-import com.ticket4u.crud.dto.CrudProfileResponse;
+import com.ticket4u.organizer.dto.OrganizerProfileResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -10,23 +10,23 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class CrudProfileClient {
+public class OrganizerProfileClient {
 
     private final RestClient restClient;
 
-    public CrudProfileClient(@Qualifier("userServiceClient") RestClient restClient) {
+    public OrganizerProfileClient(@Qualifier("userServiceClient") RestClient restClient) {
         this.restClient = restClient;
     }
 
-    public CrudProfileResponse getOrganizerProfile(UUID organizerId) {
+    public OrganizerProfileResponse getOrganizerProfile(UUID organizerId) {
         try {
             return restClient.get()
                     .uri("/api/v1/internal/organizers/{id}", organizerId)
                     .retrieve()
-                    .body(CrudProfileResponse.class);
+                    .body(OrganizerProfileResponse.class);
         } catch (Exception e) {
             log.error("Failed to fetch organizer profile for id={}: {}", organizerId, e.getMessage());
-            return new CrudProfileResponse(organizerId, "Unknown Organizer", null);
+            return new OrganizerProfileResponse(organizerId, "Unknown Organizer", null);
         }
     }
 }

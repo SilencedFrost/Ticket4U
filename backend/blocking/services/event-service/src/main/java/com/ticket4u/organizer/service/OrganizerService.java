@@ -1,25 +1,25 @@
-package com.ticket4u.crud.service;
+package com.ticket4u.organizer.service;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
-import com.ticket4u.crud.dto.*;
+import com.ticket4u.organizer.dto.*;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface CrudService {
+public interface OrganizerService {
 
     // Profile
-    CrudProfileResponse getProfile(UUID organizerId);
+    OrganizerProfileResponse getProfile(UUID organizerId);
 
     // Categories — reuses core.dto.CategorySummaryResponse
     List<CategorySummaryResponse> getCategories();
 
     // Events
-    List<CrudEventResponse> getEvents(UUID organizerId);
-    CrudEventResponse getEvent(UUID organizerId, UUID eventId);
-    CrudEventResponse createEvent(UUID organizerId, CrudEventRequest request);
-    CrudEventResponse updateEvent(UUID organizerId, UUID eventId, CrudEventRequest request);
+    List<OrganizerEventResponse> getEvents(UUID organizerId);
+    OrganizerEventResponse getEvent(UUID organizerId, UUID eventId);
+    OrganizerEventResponse createEvent(UUID organizerId, OrganizerEventRequest request);
+    OrganizerEventResponse updateEvent(UUID organizerId, UUID eventId, OrganizerEventRequest request);
     void deleteEvent(UUID organizerId, UUID eventId);
 
     // Sessions — reuses core.dto.EventSessionResponse
@@ -27,9 +27,9 @@ public interface CrudService {
     EventSessionResponse updateSession(UUID organizerId, UUID eventId, UUID sessionId, EventSessionRequest request);
 
     // Zones
-    List<CrudZoneResponse> getZones(UUID organizerId, UUID sessionId);
-    CrudZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
-    CrudZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
+    List<OrganizerZoneResponse> getZones(UUID organizerId, UUID sessionId);
+    OrganizerZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request);
+    OrganizerZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request);
     void deleteZone(UUID organizerId, UUID sessionId, UUID zoneId);
 
     // Layout

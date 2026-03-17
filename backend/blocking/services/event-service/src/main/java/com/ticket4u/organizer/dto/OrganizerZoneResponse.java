@@ -1,10 +1,10 @@
-package com.ticket4u.crud.dto;
+package com.ticket4u.organizer.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-public record CrudZoneResponse(
+public record OrganizerZoneResponse(
         UUID id,
         UUID sessionId,
         String name,

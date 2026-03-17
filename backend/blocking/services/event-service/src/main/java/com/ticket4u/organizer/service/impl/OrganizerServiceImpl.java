@@ -1,15 +1,15 @@
-package com.ticket4u.crud.service.impl;
+package com.ticket4u.organizer.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
-import com.ticket4u.crud.client.CrudProfileClient;
-import com.ticket4u.crud.dto.*;
-import com.ticket4u.crud.repository.*;
-import com.ticket4u.crud.service.CrudService;
+import com.ticket4u.organizer.client.OrganizerProfileClient;
+import com.ticket4u.organizer.dto.*;
+import com.ticket4u.organizer.repository.*;
+import com.ticket4u.organizer.service.OrganizerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,21 +26,21 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CrudServiceImpl implements CrudService {
+public class OrganizerServiceImpl implements OrganizerService {
 
-    private final CrudEventRepository   eventRepository;
-    private final CrudSessionRepository sessionRepository;
-    private final CrudZoneRepository    zoneRepository;
-    private final CrudSeatRepository    seatRepository;
-    private final CrudVenueRepository   venueRepository;
+    private final OrganizerEventRepository eventRepository;
+    private final OrganizerSessionRepository sessionRepository;
+    private final OrganizerZoneRepository zoneRepository;
+    private final OrganizerSeatRepository seatRepository;
+    private final OrganizerVenueRepository venueRepository;
     private final CategoryRepository    categoryRepository;
-    private final CrudProfileClient     profileClient;
+    private final OrganizerProfileClient profileClient;
     private final ObjectMapper          objectMapper;
 
     // Profile
 
     @Override
-    public CrudProfileResponse getProfile(UUID organizerId) {
+    public OrganizerProfileResponse getProfile(UUID organizerId) {
         return profileClient.getOrganizerProfile(organizerId);
     }
 
@@ -58,7 +58,7 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CrudEventResponse> getEvents(UUID organizerId) {
+    public List<OrganizerEventResponse> getEvents(UUID organizerId) {
         return eventRepository.findAllByOrganizerIdOrderByFirstSessionStartDesc(organizerId)
                 .stream()
                 .map(e -> mapEventToResponse(e, true))
@@ -67,13 +67,13 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional(readOnly = true)
-    public CrudEventResponse getEvent(UUID organizerId, UUID eventId) {
+    public OrganizerEventResponse getEvent(UUID organizerId, UUID eventId) {
         return mapEventToResponse(findEvent(organizerId, eventId), true);
     }
 
     @Override
     @Transactional
-    public CrudEventResponse createEvent(UUID organizerId, CrudEventRequest request) {
+    public OrganizerEventResponse createEvent(UUID organizerId, OrganizerEventRequest request) {
         Event event = new Event();
         event.setOrganizerId(organizerId);
         applyRequestToEvent(event, request);
@@ -96,7 +96,7 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional
-    public CrudEventResponse updateEvent(UUID organizerId, UUID eventId, CrudEventRequest request) {
+    public OrganizerEventResponse updateEvent(UUID organizerId, UUID eventId, OrganizerEventRequest request) {
         Event event = findEvent(organizerId, eventId);
         applyRequestToEvent(event, request);
         if (request.status() != null) {
@@ -157,7 +157,7 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CrudZoneResponse> getZones(UUID organizerId, UUID sessionId) {
+    public List<OrganizerZoneResponse> getZones(UUID organizerId, UUID sessionId) {
         findSession(organizerId, sessionId);
         return zoneRepository.findAllBySessionId(sessionId)
                 .stream()
@@ -167,7 +167,7 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional
-    public CrudZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
+    public OrganizerZoneResponse createZone(UUID organizerId, UUID sessionId, ZoneRequest request) {
         EventSession session = findSession(organizerId, sessionId);
         Zone zone = new Zone();
         zone.setSession(session);
@@ -177,7 +177,7 @@ public class CrudServiceImpl implements CrudService {
 
     @Override
     @Transactional
-    public CrudZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
+    public OrganizerZoneResponse updateZone(UUID organizerId, UUID sessionId, UUID zoneId, ZoneRequest request) {
         findSession(organizerId, sessionId);
         Zone zone = zoneRepository.findByIdAndSessionId(zoneId, sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
@@ -385,7 +385,7 @@ public class CrudServiceImpl implements CrudService {
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
     }
 
-    private void applyRequestToEvent(Event event, CrudEventRequest req) {
+    private void applyRequestToEvent(Event event, OrganizerEventRequest req) {
         event.setName(req.name());
         event.setAddressLine(req.addressLine());
         event.setBannerUrl(req.bannerUrl() != null ? req.bannerUrl() : "");
@@ -420,7 +420,7 @@ public class CrudServiceImpl implements CrudService {
         if (zone.getQuantitySold() == null) zone.setQuantitySold(0);
     }
 
-    private CrudEventResponse mapEventToResponse(Event event, boolean includeStats) {
+    private OrganizerEventResponse mapEventToResponse(Event event, boolean includeStats) {
         Integer ticketsSold   = includeStats ? eventRepository.sumTicketsSoldByEventId(event.getId()) : 0;
         Integer totalCapacity = includeStats ? eventRepository.sumCapacityByEventId(event.getId()) : 0;
         BigDecimal revenue    = includeStats ? eventRepository.sumRevenueByEventId(event.getId()) : BigDecimal.ZERO;
@@ -432,7 +432,7 @@ public class CrudServiceImpl implements CrudService {
                         .min(OffsetDateTime::compareTo)
                         .orElse(null);
 
-        return new CrudEventResponse(
+        return new OrganizerEventResponse(
                 event.getId(),
                 event.getName(),
                 event.getAddressLine(),
@@ -468,10 +468,10 @@ public class CrudServiceImpl implements CrudService {
         );
     }
 
-    private CrudZoneResponse mapZoneToResponse(Zone zone) {
+    private OrganizerZoneResponse mapZoneToResponse(Zone zone) {
         int seatCount = Boolean.TRUE.equals(zone.getIsStanding()) ? 0
                 : seatRepository.countByZoneId(zone.getId());
-        return new CrudZoneResponse(
+        return new OrganizerZoneResponse(
                 zone.getId(),
                 zone.getSession() != null ? zone.getSession().getId() : null,
                 zone.getName(),

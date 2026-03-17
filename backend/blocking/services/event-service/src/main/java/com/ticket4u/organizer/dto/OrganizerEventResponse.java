@@ -1,11 +1,11 @@
-package com.ticket4u.crud.dto;
+package com.ticket4u.organizer.dto;
 
 import com.ticket4u.core.entity.Event;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record CrudEventResponse(
+public record OrganizerEventResponse(
         UUID id,
         String name,
         String addressLine,

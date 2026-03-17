@@ -1,9 +1,9 @@
-package com.ticket4u.crud.controller;
+package com.ticket4u.organizer.controller;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
-import com.ticket4u.crud.dto.*;
-import com.ticket4u.crud.service.CrudService;
+import com.ticket4u.organizer.dto.*;
+import com.ticket4u.organizer.service.OrganizerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/organizer")
 @RequiredArgsConstructor
-public class CrudController {
+public class OrganizerController {
 
-    private final CrudService crudService;
+    private final OrganizerService organizerService;
 
     private UUID currentUserId() {
         return UUID.fromString(
@@ -31,48 +31,48 @@ public class CrudController {
     // ── Profile ────────────────────────────────────────────
 
     @GetMapping("/me")
-    public ResponseEntity<CrudProfileResponse> getProfile() {
-        return ResponseEntity.ok(crudService.getProfile(currentUserId()));
+    public ResponseEntity<OrganizerProfileResponse> getProfile() {
+        return ResponseEntity.ok(organizerService.getProfile(currentUserId()));
     }
 
     // ── Categories ─────────────────────────────────────────
 
     @GetMapping("/categories")
     public ResponseEntity<List<CategorySummaryResponse>> getCategories() {
-        return ResponseEntity.ok(crudService.getCategories());
+        return ResponseEntity.ok(organizerService.getCategories());
     }
 
     // ── Events ─────────────────────────────────────────────
 
     @GetMapping("/events")
-    public ResponseEntity<List<CrudEventResponse>> getEvents() {
-        return ResponseEntity.ok(crudService.getEvents(currentUserId()));
+    public ResponseEntity<List<OrganizerEventResponse>> getEvents() {
+        return ResponseEntity.ok(organizerService.getEvents(currentUserId()));
     }
 
     @GetMapping("/events/{eventId}")
-    public ResponseEntity<CrudEventResponse> getEvent(@PathVariable UUID eventId) {
-        return ResponseEntity.ok(crudService.getEvent(currentUserId(), eventId));
+    public ResponseEntity<OrganizerEventResponse> getEvent(@PathVariable UUID eventId) {
+        return ResponseEntity.ok(organizerService.getEvent(currentUserId(), eventId));
     }
 
     @PostMapping("/events")
-    public ResponseEntity<CrudEventResponse> createEvent(
-            @Valid @RequestBody CrudEventRequest request) {
+    public ResponseEntity<OrganizerEventResponse> createEvent(
+            @Valid @RequestBody OrganizerEventRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(crudService.createEvent(currentUserId(), request));
+                .body(organizerService.createEvent(currentUserId(), request));
     }
 
     @PutMapping("/events/{eventId}")
-    public ResponseEntity<CrudEventResponse> updateEvent(
+    public ResponseEntity<OrganizerEventResponse> updateEvent(
             @PathVariable UUID eventId,
-            @Valid @RequestBody CrudEventRequest request) {
-        return ResponseEntity.ok(crudService.updateEvent(currentUserId(), eventId, request));
+            @Valid @RequestBody OrganizerEventRequest request) {
+        return ResponseEntity.ok(organizerService.updateEvent(currentUserId(), eventId, request));
     }
 
     @DeleteMapping("/events/{eventId}")
     @PreAuthorize("hasRole('ORGANIZER_ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable UUID eventId) {
-        crudService.deleteEvent(currentUserId(), eventId);
+        organizerService.deleteEvent(currentUserId(), eventId);
         return ResponseEntity.noContent().build();
     }
 
@@ -80,7 +80,7 @@ public class CrudController {
 
     @GetMapping("/events/{eventId}/sessions")
     public ResponseEntity<List<EventSessionResponse>> getSessions(@PathVariable UUID eventId) {
-        return ResponseEntity.ok(crudService.getSessions(currentUserId(), eventId));
+        return ResponseEntity.ok(organizerService.getSessions(currentUserId(), eventId));
     }
 
     @PutMapping("/events/{eventId}/sessions/{sessionId}")
@@ -89,39 +89,39 @@ public class CrudController {
             @PathVariable UUID sessionId,
             @Valid @RequestBody EventSessionRequest request) {
         return ResponseEntity.ok(
-                crudService.updateSession(currentUserId(), eventId, sessionId, request));
+                organizerService.updateSession(currentUserId(), eventId, sessionId, request));
     }
 
     // ── Zones ──────────────────────────────────────────────
 
     @GetMapping("/sessions/{sessionId}/zones")
-    public ResponseEntity<List<CrudZoneResponse>> getZones(@PathVariable UUID sessionId) {
-        return ResponseEntity.ok(crudService.getZones(currentUserId(), sessionId));
+    public ResponseEntity<List<OrganizerZoneResponse>> getZones(@PathVariable UUID sessionId) {
+        return ResponseEntity.ok(organizerService.getZones(currentUserId(), sessionId));
     }
 
     @PostMapping("/sessions/{sessionId}/zones")
-    public ResponseEntity<CrudZoneResponse> createZone(
+    public ResponseEntity<OrganizerZoneResponse> createZone(
             @PathVariable UUID sessionId,
             @Valid @RequestBody ZoneRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(crudService.createZone(currentUserId(), sessionId, request));
+                .body(organizerService.createZone(currentUserId(), sessionId, request));
     }
 
     @PutMapping("/sessions/{sessionId}/zones/{zoneId}")
-    public ResponseEntity<CrudZoneResponse> updateZone(
+    public ResponseEntity<OrganizerZoneResponse> updateZone(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId,
             @Valid @RequestBody ZoneRequest request) {
         return ResponseEntity.ok(
-                crudService.updateZone(currentUserId(), sessionId, zoneId, request));
+                organizerService.updateZone(currentUserId(), sessionId, zoneId, request));
     }
 
     @DeleteMapping("/sessions/{sessionId}/zones/{zoneId}")
     public ResponseEntity<Void> deleteZone(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId) {
-        crudService.deleteZone(currentUserId(), sessionId, zoneId);
+        organizerService.deleteZone(currentUserId(), sessionId, zoneId);
         return ResponseEntity.noContent().build();
     }
 
@@ -133,14 +133,14 @@ public class CrudController {
 
     @GetMapping("/events/{eventId}/layout")
     public ResponseEntity<EventLayoutResponse> getLayout(@PathVariable UUID eventId) {
-        return ResponseEntity.ok(crudService.getLayout(currentUserId(), eventId));
+        return ResponseEntity.ok(organizerService.getLayout(currentUserId(), eventId));
     }
 
     @PutMapping("/events/{eventId}/layout")
     public ResponseEntity<EventLayoutResponse> applyLayout(
             @PathVariable UUID eventId,
             @RequestBody EventLayoutRequest request) {
-        return ResponseEntity.ok(crudService.applyLayout(currentUserId(), eventId, request));
+        return ResponseEntity.ok(organizerService.applyLayout(currentUserId(), eventId, request));
     }
 
     // ── Seats ──────────────────────────────────────────────
@@ -149,7 +149,7 @@ public class CrudController {
     public ResponseEntity<List<SeatResponse>> getSeats(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId) {
-        return ResponseEntity.ok(crudService.getSeats(currentUserId(), sessionId, zoneId));
+        return ResponseEntity.ok(organizerService.getSeats(currentUserId(), sessionId, zoneId));
     }
 
     @PostMapping("/sessions/{sessionId}/zones/{zoneId}/seats/generate")
@@ -158,7 +158,7 @@ public class CrudController {
             @PathVariable UUID zoneId,
             @RequestBody SeatGenerateRequest request) {
         return ResponseEntity.ok(
-                crudService.generateSeats(currentUserId(), sessionId, zoneId, request));
+                organizerService.generateSeats(currentUserId(), sessionId, zoneId, request));
     }
 
     @PatchMapping("/sessions/{sessionId}/zones/{zoneId}/seats/{seatId}/price")
@@ -168,14 +168,14 @@ public class CrudController {
             @PathVariable UUID seatId,
             @RequestBody SeatPriceOverrideRequest request) {
         return ResponseEntity.ok(
-                crudService.updateSeatPrice(currentUserId(), sessionId, zoneId, seatId, request));
+                organizerService.updateSeatPrice(currentUserId(), sessionId, zoneId, seatId, request));
     }
 
     @DeleteMapping("/sessions/{sessionId}/zones/{zoneId}/seats")
     public ResponseEntity<Void> deleteSeats(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId) {
-        crudService.deleteSeats(currentUserId(), sessionId, zoneId);
+        organizerService.deleteSeats(currentUserId(), sessionId, zoneId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,4 +1,4 @@
-package com.ticket4u.crud.dto;
+package com.ticket4u.organizer.dto;
 
 public record EventLayoutRequest(
         // true  → copy venue.layout into event.layout, then generate seats

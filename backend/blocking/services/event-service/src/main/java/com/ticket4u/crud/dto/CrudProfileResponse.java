@@ -7,4 +7,3 @@ public record CrudProfileResponse(
         String name,
         String avatarUrl
 ) {}
- 

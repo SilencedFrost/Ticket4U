@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
-import com.ticket4u.core.dto.ZoneResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
 import com.ticket4u.crud.client.CrudProfileClient;
@@ -38,14 +37,14 @@ public class CrudServiceImpl implements CrudService {
     private final CrudProfileClient     profileClient;
     private final ObjectMapper          objectMapper;
 
-    // ── Profile ────────────────────────────────────────────
+    // Profile
 
     @Override
     public CrudProfileResponse getProfile(UUID organizerId) {
         return profileClient.getOrganizerProfile(organizerId);
     }
 
-    // ── Categories ─────────────────────────────────────────
+    // Categories
 
     @Override
     @Transactional(readOnly = true)
@@ -55,7 +54,7 @@ public class CrudServiceImpl implements CrudService {
                 .collect(Collectors.toList());
     }
 
-    // ── Events ─────────────────────────────────────────────
+    // Events
 
     @Override
     @Transactional(readOnly = true)
@@ -126,12 +125,12 @@ public class CrudServiceImpl implements CrudService {
         eventRepository.save(event);
     }
 
-    // ── Sessions ───────────────────────────────────────────
+    // Sessions
 
     @Override
     @Transactional(readOnly = true)
     public List<EventSessionResponse> getSessions(UUID organizerId, UUID eventId) {
-        findEvent(organizerId, eventId); // ownership check
+        findEvent(organizerId, eventId);
         return sessionRepository.findAllByEventIdOrderByStartDateAsc(eventId)
                 .stream()
                 .map(this::mapSessionToResponse)
@@ -154,7 +153,7 @@ public class CrudServiceImpl implements CrudService {
         return mapSessionToResponse(sessionRepository.save(session));
     }
 
-    // ── Zones ──────────────────────────────────────────────
+    // Zones
 
     @Override
     @Transactional(readOnly = true)
@@ -195,7 +194,7 @@ public class CrudServiceImpl implements CrudService {
         zoneRepository.delete(zone);
     }
 
-    // ── Layout ─────────────────────────────────────────────
+    // Layout
 
     @Override
     @Transactional
@@ -239,7 +238,7 @@ public class CrudServiceImpl implements CrudService {
         return new EventLayoutResponse(eventId, layoutJson);
     }
 
-    // ── Seats ──────────────────────────────────────────────
+    // Seats
 
     @Override
     @Transactional(readOnly = true)
@@ -297,21 +296,42 @@ public class CrudServiceImpl implements CrudService {
         seatRepository.deleteAllByZoneId(zone.getId());
     }
 
-    // ── Layout seat generation ─────────────────────────────
-    // For each zone in the layout JSON:
-    //   - Find matching Zone entity by name (zone_name in JSON = zone.name in DB)
-    //   - Delete existing seats for that zone
-    //   - Create Seat rows with seat_code = seat_id from JSON (stable bridge for lookups)
+    // Layout seat generation
+    //
+    // Handles two JSON formats:
+    //
+    // 1. Venue default layout (flat):
+    //    { "zones": [ { "zone_name": "VIP", "seats": [...] } ] }
+    //
+    // 2. Custom multi-floor layout:
+    //    { "floors": [ { "zones": [ { "zone_name": "VIP", "seats": [...] } ] } ] }
+    //
+    // In both cases: seat_code = seat_id from JSON (stable bridge to seats table)
 
     private void generateSeatsFromLayout(EventSession session, String layoutJson) {
         try {
-            JsonNode root  = objectMapper.readTree(layoutJson);
-            JsonNode zones = root.path("zones");
-            if (!zones.isArray()) return;
-
+            JsonNode root = objectMapper.readTree(layoutJson);
             List<Zone> sessionZones = zoneRepository.findAllBySessionId(session.getId());
 
-            for (JsonNode zoneNode : zones) {
+            // Collect all zone nodes regardless of format
+            List<JsonNode> zoneNodes = new ArrayList<>();
+
+            if (root.has("floors") && root.path("floors").isArray()) {
+                // Custom multi-floor layout — extract zones from each floor
+                for (JsonNode floor : root.path("floors")) {
+                    JsonNode zones = floor.path("zones");
+                    if (zones.isArray()) {
+                        for (JsonNode z : zones) zoneNodes.add(z);
+                    }
+                }
+            } else if (root.has("zones") && root.path("zones").isArray()) {
+                // Venue default layout — zones at root level
+                for (JsonNode z : root.path("zones")) zoneNodes.add(z);
+            }
+
+            if (zoneNodes.isEmpty()) return;
+
+            for (JsonNode zoneNode : zoneNodes) {
                 String   zoneName = zoneNode.path("zone_name").asText();
                 JsonNode seats    = zoneNode.path("seats");
                 if (!seats.isArray() || seats.isEmpty()) continue;
@@ -347,7 +367,7 @@ public class CrudServiceImpl implements CrudService {
         }
     }
 
-    // ── Private helpers ────────────────────────────────────
+    // Private Helpers
 
     private Event findEvent(UUID organizerId, UUID eventId) {
         return eventRepository.findByIdAndOrganizerId(eventId, organizerId)
@@ -438,15 +458,13 @@ public class CrudServiceImpl implements CrudService {
     }
 
     private EventSessionResponse mapSessionToResponse(EventSession s) {
-        // Reuse core.dto.EventSessionResponse
-        // core record: id, startDate, endDate, status, name, zones
         return new EventSessionResponse(
                 s.getId().toString(),
                 s.getStartDate(),
                 s.getEndDate(),
                 s.getStatus(),
                 s.getName(),
-                null // zones not needed in crud context
+                null
         );
     }
 

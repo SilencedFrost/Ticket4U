@@ -22,7 +22,7 @@ application:
   security:
     # CORS
     cors:
-      allowed-origins: ${FRONTEND_URL}
+      allowed-origins: ${FRONTEND_URL:https://localhost:3000}
 
 # Logging
 logging:

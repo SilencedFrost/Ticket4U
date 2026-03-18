@@ -1,8 +1,10 @@
 package com.ticket4u.management.dto;
 
 import com.ticket4u.core.entity.Event;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record ManagementEventResponse(
@@ -26,5 +28,9 @@ public record ManagementEventResponse(
         Integer totalCapacity,
         BigDecimal revenue,
         OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
-) {}
+        OffsetDateTime updatedAt,
+        // Included on create so frontend gets sessionId immediately
+        List<SessionSummary> sessions
+) {
+    public record SessionSummary(UUID id, OffsetDateTime startDate, OffsetDateTime endDate) {}
+}

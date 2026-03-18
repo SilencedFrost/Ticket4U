@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record ManagementEventRequest(
         @NotBlank String name,
-        @NotNull  UUID venueId,
+        UUID venueId,
         Integer categoryId,
         @NotBlank String addressLine,
         String bannerUrl,

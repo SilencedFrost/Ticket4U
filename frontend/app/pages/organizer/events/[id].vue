@@ -207,8 +207,8 @@
       <div class="card bg-reactive-secondary border-0 p-4 mb-4">
         <h5 class="fw-semibold text-reactive-primary mb-3"><i class="bi bi-layers me-2 text-primary"/>Seating Layout</h5>
 
-        <!-- Venue picker -->
-        <div class="mb-4">
+        <!-- Venue picker — only needed for venue default layout -->
+        <div v-if="layoutMode === 'venue'" class="mb-4">
           <label class="form-label small fw-semibold text-reactive-secondary">Venue <span class="text-danger">*</span></label>
           <select v-model="form.venueId" class="form-select bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.venueId }">
             <option value="">— Select a venue —</option>
@@ -326,7 +326,7 @@
             </div>
 
             <!-- Canvas area -->
-            <div class="d-flex" style="height:520px;">
+            <div class="d-flex" style="height:600px;">
               <!-- JSON panel -->
               <div v-if="activeFloor.showJsonPanel" class="border-end border-secondary overflow-auto flex-shrink-0" style="width:300px;background:#0d1117;font-family:monospace;font-size:11px;">
                 <div class="d-flex justify-content-between align-items-center px-2 py-1 border-bottom border-secondary sticky-top" style="background:#161b22;">
@@ -340,7 +340,7 @@
               <div
                 :ref="el => setCanvasContainerRef(el, activeFloorIdx)"
                 class="position-relative overflow-hidden flex-grow-1"
-                style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
+                style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px); user-select:none;"
               >
                 <canvas v-if="activeFloorIdx > 0"
                   :ref="el => { if (el) activeFloor!.ghostCanvasRef = el as HTMLCanvasElement }"
@@ -412,10 +412,15 @@
                   <select
                     :value="activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.zoneId ?? ''"
                     class="form-select form-select-sm bg-reactive-secondary border-0 text-reactive-primary" style="width:160px;"
-                    @change="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.zoneId = (e.target as HTMLSelectElement).value || undefined; rebuildAndDraw() }"
+                    @change="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.zoneId = (e.target as HTMLSelectElement).value || undefined; if (s.zoneId) { const z = zones.value.find(z => z.id === s.zoneId); if (z) autoResizeShapeForZone(activeFloorIdx, s, z) }; rebuildAndDraw() }"
                   >
-                    <option value="">No zone linked</option>
-                    <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id">{{ z.name }} ({{ z.seatCount }} seats)</option>
+                    <option value="">— Decorative (no zone) —</option>
+                    <optgroup label="Seated zones">
+                      <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id">{{ z.name }} ({{ z.seatCount }} seats)</option>
+                    </optgroup>
+                    <optgroup label="Standing zones">
+                      <option v-for="z in zones.filter(z => z.isStanding)" :key="z.id" :value="z.id">{{ z.name }} (standing · {{ z.capacity }})</option>
+                    </optgroup>
                   </select>
                   <button class="btn btn-sm btn-outline-danger ms-auto" @click="deleteSelectedShape(activeFloorIdx)"><i class="bi bi-trash"/></button>
                 </div>
@@ -647,7 +652,17 @@ const saveStep1 = async () => {
         await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/sessions/${savedSessionId.value}`, { method: 'PUT', body: { startDate: payload.startDate, endDate: payload.endDate }, credentials: 'include' })
     } else {
       const res = await $fetch<{ id: string; sessions: { id: string }[] }>(`${config.public.apiUrl}/organizer/events`, { method: 'POST', body: payload, credentials: 'include' })
-      savedEventId.value = res.id; savedSessionId.value = res.sessions?.[0]?.id ?? null
+      savedEventId.value = res.id
+      // Primary: get sessionId from response
+      savedSessionId.value = res.sessions?.[0]?.id ?? null
+      // Fallback: if sessions not in response, fetch them
+      if (!savedSessionId.value) {
+        const sessions = await $fetch<{ id: string }[]>(
+          `${config.public.apiUrl}/organizer/events/${res.id}/sessions`,
+          { credentials: 'include' }
+        ).catch(() => [])
+        savedSessionId.value = sessions?.[0]?.id ?? null
+      }
       history.replaceState({}, '', `/organizer/events/${res.id}`)
     }
     currentStep.value = 1
@@ -1192,7 +1207,10 @@ const onCanvasMouseMove = (e: MouseEvent, fi: number) => {
   if (drag.targetId === '__pan__') {
     const pan = getFloorPan(floor.floorId)
     pan.x = drag.panOffsetX + (px - drag.startX); pan.y = drag.panOffsetY + (py - drag.startY)
-    drawFloor(fi); if (fi > 0) drawGhostCanvas(fi); return
+    drawFloor(fi)
+    if (fi > 0) drawGhostCanvas(fi)
+    rebuildAndDraw()
+    return
   }
 
   // Seat interactions
@@ -1222,13 +1240,20 @@ const onCanvasMouseMove = (e: MouseEvent, fi: number) => {
     if (shape) {
       shape.rotation = drag.rotOrigAngle + (Math.atan2(ly - drag.rotCy, lx - drag.rotCx) - Math.atan2(drag.startY - drag.rotCy, drag.startX - drag.rotCx))
       drawFloor(fi)
+      if (shape.zoneId) rebuildAndDraw()
     }
     return
   }
   if (drag.resizeHandle) {
     const isStage = drag.targetId === '__stageResize__'
-    applyResize(isStage ? floor.stageBox : floor.canvasShapes.find(s => s.id === drag.targetId)!, drag.resizeHandle, drag.origX, drag.origY, drag.resizeOrigW, drag.resizeOrigH, dx, dy)
-    drawFloor(fi); return
+    const resizeTarget = isStage ? floor.stageBox : floor.canvasShapes.find(s => s.id === drag.targetId)!
+    applyResize(resizeTarget, drag.resizeHandle, drag.origX, drag.origY, drag.resizeOrigW, drag.resizeOrigH, dx, dy)
+    drawFloor(fi)
+    // Rebuild seats if resizing a zone shape
+    if (!isStage && (resizeTarget as CanvasShape).zoneId) {
+      rebuildAndDraw()
+    }
+    return
   }
   if (drag.targetId === '__stage__') {
     const { x, y } = snapPosition(fi, '__stage__', drag.origX + dx, drag.origY + dy, floor.stageBox.width, floor.stageBox.height)
@@ -1237,7 +1262,12 @@ const onCanvasMouseMove = (e: MouseEvent, fi: number) => {
   const shape = floor.canvasShapes.find(s => s.id === drag.targetId)
   if (shape) {
     const { x, y } = snapPosition(fi, shape.id, drag.origX + dx, drag.origY + dy, shape.width, shape.height)
-    shape.x = x; shape.y = y; drawFloor(fi)
+    shape.x = x; shape.y = y
+    drawFloor(fi)
+    // Seats must follow zone — redraw and rebuild hit map on every move
+    if (shape.zoneId) {
+      rebuildAndDraw()
+    }
   }
 }
 
@@ -1247,14 +1277,19 @@ const onCanvasMouseUp = (_e: MouseEvent, fi: number) => {
   drag.resizeHandle = null; drag.rotatingShape = false; drag.seatMode = ''
   const floor = layoutFloors.value[fi]
   if (floor.layoutCanvasRef) floor.layoutCanvasRef.style.cursor = 'crosshair'
-  drawFloor(fi); drawSeatsOnCanvas(fi)
+  // Final sync — rebuild hit map and redraw everything on mouse up
+  drawFloor(fi)
+  rebuildAndDraw()
 }
 
 const onCanvasWheel = (e: WheelEvent, fi: number) => {
   const floor = layoutFloors.value[fi]
   const pan   = getFloorPan(floor.floorId)
   pan.scale   = Math.min(4, Math.max(0.25, pan.scale + (e.deltaY > 0 ? -0.1 : 0.1)))
-  floor.scale = pan.scale; drawFloor(fi); if (fi > 0) drawGhostCanvas(fi)
+  floor.scale = pan.scale
+  drawFloor(fi)
+  if (fi > 0) drawGhostCanvas(fi)
+  rebuildAndDraw()
 }
 
 const applyResize = (target: { x: number; y: number; width: number; height: number }, handle: string, ox: number, oy: number, ow: number, oh: number, dx: number, dy: number) => {
@@ -1285,28 +1320,57 @@ const addStageShape = (fi: number, type: 'rect' | 'ellipse') => {
   floor.canvasShapes.push({ id: crypto.randomUUID(), type, x: CANVAS_W / 2 - 100, y: 20 + stageCount * 70, width: 200, height: 50, label: stageCount === 0 ? 'Stage' : `Stage ${stageCount + 1}`, color: '#f59e0b', accessible: false, isStage: true })
   floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id; drawFloor(fi)
 }
+// Auto-resize a shape to neatly fit its zone's seat grid
+const autoResizeShapeForZone = (fi: number, shape: CanvasShape, zone: Zone) => {
+  if (zone.isStanding || !zone.seatCount) return
+  const floor    = layoutFloors.value[fi]
+  const seatR    = (shape.seatSize ?? floor.globalSeatSize) / 2
+  const gap      = seatR * 2 + 2
+  const PADDING  = seatR * 1.5
+
+  // Infer cols/rows from seatCount — try to match what the backend generated
+  // Backend uses gridCols seats per row, gridRows rows
+  // We reconstruct from seatCount: try stored gridRows/gridCols on zone first
+  const cols = (zone as any).gridCols ?? Math.ceil(Math.sqrt(zone.seatCount))
+  const rows = Math.ceil(zone.seatCount / cols)
+
+  const newW = Math.max(160, cols * gap + PADDING * 2)
+  const newH = Math.max(80,  rows * gap + PADDING * 2)
+
+  // Keep top-left anchor, just resize
+  shape.width  = newW
+  shape.height = newH
+}
+
 const addZoneShapeToFloor = (fi: number, zone: Zone) => {
   const floor   = layoutFloors.value[fi]
-  // If shape already exists for this zone, just select it
+  // If shape already exists for this zone, just select and resize it
   const already = floor.canvasShapes.find(s => s.zoneId === zone.id || s.label === zone.name)
   if (already) {
-    // Update zoneId in case it wasn't linked before
     already.zoneId = zone.id
     floor.selectedShapeId = already.id
+    autoResizeShapeForZone(fi, already, zone)
     rebuildAndDraw()
     return
   }
-  // Create new shape with zoneId pre-linked and color from zone
-  floor.canvasShapes.push({
+  // Stagger placement so shapes don't pile on top of each other
+  const nonStageShapes = floor.canvasShapes.filter(s => !s.isStage)
+  const col = nonStageShapes.length % 3
+  const row = Math.floor(nonStageShapes.length / 3)
+  const newShape: CanvasShape = {
     id: crypto.randomUUID(), type: 'rect',
-    x: CANVAS_W / 2 - 120, y: Math.min(80 + floor.canvasShapes.length * 30, CANVAS_H - 140),
+    x: 40 + col * 280,
+    y: Math.min(80 + row * 160, CANVAS_H - 140),
     width: 240, height: 120,
     label: zone.name,
     color: '#6366f1',
     accessible: !zone.isStanding,
-    zoneId: zone.id,                    // auto-link to zone
-  })
-  floor.selectedShapeId = floor.canvasShapes[floor.canvasShapes.length - 1].id
+    zoneId: zone.id,
+  }
+  // Auto-resize to fit seats
+  autoResizeShapeForZone(fi, newShape, zone)
+  floor.canvasShapes.push(newShape)
+  floor.selectedShapeId = newShape.id
   rebuildAndDraw()
 }
 const clearFloor = (fi: number) => {
@@ -1341,77 +1405,90 @@ const groupSeatsByRow = (seats: SeatInfo[]): SeatInfo[][] => {
   return [...map.keys()].sort().map(k => map.get(k)!)
 }
 
+// Compute seat pixel positions — shared between drawSeatsOnCanvas and rebuildAndDraw
+// Returns positions in PIXEL space so hit testing and rendering are always in sync
+const computeSeatPixelPositions = (fi: number, shape: CanvasShape, seats: SeatInfo[], floor: LayoutFloor) => {
+  const pan    = getFloorPan(floor.floorId)
+  const scaleX = (floor.stageSize.width  / CANVAS_W) * pan.scale
+  const scaleY = (floor.stageSize.height / CANVAS_H) * pan.scale
+
+  const seatPx   = (shape.seatSize ?? floor.globalSeatSize) / 2
+  const baseR    = Math.max(2, seatPx * scaleX)  // radius in pixels
+  const gap      = baseR * 2 + 3
+  const PADDING  = baseR * 1.5
+
+  // Shape bounds in pixel space
+  const shapeX = pan.x + shape.x * scaleX
+  const shapeY = pan.y + shape.y * scaleY
+  const shapeW = shape.width  * scaleX
+  const shapeH = shape.height * scaleY
+
+  const seatRows = groupSeatsByRow(seats)
+  const gridH    = seatRows.length * gap - gap + baseR * 2
+  const originY  = shapeY + PADDING + Math.max(0, (shapeH - PADDING * 2 - gridH) / 2)
+
+  const result: Array<{ seat: SeatInfo; cx: number; cy: number; r: number; rot: number }> = []
+
+  seatRows.forEach((rowSeats, rowIdx) => {
+    const rowGridW   = rowSeats.length * gap - gap + baseR * 2
+    const rowOriginX = shapeX + PADDING + Math.max(0, (shapeW - PADDING * 2 - rowGridW) / 2)
+    const baseCy     = originY + rowIdx * gap
+
+    rowSeats.forEach((seat, colIdx) => {
+      const tf  = floor.seatTransforms[seat.id]
+      const cx  = rowOriginX + colIdx * gap + (tf?.dx ?? 0)
+      const cy  = baseCy + (tf?.dy ?? 0)
+      const rot = tf?.rotation ?? 0
+      const r   = baseR * (tf?.scale ?? 1)
+      result.push({ seat, cx, cy, r, rot })
+    })
+  })
+  return { result, baseR, scaleX }
+}
+
 const drawSeatsOnCanvas = (fi: number) => {
   const floor  = layoutFloors.value[fi]
   const canvas = floor?.seatCanvasRef; if (!canvas) return
   const ctx    = canvas.getContext('2d'); if (!ctx) return
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  const pan    = getFloorPan(floor.floorId)
-  const scaleX = (floor.stageSize.width  / CANVAS_W) * pan.scale
-  const scaleY = (floor.stageSize.height / CANVAS_H) * pan.scale
-
-  ctx.save(); ctx.translate(pan.x, pan.y)
-
   for (const shape of floor.canvasShapes) {
     if (!shape.zoneId) continue
     const seats = seatsByZone.value[shape.zoneId]
     if (!seats || seats.length === 0) continue
 
-    const baseR    = getSeatBaseRadius(fi, shape)
-    const gap      = baseR * 2 + 3
-    const shapeW   = shape.width  * scaleX
-    const shapeH   = shape.height * scaleY
-    const PADDING  = baseR * 1.5
-    const seatRows = groupSeatsByRow(seats)
-    const gridH    = seatRows.length * gap - gap + baseR * 2
-    const originY  = shape.y * scaleY + PADDING + Math.max(0, (shapeH - PADDING * 2 - gridH) / 2)
+    const { result, baseR, scaleX } = computeSeatPixelPositions(fi, shape, seats, floor)
 
-    seatRows.forEach((rowSeats, rowIdx) => {
-      const rowGridW   = rowSeats.length * gap - gap + baseR * 2
-      const rowOriginX = shape.x * scaleX + PADDING + Math.max(0, (shapeW - PADDING * 2 - rowGridW) / 2)
-      const baseCy     = originY + rowIdx * gap
+    for (const { seat, cx, cy, r, rot } of result) {
+      const isSelectedSeat = floor.selectedSeatId === seat.id
 
-      rowSeats.forEach((seat, colIdx) => {
-        const baseCx = rowOriginX + colIdx * gap
-        const tf     = floor.seatTransforms[seat.id]
-        const cx     = baseCx + (tf?.dx ?? 0)
-        const cy     = baseCy + (tf?.dy ?? 0)
-        const rot    = tf?.rotation ?? 0
-        const r      = baseR * (tf?.scale ?? 1)
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot)
+      ctx.fillStyle   = seat.priceOverride !== null ? '#f59e0b' : (shape.color + 'dd')
+      ctx.globalAlpha = 0.9
+      ctx.strokeStyle = isSelectedSeat ? '#ffffff' : 'transparent'
+      ctx.lineWidth   = isSelectedSeat ? 2 : 0
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill()
+      if (isSelectedSeat) ctx.stroke()
 
-        // FIX: use selectedSeatInfo instead of old selectedSeat ref
-        const isSelectedSeat = floor.selectedSeatId === seat.id
+      if (r >= 8) {
+        ctx.globalAlpha = 0.92; ctx.fillStyle = '#ffffff'
+        ctx.font = `500 ${Math.max(7, Math.min(11, r * 0.72))}px sans-serif`
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+        ctx.fillText(seat.seatCode ?? '', 0, 0)
+      }
 
-        ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot)
-        ctx.fillStyle   = seat.priceOverride !== null ? '#f59e0b' : (shape.color + 'dd')
-        ctx.globalAlpha = 0.9
-        ctx.strokeStyle = isSelectedSeat ? '#ffffff' : 'transparent'
-        ctx.lineWidth   = isSelectedSeat ? 2 : 0
-        ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill()
-        if (isSelectedSeat) ctx.stroke()
-
-        if (r >= 8) {
-          ctx.globalAlpha = 0.92; ctx.fillStyle = '#ffffff'
-          ctx.font = `500 ${Math.max(7, Math.min(11, r * 0.72))}px sans-serif`
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-          ctx.fillText(seat.seatCode ?? '', 0, 0)
-        }
-
-        if (isSelectedSeat) {
-          ctx.globalAlpha = 1
-          ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1
-          ctx.beginPath(); ctx.moveTo(0, -r); ctx.lineTo(0, -r - 10); ctx.stroke()
-          ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.fill()
-          ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.stroke()
-          ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.fill()
-          ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.stroke()
-        }
-        ctx.restore()
-      })
-    })
+      if (isSelectedSeat) {
+        ctx.globalAlpha = 1
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1
+        ctx.beginPath(); ctx.moveTo(0, -r); ctx.lineTo(0, -r - 10); ctx.stroke()
+        ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.fill()
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, -r - 13, 5, 0, Math.PI * 2); ctx.stroke()
+        ctx.fillStyle = '#6366f1'; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.fill()
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(r, r, 4, 0, Math.PI * 2); ctx.stroke()
+      }
+      ctx.restore()
+    }
   }
-  ctx.globalAlpha = 1; ctx.restore()
 }
 
 // ── Rebuild hit map ────────────────────────────────────────
@@ -1419,39 +1496,15 @@ const rebuildAndDraw = () => {
   const newMap: typeof seatHitMap.value = []
   layoutFloors.value.forEach((floor, fi) => {
     const entries: typeof seatHitMap.value[0] = []
-    const pan    = getFloorPan(floor.floorId)
-    const scaleX = (floor.stageSize.width / CANVAS_W) * pan.scale
-    const scaleY = (floor.stageSize.height / CANVAS_H) * pan.scale
-
     for (const shape of floor.canvasShapes) {
       if (!shape.zoneId) continue
       const seats = seatsByZone.value[shape.zoneId]
       if (!seats || seats.length === 0) continue
-
-      const baseR    = getSeatBaseRadius(fi, shape)
-      const gap      = baseR * 2 + 3
-      const shapeW   = shape.width  * scaleX
-      const shapeH   = shape.height * scaleY
-      const PADDING  = baseR * 1.5
-      const seatRows = groupSeatsByRow(seats)
-      const gridH    = seatRows.length * gap - gap + baseR * 2
-      const originY  = shape.y * scaleY + PADDING + Math.max(0, (shapeH - PADDING * 2 - gridH) / 2)
-
-      seatRows.forEach((rowSeats, rowIdx) => {
-        const rowGridW   = rowSeats.length * gap - gap + baseR * 2
-        const rowOriginX = shape.x * scaleX + PADDING + Math.max(0, (shapeW - PADDING * 2 - rowGridW) / 2)
-        const baseCy     = originY + rowIdx * gap
-        rowSeats.forEach((seat, colIdx) => {
-          const tf = floor.seatTransforms[seat.id]
-          const r  = baseR * (tf?.scale ?? 1)
-          entries.push({
-            seatId: seat.id, seat,
-            cx: pan.x + rowOriginX + colIdx * gap + (tf?.dx ?? 0),
-            cy: pan.y + baseCy + (tf?.dy ?? 0),
-            r,
-          })
-        })
-      })
+      // Use the same pixel-space computation as drawSeatsOnCanvas — guaranteed in sync
+      const { result } = computeSeatPixelPositions(fi, shape, seats, floor)
+      for (const { seat, cx, cy, r } of result) {
+        entries.push({ seatId: seat.id, seat, cx, cy, r })
+      }
     }
     newMap[fi] = entries
   })
@@ -1484,7 +1537,7 @@ const buildFloorJson = (floor: LayoutFloor) => {
               .map(([seatId, tf]) => [seatId, { dx: tf.dx, dy: tf.dy, rotation: tf.rotation, scale: tf.scale }])
           )
         : {},
-      seats: [],
+      // seats come from DB — not stored in layout JSON
     })),
     stage_shapes: stageShapes.map(s => ({
       label: s.label, type: s.type, rotation: s.rotation ?? 0,
@@ -1522,7 +1575,12 @@ const layoutSaved = ref(false)
 
 const applyLayout = async () => {
   if (!savedEventId.value) return
-  if (!form.value.venueId) { errors.value.venueId = 'Venue is required'; globalError.value = 'Please select a venue.'; return }
+  // Venue only required when using venue default layout
+  if (layoutMode.value === 'venue' && !form.value.venueId) {
+    errors.value.venueId = 'Venue is required for venue layout'
+    globalError.value = 'Please select a venue, or switch to Custom Layout.'
+    return
+  }
   errors.value = {}; saving.value = true; globalError.value = ''
   try {
     if (layoutMode.value === 'venue') {
@@ -1568,9 +1626,11 @@ const loadEvent = async () => {
       savedSessionId.value = eventSessions[0].id
       zones.value = await $fetch<Zone[]>(`${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones`, { credentials: 'include' }).catch(() => [])
     }
-    if (layoutData?.eventLayout) {
+    // layoutData from GET /events/{id}/layout — field may be eventLayout or layout
+    const rawLayout = layoutData?.eventLayout ?? layoutData?.layout ?? null
+    if (rawLayout) {
       try {
-        const parsed = JSON.parse(layoutData.eventLayout)
+        const parsed = JSON.parse(rawLayout)
         if (parsed.floors && Array.isArray(parsed.floors)) {
           layoutMode.value   = 'custom'
           layoutSaved.value  = true
@@ -1644,22 +1704,23 @@ const autoLinkZonesToShapes = () => {
     const hasSeat    = (seatsByZone.value[zone.id]?.length ?? 0) > 0
     const hasShape   = floor.canvasShapes.some(s => s.zoneId === zone.id)
     if (hasSeat && !hasShape) {
-      // Place a shape for this zone automatically
-      const cols  = Math.ceil(CANVAS_W / (zones.value.length + 1))
-      const xPos  = 60 + (idx % 3) * (cols + 20)
-      const yPos  = 80 + Math.floor(idx / 3) * 160
-      floor.canvasShapes.push({
+      const col   = idx % 3
+      const row   = Math.floor(idx / 3)
+      const shape: CanvasShape = {
         id:         crypto.randomUUID(),
         type:       'rect',
-        x:          Math.min(xPos, CANVAS_W - 260),
-        y:          Math.min(yPos, CANVAS_H - 140),
+        x:          Math.min(40 + col * 280, CANVAS_W - 260),
+        y:          Math.min(80 + row * 160, CANVAS_H - 140),
         width:      240,
         height:     120,
         label:      zone.name,
         color:      '#6366f1',
         accessible: !zone.isStanding,
         zoneId:     zone.id,
-      })
+      }
+      // Auto-resize to fit actual seat grid
+      autoResizeShapeForZone(floor.floorOrder - 1, shape, zone)
+      floor.canvasShapes.push(shape)
     }
   })
 }
@@ -1669,9 +1730,9 @@ watch(currentStep, async (step) => {
   if (step === 3 && savedSessionId.value) {
     await fetchZones()
     await loadSeatsForStep4()
-    // Auto-create canvas shapes for zones that have seats but no shape yet
-    // This handles seed data and events where seats were generated outside the canvas
-    autoLinkZonesToShapes()
+    // Auto-link only for existing events that already have a layout
+    // For new events, organizer uses the palette to place zones manually
+    if (!isNew.value) autoLinkZonesToShapes()
     nextTick(() => {
       rebuildAndDraw()
       layoutFloors.value.forEach((_, fi) => drawFloor(fi))

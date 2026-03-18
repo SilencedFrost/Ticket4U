@@ -2,6 +2,9 @@ package com.ticket4u.management.repository;
 
 import com.ticket4u.core.entity.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +16,13 @@ public interface EventManagementSeatRepository extends JpaRepository<Seat, UUID>
 
     Optional<Seat> findByIdAndZoneId(UUID id, UUID zoneId);
 
-    // Bridge between layout JSON seat_id and real seat rows
-    Optional<Seat> findByZoneIdAndSeatCode(UUID zoneId, String seatCode);
-
     int countByZoneId(UUID zoneId);
 
-    void deleteAllByZoneId(UUID zoneId);
+    // Max numeric col value per zone — used to derive gridCols
+    @Query("SELECT MAX(CAST(s.colName AS int)) FROM Seat s WHERE s.zone.id = :zoneId")
+    Integer maxColNumberByZoneId(@Param("zoneId") UUID zoneId);
+
+    @Modifying
+    @Query("DELETE FROM Seat s WHERE s.zone.id = :zoneId")
+    void deleteAllByZoneId(@Param("zoneId") UUID zoneId);
 }

@@ -17,5 +17,7 @@ public record ManagementZoneResponse(
         String descriptionEn,
         String giftImageUrl,
         List<String> perks,
-        int seatCount
+        int seatCount,
+        Integer gridRows,   // derived from seat data — null if no seats yet
+        Integer gridCols    // max seats per row
 ) {}

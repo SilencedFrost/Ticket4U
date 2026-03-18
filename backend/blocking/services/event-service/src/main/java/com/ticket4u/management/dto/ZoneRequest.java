@@ -14,5 +14,8 @@ public record ZoneRequest(
         String descriptionVi,
         String descriptionEn,
         String giftImageUrl,
-        List<String> perks
+        List<String> perks,
+        // Seated zone grid — if provided, seats are auto-generated on save
+        Integer gridRows,   // number of rows (A, B, C...)
+        Integer gridCols    // seats per row
 ) {}

@@ -142,7 +142,14 @@ public class ManagementServiceImpl implements ManagementService {
         Zone zone = new Zone();
         zone.setSession(session);
         applyRequestToZone(zone, request);
-        return mapZoneToResponse(zoneRepository.save(zone));
+        Zone saved = zoneRepository.save(zone);
+        // Auto-generate seats from grid if specified
+        if (!Boolean.TRUE.equals(request.isStanding())
+                && request.gridRows() != null && request.gridRows() > 0
+                && request.gridCols() != null && request.gridCols() > 0) {
+            generateSeatsFromGrid(saved, request.gridRows(), request.gridCols());
+        }
+        return mapZoneToResponse(saved);
     }
 
     @Override
@@ -152,7 +159,15 @@ public class ManagementServiceImpl implements ManagementService {
         Zone zone = zoneRepository.findByIdAndSessionId(zoneId, sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("Zone not found: " + zoneId));
         applyRequestToZone(zone, request);
-        return mapZoneToResponse(zoneRepository.save(zone));
+        Zone saved = zoneRepository.save(zone);
+        // Regenerate seats if grid dimensions provided
+        if (!Boolean.TRUE.equals(request.isStanding())
+                && request.gridRows() != null && request.gridRows() > 0
+                && request.gridCols() != null && request.gridCols() > 0) {
+            seatRepository.deleteAllByZoneId(saved.getId());
+            generateSeatsFromGrid(saved, request.gridRows(), request.gridCols());
+        }
+        return mapZoneToResponse(saved);
     }
 
     @Override
@@ -183,8 +198,15 @@ public class ManagementServiceImpl implements ManagementService {
             layoutJson = request.customLayoutJson();
         }
 
-        // null means use venue default; only store if custom
-        event.setLayout(request.useVenueLayout() ? null : layoutJson);
+        if (request.useVenueLayout()) {
+            // Venue layout — clear custom layout, keep venue association
+            event.setLayout(null);
+        } else {
+            // Custom layout — store layout JSON and clear venue so ticket-select
+            // uses event.layout directly, not venue.layout
+            event.setLayout(layoutJson);
+            event.setVenue(null);
+        }
         eventRepository.save(event);
 
         // Generate seats for all sessions from the layout
@@ -200,6 +222,10 @@ public class ManagementServiceImpl implements ManagementService {
     @Transactional(readOnly = true)
     public EventLayoutResponse getLayout(UUID organizerId, UUID eventId) {
         Event event = findEvent(organizerId, eventId);
+        // Rule:
+        // - event.layout != null  → custom layout, use it directly
+        // - event.layout == null && venue != null → use venue default layout
+        // - both null → no layout configured
         String layoutJson = event.getLayout();
         if (layoutJson == null && event.getVenue() != null) {
             layoutJson = event.getVenue().getLayout();
@@ -260,6 +286,31 @@ public class ManagementServiceImpl implements ManagementService {
     public void deleteSeats(UUID organizerId, UUID sessionId, UUID zoneId) {
         Zone zone = resolveZone(organizerId, sessionId, zoneId);
         seatRepository.deleteAllByZoneId(zone.getId());
+    }
+
+    // ── Seat generation from grid dimensions ──────────────
+    // Generates rows A-Z with gridCols seats each: A1, A2... B1, B2...
+    private void generateSeatsFromGrid(Zone zone, int gridRows, int gridCols) {
+        List<Seat> seats = new ArrayList<>();
+        for (int r = 0; r < gridRows; r++) {
+            String rowPrefix = r < 26
+                    ? String.valueOf((char) ('A' + r))
+                    : String.valueOf((char) ('A' + r / 26 - 1)) + (char) ('A' + r % 26);
+            for (int c = 1; c <= gridCols; c++) {
+                String seatCode = rowPrefix + c;
+                if (seatCode.length() > 20) seatCode = seatCode.substring(0, 20);
+                Seat seat = new Seat();
+                seat.setZone(zone);
+                seat.setName(rowPrefix + c);
+                seat.setRowName(rowPrefix.length() > 5 ? rowPrefix.substring(0, 5) : rowPrefix);
+                seat.setColName(String.valueOf(c).length() > 5 ? String.valueOf(c).substring(0, 5) : String.valueOf(c));
+                seat.setSeatCode(seatCode);
+                seat.setStatus(Seat.SeatStatus.AVAILABLE);
+                seats.add(seat);
+            }
+        }
+        seatRepository.saveAll(seats);
+        log.info("Generated {}x{} = {} seats for zone '{}'", gridRows, gridCols, seats.size(), zone.getName());
     }
 
     // ── Seat generation from layout JSON ───────────────────
@@ -358,7 +409,14 @@ public class ManagementServiceImpl implements ManagementService {
     private void applyRequestToZone(Zone zone, ZoneRequest req) {
         zone.setName(req.name());
         zone.setIsStanding(req.isStanding());
-        zone.setCapacity(req.capacity());
+        // Auto-calculate capacity from grid if both dimensions provided
+        if (!Boolean.TRUE.equals(req.isStanding())
+                && req.gridRows() != null && req.gridRows() > 0
+                && req.gridCols() != null && req.gridCols() > 0) {
+            zone.setCapacity(req.gridRows() * req.gridCols());
+        } else {
+            zone.setCapacity(req.capacity());
+        }
         zone.setPrice(req.price());
         zone.setPurchaseLimit(req.purchaseLimit());
         zone.setDescriptionVi(req.descriptionVi());
@@ -373,12 +431,17 @@ public class ManagementServiceImpl implements ManagementService {
         Integer    totalCapacity = includeStats ? eventRepository.sumCapacityByEventId(event.getId()) : 0;
         BigDecimal revenue       = includeStats ? eventRepository.sumRevenueByEventId(event.getId()) : BigDecimal.ZERO;
 
-        OffsetDateTime firstSessionStart = event.getSessions() == null ? null :
-                event.getSessions().stream()
-                        .map(EventSession::getStartDate)
-                        .filter(d -> d != null)
-                        .min(OffsetDateTime::compareTo)
-                        .orElse(null);
+        List<EventSession> sessionList = sessionRepository.findAllByEventIdOrderByStartDateAsc(event.getId());
+
+        OffsetDateTime firstSessionStart = sessionList.stream()
+                .map(EventSession::getStartDate)
+                .filter(d -> d != null)
+                .min(OffsetDateTime::compareTo)
+                .orElse(null);
+
+        List<ManagementEventResponse.SessionSummary> sessions = sessionList.stream()
+                .map(s -> new ManagementEventResponse.SessionSummary(s.getId(), s.getStartDate(), s.getEndDate()))
+                .collect(Collectors.toList());
 
         return new ManagementEventResponse(
                 event.getId(),
@@ -401,7 +464,8 @@ public class ManagementServiceImpl implements ManagementService {
                 totalCapacity,
                 revenue,
                 event.getCreatedAt(),
-                event.getUpdatedAt()
+                event.getUpdatedAt(),
+                sessions
         );
     }
 
@@ -417,8 +481,28 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     private ManagementZoneResponse mapZoneToResponse(Zone zone) {
-        int seatCount = Boolean.TRUE.equals(zone.getIsStanding()) ? 0
-                : seatRepository.countByZoneId(zone.getId());
+        if (Boolean.TRUE.equals(zone.getIsStanding())) {
+            return new ManagementZoneResponse(
+                    zone.getId(),
+                    zone.getSession() != null ? zone.getSession().getId() : null,
+                    zone.getName(),
+                    zone.getIsStanding(),
+                    zone.getCapacity(),
+                    zone.getQuantitySold(),
+                    zone.getPurchaseLimit(),
+                    zone.getPrice(),
+                    zone.getDescriptionVi(),
+                    zone.getDescriptionEn(),
+                    zone.getGiftImageUrl(),
+                    zone.getPerks(),
+                    0, null, null
+            );
+        }
+        int seatCount = seatRepository.countByZoneId(zone.getId());
+        // Derive grid dimensions from actual seat data
+        Integer gridCols = seatRepository.maxColNumberByZoneId(zone.getId());
+        Integer gridRows = (gridCols != null && gridCols > 0)
+                ? (int) Math.ceil((double) seatCount / gridCols) : null;
         return new ManagementZoneResponse(
                 zone.getId(),
                 zone.getSession() != null ? zone.getSession().getId() : null,
@@ -432,7 +516,7 @@ public class ManagementServiceImpl implements ManagementService {
                 zone.getDescriptionEn(),
                 zone.getGiftImageUrl(),
                 zone.getPerks(),
-                seatCount
+                seatCount, gridRows, gridCols
         );
     }
 

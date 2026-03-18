@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 	policy_refund 			TEXT,
 	seating_plan_image_url 	TEXT,
 
-	venue_id 				UUID NOT NULL,
+	venue_id 				UUID,
 	longitude 	DECIMAL(10, 7),
 	latitude 	DECIMAL(10, 7),
 

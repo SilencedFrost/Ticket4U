@@ -2,6 +2,6 @@ package com.ticket4u.management.dto;
 
 import java.math.BigDecimal;
 
-public record SeatPriceOverrideRequest(
+public record ManagementSeatPriceOverrideRequest(
         BigDecimal priceOverride
 ) {}

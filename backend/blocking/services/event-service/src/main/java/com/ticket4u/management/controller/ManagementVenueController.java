@@ -1,6 +1,5 @@
 package com.ticket4u.management.controller;
 
-import com.ticket4u.core.entity.Venue;
 import com.ticket4u.management.repository.EventManagementVenueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/venues")
 @RequiredArgsConstructor
-public class VenueController {
+public class ManagementVenueController {
 
     private final EventManagementVenueRepository venueRepository;
 

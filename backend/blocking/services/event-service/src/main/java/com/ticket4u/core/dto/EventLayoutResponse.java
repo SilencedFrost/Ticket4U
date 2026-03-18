@@ -1,4 +1,4 @@
-package com.ticket4u.management.dto;
+package com.ticket4u.core.dto;
 
 import java.util.UUID;
 

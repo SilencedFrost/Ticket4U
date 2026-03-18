@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record ZoneRequest(
+public record ManagementZoneRequest(
         @NotBlank String name,
         @NotNull  Boolean isStanding,
         Integer capacity,

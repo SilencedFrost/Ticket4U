@@ -3,6 +3,7 @@ package com.ticket4u.core.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -36,6 +37,7 @@ public class Venue {
     private BigDecimal latitude;
 
     @Column(columnDefinition = "JSONB")
+    @ColumnTransformer(write = "?::jsonb")
     private String layout;
 
     @Column(columnDefinition = "TEXT")

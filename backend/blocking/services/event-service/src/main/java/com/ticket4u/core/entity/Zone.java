@@ -4,6 +4,7 @@ import com.ticket4u.core.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -53,6 +54,7 @@ public class Zone {
 
     @Column(columnDefinition = "JSONB")
     @Convert(converter = StringListConverter.class)
+    @ColumnTransformer(write = "?::jsonb")
     private List<String> perks;
 
     @CreationTimestamp

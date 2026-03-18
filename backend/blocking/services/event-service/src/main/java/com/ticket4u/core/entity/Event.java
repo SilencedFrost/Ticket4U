@@ -3,6 +3,7 @@ package com.ticket4u.core.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -127,6 +128,7 @@ public class Event {
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
     @Column(name = "layout", columnDefinition = "JSONB")
+    @ColumnTransformer(write = "?::jsonb")
     private String layout;
 
     public enum EventStatus {

@@ -1,7 +1,9 @@
 package com.ticket4u.management.controller;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
+import com.ticket4u.core.dto.EventLayoutResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
+import com.ticket4u.core.dto.SeatResponse;
 import com.ticket4u.management.dto.*;
 import com.ticket4u.management.service.ManagementService;
 import jakarta.validation.Valid;
@@ -80,7 +82,7 @@ public class EventManagementController {
     public ResponseEntity<EventSessionResponse> updateSession(
             @PathVariable UUID eventId,
             @PathVariable UUID sessionId,
-            @Valid @RequestBody EventSessionRequest request) {
+            @Valid @RequestBody ManagementEventSessionRequest request) {
         return ResponseEntity.ok(
                 managementService.updateSession(currentUserId(), eventId, sessionId, request));
     }
@@ -95,7 +97,7 @@ public class EventManagementController {
     @PostMapping("/sessions/{sessionId}/zones")
     public ResponseEntity<ManagementZoneResponse> createZone(
             @PathVariable UUID sessionId,
-            @Valid @RequestBody ZoneRequest request) {
+            @Valid @RequestBody ManagementZoneRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(managementService.createZone(currentUserId(), sessionId, request));
@@ -105,7 +107,7 @@ public class EventManagementController {
     public ResponseEntity<ManagementZoneResponse> updateZone(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId,
-            @Valid @RequestBody ZoneRequest request) {
+            @Valid @RequestBody ManagementZoneRequest request) {
         return ResponseEntity.ok(
                 managementService.updateZone(currentUserId(), sessionId, zoneId, request));
     }
@@ -128,7 +130,7 @@ public class EventManagementController {
     @PutMapping("/events/{eventId}/layout")
     public ResponseEntity<EventLayoutResponse> applyLayout(
             @PathVariable UUID eventId,
-            @RequestBody EventLayoutRequest request) {
+            @RequestBody ManagementEventLayoutRequest request) {
         return ResponseEntity.ok(managementService.applyLayout(currentUserId(), eventId, request));
     }
 
@@ -145,7 +147,7 @@ public class EventManagementController {
     public ResponseEntity<List<SeatResponse>> generateSeats(
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId,
-            @RequestBody SeatGenerateRequest request) {
+            @RequestBody ManagementSeatGenerateRequest request) {
         return ResponseEntity.ok(
                 managementService.generateSeats(currentUserId(), sessionId, zoneId, request));
     }
@@ -155,7 +157,7 @@ public class EventManagementController {
             @PathVariable UUID sessionId,
             @PathVariable UUID zoneId,
             @PathVariable UUID seatId,
-            @RequestBody SeatPriceOverrideRequest request) {
+            @RequestBody ManagementSeatPriceOverrideRequest request) {
         return ResponseEntity.ok(
                 managementService.updateSeatPrice(currentUserId(), sessionId, zoneId, seatId, request));
     }

@@ -124,7 +124,6 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
-    // Custom event layout — null means use venue default layout
     @Column(name = "layout", columnDefinition = "jsonb")
     @ColumnTransformer(write = "?::jsonb")
     private String layout;

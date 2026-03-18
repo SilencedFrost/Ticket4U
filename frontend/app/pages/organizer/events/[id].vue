@@ -587,15 +587,17 @@
       <div class="d-flex justify-content-between gap-2 mt-2">
         <button class="btn btn-outline-secondary px-4" @click="currentStep = 2"><i class="bi bi-arrow-left me-1"/>{{ $t('organizer.event_form.back') }}</button>
         <div class="d-flex gap-2">
-          <!-- Apply layout — generates seats, stays on page so organizer can see/edit them -->
+          <!-- Save Layout — always available, saves and generates seats -->
           <button class="btn btn-primary px-4" :disabled="saving" @click="applyLayout">
             <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
-            <i v-else class="bi bi-layers me-2"/>
-            {{ layoutSaved ? $t('organizer.event_form.step4.reapply') : $t('organizer.event_form.step4.apply') }}
+            <i v-else class="bi bi-floppy me-2"/>
+            {{ $t('organizer.event_form.step4.save_layout') }}
           </button>
-          <!-- Finish — only available after layout has been applied -->
-          <button class="btn btn-success px-4" :disabled="!layoutSaved" @click="router.push(localePath('/organizer/events'))">
-            <i class="bi bi-check2 me-2"/>{{ $t('organizer.event_form.finish') }}
+          <!-- Save & Close — saves layout then redirects -->
+          <button class="btn btn-success px-4" :disabled="saving" @click="applyAndClose">
+            <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
+            <i v-else class="bi bi-check2 me-2"/>
+            {{ $t('organizer.event_form.step4.save_close') }}
           </button>
         </div>
       </div>
@@ -1684,6 +1686,11 @@ const loadSeatsForStep4 = async () => {
 // Two-phase: applyLayout generates seats (stays on page), finish redirects
 const layoutSaved = ref(false)
 
+const applyAndClose = async () => {
+  await applyLayout()
+  if (!globalError.value) router.push(localePath('/organizer/events'))
+}
+
 const applyLayout = async () => {
   if (!savedEventId.value) return
   // Venue only required when using venue default layout
@@ -1759,10 +1766,12 @@ const loadEvent = async () => {
     // - event.venueId != null → venue layout mode (event.layout is null)
     // - both null → new event, no layout yet
     // ManagementEventResponse uses field name "eventLayout"
-    const isCustomLayout = event.eventLayout != null
+    // Handle both camelCase (eventLayout) and snake_case (event_layout) serialization
+    const eventLayout = event.eventLayout ?? event.event_layout ?? null
+    const isCustomLayout = eventLayout != null
     const isVenueLayout  = !isCustomLayout && (event.venueId != null)
     const rawLayout = isCustomLayout
-      ? event.eventLayout
+      ? eventLayout
       : (layoutData?.layout ?? layoutData?.eventLayout ?? null)
 
     if (isCustomLayout && rawLayout) {
@@ -1784,7 +1793,8 @@ const loadEvent = async () => {
                 height: Math.max(toPixel(z.corner4?.y ?? 0.5, CANVAS_H) - y, 60),
                 label: z.zone_name ?? 'Zone', color: z.color ?? '#6366f1',
                 accessible: z.accessible !== false,
-                zoneId: z.zone_id ? (zones.value.find(zn => zn.id === z.zone_id)?.id ?? zones.value.find(zn => zn.name === z.zone_name)?.id) : undefined,
+                // Store raw zone_id from JSON — resolve to actual zone after zones are loaded
+                zoneId: z.zone_id ?? undefined,
                 rotation: z.rotation ?? 0, seatSize: z.seat_size ?? undefined,
               }
             })
@@ -1808,6 +1818,20 @@ const loadEvent = async () => {
               }
             }
             return floor
+          })
+          // Second pass: resolve zone_id strings to actual zone IDs
+          // (zones are now loaded so we can do a proper match)
+          layoutFloors.value.forEach(floor => {
+            floor.canvasShapes.forEach(shape => {
+              if (!shape.zoneId) return
+              // Try exact ID match first
+              const byId = zones.value.find(z => z.id === shape.zoneId)
+              if (byId) return // already correct
+              // Fall back to name match
+              const byName = zones.value.find(z => z.name === shape.label)
+              if (byName?.id) shape.zoneId = byName.id
+              else shape.zoneId = undefined // no match — unlink
+            })
           })
           nextTick(() => layoutFloors.value.forEach((_, fi) => drawFloor(fi)))
         }

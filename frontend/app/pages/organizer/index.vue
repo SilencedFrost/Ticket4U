@@ -27,13 +27,13 @@
     <div class="mb-4">
       <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.home.quick_actions') }}</h5>
       <div class="d-flex flex-wrap gap-3">
-        <NuxtLink to="/organizer/events/new" class="btn btn-primary px-4">
+        <NuxtLink :to="localePath('/organizer/events/new')" class="btn btn-primary px-4">
           <i class="bi bi-plus-lg me-2"/>{{ $t('organizer.events.create') }}
         </NuxtLink>
-        <NuxtLink to="/organizer/events" class="btn btn-outline-secondary px-4">
+        <NuxtLink :to="localePath('/organizer/events')" class="btn btn-outline-secondary px-4">
           <i class="bi bi-calendar-event me-2"/>{{ $t('organizer.home.view_events') }}
         </NuxtLink>
-        <NuxtLink to="/organizer/reports" class="btn btn-outline-secondary px-4">
+        <NuxtLink :to="localePath('/organizer/reports')" class="btn btn-outline-secondary px-4">
           <i class="bi bi-bar-chart me-2"/>{{ $t('organizer.home.view_reports') }}
         </NuxtLink>
       </div>
@@ -47,6 +47,7 @@ import { ref, computed, onMounted } from 'vue'
 definePageMeta({ layout: 'organizer', middleware: 'organizer' })
 
 const { t: $t } = useI18n()
+const localePath = useLocalePath()
 const config    = useRuntimeConfig()
 
 // ── Reuse profile from layout — no extra API call ──────────

@@ -77,9 +77,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 
-const userStore = useUserStore()
-const route     = useRoute()
-const { t: $t } = useI18n()
+const userStore  = useUserStore()
+const route      = useRoute()
+const { t: $t }  = useI18n()
+const localePath = useLocalePath()
 
 const sidebarCollapsed = ref(false)
 
@@ -100,15 +101,17 @@ const roleLabel = computed(() => {
 
 // ── Nav ────────────────────────────────────────────────────
 const navItems = computed(() => [
-  { to: '/organizer',                 label: $t('organizer.nav.home'),     icon: 'bi-house'          },
-  { to: '/organizer/events',          label: $t('organizer.nav.events'),   icon: 'bi-calendar-event' },
-  { to: '/organizer/reports',         label: $t('organizer.nav.reports'),  icon: 'bi-bar-chart'      },
-  { to: '/organizer/events/archived', label: $t('organizer.nav.archived'), icon: 'bi-archive'        },
+  { to: localePath('/organizer'),                 label: $t('organizer.nav.home'),     icon: 'bi-house'          },
+  { to: localePath('/organizer/events'),          label: $t('organizer.nav.events'),   icon: 'bi-calendar-event' },
+  { to: localePath('/organizer/reports'),         label: $t('organizer.nav.reports'),  icon: 'bi-bar-chart'      },
+  { to: localePath('/organizer/events/archived'), label: $t('organizer.nav.archived'), icon: 'bi-archive'        },
 ])
 
 const isActive = (to: string) => {
-  if (to === '/organizer') return route.path === '/organizer'
-  return route.path.startsWith(to)
+  // Compare without locale prefix
+  const path = route.path
+  if (to === localePath('/organizer')) return path === to
+  return path.startsWith(to)
 }
 
 // ── Logout — reset profile cache on logout ─────────────────
@@ -116,7 +119,7 @@ const { reset } = useOrganizerProfile()
 const handleLogout = async () => {
   reset()
   await userStore.logout()
-  navigateTo('/login')
+  navigateTo(localePath('/login'))
 }
 </script>
 

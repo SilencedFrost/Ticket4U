@@ -107,13 +107,13 @@
 
         <!-- Description bilingual -->
         <div class="col-12">
-          <label class="form-label small text-reactive-secondary mb-1">Description</label>
+          <label class="form-label small text-reactive-secondary mb-1">{{ $t('organizer.event_form.step3.description') }}</label>
           <ul class="nav nav-tabs mb-2 border-0">
-            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'vi' }" @click="descLang = 'vi'">🇻🇳 VI</button></li>
-            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'en' }" @click="descLang = 'en'">🇺🇸 EN</button></li>
+            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'vi' }" @click="descLang = 'vi'">🇻🇳 {{ $t('organizer.event_form.step3.desc_vi') }}</button></li>
+            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'en' }" @click="descLang = 'en'">🇺🇸 {{ $t('organizer.event_form.step3.desc_en') }}</button></li>
           </ul>
-          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" placeholder="Mô tả vị trí..."/>
-          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" placeholder="Zone description..."/>
+          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
+          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
         </div>
 
         <!-- Perks -->
@@ -124,7 +124,7 @@
             <button type="button" class="btn btn-outline-primary btn-sm" @click="addPerk"><i class="bi bi-plus-lg"/></button>
           </div>
           <div class="d-flex flex-wrap gap-1">
-            <span v-for="(perk, i) in form.perks" :key="i" class="badge bg-primary bg-opacity-15 text-primary d-inline-flex align-items-center gap-1">
+            <span v-for="(perk, i) in form.perks" :key="i" class="badge d-inline-flex align-items-center gap-1" style="background:rgba(99,102,241,0.25);color:#a5b4fc;border:1px solid rgba(99,102,241,0.4);">
               {{ perk }}<i class="bi bi-x" style="cursor:pointer" @click="form.perks.splice(i, 1)"/>
             </span>
           </div>
@@ -139,9 +139,9 @@
 
       <!-- Actions -->
       <div class="d-flex gap-2 justify-content-end mt-4">
-        <button class="btn btn-outline-secondary" @click="$emit('close')">{{ $t('common.action.cancel') }}</button>
+        <button class="btn btn-outline-secondary" @click="$emit('close')">{{ $t('common.cancel') }}</button>
         <button class="btn btn-primary" :disabled="saving" @click="handleSave">
-          <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>{{ $t('common.action.save') }}
+          <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>{{ $t('common.save') }}
         </button>
       </div>
 

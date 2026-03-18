@@ -72,7 +72,24 @@
       "view": "View"
     },
     "full_name": "Full name",
-    "phone": "Phone number"
+    "phone": "Phone number",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "reset": "Reset",
+    "clear": "Clear",
+    "search": "Search",
+    "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No"
   },
   "brand": {
     "name": "Ticket4U",
@@ -219,7 +236,8 @@
         "perks": "Perks / Inclusions",
         "perk_placeholder": "e.g. Free drink, Lightstick...",
         "delete_title": "Delete Zone",
-        "delete_confirm": "Are you sure you want to delete zone \"{name}\"?"
+        "delete_confirm": "Are you sure you want to delete zone \"{name}\"?",
+        "description": "Description"
       },
       "step4": {
         "title": "Seating Layout",
@@ -242,7 +260,30 @@
         "rotation": "Rotation",
         "price_override": "Price Override",
         "reset": "Reset",
-        "color": "Color"
+        "color": "Color",
+        "venue": "Venue",
+        "shape_rect": "Rect",
+        "shape_ellipse": "Ellipse",
+        "stage_screen": "Stage / Screen",
+        "json_panel": "Floor Layout JSON",
+        "zone_label": "Zone",
+        "rotation_short": "Rot",
+        "size": "Size",
+        "snap_on": "Snap on",
+        "reapply": "Re-apply Layout",
+        "apply": "Apply Layout & Generate Seats",
+        "no_venue": "No venue selected above.",
+        "link_zones": "Link Your Zones",
+        "link_hint": "Linked zones will have seats generated automatically.",
+        "no_zones_link": "No zones created yet. Go back to Step 3.",
+        "seated_zones": "Seated zones",
+        "standing_zones": "Standing zones",
+        "decorative": "— Decorative (no zone) —",
+        "already_placed": "Already placed — click to select",
+        "place_on_canvas": "Place on canvas",
+        "no_floor_error": "Please add at least one floor.",
+        "no_venue_layout_error": "Please select a venue with a layout, or switch to Custom Layout.",
+        "link_description": "For each section in the venue layout, select which of your ticket zones it corresponds to. Unlinked sections will be decorative only."
       }
     }
   }

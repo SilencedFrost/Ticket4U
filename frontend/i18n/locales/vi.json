@@ -72,7 +72,24 @@
       "view": "Xem"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại"
+    "phone": "Số điện thoại",
+    "cancel": "Huỷ",
+    "save": "Lưu",
+    "delete": "Xoá",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "finish": "Hoàn tất",
+    "edit": "Chỉnh sửa",
+    "add": "Thêm",
+    "remove": "Xoá",
+    "reset": "Đặt lại",
+    "clear": "Xoá hết",
+    "search": "Tìm kiếm",
+    "loading": "Đang tải...",
+    "yes": "Có",
+    "no": "Không"
   },
   "brand": {
     "name": "Ticket4U",
@@ -219,7 +236,8 @@
         "perks": "Quyền lợi đi kèm",
         "perk_placeholder": "VD: Nước uống miễn phí, Lightstick...",
         "delete_title": "Xóa khu vực",
-        "delete_confirm": "Bạn có chắc muốn xóa khu vực \"{name}\"?"
+        "delete_confirm": "Bạn có chắc muốn xóa khu vực \"{name}\"?",
+        "description": "Mô tả"
       },
       "step4": {
         "title": "Sơ đồ chỗ ngồi",
@@ -242,7 +260,30 @@
         "rotation": "Xoay",
         "price_override": "Giá tùy chỉnh",
         "reset": "Đặt lại",
-        "color": "Màu sắc"
+        "color": "Màu sắc",
+        "venue": "Địa điểm",
+        "shape_rect": "Chữ nhật",
+        "shape_ellipse": "Hình elip",
+        "stage_screen": "Sân khấu / Màn hình",
+        "json_panel": "JSON Sơ đồ tầng",
+        "zone_label": "Khu vực",
+        "rotation_short": "Xoay",
+        "size": "Kích cỡ",
+        "snap_on": "Căn chỉnh bật",
+        "reapply": "Áp dụng lại sơ đồ",
+        "apply": "Áp dụng sơ đồ & Tạo ghế",
+        "no_venue": "Chưa chọn địa điểm.",
+        "link_zones": "Liên kết khu vực",
+        "link_hint": "Khu vực đã liên kết sẽ được tạo ghế tự động.",
+        "no_zones_link": "Chưa có khu vực nào. Quay lại Bước 3.",
+        "seated_zones": "Khu vực có ghế",
+        "standing_zones": "Khu vực đứng",
+        "decorative": "— Trang trí (không liên kết) —",
+        "already_placed": "Đã đặt — nhấn để chọn",
+        "place_on_canvas": "Đặt lên sơ đồ",
+        "no_floor_error": "Vui lòng thêm ít nhất một tầng.",
+        "no_venue_layout_error": "Vui lòng chọn địa điểm có sơ đồ hoặc chuyển sang Sơ đồ tuỳ chỉnh.",
+        "link_description": "Với mỗi khu vực trong sơ đồ địa điểm, hãy chọn khu vé tương ứng. Các khu vực không liên kết sẽ chỉ mang tính trang trí."
       }
     }
   }

@@ -3,7 +3,7 @@
 
     <!-- Header -->
     <div class="d-flex align-items-center gap-3 mb-4">
-      <NuxtLink to="/organizer/events" class="btn btn-sm btn-outline-secondary">
+      <NuxtLink :to="localePath('/organizer/events')" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-arrow-left"/>
       </NuxtLink>
       <div>
@@ -12,9 +12,22 @@
         </h2>
         <small class="text-reactive-secondary" v-if="eventId">ID: {{ eventId }}</small>
       </div>
-      <span v-if="savedEventId" class="badge bg-success ms-auto">
-        <i class="bi bi-check2 me-1"/>{{ $t('organizer.event_form.draft_saved') }}
-      </span>
+      <div v-if="savedEventId" class="ms-auto d-flex align-items-center gap-2">
+        <!-- Event status badge — always visible -->
+        <span class="badge" :class="{
+          'bg-secondary':         form.status === 'EDITING',
+          'bg-primary':           form.status === 'PREMIERE' || form.status === 'SCHEDULED',
+          'bg-success':           form.status === 'SELLING',
+          'bg-warning text-dark': form.status === 'PAUSED' || form.status === 'ONGOING',
+          'bg-danger':            form.status === 'CANCELLED' || form.status === 'FINISHED',
+        }">{{ form.status }}</span>
+        <!-- Draft saved — shows briefly then fades -->
+        <Transition name="draft-toast">
+          <span v-if="showDraftSaved" class="badge bg-success d-flex align-items-center gap-1">
+            <i class="bi bi-check2"/>{{ $t('organizer.event_form.draft_saved') }}
+          </span>
+        </Transition>
+      </div>
     </div>
 
     <!-- Step Indicators -->
@@ -185,7 +198,7 @@
                 <i class="bi bi-ticket me-1"/>Max {{ zone.purchaseLimit }} / person
               </div>
               <div v-if="zone.perks && parsedPerks(zone.perks).length" class="mt-2 d-flex flex-wrap gap-1">
-                <span v-for="perk in parsedPerks(zone.perks)" :key="perk" class="badge bg-primary bg-opacity-10 text-primary small">{{ perk }}</span>
+                <span v-for="perk in parsedPerks(zone.perks)" :key="perk" class="badge small" style="background:rgba(99,102,241,0.25);color:#a5b4fc;border:1px solid rgba(99,102,241,0.4);">{{ perk }}</span>
               </div>
             </div>
           </div>
@@ -201,15 +214,15 @@
     <div v-if="currentStep === 3">
       <div v-if="zones.length === 0" class="alert alert-warning d-flex align-items-center gap-2 mb-4">
         <i class="bi bi-exclamation-triangle-fill"/>
-        <span>Please add ticket zones in Step 3 before setting up the seating layout.</span>
+        <span>{{ $t('organizer.event_form.step4.no_zones_warning') }}</span>
       </div>
 
       <div class="card bg-reactive-secondary border-0 p-4 mb-4">
-        <h5 class="fw-semibold text-reactive-primary mb-3"><i class="bi bi-layers me-2 text-primary"/>Seating Layout</h5>
+        <h5 class="fw-semibold text-reactive-primary mb-3"><i class="bi bi-layers me-2 text-primary"/>{{ $t('organizer.event_form.step4.title') }}</h5>
 
         <!-- Venue picker — only needed for venue default layout -->
         <div v-if="layoutMode === 'venue'" class="mb-4">
-          <label class="form-label small fw-semibold text-reactive-secondary">Venue <span class="text-danger">*</span></label>
+          <label class="form-label small fw-semibold text-reactive-secondary">{{ $t('organizer.event_form.step4.venue') }} <span class="text-danger">*</span></label>
           <select v-model="form.venueId" class="form-select bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.venueId }">
             <option value="">— Select a venue —</option>
             <option v-for="v in venues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
@@ -224,20 +237,20 @@
         <!-- Layout mode toggle -->
         <div class="btn-group mb-4">
           <button class="btn" :class="layoutMode === 'venue' ? 'btn-primary' : 'btn-outline-secondary'" @click="layoutMode = 'venue'">
-            <i class="bi bi-building me-2"/>Use Venue Default Layout
+            <i class="bi bi-building me-2"/>{{ $t('organizer.event_form.step4.venue_mode') }}
           </button>
           <button class="btn" :class="layoutMode === 'custom' ? 'btn-primary' : 'btn-outline-secondary'" @click="layoutMode = 'custom'">
-            <i class="bi bi-pencil-square me-2"/>Draw Custom Layout
+            <i class="bi bi-pencil-square me-2"/>{{ $t('organizer.event_form.step4.custom_mode') }}
           </button>
         </div>
 
         <!-- VENUE DEFAULT MODE -->
         <div v-if="layoutMode === 'venue'">
           <div v-if="!selectedVenue" class="alert alert-warning py-2 small">
-            <i class="bi bi-exclamation-triangle me-1"/>No venue selected above.
+            <i class="bi bi-exclamation-triangle me-1"/>{{ $t('organizer.event_form.step4.no_venue') }}
           </div>
           <div v-else-if="!selectedVenueLayout" class="alert alert-info py-2 small">
-            <i class="bi bi-info-circle me-1"/>This venue has no default layout configured. Use custom layout instead.
+            <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step4.venue_no_layout') }}
           </div>
           <div v-else class="row g-4">
             <!-- Left: layout preview -->
@@ -251,15 +264,14 @@
             <!-- Right: zone linking -->
             <div class="col-lg-5">
               <div class="fw-semibold text-reactive-primary mb-3">
-                <i class="bi bi-link-45deg me-2 text-primary"/>Link Your Zones
+                <i class="bi bi-link-45deg me-2 text-primary"/>{{ $t('organizer.event_form.step4.link_zones') }}
               </div>
               <div v-if="zones.length === 0" class="alert alert-warning py-2 small">
-                <i class="bi bi-exclamation-triangle me-1"/>No zones created yet. Go back to Step 3.
+                <i class="bi bi-exclamation-triangle me-1"/>{{ $t('organizer.event_form.step4.no_zones_link') }}
               </div>
               <div v-else>
                 <p class="small text-reactive-secondary mb-3">
-                  For each section in the venue layout, select which of your ticket zones it corresponds to.
-                  Unlinked sections will be decorative only.
+                  {{ $t('organizer.event_form.step4.link_description') }}
                 </p>
                 <!-- One row per venue zone -->
                 <div
@@ -279,13 +291,13 @@
                     class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1"
                     @change="(e) => venueZoneLinks[venueZone.zone_name] = (e.target as HTMLSelectElement).value || ''"
                   >
-                    <option value="">— Decorative —</option>
-                    <optgroup label="Seated">
+                    <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
+                    <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
                       <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id!">
                         {{ z.name }} ({{ z.seatCount }} seats)
                       </option>
                     </optgroup>
-                    <optgroup label="Standing">
+                    <optgroup :label="$t('organizer.event_form.step4.standing_zones')">
                       <option v-for="z in zones.filter(z => z.isStanding)" :key="z.id" :value="z.id!">
                         {{ z.name }} (standing · {{ z.capacity }})
                       </option>
@@ -294,7 +306,7 @@
                 </div>
                 <div class="alert alert-info py-2 small mt-3 mb-0">
                   <i class="bi bi-info-circle me-1"/>
-                  Linked zones will have seats generated automatically.
+                  {{ $t('organizer.event_form.step4.link_hint') }}
                 </div>
               </div>
             </div>
@@ -317,8 +329,8 @@
                 <span v-if="floor.floorName" class="ms-1 opacity-75">({{ floor.floorName }})</span>
               </button>
             </div>
-            <button class="btn btn-sm btn-outline-primary" @click="addFloor"><i class="bi bi-plus-lg me-1"/>Add Floor</button>
-            <button v-if="layoutFloors.length > 1" class="btn btn-sm btn-outline-danger" @click="removeFloor(activeFloorIdx)"><i class="bi bi-trash me-1"/>Remove Floor</button>
+            <button class="btn btn-sm btn-outline-primary" @click="addFloor"><i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step4.add_floor') }}</button>
+            <button v-if="layoutFloors.length > 1" class="btn btn-sm btn-outline-danger" @click="removeFloor(activeFloorIdx)"><i class="bi bi-trash me-1"/>{{ $t('organizer.event_form.step4.remove_floor') }}</button>
           </div>
 
           <!-- Active floor editor -->
@@ -327,7 +339,7 @@
             <!-- Toolbar -->
             <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center flex-wrap gap-2">
               <div class="d-flex align-items-center gap-2 flex-wrap">
-                <input v-model="activeFloor.floorName" type="text" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary fw-semibold" style="max-width:180px;" placeholder="Floor name"/>
+                <input v-model="activeFloor.floorName" type="text" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary fw-semibold" style="max-width:180px;" :placeholder="$t('organizer.event_form.step4.floor_name_placeholder')"/>
                 <div class="btn-group btn-group-sm">
                   <button v-for="tool in tools" :key="tool.id" class="btn" :class="activeFloor.activeTool === tool.id ? 'btn-primary' : 'btn-outline-secondary'" :title="tool.label" @click="activeFloor.activeTool = tool.id">
                     <i :class="tool.icon"/>
@@ -338,11 +350,11 @@
                   <button class="btn btn-outline-secondary" @click="activeFloor.scale = Math.max(0.3, activeFloor.scale - 0.15)"><i class="bi bi-dash-lg"/></button>
                   <button class="btn btn-outline-secondary" @click="activeFloor.scale = 1"><i class="bi bi-arrows-fullscreen"/></button>
                 </div>
-                <button class="btn btn-sm btn-outline-secondary" @click="addCustomShape(activeFloorIdx, 'rect')"><i class="bi bi-square me-1"/>Rect</button>
-                <button class="btn btn-sm btn-outline-secondary" @click="addCustomShape(activeFloorIdx, 'ellipse')"><i class="bi bi-circle me-1"/>Ellipse</button>
-                <button class="btn btn-sm btn-outline-warning" @click="addStageShape(activeFloorIdx, 'rect')"><i class="bi bi-collection-play me-1"/>Stage</button>
+                <button class="btn btn-sm btn-outline-secondary" @click="addCustomShape(activeFloorIdx, 'rect')"><i class="bi bi-square me-1"/>{{ $t('organizer.event_form.step4.shape_rect') }}</button>
+                <button class="btn btn-sm btn-outline-secondary" @click="addCustomShape(activeFloorIdx, 'ellipse')"><i class="bi bi-circle me-1"/>{{ $t('organizer.event_form.step4.shape_ellipse') }}</button>
+                <button class="btn btn-sm btn-outline-warning" @click="addStageShape(activeFloorIdx, 'rect')"><i class="bi bi-collection-play me-1"/>{{ $t('organizer.event_form.step4.stage') }}</button>
                 <input type="color" v-model="activeFloor.selectedColor" class="form-control form-control-sm border-0 p-0" style="width:32px;height:32px;cursor:pointer;background:none;"/>
-                <button class="btn btn-sm btn-outline-danger" @click="clearFloor(activeFloorIdx)"><i class="bi bi-trash me-1"/>Clear</button>
+                <button class="btn btn-sm btn-outline-danger" @click="clearFloor(activeFloorIdx)"><i class="bi bi-trash me-1"/>{{ $t('organizer.event_form.step4.clear') }}</button>
                 <!-- Global seat size -->
                 <div class="d-flex align-items-center gap-1 ms-1">
                   <i class="bi bi-circle text-reactive-secondary" style="font-size:0.7rem;"/>
@@ -356,7 +368,7 @@
               </div>
               <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-sm" :class="activeFloor.snapEnabled ? 'btn-primary' : 'btn-outline-secondary'" @click="activeFloor.snapEnabled = !activeFloor.snapEnabled">
-                  <i class="bi bi-magnet me-1"/>Snap
+                  <i class="bi bi-magnet me-1"/>{{ $t('organizer.event_form.step4.snap') }}
                 </button>
                 <button class="btn btn-sm btn-outline-secondary" @click="activeFloor.showJsonPanel = !activeFloor.showJsonPanel">
                   <i class="bi" :class="activeFloor.showJsonPanel ? 'bi-code-slash' : 'bi-code'"/>JSON
@@ -366,8 +378,15 @@
 
             <!-- Zone palette -->
             <div v-if="zones.length > 0" class="px-3 py-2 border-bottom border-secondary d-flex gap-2 flex-wrap align-items-center">
-              <small class="text-reactive-secondary me-1">Click to place zone:</small>
-              <button v-for="zone in zones" :key="zone.id" class="btn btn-sm zone-palette-btn" @click="addZoneShapeToFloor(activeFloorIdx, zone)">
+              <small class="text-reactive-secondary me-1">{{ $t('organizer.event_form.step4.place_zone') }}</small>
+              <button
+                v-for="zone in zones" :key="zone.id"
+                class="btn btn-sm zone-palette-btn"
+                :class="isZoneLinked(zone) ? 'zone-palette-btn--linked' : ''"
+                :title="isZoneLinked(zone) ? $t('organizer.event_form.step4.already_placed') : $t('organizer.event_form.step4.place_on_canvas')"
+                @click="addZoneShapeToFloor(activeFloorIdx, zone)"
+              >
+                <i v-if="isZoneLinked(zone)" class="bi bi-check2 me-1 text-success"/>
                 {{ zone.name }}
               </button>
             </div>
@@ -377,7 +396,7 @@
               <!-- JSON panel -->
               <div v-if="activeFloor.showJsonPanel" class="border-end border-secondary overflow-auto flex-shrink-0" style="width:300px;background:#0d1117;font-family:monospace;font-size:11px;">
                 <div class="d-flex justify-content-between align-items-center px-2 py-1 border-bottom border-secondary sticky-top" style="background:#161b22;">
-                  <span class="text-success fw-semibold" style="font-size:11px;">floor_layout_json</span>
+                  <span class="text-success fw-semibold" style="font-size:11px;">{{ $t('organizer.event_form.step4.json_panel') }}</span>
                   <button class="btn btn-sm p-0 px-1 text-secondary" @click="copyFloorJson(activeFloorIdx)"><i class="bi bi-clipboard"/></button>
                 </div>
                 <pre class="m-0 p-2 text-light" style="white-space:pre-wrap;word-break:break-all;">{{ floorJsonPreviews[activeFloorIdx] }}</pre>
@@ -421,7 +440,7 @@
               <!-- Shape selected -->
               <template v-if="activeFloor.selectedShapeId && activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                  <small class="text-reactive-secondary fw-semibold">Zone:</small>
+                  <small class="text-reactive-secondary fw-semibold">{{ $t('organizer.event_form.step4.zone_label') }}</small>
                   <input
                     :value="activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.label"
                     type="text" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary" style="width:160px;"
@@ -461,11 +480,11 @@
                     class="form-select form-select-sm bg-reactive-secondary border-0 text-reactive-primary" style="width:160px;"
                     @change="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.zoneId = (e.target as HTMLSelectElement).value || undefined; if (s.zoneId) { const z = zones.value.find(z => z.id === s.zoneId); if (z) autoResizeShapeForZone(activeFloorIdx, s, z) }; rebuildAndDraw() }"
                   >
-                    <option value="">— Decorative (no zone) —</option>
-                    <optgroup label="Seated zones">
+                    <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
+                    <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
                       <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id">{{ z.name }} ({{ z.seatCount }} seats)</option>
                     </optgroup>
-                    <optgroup label="Standing zones">
+                    <optgroup :label="$t('organizer.event_form.step4.standing_zones')">
                       <option v-for="z in zones.filter(z => z.isStanding)" :key="z.id" :value="z.id">{{ z.name }} (standing · {{ z.capacity }})</option>
                     </optgroup>
                   </select>
@@ -473,13 +492,13 @@
                 </div>
                 <!-- Rotation -->
                 <div class="d-flex align-items-center gap-2 mt-2">
-                  <small class="text-reactive-secondary fw-semibold"><i class="bi bi-arrow-clockwise me-1"/>Rotation:</small>
+                  <small class="text-reactive-secondary fw-semibold"><i class="bi bi-arrow-clockwise me-1"/>{{ $t('organizer.event_form.step4.rotation') }}</small>
                   <input type="range" min="-180" max="180" step="1"
                     :value="Math.round(((activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)?.rotation ?? 0) * 180 / Math.PI))"
                     class="form-range flex-grow-1"
                     @input="(e) => { const s = activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!; s.rotation = +(e.target as HTMLInputElement).value * Math.PI / 180; drawFloor(activeFloorIdx) }"/>
                   <small class="text-reactive-secondary" style="min-width:42px;text-align:right">{{ Math.round(((activeFloor.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)?.rotation ?? 0) * 180 / Math.PI)) }}°</small>
-                  <button class="btn btn-sm btn-outline-secondary" @click="() => { activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.rotation = 0; drawFloor(activeFloorIdx) }">Reset</button>
+                  <button class="btn btn-sm btn-outline-secondary flex-shrink-0" @click="() => { activeFloor!.canvasShapes.find(s => s.id === activeFloor!.selectedShapeId)!.rotation = 0; drawFloor(activeFloorIdx) }">{{ $t('common.reset') }}</button>
                 </div>
               </template>
 
@@ -491,7 +510,7 @@
                   </small>
                   <div class="vr mx-1 opacity-25"/>
                   <!-- Inline price override -->
-                  <small class="text-reactive-secondary"><i class="bi bi-tag me-1"/>Price:</small>
+                  <small class="text-reactive-secondary"><i class="bi bi-tag me-1"/>{{ $t('organizer.event_form.step4.price_override') }}</small>
                   <div class="input-group input-group-sm" style="width:160px;">
                     <input type="number" min="0"
                       :value="selectedSeatInfo?.priceOverride ?? ''"
@@ -507,7 +526,7 @@
                   </button>
                   <div class="vr mx-1 opacity-25"/>
                   <!-- Rotate -->
-                  <small class="text-reactive-secondary"><i class="bi bi-arrow-clockwise me-1"/>Rot:</small>
+                  <small class="text-reactive-secondary"><i class="bi bi-arrow-clockwise me-1"/>{{ $t('organizer.event_form.step4.rotation_short') }}</small>
                   <input type="range" min="-180" max="180" step="1"
                     :value="Math.round((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.rotation ?? 0) * 180 / Math.PI)"
                     class="form-range" style="width:80px;"
@@ -516,7 +535,7 @@
                   <small class="text-reactive-secondary" style="min-width:32px;">{{ Math.round((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.rotation ?? 0) * 180 / Math.PI) }}°</small>
                   <div class="vr mx-1 opacity-25"/>
                   <!-- Size -->
-                  <small class="text-reactive-secondary"><i class="bi bi-arrows-angle-expand me-1"/>Size:</small>
+                  <small class="text-reactive-secondary"><i class="bi bi-arrows-angle-expand me-1"/>{{ $t('organizer.event_form.step4.size') }}</small>
                   <input type="range" min="0.3" max="3" step="0.05"
                     :value="activeFloor.seatTransforms[activeFloor.selectedSeatId]?.scale ?? 1"
                     class="form-range" style="width:70px;"
@@ -524,8 +543,8 @@
                   />
                   <small class="text-reactive-secondary" style="min-width:30px;">{{ ((activeFloor.seatTransforms[activeFloor.selectedSeatId]?.scale ?? 1) * 100).toFixed(0) }}%</small>
                   <div class="vr mx-1 opacity-25"/>
-                  <button class="btn btn-sm btn-outline-secondary" @click="() => { delete activeFloor!.seatTransforms[activeFloor!.selectedSeatId!]; rebuildAndDraw() }">
-                    <i class="bi bi-arrow-counterclockwise me-1"/>Reset
+                  <button class="btn btn-sm btn-outline-secondary flex-shrink-0" @click="() => { delete activeFloor!.seatTransforms[activeFloor!.selectedSeatId!]; rebuildAndDraw() }">
+                    <i class="bi bi-arrow-counterclockwise me-1"/>{{ $t('common.reset') }}
                   </button>
                   <button class="btn btn-sm btn-outline-secondary ms-auto" @click="activeFloor.selectedSeatId = null; drawSeatsOnCanvas(activeFloorIdx)">
                     <i class="bi bi-x-lg"/>
@@ -536,7 +555,7 @@
               <!-- Stage selected -->
               <template v-else-if="activeFloor.editingStage">
                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                  <small class="text-reactive-secondary fw-semibold"><i class="bi bi-tv me-1"/>Stage / Screen:</small>
+                  <small class="text-reactive-secondary fw-semibold"><i class="bi bi-tv me-1"/>{{ $t('organizer.event_form.step4.stage_screen') }}</small>
                   <div class="d-flex align-items-center gap-1">
                     <small class="text-reactive-secondary">W</small>
                     <input type="number" min="80" class="form-control form-control-sm bg-reactive-secondary border-0 text-reactive-primary text-center" style="width:72px;"
@@ -555,8 +574,8 @@
               <template v-else>
                 <small class="text-reactive-secondary">
                   <i class="bi bi-info-circle me-1"/>
-                  Click a shape to select. Drag to move, handles to resize, circle handle to rotate. Link a shape to a zone to overlay seats. <strong>Click a seat</strong> to select — drag to reposition, rotate, resize, or set price override.
-                  <span v-if="activeFloor.snapEnabled" class="text-primary ms-1"><i class="bi bi-magnet me-1"/>Snap on</span>
+                  {{ $t('organizer.event_form.step4.hint') }}
+                  <span v-if="activeFloor.snapEnabled" class="text-primary ms-1"><i class="bi bi-magnet me-1"/>{{ $t('organizer.event_form.step4.snap') }} on</span>
                 </small>
               </template>
 
@@ -572,10 +591,10 @@
           <button class="btn btn-primary px-4" :disabled="saving" @click="applyLayout">
             <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
             <i v-else class="bi bi-layers me-2"/>
-            {{ layoutSaved ? 'Re-apply Layout' : 'Apply Layout & Generate Seats' }}
+            {{ layoutSaved ? $t('organizer.event_form.step4.reapply') : $t('organizer.event_form.step4.apply') }}
           </button>
           <!-- Finish — only available after layout has been applied -->
-          <button class="btn btn-success px-4" :disabled="!layoutSaved" @click="router.push('/organizer/events')">
+          <button class="btn btn-success px-4" :disabled="!layoutSaved" @click="router.push(localePath('/organizer/events'))">
             <i class="bi bi-check2 me-2"/>{{ $t('organizer.event_form.finish') }}
           </button>
         </div>
@@ -597,9 +616,9 @@
         <h5 class="text-reactive-primary fw-bold mb-2"><i class="bi bi-exclamation-triangle text-danger me-2"/>{{ $t('organizer.event_form.step3.delete_title') }}</h5>
         <p class="text-reactive-secondary">{{ $t('organizer.event_form.step3.delete_confirm', { name: deleteZoneTarget.name }) }}</p>
         <div class="d-flex gap-2 justify-content-end">
-          <button class="btn btn-outline-secondary" @click="deleteZoneTarget = null">{{ $t('common.action.cancel') }}</button>
+          <button class="btn btn-outline-secondary" @click="deleteZoneTarget = null">{{ $t('common.cancel') }}</button>
           <button class="btn btn-danger" :disabled="zoneSaving" @click="doDeleteZone">
-            <span v-if="zoneSaving" class="spinner-border spinner-border-sm me-2"/>{{ $t('common.action.delete') }}
+            <span v-if="zoneSaving" class="spinner-border spinner-border-sm me-2"/>{{ $t('common.delete') }}
           </button>
         </div>
       </div>
@@ -618,6 +637,7 @@ definePageMeta({ layout: 'organizer', middleware: 'organizer' })
 
 const { t } = useI18n()
 const $t = t
+const localePath = useLocalePath()
 const route  = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
@@ -638,8 +658,16 @@ const steps = computed(() => [
 ])
 const goToStep = (i: number) => { if (savedEventId.value || i <= currentStep.value) currentStep.value = i }
 
-const saving      = ref(false)
-const globalError = ref('')
+const saving         = ref(false)
+const globalError    = ref('')
+const showDraftSaved = ref(false)
+let draftSavedTimer: ReturnType<typeof setTimeout> | null = null
+
+const triggerDraftSaved = () => {
+  showDraftSaved.value = true
+  if (draftSavedTimer) clearTimeout(draftSavedTimer)
+  draftSavedTimer = setTimeout(() => { showDraftSaved.value = false }, 2500)
+}
 
 // ── Venues ─────────────────────────────────────────────────
 interface Venue { id: string; name: string; addressLine: string; imageUrl?: string; layout?: string }
@@ -732,8 +760,9 @@ const saveStep1 = async () => {
         ).catch(() => [])
         savedSessionId.value = sessions?.[0]?.id ?? null
       }
-      history.replaceState({}, '', `/organizer/events/${res.id}`)
+      history.replaceState({}, '', localePath(`/organizer/events/${res.id}`))
     }
+    triggerDraftSaved()
     currentStep.value = 1
   } catch (err: any) { globalError.value = err?.data?.message ?? 'Failed to save event' }
   finally { saving.value = false }
@@ -761,6 +790,7 @@ const saveStep2 = async () => {
       },
       credentials: 'include',
     })
+    triggerDraftSaved()
     currentStep.value = 2
   } catch (err: any) { globalError.value = err?.data?.message ?? 'Failed to save content' }
   finally { saving.value = false }
@@ -1680,11 +1710,11 @@ const applyLayout = async () => {
       })
     } else if (layoutMode.value === 'venue') {
       // Venue mode but no venue/layout — treat as no-op or warn
-      globalError.value = 'Please select a venue with a layout, or switch to Custom Layout.'
+      globalError.value = $t('organizer.event_form.step4.no_venue_layout_error')
       saving.value = false
       return
     } else {
-      if (layoutFloors.value.length === 0) { globalError.value = 'Please add at least one floor.'; saving.value = false; return }
+      if (layoutFloors.value.length === 0) { globalError.value = $t('organizer.event_form.step4.no_floor_error'); saving.value = false; return }
       await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, { method: 'PUT', body: { useVenueLayout: false, customLayoutJson: buildFullLayoutJson() }, credentials: 'include' })
     }
     // Stay on page — reload seats so organizer can see and fine-tune them
@@ -1786,6 +1816,19 @@ const loadEvent = async () => {
       // Venue layout mode — show venue preview in Step 4
       layoutMode.value  = 'venue'
       layoutSaved.value = true
+      // Trigger zone auto-match after venues are loaded
+      // (watch may have fired before venues array was populated)
+      nextTick(() => {
+        if (venueLayoutZones.value.length && zones.value.length) {
+          for (const venueZone of venueLayoutZones.value) {
+            if (venueZoneLinks.value[venueZone.zone_name]) continue
+            const match = zones.value.find((z: any) =>
+              z.name.toLowerCase() === venueZone.zone_name.toLowerCase()
+            )
+            if (match?.id) venueZoneLinks.value[venueZone.zone_name] = match.id
+          }
+        }
+      })
     } else {
       // New event or no layout yet
       layoutMode.value  = 'custom'
@@ -1882,6 +1925,14 @@ const parsedPerks = (perks: string | string[] | undefined): string[] => {
   try { return JSON.parse(perks) } catch { return [] }
 }
 const formatPrice = (p: number) => p === 0 ? 'Free' : new Intl.NumberFormat('vi-VN').format(p) + ' ₫'
+
+// Returns true if this zone already has a shape on any floor of the current canvas
+const isZoneLinked = (zone: Zone): boolean => {
+  if (!zone.id) return false
+  return layoutFloors.value.some(floor =>
+    floor.canvasShapes.some(s => s.zoneId === zone.id)
+  )
+}
 </script>
 
 <style scoped>
@@ -1902,4 +1953,10 @@ const formatPrice = (p: number) => p === 0 ? 'Free' : new Intl.NumberFormat('vi-
 .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
 .zone-palette-btn { background: transparent; border: 1px solid rgba(var(--bs-secondary-rgb), 0.4); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--bs-secondary); transition: background 0.15s; }
 .zone-palette-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-reactive-primary, inherit); }
+.zone-palette-btn--linked { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.08); }
+.zone-palette-btn--linked:hover { background: rgba(34,197,94,0.15); }
+/* Draft saved toast fade */
+.draft-toast-enter-active { transition: opacity 0.3s ease; }
+.draft-toast-leave-active { transition: opacity 0.8s ease; }
+.draft-toast-enter-from, .draft-toast-leave-to { opacity: 0; }
 </style>

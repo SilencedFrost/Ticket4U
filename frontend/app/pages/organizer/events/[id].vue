@@ -239,17 +239,64 @@
           <div v-else-if="!selectedVenueLayout" class="alert alert-info py-2 small">
             <i class="bi bi-info-circle me-1"/>This venue has no default layout configured. Use custom layout instead.
           </div>
-          <div v-else>
-            <div class="mb-3">
-              <div class="fw-semibold text-reactive-primary mb-1">{{ selectedVenue.name }}</div>
-              <small class="text-reactive-secondary"><i class="bi bi-geo-alt me-1"/>{{ selectedVenue.addressLine }}</small>
+          <div v-else class="row g-4">
+            <!-- Left: layout preview -->
+            <div class="col-lg-7">
+              <div class="fw-semibold text-reactive-primary mb-2">{{ selectedVenue.name }}</div>
+              <ClientOnly>
+                <LayoutPreview :layout-json="selectedVenueLayout" style="height:340px;"/>
+                <template #fallback><div class="bg-reactive-primary rounded" style="height:340px;"/></template>
+              </ClientOnly>
             </div>
-            <ClientOnly>
-              <LayoutPreview :layout-json="selectedVenueLayout" style="height:300px;"/>
-              <template #fallback><div class="bg-reactive-primary rounded" style="height:300px;"/></template>
-            </ClientOnly>
-            <div class="alert alert-info py-2 small mt-3">
-              <i class="bi bi-info-circle me-1"/>Zone names in the layout will be matched to your ticket zones by name.
+            <!-- Right: zone linking -->
+            <div class="col-lg-5">
+              <div class="fw-semibold text-reactive-primary mb-3">
+                <i class="bi bi-link-45deg me-2 text-primary"/>Link Your Zones
+              </div>
+              <div v-if="zones.length === 0" class="alert alert-warning py-2 small">
+                <i class="bi bi-exclamation-triangle me-1"/>No zones created yet. Go back to Step 3.
+              </div>
+              <div v-else>
+                <p class="small text-reactive-secondary mb-3">
+                  For each section in the venue layout, select which of your ticket zones it corresponds to.
+                  Unlinked sections will be decorative only.
+                </p>
+                <!-- One row per venue zone -->
+                <div
+                  v-for="venueZone in venueLayoutZones"
+                  :key="venueZone.zone_name"
+                  class="d-flex align-items-center gap-2 mb-2"
+                >
+                  <!-- Venue zone color dot + name -->
+                  <div class="d-flex align-items-center gap-2 flex-shrink-0" style="min-width:130px;">
+                    <div class="rounded-circle flex-shrink-0" :style="{ width:'10px', height:'10px', background: venueZone.color ?? '#6366f1' }"/>
+                    <small class="text-reactive-primary fw-semibold text-truncate">{{ venueZone.zone_name }}</small>
+                  </div>
+                  <i class="bi bi-arrow-right text-reactive-secondary flex-shrink-0"/>
+                  <!-- Dropdown to pick event zone -->
+                  <select
+                    :value="venueZoneLinks[venueZone.zone_name] ?? ''"
+                    class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1"
+                    @change="(e) => venueZoneLinks[venueZone.zone_name] = (e.target as HTMLSelectElement).value || ''"
+                  >
+                    <option value="">— Decorative —</option>
+                    <optgroup label="Seated">
+                      <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id!">
+                        {{ z.name }} ({{ z.seatCount }} seats)
+                      </option>
+                    </optgroup>
+                    <optgroup label="Standing">
+                      <option v-for="z in zones.filter(z => z.isStanding)" :key="z.id" :value="z.id!">
+                        {{ z.name }} (standing · {{ z.capacity }})
+                      </option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="alert alert-info py-2 small mt-3 mb-0">
+                  <i class="bi bi-info-circle me-1"/>
+                  Linked zones will have seats generated automatically.
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -569,7 +616,8 @@ import ZoneModal from '~/components/crud-event/ZoneModal.vue'
 
 definePageMeta({ layout: 'organizer', middleware: 'organizer' })
 
-const { t: $t } = useI18n()
+const { t } = useI18n()
+const $t = t
 const route  = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
@@ -598,6 +646,27 @@ interface Venue { id: string; name: string; addressLine: string; imageUrl?: stri
 const venues = ref<Venue[]>([])
 const selectedVenue       = computed(() => venues.value.find(v => v.id === form.value.venueId) ?? null)
 const selectedVenueLayout = computed(() => selectedVenue.value?.layout ?? null)
+
+// { [venueZoneName]: eventZoneId } — organizer links venue zones to event zones
+const venueZoneLinks = ref<Record<string, string>>({})
+
+// All zone shapes from the venue layout (all floors)
+const venueLayoutZones = computed(() => {
+  if (!selectedVenueLayout.value) return []
+  try {
+    const parsed = JSON.parse(selectedVenueLayout.value)
+    const zones: any[] = []
+    if (parsed.floors) {
+      for (const floor of parsed.floors)
+        if (floor.zones) zones.push(...floor.zones)
+    } else if (parsed.zones) {
+      zones.push(...parsed.zones)
+    }
+    return zones
+  } catch { return [] }
+})
+
+// (auto-match watch moved below zones declaration)
 
 const fetchVenues = async () => {
   try { venues.value = await $fetch<Venue[]>(`${config.public.apiUrl}/venues`, { credentials: 'include' }) }
@@ -704,6 +773,18 @@ interface Zone {
   perks?: string | string[]; quantitySold?: number; seatCount: number
 }
 const zones            = ref<Zone[]>([])
+
+// Auto-match venue zone names to event zone names when zones load
+watch([venueLayoutZones, zones], () => {
+  if (!venueLayoutZones.value.length || !zones.value.length) return
+  for (const venueZone of venueLayoutZones.value) {
+    if (venueZoneLinks.value[venueZone.zone_name]) continue
+    const match = zones.value.find(z =>
+      z.name.toLowerCase() === venueZone.zone_name.toLowerCase()
+    )
+    if (match?.id) venueZoneLinks.value[venueZone.zone_name] = match.id
+  }
+}, { immediate: true })
 const showZoneModal    = ref(false)
 const editingZone      = ref<Zone | null>(null)
 const deleteZoneTarget = ref<Zone | null>(null)
@@ -1583,8 +1664,25 @@ const applyLayout = async () => {
   }
   errors.value = {}; saving.value = true; globalError.value = ''
   try {
-    if (layoutMode.value === 'venue') {
-      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, { method: 'PUT', body: { useVenueLayout: true }, credentials: 'include' })
+    if (layoutMode.value === 'venue' && form.value.venueId && selectedVenueLayout.value) {
+      // Venue layout with zone links
+      const zoneLinks = Object.entries(venueZoneLinks.value)
+        .filter(([, zoneId]) => zoneId)
+        .map(([venueZoneName, zoneId]) => ({ venueZoneName, zoneId }))
+      await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, {
+        method: 'PUT',
+        body: {
+          useVenueLayout: true,
+          venueId: form.value.venueId || null,   // re-link venue in case it was cleared
+          venueZoneLinks: zoneLinks,
+        },
+        credentials: 'include'
+      })
+    } else if (layoutMode.value === 'venue') {
+      // Venue mode but no venue/layout — treat as no-op or warn
+      globalError.value = 'Please select a venue with a layout, or switch to Custom Layout.'
+      saving.value = false
+      return
     } else {
       if (layoutFloors.value.length === 0) { globalError.value = 'Please add at least one floor.'; saving.value = false; return }
       await $fetch(`${config.public.apiUrl}/organizer/events/${savedEventId.value}/layout`, { method: 'PUT', body: { useVenueLayout: false, customLayoutJson: buildFullLayoutJson() }, credentials: 'include' })
@@ -1626,9 +1724,18 @@ const loadEvent = async () => {
       savedSessionId.value = eventSessions[0].id
       zones.value = await $fetch<Zone[]>(`${config.public.apiUrl}/organizer/sessions/${savedSessionId.value}/zones`, { credentials: 'include' }).catch(() => [])
     }
-    // layoutData from GET /events/{id}/layout — field may be eventLayout or layout
-    const rawLayout = layoutData?.eventLayout ?? layoutData?.layout ?? null
-    if (rawLayout) {
+    // Determine layout mode from event data:
+    // - event.layout != null → custom layout stored on event
+    // - event.venueId != null → venue layout mode (event.layout is null)
+    // - both null → new event, no layout yet
+    // ManagementEventResponse uses field name "eventLayout"
+    const isCustomLayout = event.eventLayout != null
+    const isVenueLayout  = !isCustomLayout && (event.venueId != null)
+    const rawLayout = isCustomLayout
+      ? event.eventLayout
+      : (layoutData?.layout ?? layoutData?.eventLayout ?? null)
+
+    if (isCustomLayout && rawLayout) {
       try {
         const parsed = JSON.parse(rawLayout)
         if (parsed.floors && Array.isArray(parsed.floors)) {
@@ -1675,10 +1782,14 @@ const loadEvent = async () => {
           nextTick(() => layoutFloors.value.forEach((_, fi) => drawFloor(fi)))
         }
       } catch { /* leave default */ }
-    } else {
+    } else if (isVenueLayout) {
+      // Venue layout mode — show venue preview in Step 4
       layoutMode.value  = 'venue'
-      // If event already has a venue assigned, layout is ready
-      if (event.venueId) layoutSaved.value = true
+      layoutSaved.value = true
+    } else {
+      // New event or no layout yet
+      layoutMode.value  = 'custom'
+      layoutSaved.value = false
     }
   } catch { globalError.value = 'Failed to load event data' }
 }
@@ -1737,6 +1848,20 @@ watch(currentStep, async (step) => {
       rebuildAndDraw()
       layoutFloors.value.forEach((_, fi) => drawFloor(fi))
     })
+  }
+})
+
+// When switching to custom layout, clear zone shapes (keep stage box intact)
+watch(layoutMode, (newMode, oldMode) => {
+  if (newMode === 'custom' && oldMode === 'venue') {
+    layoutFloors.value.forEach(floor => {
+      // Remove all zone shapes — keep only stage shapes
+      floor.canvasShapes    = floor.canvasShapes.filter(s => s.isStage)
+      floor.selectedShapeId = null
+      floor.selectedSeatId  = null
+    })
+    seatsByZone.value = {}
+    nextTick(() => layoutFloors.value.forEach((_, fi) => drawFloor(fi)))
   }
 })
 

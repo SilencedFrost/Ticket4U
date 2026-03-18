@@ -8,8 +8,8 @@
       <div class="sidebar-header px-3 py-4 border-bottom border-secondary">
         <div class="d-flex align-items-center gap-3">
           <img
-            v-if="profile?.logoUrl"
-            :src="profile.logoUrl"
+            v-if="logoUrl"
+            :src="logoUrl"
             class="org-avatar rounded-circle flex-shrink-0"
             alt="org logo"
           />
@@ -86,6 +86,9 @@ const sidebarCollapsed = ref(false)
 // ── Shared profile — fetched once, reused by all pages ─────
 const { profile, fetchProfile } = useOrganizerProfile()
 onMounted(fetchProfile)
+
+// Handle both camelCase and snake_case from user-service
+const logoUrl = computed(() => profile.value?.logoUrl ?? profile.value?.logo_url ?? null)
 
 // ── Role label ─────────────────────────────────────────────
 const roleLabel = computed(() => {

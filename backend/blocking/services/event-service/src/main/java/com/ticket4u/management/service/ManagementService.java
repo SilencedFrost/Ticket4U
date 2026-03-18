@@ -9,9 +9,6 @@ import java.util.UUID;
 
 public interface ManagementService {
 
-    // Profile
-    OrganizerProfileResponse getProfile(UUID organizerId);
-
     // Categories
     List<CategorySummaryResponse> getCategories();
 

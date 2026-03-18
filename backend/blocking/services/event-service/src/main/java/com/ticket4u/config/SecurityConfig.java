@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/*/public/**", "/api/*/auth/**", "/.well-known/**").permitAll()
-                        .requestMatchers("/api/v1/organizer/**").hasAnyRole("EVENT_MANAGER", "ORGANIZER_ADMIN")
+                        .requestMatchers("/api/v1/organizer/**", "/api/v1/venues/**")
+                        .hasAnyRole("EVENT_MANAGER", "ORGANIZER_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

@@ -6,7 +6,6 @@ import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
-import com.ticket4u.management.client.OrganizerProfileClient;
 import com.ticket4u.management.dto.*;
 import com.ticket4u.management.repository.*;
 import com.ticket4u.management.service.ManagementService;
@@ -28,23 +27,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ManagementServiceImpl implements ManagementService {
 
-    private final EventManagementRepository       eventRepository;
+    private final EventManagementRepository        eventRepository;
     private final EventManagementSessionRepository sessionRepository;
     private final EventManagementZoneRepository    zoneRepository;
     private final EventManagementSeatRepository    seatRepository;
     private final EventManagementVenueRepository   venueRepository;
-    private final CategoryRepository          categoryRepository;
-    private final OrganizerProfileClient          profileClient;
-    private final ObjectMapper                objectMapper;
-
-    // ── Profile ────────────────────────────────────────────
-
-    @Override
-    public OrganizerProfileResponse getProfile(UUID organizerId) {
-        return profileClient.getOrganizerProfile(organizerId);
-    }
-
-    // ── Categories ─────────────────────────────────────────
+    private final CategoryRepository               categoryRepository;
+    private final ObjectMapper                     objectMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -54,15 +43,11 @@ public class ManagementServiceImpl implements ManagementService {
                 .collect(Collectors.toList());
     }
 
-    // ── Events ─────────────────────────────────────────────
-
     @Override
     @Transactional(readOnly = true)
     public List<ManagementEventResponse> getEvents(UUID organizerId) {
         return eventRepository.findAllByOrganizerIdOrderByFirstSessionStartDesc(organizerId)
-                .stream()
-                .map(e -> mapEventToResponse(e, true))
-                .collect(Collectors.toList());
+                .stream().map(e -> mapEventToResponse(e, true)).collect(Collectors.toList());
     }
 
     @Override
@@ -82,7 +67,6 @@ public class ManagementServiceImpl implements ManagementService {
                 : Event.EventStatus.EDITING);
         Event saved = eventRepository.save(event);
 
-        // Auto-create first session
         EventSession session = new EventSession();
         session.setEvent(saved);
         session.setName(request.name());
@@ -99,12 +83,10 @@ public class ManagementServiceImpl implements ManagementService {
     public ManagementEventResponse updateEvent(UUID organizerId, UUID eventId, ManagementEventRequest request) {
         Event event = findEvent(organizerId, eventId);
         applyRequestToEvent(event, request);
-        if (request.status() != null) {
+        if (request.status() != null)
             event.setStatus(Event.EventStatus.valueOf(request.status().toUpperCase()));
-        }
         Event saved = eventRepository.save(event);
 
-        // Update first session's dates
         List<EventSession> sessions = sessionRepository.findAllByEventIdOrderByStartDateAsc(eventId);
         if (!sessions.isEmpty()) {
             EventSession first = sessions.get(0);
@@ -112,7 +94,6 @@ public class ManagementServiceImpl implements ManagementService {
             first.setEndDate(request.endDate());
             sessionRepository.save(first);
         }
-
         return mapEventToResponse(saved, false);
     }
 
@@ -125,16 +106,12 @@ public class ManagementServiceImpl implements ManagementService {
         eventRepository.save(event);
     }
 
-    // ── Sessions ───────────────────────────────────────────
-
     @Override
     @Transactional(readOnly = true)
     public List<EventSessionResponse> getSessions(UUID organizerId, UUID eventId) {
         findEvent(organizerId, eventId);
         return sessionRepository.findAllByEventIdOrderByStartDateAsc(eventId)
-                .stream()
-                .map(this::mapSessionToResponse)
-                .collect(Collectors.toList());
+                .stream().map(this::mapSessionToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -150,16 +127,12 @@ public class ManagementServiceImpl implements ManagementService {
         return mapSessionToResponse(sessionRepository.save(session));
     }
 
-    // ── Zones ──────────────────────────────────────────────
-
     @Override
     @Transactional(readOnly = true)
     public List<ManagementZoneResponse> getZones(UUID organizerId, UUID sessionId) {
         findSession(organizerId, sessionId);
         return zoneRepository.findAllBySessionId(sessionId)
-                .stream()
-                .map(this::mapZoneToResponse)
-                .collect(Collectors.toList());
+                .stream().map(this::mapZoneToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -191,8 +164,6 @@ public class ManagementServiceImpl implements ManagementService {
         zoneRepository.delete(zone);
     }
 
-    // ── Layout ─────────────────────────────────────────────
-
     @Override
     @Transactional
     public EventLayoutResponse applyLayout(UUID organizerId, UUID eventId, EventLayoutRequest request) {
@@ -212,7 +183,7 @@ public class ManagementServiceImpl implements ManagementService {
             layoutJson = request.customLayoutJson();
         }
 
-        // layout = null means use venue default; only set if custom
+        // null means use venue default; only store if custom
         event.setLayout(request.useVenueLayout() ? null : layoutJson);
         eventRepository.save(event);
 
@@ -229,15 +200,12 @@ public class ManagementServiceImpl implements ManagementService {
     @Transactional(readOnly = true)
     public EventLayoutResponse getLayout(UUID organizerId, UUID eventId) {
         Event event = findEvent(organizerId, eventId);
-        // eventLayout takes priority; fall back to venue layout
         String layoutJson = event.getLayout();
         if (layoutJson == null && event.getVenue() != null) {
             layoutJson = event.getVenue().getLayout();
         }
         return new EventLayoutResponse(eventId, layoutJson);
     }
-
-    // ── Seats ──────────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -259,10 +227,8 @@ public class ManagementServiceImpl implements ManagementService {
             String prefix = row.prefix() != null ? row.prefix() : "A";
             for (int col = 1; col <= row.count(); col++) {
                 String colStr   = String.valueOf(col);
-                // Format: A1, A2, B1 — matches seed data pattern
-                String seatCode = prefix + col;
+                String seatCode = prefix + col; // A1, A2, B1 — matches seed data pattern
                 if (seatCode.length() > 20) seatCode = seatCode.substring(0, 20);
-
                 Seat seat = new Seat();
                 seat.setZone(zone);
                 seat.setName(prefix + col);
@@ -297,17 +263,9 @@ public class ManagementServiceImpl implements ManagementService {
     }
 
     // ── Seat generation from layout JSON ───────────────────
-    //
-    // Handles two JSON formats:
-    //
-    // 1. Venue default layout (flat):
-    //    { "zones": [ { "zone_name": "VIP", "seats": [...] } ] }
-    //
-    // 2. Custom multi-floor layout:
-    //    { "floors": [ { "zones": [ { "zone_name": "VIP", "seats": [...] } ] } ] }
-    //
-    // seat_code = seat_id from JSON — stable bridge to seats table
-
+    // Handles two formats:
+    // 1. Venue default: { "zones": [ { "zone_name": "VIP", "seats": [...] } ] }
+    // 2. Custom multi-floor: { "floors": [ { "zones": [ { "zone_name": "VIP", "seats": [...] } ] } ] }
     private void generateSeatsFromLayout(EventSession session, String layoutJson) {
         try {
             JsonNode root = objectMapper.readTree(layoutJson);
@@ -333,19 +291,16 @@ public class ManagementServiceImpl implements ManagementService {
                 Zone matchedZone = sessionZones.stream()
                         .filter(z -> z.getName().equalsIgnoreCase(zoneName))
                         .findFirst().orElse(null);
-
                 if (matchedZone == null) {
                     log.warn("Layout zone '{}' has no matching Zone in session {}", zoneName, session.getId());
                     continue;
                 }
 
                 seatRepository.deleteAllByZoneId(matchedZone.getId());
-
                 List<Seat> newSeats = new ArrayList<>();
                 for (JsonNode seatNode : seats) {
                     String seatId   = seatNode.path("seat_id").asText();
                     String seatName = seatNode.path("seat_name").asText();
-
                     Seat seat = new Seat();
                     seat.setZone(matchedZone);
                     seat.setName(seatName.length() > 255 ? seatName.substring(0, 255) : seatName);

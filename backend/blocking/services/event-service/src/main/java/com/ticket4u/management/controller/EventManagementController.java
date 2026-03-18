@@ -28,13 +28,6 @@ public class EventManagementController {
         );
     }
 
-    // ── Profile ────────────────────────────────────────────
-
-    @GetMapping("/me")
-    public ResponseEntity<OrganizerProfileResponse> getProfile() {
-        return ResponseEntity.ok(managementService.getProfile(currentUserId()));
-    }
-
     // ── Categories ─────────────────────────────────────────
 
     @GetMapping("/categories")

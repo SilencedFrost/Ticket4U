@@ -126,6 +126,9 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private Set<EventSession> sessions = new LinkedHashSet<>();
 
+    @Column(name = "layout", columnDefinition = "JSONB")
+    private String layout;
+
     public enum EventStatus {
         EDITING,
         SCHEDULED,

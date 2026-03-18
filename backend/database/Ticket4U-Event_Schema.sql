@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 
 	venue_id 				UUID,
     layout                  JSONB,
-    
+
 	longitude 	DECIMAL(10, 7),
 	latitude 	DECIMAL(10, 7),
 

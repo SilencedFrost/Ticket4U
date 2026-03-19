@@ -290,7 +290,8 @@
         "link_description": "For each section in the venue layout, select which of your ticket zones it corresponds to. Unlinked sections will be decorative only.",
         "save_layout": "Save Layout",
         "save_close": "Save & Close",
-        "load_saved": "Load Saved Layout"
+        "load_saved": "Load Saved Layout",
+        "no_saved_layout": "No saved layout available"
       }
     }
   }

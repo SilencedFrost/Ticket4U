@@ -290,7 +290,8 @@
         "link_description": "Với mỗi khu vực trong sơ đồ địa điểm, hãy chọn khu vé tương ứng. Các khu vực không liên kết sẽ chỉ mang tính trang trí.",
         "save_layout": "Lưu sơ đồ",
         "save_close": "Lưu & Đóng",
-        "load_saved": "Tải sơ đồ đã lưu"
+        "load_saved": "Tải sơ đồ đã lưu",
+        "no_saved_layout": "Chưa có sơ đồ được lưu"
       }
     }
   }

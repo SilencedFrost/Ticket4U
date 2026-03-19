@@ -1,7 +1,6 @@
 package com.ticket4u.util;
 
 import com.ticket4u.constant.TokenConstants;
-import com.ticket4u.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

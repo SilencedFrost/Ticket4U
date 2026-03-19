@@ -1,30 +1,31 @@
 @echo off
 :: =============================================================
-::  HUONG DAN GHIN LEN TASKBAR (chi can lam 1 lan)
+::  HOW TO PIN TO TASKBAR (only needs to be done once)
 ::
-::  File .bat khong the ghin truc tiep len taskbar.
-::  Can tao Shortcut ben NGOAI thu muc du an (tranh git track).
+::  A .bat file cannot be pinned directly to the taskbar.
+::  You need to create a Shortcut OUTSIDE the project folder
+::  (to avoid git tracking).
 ::
-::  Cac buoc:
-::  1. Chuot phai Desktop -> New -> Shortcut
-::  2. "Type the location of the item", dan vao:
-::        cmd /c "C:\path\thuc\te\cua\ban\Ticket4U\start-all.bat"
-::     Vi du:
+::  Steps:
+::  1. Right-click Desktop -> New -> Shortcut
+::  2. In "Type the location of the item", paste:
+::        cmd /c "C:\actual\path\on\your\machine\Ticket4U\start-all.bat"
+::     Example:
 ::        cmd /c "D:\study\Ticket4U\start-all.bat"
-::  3. Dat ten shortcut: Ticket4U (hoac tuy y)
-::  4. (Tuy chon) Chuot phai shortcut -> Properties
-::               -> Change Icon -> chon tu shell32.dll
-::               -> Change Icon -> Browse toi auto-run\logo-primary.ico
-::  5. Chuot phai shortcut -> Pin to taskbar
+::  3. Name the shortcut: Ticket4U (or whatever you prefer)
+::  4. (Optional) Right-click shortcut -> Properties
+::               -> Change Icon -> pick from shell32.dll
+::               -> Change Icon -> Browse to auto-run\logo-primary.ico
+::  5. Right-click shortcut -> Pin to taskbar
 :: =============================================================
 
-echo Dang khoi dong toan bo he thong Ticket4U...
+echo Starting the entire Ticket4U system...
 
-:: Goi file khoi dong backend (se tu mo 2 cua so PowerShell moi)
+:: Call the backend startup file (will automatically open 2 new PowerShell windows)
 call "%~dp0auto-run\start-backend.bat"
 
-:: Mo mot cua so CMD moi de chay frontend
+:: Open a new CMD window to run the frontend
 start "Nuxt Frontend" cmd /k ""%~dp0auto-run\start-frontend.bat""
 
-:: Tu dong tat cua so tong quan nay sau khi da goi xong cac service
+:: Automatically close this master window after all services have been launched
 exit

@@ -198,7 +198,6 @@ public class ManagementServiceImpl implements ManagementService {
 
         String layoutJson;
         if (request.useVenueLayout()) {
-            // Re-link venue if venueId explicitly provided (e.g. switching from custom → venue)
             if (request.venueId() != null) {
                 Venue v = venueRepository.findById(request.venueId())
                         .orElseThrow(() -> new EntityNotFoundException("Venue not found: " + request.venueId()));
@@ -206,15 +205,30 @@ public class ManagementServiceImpl implements ManagementService {
             }
             Venue venue = event.getVenue();
             if (venue != null && venue.getLayout() != null) {
-                // Happy path: venue has a layout — use it and clear custom layout
                 layoutJson = venue.getLayout();
-                event.setLayout(null);
+                // Store venue marker JSON to persist zone links for frontend restore
+                try {
+                    StringBuilder marker = new StringBuilder("{\"venueMode\":true,\"venueId\":\"")
+                            .append(venue.getId()).append("\",\"zoneLinks\":{");
+                    if (request.venueZoneLinks() != null) {
+                        boolean first = true;
+                        for (ManagementEventLayoutRequest.VenueZoneLink link : request.venueZoneLinks()) {
+                            if (link.zoneId() == null) continue;
+                            if (!first) marker.append(",");
+                            marker.append("\"").append(link.venueZoneName()).append("\":\"")
+                                    .append(link.zoneId()).append("\"");
+                            first = false;
+                        }
+                    }
+                    marker.append("}}");
+                    event.setLayout(marker.toString());
+                } catch (Exception e) {
+                    event.setLayout(null);
+                }
             } else if (request.customLayoutJson() != null && !request.customLayoutJson().isBlank()) {
-                // Fallback: no venue layout but custom JSON provided — use it
                 layoutJson = request.customLayoutJson();
                 event.setLayout(layoutJson);
             } else if (event.getLayout() != null) {
-                // Fallback: re-apply existing stored custom layout
                 layoutJson = event.getLayout();
             } else {
                 throw new IllegalArgumentException(
@@ -224,8 +238,8 @@ public class ManagementServiceImpl implements ManagementService {
             if (request.customLayoutJson() == null || request.customLayoutJson().isBlank())
                 throw new IllegalArgumentException("customLayoutJson must be provided when useVenueLayout is false.");
             layoutJson = request.customLayoutJson();
-            event.setLayout(layoutJson); // store custom layout
-            event.setVenue(null);        // clear venue — ticket-select uses event.layout directly
+            event.setLayout(layoutJson);
+            event.setVenue(null);
         }
         eventRepository.save(event);
 
@@ -247,9 +261,6 @@ public class ManagementServiceImpl implements ManagementService {
     @Transactional(readOnly = true)
     public EventLayoutResponse getLayout(UUID organizerId, UUID eventId) {
         Event event = findEvent(organizerId, eventId);
-        // event.layout != null  → custom layout
-        // event.layout == null && venue != null → venue default layout
-        // both null → no layout
         String layoutJson = event.getLayout();
         if (layoutJson == null && event.getVenue() != null) {
             layoutJson = event.getVenue().getLayout();
@@ -371,6 +382,10 @@ public class ManagementServiceImpl implements ManagementService {
     private void generateSeatsFromLayout(EventSession session, String layoutJson) {
         try {
             JsonNode root = objectMapper.readTree(layoutJson);
+
+            // Skip venue marker JSON — no seats to generate from it
+            if (root.has("venueMode") && root.path("venueMode").asBoolean()) return;
+
             List<Zone> sessionZones = zoneRepository.findAllBySessionId(session.getId());
 
             List<JsonNode> zoneNodes = new ArrayList<>();
@@ -386,7 +401,6 @@ public class ManagementServiceImpl implements ManagementService {
             if (zoneNodes.isEmpty()) return;
 
             for (JsonNode zoneNode : zoneNodes) {
-                // Match by zone_id first, fall back to zone_name
                 String zoneIdStr = zoneNode.path("zone_id").asText(null);
                 String zoneName  = zoneNode.path("zone_name").asText();
 
@@ -410,7 +424,6 @@ public class ManagementServiceImpl implements ManagementService {
                 }
                 if (Boolean.TRUE.equals(matchedZone.getIsStanding())) continue;
 
-                // If zone already has seats from grid generation, skip
                 int existingCount = seatRepository.countByZoneId(matchedZone.getId());
                 if (existingCount > 0) {
                     log.info("Zone '{}' already has {} seats — skipping layout generation",
@@ -418,7 +431,6 @@ public class ManagementServiceImpl implements ManagementService {
                     continue;
                 }
 
-                // Generate from capacity if no explicit seats in JSON
                 JsonNode seats = zoneNode.path("seats");
                 if (!seats.isArray() || seats.isEmpty()) {
                     if (matchedZone.getCapacity() != null && matchedZone.getCapacity() > 0) {

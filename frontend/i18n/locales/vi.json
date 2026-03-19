@@ -237,7 +237,11 @@
         "perk_placeholder": "VD: Nước uống miễn phí, Lightstick...",
         "delete_title": "Xóa khu vực",
         "delete_confirm": "Bạn có chắc muốn xóa khu vực \"{name}\"?",
-        "description": "Mô tả"
+        "description": "Mô tả",
+        "desc_vi": "VI",
+        "desc_en": "EN",
+        "desc_vi_placeholder": "Mô tả khu vực bằng tiếng Việt...",
+        "desc_en_placeholder": "Mô tả khu vực bằng tiếng Anh..."
       },
       "step4": {
         "title": "Sơ đồ chỗ ngồi",
@@ -283,7 +287,10 @@
         "place_on_canvas": "Đặt lên sơ đồ",
         "no_floor_error": "Vui lòng thêm ít nhất một tầng.",
         "no_venue_layout_error": "Vui lòng chọn địa điểm có sơ đồ hoặc chuyển sang Sơ đồ tuỳ chỉnh.",
-        "link_description": "Với mỗi khu vực trong sơ đồ địa điểm, hãy chọn khu vé tương ứng. Các khu vực không liên kết sẽ chỉ mang tính trang trí."
+        "link_description": "Với mỗi khu vực trong sơ đồ địa điểm, hãy chọn khu vé tương ứng. Các khu vực không liên kết sẽ chỉ mang tính trang trí.",
+        "save_layout": "Lưu sơ đồ",
+        "save_close": "Lưu & Đóng",
+        "load_saved": "Tải sơ đồ đã lưu"
       }
     }
   }

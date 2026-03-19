@@ -16,7 +16,7 @@ public record ManagementEventResponse(
         String bannerUrl,
         UUID venueId,
         String venueName,
-        String eventLayout,
+        String layout,
         String aboutVi,
         String aboutEn,
         String termsAndConditions,

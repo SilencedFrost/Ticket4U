@@ -1,7 +1,6 @@
 package com.ticket4u.core.dto;
 
 import com.ticket4u.core.entity.Event;
-import com.ticket4u.core.entity.Venue;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

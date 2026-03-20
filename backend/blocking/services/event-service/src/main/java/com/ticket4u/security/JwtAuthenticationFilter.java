@@ -1,8 +1,12 @@
 package com.ticket4u.security;
 
-import com.ticket4u.util.CookieUtil;
-import com.ticket4u.util.JwtUtil;
+import com.nimbusds.jose.jwk.JWK;
 import com.ticket4u.core.constants.TokenConstants;
+import com.ticket4u.jwk.exception.JwkRetrievalException;
+import com.ticket4u.jwk.exception.JwtValidationException;
+import com.ticket4u.jwk.supplier.EventJwkSupplier;
+import com.ticket4u.jwk.util.JwtUtil;
+import com.ticket4u.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,16 +30,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
+    private final JwtUtil           jwtUtil;
+    private final CookieUtil        cookieUtil;
+    private final EventJwkSupplier  eventJwkSupplier;
+
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return pathMatcher.match("/api/*/public/**", path)
-                || pathMatcher.match("/.well-known/**", path)
-                || pathMatcher.match("/api/*/auth/**", path);
+                || pathMatcher.match("/.well-known/**", path);
     }
 
     @Override
@@ -52,29 +57,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey())
                     .orElse(null);
 
-            if (accessToken != null && jwtUtil.validate(accessToken)) {
+            if (accessToken != null) {
                 try {
-                    String userId = jwtUtil.extractSubject(accessToken);
+                    JWK publicKey = eventJwkSupplier.getJwk();
 
-                    List<String> roles = jwtUtil.extractClaim(accessToken, claims -> {
-                        try {
-                            return claims.getStringListClaim("roles");
-                        } catch (ParseException e) {
-                            return List.of();
-                        }
-                    });
+                    if (jwtUtil.validate(accessToken, publicKey)) {
+                        String userId = jwtUtil.extractSubject(accessToken, publicKey);
 
-                    var authorities = roles.stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                            .toList();
+                        List<String> roles = jwtUtil.extractClaim(accessToken, publicKey, claims -> {
+                            try {
+                                return claims.getStringListClaim("roles");
+                            } catch (ParseException e) {
+                                return List.of();
+                            }
+                        });
 
-                    var auth = new UsernamePasswordAuthenticationToken(
-                            userId, null, authorities
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(auth);
+                        var authorities = roles.stream()
+                                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                                .toList();
 
+                        var auth = new UsernamePasswordAuthenticationToken(
+                                userId, null, authorities
+                        );
+                        SecurityContextHolder.getContext().setAuthentication(auth);
+                    }
+
+                } catch (JwkRetrievalException e) {
+                    log.error("Failed to retrieve JWK: {}", e.getMessage());
+                } catch (JwtValidationException e) {
+                    log.warn("JWT validation failed: {}", e.getMessage());
                 } catch (Exception e) {
-                    log.warn("Failed to process JWT claims: {}", e.getMessage());
+                    log.warn("Failed to process JWT: {}", e.getMessage());
                 }
             }
         }

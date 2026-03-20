@@ -22,9 +22,9 @@
 echo Starting the entire Ticket4U system...
 
 :: Use %~dp0 to reference files relative to THIS script's location
-call "%~dp0start-backend.bat"
+call %~dp0start-backend.bat
 
-start "Nuxt Frontend" "%~dp0start-frontend.bat"
+start %~dp0start-frontend.bat
 
 :: Automatically close this master window after all services have been launched
 exit

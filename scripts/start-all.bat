@@ -15,7 +15,7 @@
 ::  3. Name the shortcut: Ticket4U (or whatever you prefer)
 ::  4. (Optional) Right-click shortcut -> Properties
 ::               -> Change Icon -> pick from shell32.dll
-::               -> Change Icon -> Browse to auto-run\logo-primary.ico
+::               -> Change Icon -> Browse to auto-run\logo-primary.ico 
 ::  5. Right-click shortcut -> Pin to taskbar
 :: =============================================================
 
@@ -24,7 +24,7 @@ echo Starting the entire Ticket4U system...
 :: Use %~dp0 to reference files relative to THIS script's location
 call "%~dp0start-backend.bat"
 
-start "Nuxt Frontend" cmd /k ""%~dp0start-frontend.bat""
+start "Nuxt Frontend" "%~dp0start-frontend.bat"
 
 :: Automatically close this master window after all services have been launched
 exit

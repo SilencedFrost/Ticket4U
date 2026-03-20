@@ -1,12 +1,13 @@
 package com.ticket4u.core.entity;
 
-import com.ticket4u.core.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -51,8 +52,7 @@ public class Zone {
     @Column(length = 512)
     private String giftImageUrl;
 
-    @Column(columnDefinition = "JSONB")
-    @Convert(converter = StringListConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     private List<String> perks;
 
     @CreationTimestamp

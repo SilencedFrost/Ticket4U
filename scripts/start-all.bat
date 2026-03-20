@@ -21,11 +21,10 @@
 
 echo Starting the entire Ticket4U system...
 
-:: Call the backend startup file (will automatically open 2 new PowerShell windows)
-call "start-backend.bat"
+:: Use %~dp0 to reference files relative to THIS script's location
+call "%~dp0start-backend.bat"
 
-:: Open a new CMD window to run the frontend
-start "Nuxt Frontend" cmd /k ""start-frontend.bat""
+start "Nuxt Frontend" cmd /k ""%~dp0start-frontend.bat""
 
 :: Automatically close this master window after all services have been launched
 exit

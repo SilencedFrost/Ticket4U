@@ -678,4 +678,525 @@ CROSS JOIN generate_series(1, 10) r
 CROSS JOIN generate_series(1, 10) c 
 WHERE z.name = 'Khu học viên' AND e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
+--6. Venues Layout
+-- CIS Arena → Sports Arena layout
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.3, "y1": -0.3, "x2": 0.3, "y2": 0.3 },
+  "zones": [
+    {
+      "zone_name": "Courtside Left",
+      "zone_type": "sitting",
+      "color": "#F59E0B",
+      "corner1": { "x": -0.9,  "y": -0.5 },
+      "corner2": { "x": -0.35, "y": -0.5 },
+      "corner3": { "x": -0.35, "y":  0.5 },
+      "corner4": { "x": -0.9,  "y":  0.5 },
+      "seats": [
+        { "seat_name": "L-A1", "seat_id": "L-A1", "seat_pos": { "x": -0.8, "y": -0.35 }, "seat_rotation":  90 },
+        { "seat_name": "L-A2", "seat_id": "L-A2", "seat_pos": { "x": -0.8, "y": -0.1  }, "seat_rotation":  90 },
+        { "seat_name": "L-A3", "seat_id": "L-A3", "seat_pos": { "x": -0.8, "y":  0.15 }, "seat_rotation":  90 },
+        { "seat_name": "L-A4", "seat_id": "L-A4", "seat_pos": { "x": -0.8, "y":  0.4  }, "seat_rotation":  90 },
+        { "seat_name": "L-B1", "seat_id": "L-B1", "seat_pos": { "x": -0.6, "y": -0.35 }, "seat_rotation":  90 },
+        { "seat_name": "L-B2", "seat_id": "L-B2", "seat_pos": { "x": -0.6, "y": -0.1  }, "seat_rotation":  90 },
+        { "seat_name": "L-B3", "seat_id": "L-B3", "seat_pos": { "x": -0.6, "y":  0.15 }, "seat_rotation":  90 },
+        { "seat_name": "L-B4", "seat_id": "L-B4", "seat_pos": { "x": -0.6, "y":  0.4  }, "seat_rotation":  90 }
+      ]
+    },
+    {
+      "zone_name": "Courtside Right",
+      "zone_type": "sitting",
+      "color": "#F59E0B",
+      "corner1": { "x":  0.35, "y": -0.5 },
+      "corner2": { "x":  0.9,  "y": -0.5 },
+      "corner3": { "x":  0.9,  "y":  0.5 },
+      "corner4": { "x":  0.35, "y":  0.5 },
+      "seats": [
+        { "seat_name": "R-A1", "seat_id": "R-A1", "seat_pos": { "x":  0.6, "y": -0.35 }, "seat_rotation": -90 },
+        { "seat_name": "R-A2", "seat_id": "R-A2", "seat_pos": { "x":  0.6, "y": -0.1  }, "seat_rotation": -90 },
+        { "seat_name": "R-A3", "seat_id": "R-A3", "seat_pos": { "x":  0.6, "y":  0.15 }, "seat_rotation": -90 },
+        { "seat_name": "R-A4", "seat_id": "R-A4", "seat_pos": { "x":  0.6, "y":  0.4  }, "seat_rotation": -90 },
+        { "seat_name": "R-B1", "seat_id": "R-B1", "seat_pos": { "x":  0.8, "y": -0.35 }, "seat_rotation": -90 },
+        { "seat_name": "R-B2", "seat_id": "R-B2", "seat_pos": { "x":  0.8, "y": -0.1  }, "seat_rotation": -90 },
+        { "seat_name": "R-B3", "seat_id": "R-B3", "seat_pos": { "x":  0.8, "y":  0.15 }, "seat_rotation": -90 },
+        { "seat_name": "R-B4", "seat_id": "R-B4", "seat_pos": { "x":  0.8, "y":  0.4  }, "seat_rotation": -90 }
+      ]
+    },
+    {
+      "zone_name": "Bleachers",
+      "zone_type": "sitting",
+      "color": "#64748B",
+      "corner1": { "x": -0.9, "y":  0.55 },
+      "corner2": { "x":  0.9, "y":  0.55 },
+      "corner3": { "x":  0.9, "y":  0.95 },
+      "corner4": { "x": -0.9, "y":  0.95 },
+      "seats": [
+        { "seat_name": "BL-A1", "seat_id": "BL-A1", "seat_pos": { "x": -0.72, "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A2", "seat_id": "BL-A2", "seat_pos": { "x": -0.48, "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A3", "seat_id": "BL-A3", "seat_pos": { "x": -0.24, "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A4", "seat_id": "BL-A4", "seat_pos": { "x":  0.0,  "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A5", "seat_id": "BL-A5", "seat_pos": { "x":  0.24, "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A6", "seat_id": "BL-A6", "seat_pos": { "x":  0.48, "y": 0.68 }, "seat_rotation": 0 },
+        { "seat_name": "BL-A7", "seat_id": "BL-A7", "seat_pos": { "x":  0.72, "y": 0.68 }, "seat_rotation": 0 }
+      ]
+    }
+  ],
+  "seat_size": 20
+}'::jsonb
+WHERE name = 'CIS Arena';
 
+
+-- Nhà Hát Bến Thành → Theater - VIP + Standard
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.5, "y1": -1.0, "x2": 0.5, "y2": -0.88 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "sitting",
+      "color": "#DC2626",
+      "corner1": { "x": -0.85, "y": -0.85 },
+      "corner2": { "x":  0.85, "y": -0.85 },
+      "corner3": { "x":  0.85, "y": -0.1  },
+      "corner4": { "x": -0.85, "y": -0.1  },
+      "seats": [
+        { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "C1", "seat_id": "C1", "seat_pos": { "x": -0.65, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C2", "seat_id": "C2", "seat_pos": { "x": -0.4,  "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C3", "seat_id": "C3", "seat_pos": { "x": -0.15, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C4", "seat_id": "C4", "seat_pos": { "x":  0.15, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C5", "seat_id": "C5", "seat_pos": { "x":  0.4,  "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C6", "seat_id": "C6", "seat_pos": { "x":  0.65, "y": -0.25 }, "seat_rotation": 0 }
+      ]
+    },
+    {
+      "zone_name": "Standard",
+      "zone_type": "sitting",
+      "color": "#059669",
+      "corner1": { "x": -0.85, "y": -0.05 },
+      "corner2": { "x":  0.85, "y": -0.05 },
+      "corner3": { "x":  0.85, "y":  0.9  },
+      "corner4": { "x": -0.85, "y":  0.9  },
+      "seats": [
+        { "seat_name": "D1", "seat_id": "D1", "seat_pos": { "x": -0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D2", "seat_id": "D2", "seat_pos": { "x": -0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D3", "seat_id": "D3", "seat_pos": { "x": -0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D4", "seat_id": "D4", "seat_pos": { "x":  0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D5", "seat_id": "D5", "seat_pos": { "x":  0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D6", "seat_id": "D6", "seat_pos": { "x":  0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "E1", "seat_id": "E1", "seat_pos": { "x": -0.65, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E2", "seat_id": "E2", "seat_pos": { "x": -0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E3", "seat_id": "E3", "seat_pos": { "x": -0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E4", "seat_id": "E4", "seat_pos": { "x":  0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E5", "seat_id": "E5", "seat_pos": { "x":  0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E6", "seat_id": "E6", "seat_pos": { "x":  0.65, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "F1", "seat_id": "F1", "seat_pos": { "x": -0.65, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F2", "seat_id": "F2", "seat_pos": { "x": -0.4,  "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F3", "seat_id": "F3", "seat_pos": { "x": -0.15, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F4", "seat_id": "F4", "seat_pos": { "x":  0.15, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F5", "seat_id": "F5", "seat_pos": { "x":  0.4,  "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F6", "seat_id": "F6", "seat_pos": { "x":  0.65, "y": 0.6  }, "seat_rotation": 0 }
+      ]
+    }
+  ],
+  "seat_size": 22
+}'::jsonb
+WHERE name = 'Nhà Hát Bến Thành';
+
+
+-- Mây in The Nest → Concert Classic (VIP sitting + GA standing)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "sitting",
+      "color": "#DC2626",
+      "corner1": { "x": -0.85, "y": -0.82 },
+      "corner2": { "x":  0.85, "y": -0.82 },
+      "corner3": { "x":  0.85, "y": -0.2  },
+      "corner4": { "x": -0.85, "y": -0.2  },
+      "seats": [
+        { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.7  }, "seat_rotation": 0 },
+        { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": -0.45 }, "seat_rotation": 0 },
+        { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": -0.45 }, "seat_rotation": 0 },
+        { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": -0.45 }, "seat_rotation": 0 },
+        { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": -0.45 }, "seat_rotation": 0 },
+        { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": -0.45 }, "seat_rotation": 0 },
+        { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": -0.45 }, "seat_rotation": 0 }
+      ]
+    },
+    {
+      "zone_name": "GA",
+      "zone_type": "standing",
+      "color": "#2563EB",
+      "corner1": { "x": -0.85, "y": -0.15 },
+      "corner2": { "x":  0.85, "y": -0.15 },
+      "corner3": { "x":  0.85, "y":  0.9  },
+      "corner4": { "x": -0.85, "y":  0.9  },
+      "seats": []
+    }
+  ],
+  "seat_size": 22
+}'::jsonb
+WHERE name = 'Mây in The Nest';
+
+
+-- GEM Center → Theater - VIP + Standard
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.5, "y1": -1.0, "x2": 0.5, "y2": -0.88 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "sitting",
+      "color": "#DC2626",
+      "corner1": { "x": -0.85, "y": -0.85 },
+      "corner2": { "x":  0.85, "y": -0.85 },
+      "corner3": { "x":  0.85, "y": -0.1  },
+      "corner4": { "x": -0.85, "y": -0.1  },
+      "seats": [
+        { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": -0.55 }, "seat_rotation": 0 },
+        { "seat_name": "C1", "seat_id": "C1", "seat_pos": { "x": -0.65, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C2", "seat_id": "C2", "seat_pos": { "x": -0.4,  "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C3", "seat_id": "C3", "seat_pos": { "x": -0.15, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C4", "seat_id": "C4", "seat_pos": { "x":  0.15, "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C5", "seat_id": "C5", "seat_pos": { "x":  0.4,  "y": -0.25 }, "seat_rotation": 0 },
+        { "seat_name": "C6", "seat_id": "C6", "seat_pos": { "x":  0.65, "y": -0.25 }, "seat_rotation": 0 }
+      ]
+    },
+    {
+      "zone_name": "Standard",
+      "zone_type": "sitting",
+      "color": "#059669",
+      "corner1": { "x": -0.85, "y": -0.05 },
+      "corner2": { "x":  0.85, "y": -0.05 },
+      "corner3": { "x":  0.85, "y":  0.9  },
+      "corner4": { "x": -0.85, "y":  0.9  },
+      "seats": [
+        { "seat_name": "D1", "seat_id": "D1", "seat_pos": { "x": -0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D2", "seat_id": "D2", "seat_pos": { "x": -0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D3", "seat_id": "D3", "seat_pos": { "x": -0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D4", "seat_id": "D4", "seat_pos": { "x":  0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D5", "seat_id": "D5", "seat_pos": { "x":  0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "D6", "seat_id": "D6", "seat_pos": { "x":  0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "E1", "seat_id": "E1", "seat_pos": { "x": -0.65, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E2", "seat_id": "E2", "seat_pos": { "x": -0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E3", "seat_id": "E3", "seat_pos": { "x": -0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E4", "seat_id": "E4", "seat_pos": { "x":  0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E5", "seat_id": "E5", "seat_pos": { "x":  0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "E6", "seat_id": "E6", "seat_pos": { "x":  0.65, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "F1", "seat_id": "F1", "seat_pos": { "x": -0.65, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F2", "seat_id": "F2", "seat_pos": { "x": -0.4,  "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F3", "seat_id": "F3", "seat_pos": { "x": -0.15, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F4", "seat_id": "F4", "seat_pos": { "x":  0.15, "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F5", "seat_id": "F5", "seat_pos": { "x":  0.4,  "y": 0.6  }, "seat_rotation": 0 },
+        { "seat_name": "F6", "seat_id": "F6", "seat_pos": { "x":  0.65, "y": 0.6  }, "seat_rotation": 0 }
+      ]
+    }
+  ],
+  "seat_size": 22
+}'::jsonb
+WHERE name = 'GEM Center';
+
+
+-- Tinh Tế Cafe → Restaurant layout (intimate, small venue)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.15, "y1": -1.0, "x2": 0.15, "y2": -0.9 },
+  "zones": [
+    {
+      "zone_name": "Window Section",
+      "zone_type": "sitting",
+      "color": "#DC2626",
+      "corner1": { "x": -0.9, "y": -0.85 },
+      "corner2": { "x": -0.3, "y": -0.85 },
+      "corner3": { "x": -0.3, "y":  0.9  },
+      "corner4": { "x": -0.9, "y":  0.9  },
+      "seats": [
+        { "seat_name": "W1", "seat_id": "W1", "seat_pos": { "x": -0.7, "y": -0.65 }, "seat_rotation":  90 },
+        { "seat_name": "W2", "seat_id": "W2", "seat_pos": { "x": -0.7, "y": -0.35 }, "seat_rotation":  90 },
+        { "seat_name": "W3", "seat_id": "W3", "seat_pos": { "x": -0.7, "y": -0.05 }, "seat_rotation":  90 },
+        { "seat_name": "W4", "seat_id": "W4", "seat_pos": { "x": -0.7, "y":  0.25 }, "seat_rotation":  90 },
+        { "seat_name": "W5", "seat_id": "W5", "seat_pos": { "x": -0.7, "y":  0.55 }, "seat_rotation":  90 }
+      ]
+    },
+    {
+      "zone_name": "Main Floor",
+      "zone_type": "sitting",
+      "color": "#059669",
+      "corner1": { "x": -0.25, "y": -0.85 },
+      "corner2": { "x":  0.25, "y": -0.85 },
+      "corner3": { "x":  0.25, "y":  0.9  },
+      "corner4": { "x": -0.25, "y":  0.9  },
+      "seats": [
+        { "seat_name": "M1", "seat_id": "M1", "seat_pos": { "x": 0.0, "y": -0.65 }, "seat_rotation": 0 },
+        { "seat_name": "M2", "seat_id": "M2", "seat_pos": { "x": 0.0, "y": -0.35 }, "seat_rotation": 0 },
+        { "seat_name": "M3", "seat_id": "M3", "seat_pos": { "x": 0.0, "y": -0.05 }, "seat_rotation": 0 },
+        { "seat_name": "M4", "seat_id": "M4", "seat_pos": { "x": 0.0, "y":  0.25 }, "seat_rotation": 0 },
+        { "seat_name": "M5", "seat_id": "M5", "seat_pos": { "x": 0.0, "y":  0.55 }, "seat_rotation": 0 }
+      ]
+    },
+    {
+      "zone_name": "Private Room",
+      "zone_type": "sitting",
+      "color": "#7C3AED",
+      "corner1": { "x":  0.3, "y": -0.85 },
+      "corner2": { "x":  0.9, "y": -0.85 },
+      "corner3": { "x":  0.9, "y":  0.9  },
+      "corner4": { "x":  0.3, "y":  0.9  },
+      "seats": [
+        { "seat_name": "P1", "seat_id": "P1", "seat_pos": { "x": 0.6, "y": -0.65 }, "seat_rotation": -90 },
+        { "seat_name": "P2", "seat_id": "P2", "seat_pos": { "x": 0.6, "y": -0.35 }, "seat_rotation": -90 },
+        { "seat_name": "P3", "seat_id": "P3", "seat_pos": { "x": 0.6, "y": -0.05 }, "seat_rotation": -90 },
+        { "seat_name": "P4", "seat_id": "P4", "seat_pos": { "x": 0.6, "y":  0.25 }, "seat_rotation": -90 },
+        { "seat_name": "P5", "seat_id": "P5", "seat_pos": { "x": 0.6, "y":  0.55 }, "seat_rotation": -90 }
+      ]
+    }
+  ],
+  "seat_size": 22
+}'::jsonb
+WHERE name = 'Tinh Tế Cafe';
+
+
+-- Dreamplex Điện Biên Phủ → Theater - VIP + Standard (workshop/conference style)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.5, "y1": -1.0, "x2": 0.5, "y2": -0.88 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "sitting",
+      "color": "#059669",
+      "corner1": { "x": -0.85, "y": -0.85 },
+      "corner2": { "x":  0.85, "y": -0.85 },
+      "corner3": { "x":  0.85, "y": -0.1  },
+      "corner4": { "x": -0.85, "y": -0.1  },
+      "seats": [
+        { "seat_name": "A1", "seat_id": "A1", "seat_pos": { "x": -0.65, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A2", "seat_id": "A2", "seat_pos": { "x": -0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A3", "seat_id": "A3", "seat_pos": { "x": -0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A4", "seat_id": "A4", "seat_pos": { "x":  0.15, "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A5", "seat_id": "A5", "seat_pos": { "x":  0.4,  "y": -0.75 }, "seat_rotation": 0 },
+        { "seat_name": "A6", "seat_id": "A6", "seat_pos": { "x":  0.65, "y": -0.75 }, "seat_rotation": 0 }
+      ]
+    },
+    {
+      "zone_name": "Standard",
+      "zone_type": "sitting",
+      "color": "#0D9488",
+      "corner1": { "x": -0.85, "y": -0.05 },
+      "corner2": { "x":  0.85, "y": -0.05 },
+      "corner3": { "x":  0.85, "y":  0.9  },
+      "corner4": { "x": -0.85, "y":  0.9  },
+      "seats": [
+        { "seat_name": "B1", "seat_id": "B1", "seat_pos": { "x": -0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "B2", "seat_id": "B2", "seat_pos": { "x": -0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "B3", "seat_id": "B3", "seat_pos": { "x": -0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "B4", "seat_id": "B4", "seat_pos": { "x":  0.15, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "B5", "seat_id": "B5", "seat_pos": { "x":  0.4,  "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "B6", "seat_id": "B6", "seat_pos": { "x":  0.65, "y": 0.1  }, "seat_rotation": 0 },
+        { "seat_name": "C1", "seat_id": "C1", "seat_pos": { "x": -0.65, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "C2", "seat_id": "C2", "seat_pos": { "x": -0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "C3", "seat_id": "C3", "seat_pos": { "x": -0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "C4", "seat_id": "C4", "seat_pos": { "x":  0.15, "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "C5", "seat_id": "C5", "seat_pos": { "x":  0.4,  "y": 0.35 }, "seat_rotation": 0 },
+        { "seat_name": "C6", "seat_id": "C6", "seat_pos": { "x":  0.65, "y": 0.35 }, "seat_rotation": 0 }
+      ]
+    }
+  ],
+  "seat_size": 22
+}'::jsonb
+WHERE name = 'Dreamplex Điện Biên Phủ';
+
+
+-- Gigamall Thủ Đức → Standing - VIP + GA (exhibition/open space)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "standing",
+      "color": "#7C3AED",
+      "corner1": { "x": -0.9, "y": -0.8 },
+      "corner2": { "x":  0.9, "y": -0.8 },
+      "corner3": { "x":  0.9, "y": -0.2 },
+      "corner4": { "x": -0.9, "y": -0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "GA",
+      "zone_type": "standing",
+      "color": "#5B21B6",
+      "corner1": { "x": -0.9, "y": -0.15 },
+      "corner2": { "x":  0.9, "y": -0.15 },
+      "corner3": { "x":  0.9, "y":  0.9  },
+      "corner4": { "x": -0.9, "y":  0.9  },
+      "seats": []
+    }
+  ],
+  "seat_size": 20
+}'::jsonb
+WHERE name = 'Gigamall Thủ Đức';
+
+
+-- Sân Lễ Hội Đền Vua Đinh - Vua Lê → Standing - 3 Zones (large outdoor festival)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+  "zones": [
+    {
+      "zone_name": "VVIP",
+      "zone_type": "standing",
+      "color": "#DC2626",
+      "corner1": { "x": -0.9, "y": -0.8  },
+      "corner2": { "x":  0.9, "y": -0.8  },
+      "corner3": { "x":  0.9, "y": -0.35 },
+      "corner4": { "x": -0.9, "y": -0.35 },
+      "seats": []
+    },
+    {
+      "zone_name": "VIP",
+      "zone_type": "standing",
+      "color": "#F59E0B",
+      "corner1": { "x": -0.9, "y": -0.3 },
+      "corner2": { "x":  0.9, "y": -0.3 },
+      "corner3": { "x":  0.9, "y":  0.2 },
+      "corner4": { "x": -0.9, "y":  0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "GA Standing",
+      "zone_type": "standing",
+      "color": "#2563EB",
+      "corner1": { "x": -0.9, "y":  0.25 },
+      "corner2": { "x":  0.9, "y":  0.25 },
+      "corner3": { "x":  0.9, "y":  0.9  },
+      "corner4": { "x": -0.9, "y":  0.9  },
+      "seats": []
+    }
+  ],
+  "seat_size": 20
+}'::jsonb
+WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê';
+
+
+-- Công viên Yên Sở → Standing - VIP + GA (outdoor park concert)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+  "zones": [
+    {
+      "zone_name": "VIP",
+      "zone_type": "standing",
+      "color": "#F59E0B",
+      "corner1": { "x": -0.9, "y": -0.8 },
+      "corner2": { "x":  0.9, "y": -0.8 },
+      "corner3": { "x":  0.9, "y": -0.2 },
+      "corner4": { "x": -0.9, "y": -0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "GA",
+      "zone_type": "standing",
+      "color": "#2563EB",
+      "corner1": { "x": -0.9, "y": -0.15 },
+      "corner2": { "x":  0.9, "y": -0.15 },
+      "corner3": { "x":  0.9, "y":  0.9  },
+      "corner4": { "x": -0.9, "y":  0.9  },
+      "seats": []
+    }
+  ],
+  "seat_size": 20
+}'::jsonb
+WHERE name = 'Công viên Yên Sở';
+
+
+-- Khu đô thị Vạn Phúc → Standing - 5 Zones Festival (large EDM festival)
+UPDATE public.venues
+SET layout = '{
+  "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 },
+  "zones": [
+    {
+      "zone_name": "SVIP",
+      "zone_type": "standing",
+      "color": "#DC2626",
+      "corner1": { "x": -0.4, "y": -0.8 },
+      "corner2": { "x":  0.4, "y": -0.8 },
+      "corner3": { "x":  0.4, "y": -0.2 },
+      "corner4": { "x": -0.4, "y": -0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "VIP Left",
+      "zone_type": "standing",
+      "color": "#F59E0B",
+      "corner1": { "x": -0.9,  "y": -0.8 },
+      "corner2": { "x": -0.45, "y": -0.8 },
+      "corner3": { "x": -0.45, "y": -0.2 },
+      "corner4": { "x": -0.9,  "y": -0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "VIP Right",
+      "zone_type": "standing",
+      "color": "#F59E0B",
+      "corner1": { "x":  0.45, "y": -0.8 },
+      "corner2": { "x":  0.9,  "y": -0.8 },
+      "corner3": { "x":  0.9,  "y": -0.2 },
+      "corner4": { "x":  0.45, "y": -0.2 },
+      "seats": []
+    },
+    {
+      "zone_name": "GA Left",
+      "zone_type": "standing",
+      "color": "#2563EB",
+      "corner1": { "x": -0.9,  "y": -0.15 },
+      "corner2": { "x": -0.05, "y": -0.15 },
+      "corner3": { "x": -0.05, "y":  0.9  },
+      "corner4": { "x": -0.9,  "y":  0.9  },
+      "seats": []
+    },
+    {
+      "zone_name": "GA Early Bird",
+      "zone_type": "standing",
+      "color": "#1D4ED8",
+      "corner1": { "x":  0.05, "y": -0.15 },
+      "corner2": { "x":  0.9,  "y": -0.15 },
+      "corner3": { "x":  0.9,  "y":  0.9  },
+      "corner4": { "x":  0.05, "y":  0.9  },
+      "seats": []
+    }
+  ],
+  "seat_size": 20
+}'::jsonb
+WHERE name = 'Khu đô thị Vạn Phúc';

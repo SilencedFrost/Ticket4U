@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -19,8 +20,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Organizer {
+
     @Id
-    @Column(name = "id", nullable = false)
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     private UUID id;
 
     @Column(nullable = false, length = 64)

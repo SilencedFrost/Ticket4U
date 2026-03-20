@@ -4,8 +4,6 @@ import com.ticket4u.constant.ValidationConstants;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.regex.Pattern;
-
 public class EmailDomainValidator implements ConstraintValidator<ValidEmailDomain, String> {
 
     @Override

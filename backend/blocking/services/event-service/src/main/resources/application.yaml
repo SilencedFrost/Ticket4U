@@ -13,6 +13,8 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+        type:
+          json_format_mapper: com.ticket4u.config.HibernateJackson3FormatMapper
 
 server:
   port: ${SERVER_PORT:8083}

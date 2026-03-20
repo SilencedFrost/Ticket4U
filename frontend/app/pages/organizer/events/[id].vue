@@ -708,7 +708,7 @@ const venueLayoutZones = computed(() => {
 // (auto-match watch moved below zones declaration)
 
 const fetchVenues = async () => {
-  try { venues.value = await $fetch<Venue[]>(`${config.public.apiUrl}/venues`, { credentials: 'include' }) }
+  try { venues.value = await $fetch<Venue[]>(`${config.public.apiUrl}/organizer/venues`, { credentials: 'include' }) }
   catch { venues.value = [] }
 }
 
@@ -1965,14 +1965,12 @@ const loadEvent = async () => {
   } catch { globalError.value = 'Failed to load event data' }
 }
 
-// ── Lifecycle ──────────────────────────────────────────────
+// Lifecycle 
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchVenues()])
   if (!isNew.value) await loadEvent()
   if (layoutFloors.value.length === 0) layoutFloors.value.push(makeFloor(1))
 })
-
-
 
 watch(currentStep, async (step) => {
   if (step === 2 && savedSessionId.value) await fetchZones()
@@ -2020,7 +2018,7 @@ watch(
   () => nextTick(() => layoutFloors.value.forEach((_, fi) => drawSeatsOnCanvas(fi)))
 )
 
-// ── Helpers ────────────────────────────────────────────────
+// Helpers
 const parsedPerks = (perks: string | string[] | undefined): string[] => {
   if (!perks) return []
   if (Array.isArray(perks)) return perks

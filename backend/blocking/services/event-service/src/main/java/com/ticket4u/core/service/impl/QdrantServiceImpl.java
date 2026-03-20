@@ -1,0 +1,141 @@
+package com.ticket4u.core.service.impl;
+
+import com.ticket4u.core.exceptions.QdrantOperationException;
+import com.ticket4u.core.service.QdrantService;
+import io.qdrant.client.QdrantClient;
+import io.qdrant.client.ValueFactory;
+import io.qdrant.client.grpc.Collections;
+import io.qdrant.client.grpc.Common;
+import io.qdrant.client.grpc.JsonWithInt;
+import io.qdrant.client.grpc.Points;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class QdrantServiceImpl implements QdrantService {
+
+    private final QdrantClient client;
+
+    /**
+     * Create a new collection in Qdrant with specific vector settings.
+     * @param collectionName Name of the collection to create.
+     * @param vectorSize Size of the vector (e.g., 384 or 768).
+     * @throws QdrantOperationException if the collection cannot be created.
+     */
+    @Override
+    public void createCollection(String collectionName, int vectorSize) {
+        try {
+            client.createCollectionAsync(collectionName,
+                    Collections.VectorParams.newBuilder()
+                            .setSize(vectorSize)
+                            .setDistance(Collections.Distance.Cosine)
+                            .build()
+            ).get();
+        } catch (Exception e) {
+            throw new QdrantOperationException("createCollection", collectionName, e.getMessage());
+        }
+    }
+
+    /**
+     * Check if a collection already exists in the Qdrant database.
+     * @param collectionName Name of the collection to check.
+     * @return true if exists, false otherwise.
+     * @throws QdrantOperationException if there is a connection error.
+     */
+    @Override
+    public boolean isCollectionExists(String collectionName) {
+        try {
+            return client.listCollectionsAsync().get().contains(collectionName);
+        } catch (Exception e) {
+            throw new QdrantOperationException("isCollectionExists", collectionName, e.getMessage());
+        }
+    }
+
+    /**
+     * Insert or update a point (vector and metadata) in a collection.
+     * @param collectionName Target collection name.
+     * @param id Unique ID of the point.
+     * @param vector List of float values representing the vector.
+     * @param payload Map of metadata to store with the vector.
+     * @throws QdrantOperationException if the upsert process fails.
+     */
+    @Override
+    public void upsert(String collectionName, Common.PointId id, List<Float> vector, Map<String, Object> payload) {
+        try {
+            Points.PointStruct point = Points.PointStruct.newBuilder()
+                    .setId(id)
+                    .setVectors(Points.Vectors.newBuilder()
+                            .setVector(Points.Vector.newBuilder().addAllData(vector).build())
+                            .build())
+                    .putAllPayload(buildPayload(payload))
+                    .build();
+
+            client.upsertAsync(collectionName, List.of(point)).get();
+        } catch (Exception e) {
+            throw new QdrantOperationException("upsert", collectionName, e.getMessage());
+        }
+    }
+
+    /**
+     * Search for the most similar vectors in a collection.
+     * @param collectionName Collection to search in.
+     * @param queryVector The vector used for searching.
+     * @param threshold Minimum similarity score to include a result.
+     * @param limit Maximum number of results to return.
+     * @return List of scored points found.
+     * @throws QdrantOperationException if the search fails.
+     */
+    @Override
+    public List<Points.ScoredPoint> search(String collectionName, List<Float> queryVector, float threshold, int limit) {
+        try {
+            Points.SearchPoints searchPoints = Points.SearchPoints.newBuilder()
+                    .setCollectionName(collectionName)
+                    .addAllVector(queryVector)
+                    .setScoreThreshold(threshold)
+                    .setLimit(limit)
+                    .setWithPayload(Points.WithPayloadSelector.newBuilder()
+                            .setEnable(true)
+                            .build())
+                    .build();
+
+            return client.searchAsync(searchPoints).get();
+        } catch (Exception e) {
+            throw new QdrantOperationException("search", collectionName, e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieve a specific point's data using its ID.
+     * @param collectionName Collection to look in.
+     * @param id The ID of the point to retrieve.
+     * @return The retrieved point data.
+     * @throws QdrantOperationException if the ID is not found or connection fails.
+     */
+    @Override
+    public Points.RetrievedPoint getById(String collectionName, Common.PointId id) {
+        try {
+            return client.retrieveAsync(collectionName, List.of(id), true, false, null)
+                    .get()
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new QdrantOperationException("Point ID not found: " + id));
+        } catch (Exception e) {
+            throw new QdrantOperationException("getById", collectionName, e.getMessage());
+        }
+    }
+
+    private Map<String, JsonWithInt.Value> buildPayload(Map<String, Object> metadata) {
+        return metadata.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> ValueFactory.value(e.getValue().toString())
+                ));
+    }
+}

@@ -20,6 +20,11 @@ spring:
 server:
   port: ${SERVER_PORT:8083}
 
+# Qdrant Configuration
+qdrant:
+  host: ${QDRANT_HOST:localhost}
+  port: ${QDRANT_PORT:6334}
+
 application:
   security:
     # CORS

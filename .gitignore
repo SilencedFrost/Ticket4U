@@ -1,3 +1,9 @@
 **/.idea
 **/.vscode
 **/AGENTS.md
+
+# Build and Binary files
+**/automated-tests/bin/
+
+# Docker data 
+**/qdrant_storage/

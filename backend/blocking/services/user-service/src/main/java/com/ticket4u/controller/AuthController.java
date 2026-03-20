@@ -1,6 +1,8 @@
 package com.ticket4u.controller;
 
-import com.ticket4u.dto.auth.*;
+import com.ticket4u.dto.auth.LoginRequest;
+import com.ticket4u.dto.auth.OAuth2RegisterRequest;
+import com.ticket4u.dto.auth.RegisterRequest;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
@@ -14,7 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")

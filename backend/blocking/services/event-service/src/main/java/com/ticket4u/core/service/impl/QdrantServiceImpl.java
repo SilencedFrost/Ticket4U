@@ -86,7 +86,14 @@ public class QdrantServiceImpl implements QdrantService {
                     .putAllPayload(buildPayload(payload))
                     .build();
 
-            client.upsertAsync(collectionName, List.of(point)).get(timeoutSeconds, TimeUnit.SECONDS);;
+            Points.UpsertPoints request = Points.UpsertPoints.newBuilder()
+                    .setCollectionName(collectionName)
+                    .addAllPoints(List.of(point))
+                    .setWait(true)
+                    .setUpdateMode(Points.UpdateMode.Upsert)   // explicit default, swap to InsertOnly if needed
+                    .build();
+
+            client.upsertAsync(request).get(timeoutSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("Qdrant upsert failed on collection '{}': {}", collectionName, e.getMessage());
             throw new QdrantOperationException("upsert", collectionName, "Operation failed");

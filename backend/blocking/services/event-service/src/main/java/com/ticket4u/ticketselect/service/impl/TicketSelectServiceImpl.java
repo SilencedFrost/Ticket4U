@@ -17,11 +17,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -76,18 +80,28 @@ public class TicketSelectServiceImpl implements TicketSelectService {
     }
 
     // ── Layout resolution ──────────────────────────────────
-    // 1. event.layout = {"venueMode":true,...} → use venue.layout
-    // 2. event.layout = custom floors JSON     → use as-is
-    // 3. event.layout = null && venue != null  → use venue.layout
-    // 4. both null                             → no layout
+    // 1. event.layout = {"venueMode":true,"zoneLinks":{...}} → inject zone_ids into venue layout
+    // 2. event.layout = custom floors JSON                   → use as-is
+    // 3. event.layout = null && venue != null                → use venue.layout as-is
+    // 4. both null                                           → no layout
     private String resolveLayout(Event event) {
         String stored = event.getLayout();
+
         if (stored != null) {
             try {
                 JsonNode node = objectMapper.readTree(stored);
                 if (node.has("venueMode") && node.path("venueMode").asBoolean()) {
+                    // Extract zoneLinks: { "VIP": "zone-uuid", "GA": "zone-uuid" }
+                    Map<String, String> zoneLinks = new HashMap<>();
+                    JsonNode linksNode = node.path("zoneLinks");
+                    if (linksNode.isObject()) {
+                        linksNode.properties().forEach(entry ->
+                                zoneLinks.put(entry.getKey(), entry.getValue().asText())
+                        );
+                    }
+
                     if (event.getVenue() != null && event.getVenue().getLayout() != null) {
-                        return event.getVenue().getLayout();
+                        return injectZoneIds(event.getVenue().getLayout(), zoneLinks);
                     }
                     log.warn("Event {} has venue marker but no venue layout", event.getId());
                     return null;
@@ -95,12 +109,53 @@ public class TicketSelectServiceImpl implements TicketSelectService {
             } catch (Exception e) {
                 log.warn("Event {} layout parse failed: {}", event.getId(), e.getMessage());
             }
+            // Custom layout — return as-is
             return stored;
         }
+
+        // No stored layout — fall back to venue default (no zone links)
         if (event.getVenue() != null && event.getVenue().getLayout() != null) {
             return event.getVenue().getLayout();
         }
+
         return null;
+    }
+
+    // ── Inject zone_ids into venue layout JSON ─────────────
+    // Venue layout has zones with zone_name but no zone_id.
+    // We inject zone_id from the zoneLinks map so the frontend
+    // can match zones to actual Zone entities and load seats.
+    private String injectZoneIds(String venueLayout, Map<String, String> zoneLinks) {
+        if (zoneLinks.isEmpty()) return venueLayout;
+        try {
+            JsonNode root = objectMapper.readTree(venueLayout);
+
+            // Handle both { floors: [...] } and flat { stage, zones } structures
+            if (root.has("floors") && root.path("floors").isArray()) {
+                ArrayNode floors = (ArrayNode) root.path("floors");
+                for (JsonNode floor : floors) {
+                    injectZoneIdsIntoFloor(floor, zoneLinks);
+                }
+            } else if (root.has("zones") && root.path("zones").isArray()) {
+                injectZoneIdsIntoFloor(root, zoneLinks);
+            }
+
+            return objectMapper.writeValueAsString(root);
+        } catch (Exception e) {
+            log.warn("Failed to inject zone_ids into venue layout: {}", e.getMessage());
+            return venueLayout;
+        }
+    }
+
+    private void injectZoneIdsIntoFloor(JsonNode floorNode, Map<String, String> zoneLinks) {
+        JsonNode zonesNode = floorNode.path("zones");
+        if (!zonesNode.isArray()) return;
+        for (JsonNode zone : zonesNode) {
+            String zoneName = zone.path("zone_name").asText(null);
+            if (zoneName != null && zoneLinks.containsKey(zoneName)) {
+                ((ObjectNode) zone).put("zone_id", zoneLinks.get(zoneName));
+            }
+        }
     }
 
     // ── Mapping ────────────────────────────────────────────

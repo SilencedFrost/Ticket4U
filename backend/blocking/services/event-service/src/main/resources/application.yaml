@@ -32,6 +32,8 @@ application:
     # CORS
     cors:
       allowed-origins: ${FRONTEND_URL}
+  services:
+    user: ${USER_SERVICE_URL:https://localhost:8080}
 
 # Logging
 logging:

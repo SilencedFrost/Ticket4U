@@ -128,15 +128,20 @@ public class QdrantServiceImpl implements QdrantService {
      */
     @Override
     public Points.RetrievedPoint getById(String collectionName, Common.PointId id) {
+        List<Points.RetrievedPoint> results;
         try {
-            return client.retrieveAsync(collectionName, List.of(id), true, false, null)
-                    .get(timeoutSeconds, TimeUnit.SECONDS)
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(() -> new QdrantOperationException("Point ID not found: " + id));
+            results = client.retrieveAsync(collectionName, List.of(id), true, false, null)
+                    .get(timeoutSeconds, TimeUnit.SECONDS);
+        } catch (QdrantOperationException e) {
+            throw e; // rethrow cleanly if already wrapped
         } catch (Exception e) {
-            throw new QdrantOperationException("getById", collectionName, e.getMessage());
+            log.error("Qdrant getById failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("getById", collectionName, "Retrieve operation failed");
         }
+
+        return results.stream()
+                .findFirst()
+                .orElseThrow(() -> new QdrantOperationException("Point ID not found in collection '" + collectionName + "': " + id));
     }
 
     private Map<String, JsonWithInt.Value> buildPayload(Map<String, Object> metadata) {

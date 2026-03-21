@@ -46,7 +46,8 @@ public class QdrantServiceImpl implements QdrantService {
                             .build()
             ).get(timeoutSeconds, TimeUnit.SECONDS);;
         } catch (Exception e) {
-            throw new QdrantOperationException("createCollection", collectionName, e.getMessage());
+            log.error("Qdrant createCollection failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("createCollection", collectionName, "Operation failed");
         }
     }
 
@@ -61,7 +62,8 @@ public class QdrantServiceImpl implements QdrantService {
         try {
             return client.listCollectionsAsync().get(timeoutSeconds, TimeUnit.SECONDS).contains(collectionName);
         } catch (Exception e) {
-            throw new QdrantOperationException("isCollectionExists", collectionName, e.getMessage());
+            log.error("Qdrant isCollectionExists failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("isCollectionExists", collectionName, "Operation failed");
         }
     }
 
@@ -86,7 +88,8 @@ public class QdrantServiceImpl implements QdrantService {
 
             client.upsertAsync(collectionName, List.of(point)).get(timeoutSeconds, TimeUnit.SECONDS);;
         } catch (Exception e) {
-            throw new QdrantOperationException("upsert", collectionName, e.getMessage());
+            log.error("Qdrant upsert failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("upsert", collectionName, "Operation failed");
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class CookieExtratorUtil {
+public class CookieExtractorUtil {
 
     private final CookieUtil cookieUtil;
 

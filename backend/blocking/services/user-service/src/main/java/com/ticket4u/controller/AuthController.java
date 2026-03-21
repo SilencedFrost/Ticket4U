@@ -10,7 +10,7 @@ import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.PasswordResetService;
-import com.ticket4u.util.CookieExtratorUtil;
+import com.ticket4u.util.CookieExtractorUtil;
 import com.ticket4u.util.HttpRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Slf4j
 public class AuthController {
 
-    private final CookieExtratorUtil cookieExtratorUtil;
+    private final CookieExtractorUtil cookieExtractorUtil;
     private final AuthService authService;
     private final EmailVerificationService emailVerificationService;
     private final PasswordResetService passwordResetService;
@@ -44,7 +44,7 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request
     ) {
-        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
+        String refreshToken = cookieExtractorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
         RefreshResult refreshResult = authService.refresh(refreshToken);
 
@@ -62,7 +62,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest request
     ) {
-        String oldRefreshToken = cookieExtratorUtil.getRefreshTokenOrGet(request, null);
+        String oldRefreshToken = cookieExtractorUtil.getRefreshTokenOrGet(request, null);
 
         String ua = HttpRequestUtil.getUserAgent(request);
 
@@ -79,7 +79,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
+        String refreshToken = cookieExtractorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
         LogoutResult logoutResult = authService.logout(refreshToken);
 

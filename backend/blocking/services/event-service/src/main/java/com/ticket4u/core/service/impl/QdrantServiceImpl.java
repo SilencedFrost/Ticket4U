@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static io.qdrant.client.QueryFactory.nearest;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -100,9 +102,9 @@ public class QdrantServiceImpl implements QdrantService {
     @Override
     public List<Points.ScoredPoint> search(String collectionName, List<Float> queryVector, float threshold, int limit) {
         try {
-            Points.SearchPoints searchPoints = Points.SearchPoints.newBuilder()
+            Points.QueryPoints queryPoints = Points.QueryPoints.newBuilder()
                     .setCollectionName(collectionName)
-                    .addAllVector(queryVector)
+                    .setQuery(nearest(queryVector))
                     .setScoreThreshold(threshold)
                     .setLimit(limit)
                     .setWithPayload(Points.WithPayloadSelector.newBuilder()
@@ -110,9 +112,10 @@ public class QdrantServiceImpl implements QdrantService {
                             .build())
                     .build();
 
-            return client.searchAsync(searchPoints).get(timeoutSeconds, TimeUnit.SECONDS);;
+            return client.queryAsync(queryPoints).get(timeoutSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
-            throw new QdrantOperationException("search", collectionName, e.getMessage());
+            log.error("Qdrant search failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("search", collectionName, "Search operation failed");
         }
     }
 

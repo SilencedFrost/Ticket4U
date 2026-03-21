@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static io.qdrant.client.QueryFactory.nearest;
 import static io.qdrant.client.VectorsFactory.vectors;
+import static io.qdrant.client.WithPayloadSelectorFactory.enable;
 
 @Slf4j
 @Service
@@ -109,14 +110,12 @@ public class QdrantServiceImpl implements QdrantService {
                     .setQuery(nearest(queryVector))
                     .setScoreThreshold(threshold)
                     .setLimit(limit)
-                    .setWithPayload(Points.WithPayloadSelector.newBuilder()
-                            .setEnable(true)
-                            .build())
+                    .setWithPayload(enable(true))
                     .build();
 
             return client.queryAsync(queryPoints).get(timeoutSeconds, TimeUnit.SECONDS);
         } catch (Exception e) {
-            log.error("Qdrant search failed on collection '{}': {}", collectionName, e.getMessage());
+            log.error("Qdrant search failed on collection {}: {}", collectionName, e.getMessage());
             throw new QdrantOperationException("search", collectionName, "Search operation failed");
         }
     }

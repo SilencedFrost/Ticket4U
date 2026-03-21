@@ -55,7 +55,7 @@ onUnmounted(() => {
             class="health-indicator"
             :class="{ healthy: isHealthy.service, unhealthy: !isHealthy.service }"
           />
-          Event-service
+          User-service
         </h4>
       </div>
 

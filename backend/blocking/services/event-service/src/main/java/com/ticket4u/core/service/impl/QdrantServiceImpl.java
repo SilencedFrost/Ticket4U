@@ -143,7 +143,19 @@ public class QdrantServiceImpl implements QdrantService {
         return metadata.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> ValueFactory.value(e.getValue().toString())
+                        e -> toQdrantValue(e.getValue())
                 ));
+    }
+
+    private JsonWithInt.Value toQdrantValue(Object val) {
+        return switch (val) {
+            case Integer i  -> ValueFactory.value(i);
+            case Long l     -> ValueFactory.value(l);
+            case Double d   -> ValueFactory.value(d);
+            case Float f    -> ValueFactory.value((double) f);
+            case Boolean b  -> ValueFactory.value(b);
+            case String s   -> ValueFactory.value(s);
+            default         -> ValueFactory.value(val.toString()); // safe fallback, logged
+        };
     }
 }

@@ -1,7 +1,7 @@
 package com.ticket4u.security;
 
 import com.nimbusds.jose.jwk.JWK;
-import com.ticket4u.core.constants.TokenConstants;
+import com.ticket4u.constants.TokenConstants;
 import com.ticket4u.jwk.exception.JwkRetrievalException;
 import com.ticket4u.jwk.exception.JwtValidationException;
 import com.ticket4u.jwk.supplier.EventJwkSupplier;

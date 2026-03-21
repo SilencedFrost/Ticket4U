@@ -7,3 +7,5 @@
 
 # Docker data 
 **/qdrant_storage/
+
+**/secrets/

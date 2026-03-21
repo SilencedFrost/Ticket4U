@@ -1,6 +1,5 @@
 package com.ticket4u.controller;
 
-import com.ticket4u.dto.AvailabilityResponse;
 import com.ticket4u.dto.ReserveRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

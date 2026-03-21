@@ -10,16 +10,21 @@ import io.qdrant.client.grpc.JsonWithInt;
 import io.qdrant.client.grpc.Points;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class QdrantServiceImpl implements QdrantService {
+
+    @Value("${qdrant.timeout-seconds:5}") // default timeout
+    private long timeoutSeconds;
 
     private final QdrantClient client;
 
@@ -37,7 +42,7 @@ public class QdrantServiceImpl implements QdrantService {
                             .setSize(vectorSize)
                             .setDistance(Collections.Distance.Cosine)
                             .build()
-            ).get();
+            ).get(timeoutSeconds, TimeUnit.SECONDS);;
         } catch (Exception e) {
             throw new QdrantOperationException("createCollection", collectionName, e.getMessage());
         }
@@ -52,7 +57,7 @@ public class QdrantServiceImpl implements QdrantService {
     @Override
     public boolean isCollectionExists(String collectionName) {
         try {
-            return client.listCollectionsAsync().get().contains(collectionName);
+            return client.listCollectionsAsync().get(timeoutSeconds, TimeUnit.SECONDS).contains(collectionName);
         } catch (Exception e) {
             throw new QdrantOperationException("isCollectionExists", collectionName, e.getMessage());
         }
@@ -77,7 +82,7 @@ public class QdrantServiceImpl implements QdrantService {
                     .putAllPayload(buildPayload(payload))
                     .build();
 
-            client.upsertAsync(collectionName, List.of(point)).get();
+            client.upsertAsync(collectionName, List.of(point)).get(timeoutSeconds, TimeUnit.SECONDS);;
         } catch (Exception e) {
             throw new QdrantOperationException("upsert", collectionName, e.getMessage());
         }
@@ -105,7 +110,7 @@ public class QdrantServiceImpl implements QdrantService {
                             .build())
                     .build();
 
-            return client.searchAsync(searchPoints).get();
+            return client.searchAsync(searchPoints).get(timeoutSeconds, TimeUnit.SECONDS);;
         } catch (Exception e) {
             throw new QdrantOperationException("search", collectionName, e.getMessage());
         }
@@ -122,7 +127,7 @@ public class QdrantServiceImpl implements QdrantService {
     public Points.RetrievedPoint getById(String collectionName, Common.PointId id) {
         try {
             return client.retrieveAsync(collectionName, List.of(id), true, false, null)
-                    .get()
+                    .get(timeoutSeconds, TimeUnit.SECONDS)
                     .stream()
                     .findFirst()
                     .orElseThrow(() -> new QdrantOperationException("Point ID not found: " + id));

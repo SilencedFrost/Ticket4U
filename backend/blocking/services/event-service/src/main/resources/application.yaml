@@ -20,11 +20,20 @@ spring:
 server:
   port: ${SERVER_PORT:8083}
 
+# Qdrant Configuration
+qdrant:
+  host: ${QDRANT_HOST:localhost}
+  port: ${QDRANT_PORT:6334}
+  api-key: ${QDRANT_API_KEY:}
+  timeout-seconds: ${QDRANT_TIMEOUT:5}
+
 application:
   security:
     # CORS
     cors:
       allowed-origins: ${FRONTEND_URL}
+  services:
+    user: ${USER_SERVICE_URL:https://localhost:8080}
 
 # Logging
 logging:

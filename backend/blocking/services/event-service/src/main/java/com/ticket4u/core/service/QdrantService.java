@@ -12,4 +12,5 @@ public interface QdrantService {
     void upsert(String collectionName, Common.PointId id, List<Float> vector, Map<String, Object> payload);
     List<Points.ScoredPoint> search(String collectionName, List<Float> queryVector, float threshold, int limit);
     Points.RetrievedPoint getById(String collectionName, Common.PointId id);
+    void createCollectionIfAbsent(String collectionName, int vectorSize);
 }

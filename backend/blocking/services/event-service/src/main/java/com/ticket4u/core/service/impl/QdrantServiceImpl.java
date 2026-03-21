@@ -163,4 +163,17 @@ public class QdrantServiceImpl implements QdrantService {
             default         -> ValueFactory.value(val.toString()); // safe fallback, logged
         };
     }
+
+    @Override
+    public void createCollectionIfAbsent(String collectionName, int vectorSize) {
+        try {
+            createCollection(collectionName, vectorSize);
+        } catch (QdrantOperationException e) {
+            if (e.getMessage() != null && e.getMessage().contains("already exists")) {
+                log.info("Collection '{}' already exists, skipping.", collectionName);
+                return;
+            }
+            throw e;
+        }
+    }
 }

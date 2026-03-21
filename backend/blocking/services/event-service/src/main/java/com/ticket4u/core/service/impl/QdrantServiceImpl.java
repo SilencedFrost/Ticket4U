@@ -170,12 +170,14 @@ public class QdrantServiceImpl implements QdrantService {
     public void createCollectionIfAbsent(String collectionName, int vectorSize) {
         try {
             createCollection(collectionName, vectorSize);
-        } catch (QdrantOperationException e) {
-            if (e.getMessage() != null && e.getMessage().contains("already exists")) {
-                log.info("Collection '{}' already exists, skipping.", collectionName);
+        } catch (Exception e) {
+            if (e.getCause() instanceof java.util.concurrent.ExecutionException ex
+                    && ex.getCause() instanceof io.grpc.StatusRuntimeException srex
+                    && srex.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
+                log.info("Collection '{}' already exists, skipping creation.", collectionName);
                 return;
             }
-            throw e;
+            throw new QdrantOperationException("createCollectionIfAbsent", collectionName, "Initialization failed");
         }
     }
 }

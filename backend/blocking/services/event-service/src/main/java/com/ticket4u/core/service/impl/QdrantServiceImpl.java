@@ -161,14 +161,63 @@ public class QdrantServiceImpl implements QdrantService {
     }
 
     private JsonWithInt.Value toQdrantValue(Object val) {
+        if (val == null) {
+            // NullValue: proto oneof null_value
+            return JsonWithInt.Value.newBuilder()
+                    .setNullValue(JsonWithInt.NullValue.NULL_VALUE)
+                    .build();
+        }
         return switch (val) {
+            // --- integer family ---
             case Integer i  -> ValueFactory.value(i);
             case Long l     -> ValueFactory.value(l);
+            case Short s    -> ValueFactory.value((int) s);
+            case Byte b     -> ValueFactory.value((int) b);
+
+            // --- float family ---
             case Double d   -> ValueFactory.value(d);
             case Float f    -> ValueFactory.value((double) f);
+
+            // --- boolean (must be before Number to avoid autoboxing ambiguity) ---
             case Boolean b  -> ValueFactory.value(b);
+
+            // --- string ---
             case String s   -> ValueFactory.value(s);
-            default         -> ValueFactory.value(val.toString()); // safe fallback, logged
+
+            // --- list / array (recursive) ---
+            case List<?> list -> JsonWithInt.Value.newBuilder()
+                    .setListValue(
+                            JsonWithInt.ListValue.newBuilder()
+                                    .addAllValues(
+                                            list.stream()
+                                                    .map(this::toQdrantValue)
+                                                    .collect(Collectors.toList())
+                                    )
+                                    .build()
+                    )
+                    .build();
+
+            // --- nested object / struct (recursive) ---
+            case Map<?, ?> map -> {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> strMap = (Map<String, Object>) map;
+                yield JsonWithInt.Value.newBuilder()
+                        .setStructValue(
+                                JsonWithInt.Struct.newBuilder()
+                                        .putAllFields(
+                                                strMap.entrySet().stream()
+                                                        .collect(Collectors.toMap(
+                                                                Map.Entry::getKey,
+                                                                e -> toQdrantValue(e.getValue())
+                                                        ))
+                                        )
+                                        .build()
+                        )
+                        .build();
+            }
+
+            // --- safe fallback ---
+            default -> ValueFactory.value(val.toString());
         };
     }
 

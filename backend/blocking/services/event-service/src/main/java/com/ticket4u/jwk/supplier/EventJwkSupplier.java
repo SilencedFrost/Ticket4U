@@ -44,7 +44,7 @@ public class EventJwkSupplier implements JwkSupplier {
 
         this.cachedKey = new ECKey.Builder(parsed)
                 .keyID(keyId)
-                .algorithm(algorithm)   // ← this is what was missing
+                .algorithm(algorithm)
                 .build();
 
         log.info("EventJwkSupplier initialized — keyId={} algorithm={}", keyId, algorithm);

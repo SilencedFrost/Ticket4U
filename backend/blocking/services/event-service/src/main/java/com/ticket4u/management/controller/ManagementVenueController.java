@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/organizer/venues")
+@RequestMapping("/api/v1/events/venues")
 @RequiredArgsConstructor
 public class ManagementVenueController {
 

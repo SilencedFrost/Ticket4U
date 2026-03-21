@@ -1,5 +1,7 @@
 package com.ticket4u.jwk.supplier;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.util.IOUtils;
@@ -32,8 +34,20 @@ public class EventJwkSupplier implements JwkSupplier {
                 )
         );
         ECKey parsed = ECKey.parseFromPEMEncodedObjects(pem).toECKey();
-        this.cachedKey = new ECKey.Builder(parsed).keyID(keyId).build();
-        log.info("EventJwkSupplier initialized with key: {}", keyId);
+
+        Curve curve = parsed.getCurve();
+        JWSAlgorithm algorithm;
+        if      (Curve.P_256.equals(curve)) algorithm = JWSAlgorithm.ES256;
+        else if (Curve.P_384.equals(curve)) algorithm = JWSAlgorithm.ES384;
+        else if (Curve.P_521.equals(curve)) algorithm = JWSAlgorithm.ES512;
+        else throw new IllegalArgumentException("Unsupported curve: " + curve);
+
+        this.cachedKey = new ECKey.Builder(parsed)
+                .keyID(keyId)
+                .algorithm(algorithm)
+                .build();
+
+        log.info("EventJwkSupplier initialized — keyId={} algorithm={}", keyId, algorithm);
     }
 
     @Override
@@ -45,8 +59,6 @@ public class EventJwkSupplier implements JwkSupplier {
 
     @Override
     public boolean refresh() {
-        // Local PEM — no remote refresh needed
-        // When JwkService is ready, implement remote fetch here
         return cachedKey != null;
     }
 }

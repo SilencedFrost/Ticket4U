@@ -1,7 +1,9 @@
 package com.ticket4u.dto;
 
+import java.util.UUID;
+
 public record SeatResponse(
-        String seatId,
+        UUID seatId,
         String status
 ) {
 }

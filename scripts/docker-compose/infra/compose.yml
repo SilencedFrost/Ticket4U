@@ -1,3 +1,5 @@
+name: ticket4u
+
 services:
   qdrant:
     image: qdrant/qdrant:latest
@@ -19,5 +21,5 @@ volumes:
   qdrant_storage:
 
 networks:
-  default:
-    name: ticket4u-network
+  ticket4u-network:
+    external: true

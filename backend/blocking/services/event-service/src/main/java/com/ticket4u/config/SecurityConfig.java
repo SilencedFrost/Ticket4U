@@ -1,6 +1,6 @@
 package com.ticket4u.config;
 
-import com.ticket4u.security.JwtAuthenticationFilter;
+import com.ticket4u.config.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.ticket4u.security;
+package com.ticket4u.config.filter;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.ticket4u.constants.TokenConstants;

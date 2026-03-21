@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static io.qdrant.client.QueryFactory.nearest;
+import static io.qdrant.client.VectorsFactory.vectors;
 
 @Slf4j
 @Service
@@ -80,9 +81,7 @@ public class QdrantServiceImpl implements QdrantService {
         try {
             Points.PointStruct point = Points.PointStruct.newBuilder()
                     .setId(id)
-                    .setVectors(Points.Vectors.newBuilder()
-                            .setVector(Points.Vector.newBuilder().addAllData(vector).build())
-                            .build())
+                    .setVectors(vectors(vector))
                     .putAllPayload(buildPayload(payload))
                     .build();
 

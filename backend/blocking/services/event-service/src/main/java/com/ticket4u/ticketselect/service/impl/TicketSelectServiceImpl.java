@@ -101,7 +101,11 @@ public class TicketSelectServiceImpl implements TicketSelectService {
                     }
 
                     if (event.getVenue() != null && event.getVenue().getLayout() != null) {
-                        return injectZoneIds(event.getVenue().getLayout(), zoneLinks);
+                        List<Zone> sessionZones = event.getSessions().stream()
+                                .filter(s -> s.getZones() != null)
+                                .flatMap(s -> s.getZones().stream())
+                                .toList();
+                        return injectZoneIds(event.getVenue().getLayout(), zoneLinks, sessionZones);
                     }
                     log.warn("Event {} has venue marker but no venue layout", event.getId());
                     return null;
@@ -125,19 +129,25 @@ public class TicketSelectServiceImpl implements TicketSelectService {
     // Venue layout has zones with zone_name but no zone_id.
     // We inject zone_id from the zoneLinks map so the frontend
     // can match zones to actual Zone entities and load seats.
-    private String injectZoneIds(String venueLayout, Map<String, String> zoneLinks) {
+    private String injectZoneIds(String venueLayout, Map<String, String> zoneLinks,
+                                 List<Zone> sessionZones) {
         if (zoneLinks.isEmpty()) return venueLayout;
         try {
             JsonNode root = objectMapper.readTree(venueLayout);
 
+            // Build zoneId → Zone lookup for isStanding override
+            Map<String, Zone> zoneById = new HashMap<>();
+            for (Zone z : sessionZones) {
+                zoneById.put(z.getId().toString(), z);
+            }
+
             // Handle both { floors: [...] } and flat { stage, zones } structures
             if (root.has("floors") && root.path("floors").isArray()) {
-                ArrayNode floors = (ArrayNode) root.path("floors");
-                for (JsonNode floor : floors) {
-                    injectZoneIdsIntoFloor(floor, zoneLinks);
+                for (JsonNode floor : root.path("floors")) {
+                    injectZoneIdsIntoFloor(floor, zoneLinks, zoneById);
                 }
             } else if (root.has("zones") && root.path("zones").isArray()) {
-                injectZoneIdsIntoFloor(root, zoneLinks);
+                injectZoneIdsIntoFloor(root, zoneLinks, zoneById);
             }
 
             return objectMapper.writeValueAsString(root);
@@ -147,13 +157,21 @@ public class TicketSelectServiceImpl implements TicketSelectService {
         }
     }
 
-    private void injectZoneIdsIntoFloor(JsonNode floorNode, Map<String, String> zoneLinks) {
+    private void injectZoneIdsIntoFloor(JsonNode floorNode, Map<String, String> zoneLinks,
+                                        Map<String, Zone> zoneById) {
         JsonNode zonesNode = floorNode.path("zones");
         if (!zonesNode.isArray()) return;
         for (JsonNode zone : zonesNode) {
             String zoneName = zone.path("zone_name").asText(null);
-            if (zoneName != null && zoneLinks.containsKey(zoneName)) {
-                ((ObjectNode) zone).put("zone_id", zoneLinks.get(zoneName));
+            if (zoneName == null || !zoneLinks.containsKey(zoneName)) continue;
+            String zoneId = zoneLinks.get(zoneName);
+            ((ObjectNode) zone).put("zone_id", zoneId);
+            // Override accessible from actual Zone entity — isStanding is the source of truth,
+            // not the venue layout's original accessible flag
+            Zone actual = zoneById.get(zoneId);
+            if (actual != null) {
+                boolean isStanding = Boolean.TRUE.equals(actual.getIsStanding());
+                ((ObjectNode) zone).put("accessible", !isStanding);
             }
         }
     }

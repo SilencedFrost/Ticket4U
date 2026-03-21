@@ -417,9 +417,12 @@ const handleCanvasClick = (e: MouseEvent) => {
     }
   }
 
-  // Hit test zones (standing)
+  // Hit test zones (standing or seated with no seats loaded)
   for (const zone of floor.layout.zones) {
-    if (isPointInZone(nx, ny, zone)) { handleZoneClick(zone); return }
+    if (isPointInZone(nx, ny, zone)) {
+      handleZoneClick(zone)
+      return
+    }
   }
 }
 
@@ -437,7 +440,11 @@ const isPointInZone = (x: number, y: number, zone: LayoutZone): boolean => {
 const handleZoneClick = (zone: LayoutZone) => {
   const ticket = getZoneTicket(zone)
   if (!ticket || ticket.soldOut) return
-  if (zone.zone_type === 'standing') { selectedStandingZone.value = zone; standingQuantity.value = 1 }
+  if (zone.zone_type === 'standing') {
+    selectedStandingZone.value = zone
+    standingQuantity.value = 1
+  }
+  // sitting zones are handled by seat clicks — zone click just highlights it
 }
 
 // ── Standing selection ─────────────────────────────────────

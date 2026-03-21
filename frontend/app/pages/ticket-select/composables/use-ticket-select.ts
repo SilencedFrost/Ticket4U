@@ -42,11 +42,11 @@ interface TicketSelectResponse {
 
 // ── Parsed layout floor shape ──────────────────────────────
 interface RawLayoutFloor {
-  floor_order?:    number
-  floor_name?:     string
+  floor_order?:      number
+  floor_name?:       string
   global_seat_size?: number
-  stage?:          { x1: number; y1: number; x2: number; y2: number }
-  zones?:          RawLayoutZone[]
+  stage?:            { x1: number; y1: number; x2: number; y2: number }
+  zones?:            RawLayoutZone[]
 }
 
 interface RawLayoutZone {
@@ -75,14 +75,23 @@ const buildFloors = (
 ): Floor[] => {
   if (!layoutJson) return []
 
-  let parsed: { venueMode?: boolean; floors?: RawLayoutFloor[] }
+  let parsed: { venueMode?: boolean; floors?: RawLayoutFloor[]; stage?: RawLayoutFloor['stage']; zones?: RawLayoutZone[] }
   try { parsed = JSON.parse(layoutJson) as typeof parsed }
   catch { return [] }
 
+  // Venue marker without floors — backend should have resolved but guard anyway
   if (parsed.venueMode) return []
 
-  const rawFloors = parsed.floors ?? []
-  if (!rawFloors.length) return []
+  // Handle both multi-floor { floors: [...] } and single-floor { stage, zones } shapes
+  let rawFloors: RawLayoutFloor[]
+  if (parsed.floors && parsed.floors.length > 0) {
+    rawFloors = parsed.floors
+  } else if (parsed.stage || parsed.zones) {
+    // Flat single-floor venue layout
+    rawFloors = [{ floor_order: 1, floor_name: 'Main Floor', stage: parsed.stage as RawLayoutFloor['stage'], zones: parsed.zones }]
+  } else {
+    return []
+  }
 
   // Seat lookup by zoneId
   const seatsByZone = new Map<string, SeatResponse[]>()
@@ -115,7 +124,7 @@ const buildFloors = (
 
         return {
           zone_name:    z.zone_name ?? 'Zone',
-          zone_type:    z.accessible === false ? 'sitting' : 'standing',
+          zone_type:    z.accessible !== false ? 'sitting' : 'standing',
           color:        z.color ?? FALLBACK_COLORS[0]!,
           corner1:      z.corner1,
           corner2:      z.corner2,

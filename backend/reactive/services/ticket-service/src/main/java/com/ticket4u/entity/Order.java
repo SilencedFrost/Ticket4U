@@ -1,16 +1,15 @@
 package com.ticket4u.entity;
 
-import com.ticket4u.constant.TokenConstants;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -30,6 +29,9 @@ public class Order {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
+
+    @Column(nullable = false)
+    private String currency;
 
     private String discountCode;
 
@@ -57,8 +59,6 @@ public class Order {
 
     private OffsetDateTime purchasedAt;
 
-    private OffsetDateTime expiresAt;
-
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
@@ -69,4 +69,7 @@ public class Order {
 
     @Column(columnDefinition = "text")
     private String notes;
+
+    @OneToMany(mappedBy = "order")
+    private Set<Ticket> tickets = new HashSet<>();
 }

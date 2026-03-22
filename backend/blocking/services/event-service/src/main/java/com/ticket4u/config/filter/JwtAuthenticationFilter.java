@@ -1,8 +1,8 @@
 package com.ticket4u.config.filter;
 
 import com.nimbusds.jose.jwk.JWK;
-import com.ticket4u.constant.TokenConstants;
-import com.ticket4u.entity.CustomUserDetails;
+import com.ticket4u.constants.TokenConstants;
+import com.ticket4u.core.entity.CustomUserDetails;
 import com.ticket4u.jwk.supplier.AuthJwkSupplier;
 import com.ticket4u.jwk.util.JwtUtil;
 import com.ticket4u.util.CookieUtil;

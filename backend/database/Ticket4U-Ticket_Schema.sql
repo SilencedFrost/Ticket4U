@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.order
 	id uuid PRIMARY KEY,
 	user_id uuid NOT NULL,
 	total_amount decimal(10, 2) NOT NULL,
+	currency char(3) NOT NULL,
 	discount_code varchar(50),
 	discount_amount decimal(10, 2),
 	fees decimal(10, 2),
@@ -19,7 +20,6 @@ CREATE TABLE IF NOT EXISTS public.order
 	transaction_id varchar(255),
 	created_at timestamptz NOT NULL,
 	purchased_at timestamptz,
-	expires_at timestamptz,
 	updated_at timestamptz NOT NULL,
 	cancelled_at timestamptz,
 	refund_amount decimal(10, 2),
@@ -34,15 +34,18 @@ ALTER TABLE IF EXISTS public.order
 CREATE TABLE IF NOT EXISTS public.ticket
 (
 	id uuid PRIMARY KEY,
-	order_id uuid NOT NULL,
+	order_id uuid UNIQUE,
 	event_id uuid NOT NULL,
+	event_name text NOT NULL,
+	seat_id uuid NOT NULL,
 	seat_name varchar(32) NOT NULL,
+	zone_id uuid NOT NULL,
+	zone_name VARCHAR(255) NOT NULL,
 	ticket_type varchar(32) NOT NULL,
 	base_price decimal(10, 2) NOT NULL,
 	status varchar(32) NOT NULL,
 	created_at timestamptz NOT NULL,
 	used_at timestamptz,
-	currency char(3) NOT NULL,
 	qr_secret varchar(64) NOT NULL,
 	FOREIGN KEY (order_id) REFERENCES public.order(id) ON DELETE CASCADE
 );

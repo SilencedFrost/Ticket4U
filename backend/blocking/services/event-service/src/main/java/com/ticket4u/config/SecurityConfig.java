@@ -1,6 +1,6 @@
 package com.ticket4u.config;
 
-import com.ticket4u.security.JwtAuthenticationFilter;
+import com.ticket4u.config.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +30,9 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/*/public/**", "/.well-known/**").permitAll()
-                        .requestMatchers("/api/v1/**")
+                        .requestMatchers("/health/jwk/user").authenticated()
+                        .requestMatchers("/api/*/public/**", "/.well-known/**", "/health/**").permitAll()
+                        .requestMatchers("/api/*/events/**", "/api/*/venues/**")
                         .hasAnyRole("EVENT_MANAGER", "ORGANIZER_ADMIN")
                         .anyRequest().authenticated()
                 )

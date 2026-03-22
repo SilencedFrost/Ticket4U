@@ -1,3 +1,6 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
     id("java")
     id("org.springframework.boot") version "4.0.0" apply false
@@ -82,11 +85,15 @@ subprojects {
         options.compilerArgs.add("-parameters")
     }
 
-    tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    tasks.named<BootRun>("bootRun") {
         val profile = project.findProperty("profile")?.toString() ?: "dev"
 
         sourceResources(sourceSets["main"])
         systemProperty("spring.profiles.active", profile)
+    }
+
+    tasks.named<BootBuildImage>("bootBuildImage") {
+        imageName.set("${project.name}:latest")
     }
 
     tasks.register("runUser") {
@@ -95,5 +102,13 @@ subprojects {
 
     tasks.register("runEvent") {
         dependsOn(":services:event-service:bootRun")
+    }
+
+    tasks.register("buildUser") {
+        dependsOn(":services:user-service:bootBuildImage")
+    }
+
+    tasks.register("buildEvent") {
+        dependsOn(":services:event-service:bootBuildImage")
     }
 }

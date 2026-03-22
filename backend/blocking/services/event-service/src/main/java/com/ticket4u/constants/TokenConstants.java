@@ -1,4 +1,4 @@
-package com.ticket4u.core.constants;
+package com.ticket4u.constants;
 
 import lombok.Getter;
 

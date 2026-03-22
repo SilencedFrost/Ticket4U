@@ -1,8 +1,9 @@
 package com.ticket4u.jwk.supplier;
 
 import com.nimbusds.jose.jwk.JWK;
-import java.util.Optional;
 import com.ticket4u.jwk.exception.JwkRetrievalException;
+
+import java.util.Optional;
 
 /**
  * Interface for supplying JWK Sets dynamically for JWT token verification.

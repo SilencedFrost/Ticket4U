@@ -16,11 +16,20 @@ spring:
         type:
           json_format_mapper: com.ticket4u.config.HibernateJackson3FormatMapper
 
+# Port
 server:
   port: ${SERVER_PORT:8083}
 
+# Qdrant Configuration
+qdrant:
+  host: ${QDRANT_HOST:localhost}
+  port: ${QDRANT_PORT:6334}
+  api-key: ${QDRANT_API_KEY:}
+  timeout-seconds: ${QDRANT_TIMEOUT:5}
+
 application:
   security:
+    # CORS
     cors:
       allowed-origins: ${FRONTEND_URL:https://localhost:3000}
     jwt:
@@ -28,6 +37,7 @@ application:
       public-key-path: ${JWT_PUBLIC_KEY_PATH:keys/ec-public.pem}
       key-id: ${JWT_KEY_ID:ticket4u-ec-key}
 
+# Logging
 logging:
   level:
     root: INFO

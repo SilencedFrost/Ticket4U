@@ -1,18 +1,29 @@
 # Database Configuration
 spring:
   datasource:
-    url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-User}
+    url: ${DB_URL_USER:jdbc:postgresql://ticket4u-db-user:5432/Ticket4U-User}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   # JPA/Hibernate Configuration
   jpa:
-    show-sql: true
+    open-in-view: false
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 20
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid,profile,email
 
 # Port
 server:
@@ -22,25 +33,15 @@ application:
   security:
     # JWT
     jwt:
-      private-key-path: keys/ec-private.pem
-      public-key-path: keys/ec-public.pem
+      private-key-path: ${JWT_SECRET:file:/keys/ec-private.pem}
+      public-key-path: ${JWT_PUB:file:/keys/ec-public.pem}
       key-id: auth-key-es256
       issuer: ticket4u
     # CORS
     cors:
-      allowed-origins: ${FRONTEND_URL:https://localhost:3000}
+      allowed-origins: ${FRONTEND_URL:https://ticketforyou.vercel.app}
 
 # Logging
 logging:
   level:
-    root: INFO
-
-  # OAuth2 Configuration
-security:
-  oauth2:
-    client:
-      registration:
-        google:
-          client-id: ${GOOGLE_CLIENT_ID}
-          client-secret: ${GOOGLE_CLIENT_SECRET}
-          scope: openid,profile,email
+    root: WARN

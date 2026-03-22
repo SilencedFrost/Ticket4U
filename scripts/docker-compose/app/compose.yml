@@ -1,0 +1,21 @@
+name: ticket4u
+
+services:
+  user-service:
+    image: user-service:latest
+    container_name: ticket4u-service-user
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - ticket4u-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  ticket4u-network:
+    external: true

@@ -27,6 +27,12 @@ qdrant:
   api-key: ${QDRANT_API_KEY:}
   timeout-seconds: ${QDRANT_TIMEOUT:5}
 
+# AI Embedding Configuration
+ai:
+  embedding:
+    api-url: ${AI_EMBEDDING_URL:http://localhost:8084/v1/embeddings}
+    model-name: ${AI_EMBEDDING_MODEL:nvidia/llama-nemotron-embed-vl-1b-v2}
+
 application:
   security:
     # CORS

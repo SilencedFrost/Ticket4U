@@ -22,18 +22,18 @@ application:
   security:
     # JWT
     jwt:
-      private-key-path: keys/ec-private.pem
-      public-key-path: keys/ec-public.pem
+      private-key-path: ${JWT_SECRET:file:/keys/ec-private.pem}
+      public-key-path: ${JWT_PUB:file:/keys/ec-public.pem}
       key-id: auth-key-es256
       issuer: ticket4u
     # CORS
     cors:
-      allowed-origins: ${FRONTEND_URL:https://localhost:3000}
+      allowed-origins: ${FRONTEND_URL:https://ticketforyou.vercel.app}
 
 # Logging
 logging:
   level:
-    root: INFO
+    root: WARN
 
   # OAuth2 Configuration
 security:

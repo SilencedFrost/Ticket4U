@@ -11,3 +11,7 @@
 # Secrets
 **/secrets/
 **/.env
+
+### Keys ###
+**/*.pem
+**/*.p12

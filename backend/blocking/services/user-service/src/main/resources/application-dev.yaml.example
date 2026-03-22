@@ -29,6 +29,7 @@ spring:
 server:
   port: 8080
   ssl:
+    enabled: true
     certificate: classpath:keys/localhost+2.pem
     certificate-private-key: classpath:keys/localhost+2-key.pem
 
@@ -36,11 +37,13 @@ application:
   security:
     # JWT
     jwt:
-      private-key-path: keys/ec-private.pem
-      public-key-path: keys/ec-public.pem
-      key-id: auth-key-es256
-      issuer: ticket4u
+      private-key-path: classpath:keys/ec-private.pem
+      public-key-path: classpath:keys/ec-public.pem
 
 # CORS
     cors:
       allowed-origins: https://localhost:3000
+
+logging:
+  level:
+    root: INFO

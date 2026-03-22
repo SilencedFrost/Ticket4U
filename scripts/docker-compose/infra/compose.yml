@@ -1,4 +1,4 @@
-name: ticket4u
+name: ticket4u-infra
 
 services:
   qdrant:

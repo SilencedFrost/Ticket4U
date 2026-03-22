@@ -24,7 +24,7 @@ services:
     image: postgres:18
     container_name: ticket4u-db-user
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - ticket4u_db_user:/var/lib/postgresql/18/docker
     restart: always

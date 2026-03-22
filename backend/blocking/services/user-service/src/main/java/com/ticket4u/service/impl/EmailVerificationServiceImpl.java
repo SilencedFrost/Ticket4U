@@ -4,6 +4,7 @@ import com.ticket4u.constant.TokenType;
 import com.ticket4u.entity.VerificationToken;
 import com.ticket4u.entity.User;
 import com.ticket4u.exception.AccountAlreadyActiveException;
+import com.ticket4u.exception.VerificationEmailSendFailedException;
 import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.MailServiceClient;
@@ -26,11 +27,32 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     @Transactional
     public void sendVerificationEmail(User user) {
+        dispatchVerificationEmail(user, false);
+    }
+
+    private void dispatchVerificationEmail(User user, boolean asyncDispatch) {
         VerificationTokenService.IssuedToken issuedToken = verificationTokenService.issueToken(
                 user,
                 TokenType.EMAIL_VERIFICATION,
                 "/auth/verify-email"
         );
+
+        if (!asyncDispatch) {
+            try {
+                mailServiceClient.sendVerificationEmail(
+                        user.getEmail(),
+                        user.getUsername(),
+                        issuedToken.link(),
+                        issuedToken.expiryHours(),
+                        false
+                );
+                log.info("Verification email sent for user: {}", user.getEmail());
+            } catch (Exception ex) {
+                log.error("Failed to send verification email for user: {}", user.getEmail(), ex);
+                throw new VerificationEmailSendFailedException("auth.verification.send_failed");
+            }
+            return;
+        }
 
         verificationTokenService.runAfterCommit(() -> {
             try {
@@ -38,7 +60,8 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
                         user.getEmail(),
                         user.getUsername(),
                         issuedToken.link(),
-                        issuedToken.expiryHours()
+                        issuedToken.expiryHours(),
+                        true
                 );
                 log.info("Verification email queued for user: {}", user.getEmail());
             } catch (Exception ex) {
@@ -81,7 +104,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
             return;
         }
 
-        sendVerificationEmail(optionalUser.get());
+        dispatchVerificationEmail(optionalUser.get(), true);
         log.info("Resent verification email to: {}", email);
     }
 }

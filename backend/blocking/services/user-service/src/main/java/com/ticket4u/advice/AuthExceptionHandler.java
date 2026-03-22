@@ -4,6 +4,7 @@ import com.ticket4u.exception.AccountAlreadyActiveException;
 import com.ticket4u.exception.InvalidGoogleTokenException;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.exception.UserNotFoundException;
+import com.ticket4u.exception.VerificationEmailSendFailedException;
 import com.ticket4u.exception.VerificationTokenExpiredException;
 import com.ticket4u.exception.VerificationTokenNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,12 @@ public class AuthExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> handleUserNotFound(UserNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(VerificationEmailSendFailedException.class)
+    public ResponseEntity<?> handleVerificationEmailSendFailed(VerificationEmailSendFailedException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(Map.of("message", e.getMessage()));
     }
 }

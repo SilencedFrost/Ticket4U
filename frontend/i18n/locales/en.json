@@ -56,6 +56,7 @@
     "verification": {
       "verifying": "Verifying your email...",
       "success": "Your email has been verified. You can now log in.",
+      "send_failed": "Unable to send verification email right now. Please try again in a moment.",
       "token_expired": "Verification link has expired. Please register again.",
       "expired_title": "Link expired",
       "token_invalid": "Invalid verification link.",

@@ -69,12 +69,12 @@ public class EventSemanticServiceImpl implements EventSemanticService {
     public List<EventSummaryResponse> findSimilarById(UUID id, int limit) {
         return eventRepository.findById(id)
                 .map(event -> {
-                    String queryContext = String.format("Tìm các sự kiện tương tự như: %s thuộc thể loại %s",
-                            event.getName(),
-                            event.getCategory().getName());
+                    String queryContext = String.format("Category: %s | Event: %s",
+                            event.getCategory().getName(),
+                            event.getName());
                     return embeddingService.getQueryEmbedding(queryContext);
                 })
-                .map(vector -> qdrantService.search(COLLECTION, vector, 0.1f, limit + 1))
+                .map(vector -> qdrantService.search(COLLECTION, vector, 0.3f, limit + 1))
                 .map(scoredPoints -> extractAndSortIds(scoredPoints, id, limit))
                 .map(this::fetchAndMapToDtos)
                 .orElse(Collections.emptyList());

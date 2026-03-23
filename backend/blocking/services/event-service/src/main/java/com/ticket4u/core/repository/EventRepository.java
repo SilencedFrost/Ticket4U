@@ -57,7 +57,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Query("""
     SELECT e FROM Event e
-    WHERE e.category.id = :categoryId
+    JOIN e.categories c
+    WHERE c.id = :categoryId
     AND EXISTS (
         SELECT s FROM EventSession s
         WHERE s.event = e

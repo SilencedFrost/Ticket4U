@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS public.seats;
 DROP TABLE IF EXISTS public.zones;
 DROP TABLE IF EXISTS public.event_sessions;
+DROP TABLE IF EXISTS public.event_categories;
 DROP TABLE IF EXISTS public.events;
 DROP TABLE IF EXISTS public.venues;
 DROP TABLE IF EXISTS public.categories;
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 	id 						UUID PRIMARY KEY,
 	name 					VARCHAR(255) NOT NULL UNIQUE,
 	organizer_id 			UUID NOT NULL,
-	category_id 			INTEGER, 
+
 	address_line 			VARCHAR(255) NOT NULL,
 	status 					VARCHAR(50) NOT NULL,
 	banner_url 				TEXT NOT NULL,
@@ -52,8 +53,6 @@ CREATE TABLE IF NOT EXISTS public.events (
 	longitude 	DECIMAL(10, 7),
 	latitude 	DECIMAL(10, 7),
 
-	CONSTRAINT event_fk_category FOREIGN KEY (category_id)
-		REFERENCES public.categories (id),
 	ConSTRAINT event_fk_venue FOREIGN KEY (venue_id)
 		REFERENCES public.venues (id)
 );
@@ -72,6 +71,18 @@ CREATE TABLE IF NOT EXISTS public.event_sessions (
 
 	CONSTRAINT session_fk_event FOREIGN KEY (event_id)
 		REFERENCES public.events (id)
+);
+
+--Table: event_categories
+--Junction table for N-N relationship between events and categories
+CREATE TABLE IF NOT EXISTS public.event_categories (
+	event_id UUID NOT NULL,
+	category_id INTEGER NOT NULL,
+
+	PRIMARY KEY (event_id, category_id),
+
+	CONSTRAINT fk_event FOREIGN KEY (event_id) REFERENCES public.events (id) ON DELETE CASCADE,
+	CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES public.categories (id) ON DELETE CASCADE
 );
 
 -- Table: zones

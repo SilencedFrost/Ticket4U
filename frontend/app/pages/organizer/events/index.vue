@@ -89,7 +89,7 @@
             </td>
             <td class="py-3">
                 <span class="badge rounded-pill px-3 py-2" :class="getStatusClass(event.status)">
-                  {{ getStatusLabel(event.status) }}
+                  {{ $t(getStatusI18nKey(event.status)) }}
                 </span>
             </td>
             <td class="py-3">
@@ -149,7 +149,7 @@ import {
   getRevenue,
   getSessionStart,
   getStatusClass,
-  getStatusLabel,
+  getStatusI18nKey,
   formatPrice,
   formatDate,
   formatTime,
@@ -167,6 +167,7 @@ const statusFilter = ref('')
 
 const statusOptions = computed(() => [
   { value: 'EDITING',   label: $t('organizer.events.status.editing')   },
+  { value: 'SCHEDULED', label: $t('organizer.events.status.premier')   },
   { value: 'PREMIERE',  label: $t('organizer.events.status.premier')   },
   { value: 'SELLING',   label: $t('organizer.events.status.selling')   },
   { value: 'PAUSED',    label: $t('organizer.events.status.paused')    },

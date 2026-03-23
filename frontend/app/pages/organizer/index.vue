@@ -73,7 +73,7 @@
               </td>
               <td class="py-3">
                   <span class="badge rounded-pill px-3 py-2" :class="getStatusClass(event.status)">
-                    {{ getStatusLabel(event.status) }}
+                    {{ $t(getStatusI18nKey(event.status)) }}
                   </span>
               </td>
               <td class="py-3">
@@ -102,7 +102,7 @@ import {
   getRevenue,
   getSessionStart,
   getStatusClass,
-  getStatusLabel,
+  getStatusI18nKey,
   formatPrice,
   formatDate,
   formatTime,

@@ -517,9 +517,12 @@ export const getRevenue = (event: MockEvent): number =>
 export const getSessionStart = (event: MockEvent): string =>
     event.session.startDate
 
-/** Status badge CSS class */
+
+
+/** Status badge CSS class — includes all backend enum values */
 export const getStatusClass = (status: string): string => ({
     EDITING:   'bg-secondary bg-opacity-10 text-secondary',
+    SCHEDULED: 'bg-info bg-opacity-10 text-info',
     PREMIERE:  'bg-info bg-opacity-10 text-info',
     SELLING:   'bg-primary bg-opacity-10 text-primary',
     PAUSED:    'bg-warning bg-opacity-10 text-warning',
@@ -528,20 +531,21 @@ export const getStatusClass = (status: string): string => ({
     CANCELLED: 'bg-danger bg-opacity-10 text-danger',
 }[status] ?? 'bg-secondary bg-opacity-10 text-secondary')
 
-/** Status human label (Vietnamese) */
-export const getStatusLabel = (status: string): string => ({
-    EDITING:   'Nháp',
-    PREMIERE:  'Sắp mở bán',
-    SELLING:   'Đang bán',
-    PAUSED:    'Tạm dừng',
-    ONGOING:   'Đang diễn',
-    FINISHED:  'Đã kết thúc',
-    CANCELLED: 'Đã hủy',
+/** Status i18n key — pass result to $t() in Vue components */
+export const getStatusI18nKey = (status: string): string => ({
+    EDITING:   'organizer.events.status.editing',
+    SCHEDULED: 'organizer.events.status.premier',
+    PREMIERE:  'organizer.events.status.premier',
+    SELLING:   'organizer.events.status.selling',
+    PAUSED:    'organizer.events.status.paused',
+    ONGOING:   'organizer.events.status.ongoing',
+    FINISHED:  'organizer.events.status.finished',
+    CANCELLED: 'organizer.events.status.cancelled',
 }[status] ?? status)
 
 /** Format VND price */
 export const formatPrice = (p: number): string =>
-    p === 0 ? 'Miễn phí' : new Intl.NumberFormat('vi-VN').format(p) + ' ₫'
+    new Intl.NumberFormat('vi-VN').format(p) + ' ₫'
 
 /** Format date vi-VN */
 export const formatDate = (d: string): string =>

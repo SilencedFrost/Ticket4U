@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +19,6 @@ import java.text.ParseException;
 import java.time.Duration;
 
 @Component
-@ConditionalOnProperty(name = "application.services.user")
 public class AuthJwkSupplier implements JwkSupplier {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthJwkSupplier.class);

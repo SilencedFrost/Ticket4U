@@ -1,4 +1,4 @@
-name: ticket4u
+name: ticket4u-infra
 
 services:
   qdrant:
@@ -6,10 +6,13 @@ services:
     container_name: ticket4u-qdrant
     ports:
       - "6333:6333"
-      - "6334:6334"
+      # only expose http port to access webUI, gRPC routes internally
+      # - "6334:6334"
     volumes:
-      - qdrant_storage:/qdrant/storage
-    restart: unless-stopped
+      - ticket4u_qdrant_storage:/qdrant/storage
+    restart: always
+    networks:
+      - ticket4u-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:6333/healthz || exit 1"]
       interval: 30s
@@ -17,8 +20,31 @@ services:
       retries: 3
       start_period: 10s
 
+  user-db:
+    image: postgres:18
+    container_name: ticket4u-db-user
+    ports:
+      - "5433:5432"
+    volumes:
+      - ticket4u_db_user:/var/lib/postgresql/18/docker
+    restart: always
+    networks:
+      - ticket4u-network
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_USER}
+      POSTGRES_USER: ${POSTGRES_USER_USER}
+      POSTGRES_DB: Ticket4U-User
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER_USER} -d Ticket4U-User"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
 volumes:
-  qdrant_storage:
+  ticket4u_qdrant_storage:
+  ticket4u_db_user:
 
 networks:
   ticket4u-network:

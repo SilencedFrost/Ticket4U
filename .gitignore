@@ -7,13 +7,14 @@
 
 # Docker data 
 **/qdrant_storage/
-ec-private.pem
-ec-public.pem
-localhost+2.pem
-localhost+2-key.pem
 
+# Secrets
 **/secrets/
-ec-private.pem
-ec-public.pem
-localhost+2-key.pem
-localhost+2.pem
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+### Keys ###
+**/*.pem
+**/*.p12

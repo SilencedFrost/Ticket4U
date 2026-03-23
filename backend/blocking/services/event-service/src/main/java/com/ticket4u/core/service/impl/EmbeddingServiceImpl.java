@@ -25,6 +25,12 @@ public class EmbeddingServiceImpl implements EmbeddingService {
     @Value("${application.services.embedding}")
     private String embedApiUrl;
 
+    /**
+     * Converts long text/document into a vector for storage.
+     * Uses "text" mode to help the AI understand this is a content to remember.
+     * @param text The input content.
+     * @return List of float values representing the vector.
+     */
     @Override
     public List<Float> getDocumentEmbedding(String text) {
         if (text == null || text.isBlank()) return Collections.emptyList();
@@ -32,6 +38,12 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         return callEmbeddingApi(text, "text");
     }
 
+    /**
+     * Converts a user search query into a vector for searching.
+     * Uses "query" mode to help the AI find the best results.
+     * @param query The search text from user.
+     * @return List of float values for searching.
+     */
     @Override
     public List<Float> getQueryEmbedding(String query) {
         if (query == null || query.isBlank()) return Collections.emptyList();
@@ -39,6 +51,12 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         return callEmbeddingApi(query, "query");
     }
 
+    /**
+     * Private helper to send requests to the Python AI service.
+     * @param input The text to be processed.
+     * @param mode The specific mode (text or query) for the AI model.
+     * @return The resulting vector list from the AI service.
+     */
     private List<Float> callEmbeddingApi(String input, String mode) {
         Map<String, Object> request = Map.of(
                 "texts", List.of(input),

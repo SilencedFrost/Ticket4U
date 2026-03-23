@@ -233,7 +233,7 @@ const fetchEvents = async () => {
   loading.value = true; fetchError.value = ''
   try {
     events.value = await $fetch<OrgEvent[]>(
-      `${config.public.apiUrl}/organizer/events`,
+      `${config.public.apiUrl}/events`,
       { credentials: 'include' }
     )
   } catch (err: any) {

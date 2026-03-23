@@ -3,7 +3,7 @@ spring:
   datasource:
     url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-Event}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:tintin7335}
     driver-class-name: org.postgresql.Driver
 
   # JPA/Hibernate Configuration
@@ -21,13 +21,12 @@ server:
   port: ${SERVER_PORT:8083}
 
 # Qdrant Configuration
-qdrant:
-  host: ${QDRANT_HOST:localhost}
-  port: ${QDRANT_PORT:6334}
-  api-key: ${QDRANT_API_KEY:}
-  timeout-seconds: ${QDRANT_TIMEOUT:5}
+
 
 application:
+  application:
+    services:
+      user-service: http://localhost:8080
   security:
     # CORS
     cors:

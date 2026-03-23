@@ -27,14 +27,14 @@ INSERT INTO public.venues (id, name,           address_line,                    
 
 --3. Table: Events
 INSERT INTO public.events (
-	id, name, organizer_id, category_id, address_line, 
+	id, name, organizer_id, address_line, 
 	status, banner_url,
 	created_at, updated_at,
 	about_vi, about_en, terms_and_conditions, policy_refund, seating_plan_image_url,
 	venue_id, longitude, latitude
 ) VALUES
 -- Hà Anh Tuấn: Chân Trời Rực Rỡ
-(uuidv7(), 'Hà Anh Tuấn: Chân Trời Rực Rỡ', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Sân Lễ Hội Đền Hùng, Huyện Gia Viễn, Tỉnh Ninh Bình', 
+(uuidv7(), 'Hà Anh Tuấn: Chân Trời Rực Rỡ', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'Sân Lễ Hội Đền Hùng, Huyện Gia Viễn, Tỉnh Ninh Bình', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg', 
 	NOW(), NULL,
@@ -70,7 +70,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê'), 105.945023, 20.317891),
 
 -- VBA 2025: Saigon Heat
-(uuidv7(), 'VBA 2025: Saigon Heat vs Hanoi Buffaloes', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 4, 'CIS Arena, Quận 7, TP. Hồ Chí Minh', 
+(uuidv7(), 'VBA 2025: Saigon Heat vs Hanoi Buffaloes', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'CIS Arena, Quận 7, TP. Hồ Chí Minh', 
 	'FINISHED', 
 	'https://cdn.nextix.cloud/nextix/81/saigonheat_1_2996fb89aa.png?updated_at=2024-06-20T06:55:12.533Z', 
 	NOW(), NULL,
@@ -106,7 +106,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'CIS Arena'), 106.719368, 10.731490),
 
 -- Những Thành Phố Mơ Màng
-(uuidv7(), 'Những Thành Phố Mơ Màng - Summer Tour', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội', 
+(uuidv7(), 'Những Thành Phố Mơ Màng - Summer Tour', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg', 
 	NOW(), NULL,
@@ -142,7 +142,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở'), 105.850234, 20.976543),
 
 -- Mây Lang Thang
-(uuidv7(), 'Mây Lang Thang: Đêm Nhạc Trịnh', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 1, 'Mây Lang Thang, Phường 4, Thành phố Đà Lạt, Tỉnh Lâm Đồng', 
+(uuidv7(), 'Mây Lang Thang: Đêm Nhạc Trịnh', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'Mây Lang Thang, Phường 4, Thành phố Đà Lạt, Tỉnh Lâm Đồng', 
 	'PREMIERE', 
 	'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg', 
 	NOW(), NULL,
@@ -178,7 +178,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Mây in The Nest'), 108.436867, 11.934155),
 
 -- Kịch Idecaf
-(uuidv7(), 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Nhà Hát Bến Thành, Quận 1, TP. Hồ Chí Minh', 
+(uuidv7(), 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'Nhà Hát Bến Thành, Quận 1, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png', 
 	NOW(), NULL,
@@ -214,7 +214,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Nhà Hát Bến Thành'), 106.690864, 10.769444),
 
 -- Ravolution Music Festival
-(uuidv7(), 'Ravolution Music Festival: Unite', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 1, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
+(uuidv7(), 'Ravolution Music Festival: Unite', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg', 
 	NOW(), NULL,
@@ -250,7 +250,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc'), 106.781234, 10.853456),
 
 -- Saigon Tếu: Hài Độc Thoại
-(uuidv7(), 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 3, 'Cà phê Tinh Tế, Quận 3, TP. Hồ Chí Minh', 
+(uuidv7(), 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'Cà phê Tinh Tế, Quận 3, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg', 
 	NOW(), NULL,
@@ -286,7 +286,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Tinh Tế Cafe'), 106.686500, 10.786200),
 
 -- Vietnam Tech Summit 2025
-(uuidv7(), 'Vietnam Tech Summit 2025', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 2, 'GEM Center, Quận 1, TP. Hồ Chí Minh', 
+(uuidv7(), 'Vietnam Tech Summit 2025', '019bb098-c487-7bdb-9082-f51c9e8a9cc5', 'GEM Center, Quận 1, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg', 
 	NOW(), NULL,
@@ -322,7 +322,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'GEM Center'), 106.697150, 10.772510),
 
 -- Workshop Marketing 0 Đồng
-(uuidv7(), 'Workshop: Marketing 0 Đồng cho Startup', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 2, 'Dreamplex Điện Biên Phủ, Quận Bình Thạnh, TP. Hồ Chí Minh', 
+(uuidv7(), 'Workshop: Marketing 0 Đồng cho Startup', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'Dreamplex Điện Biên Phủ, Quận Bình Thạnh, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png', 
 	NOW(), NULL,
@@ -358,7 +358,7 @@ INSERT INTO public.events (
 	(SELECT id FROM public.venues WHERE name = 'Dreamplex Điện Biên Phủ'), 106.707300, 10.799800),
 
 -- Van Gogh Art Experience
-(uuidv7(), 'Van Gogh Art Lighting Experience', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 3, 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
+(uuidv7(), 'Van Gogh Art Lighting Experience', '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh', 
 	'PREMIERE', 
 	'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990', 
 	NOW(), NULL,
@@ -392,6 +392,31 @@ INSERT INTO public.events (
 	'<p>Không hỗ trợ hoàn tiền.</p>', 
 	'https://salt.tkbcdn.com/ts/ds/22/11/d9/bb3f49b5cc337eb5e7d02d413bc64453.jpg',
 	(SELECT id FROM public.venues WHERE name = 'Gigamall Thủ Đức'), 106.761789, 10.847910);
+
+
+--4. Table: event_categories
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ'
+UNION ALL
+SELECT id, 3 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ'
+UNION ALL
+SELECT id, 4 FROM public.events WHERE name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes'
+UNION ALL
+SELECT id, 1 FROM public.events WHERE name = 'Những Thành Phố Mơ Màng - Summer Tour'
+UNION ALL
+SELECT id, 1 FROM public.events WHERE name = 'Mây Lang Thang: Đêm Nhạc Trịnh'
+UNION ALL
+SELECT id, 3 FROM public.events WHERE name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35'
+UNION ALL
+SELECT id, 1 FROM public.events WHERE name = 'Ravolution Music Festival: Unite'
+UNION ALL
+SELECT id, 3 FROM public.events WHERE name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi'
+UNION ALL
+SELECT id, 2 FROM public.events WHERE name = 'Vietnam Tech Summit 2025'
+UNION ALL
+SELECT id, 2 FROM public.events WHERE name = 'Workshop: Marketing 0 Đồng cho Startup'
+UNION ALL
+SELECT id, 3 FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
 
 --3. Table: Event Sessions 
 -- Session cho Hà Anh Tuấn

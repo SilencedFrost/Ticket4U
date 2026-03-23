@@ -11,9 +11,9 @@
         <!-- Floor dropdown -->
         <div v-if="floors.length > 1" class="dropdown">
           <button
-            class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
-            type="button"
-            data-bs-toggle="dropdown"
+              class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
+              type="button"
+              data-bs-toggle="dropdown"
           >
             <i class="bi bi-layers me-1"/>
             {{ activeFloor?.floor_name ?? $t('event_payment.floor.select') }}
@@ -21,9 +21,9 @@
           <ul class="dropdown-menu">
             <li v-for="floor in floors" :key="floor.id">
               <button
-                class="dropdown-item d-flex align-items-center gap-2"
-                :class="{ active: activeFloorId === floor.id }"
-                @click="activeFloorId = floor.id"
+                  class="dropdown-item d-flex align-items-center gap-2"
+                  :class="{ active: activeFloorId === floor.id }"
+                  @click="activeFloorId = floor.id"
               >
                 <i class="bi bi-check2 me-1" :style="{ opacity: activeFloorId === floor.id ? 1 : 0 }"/>
                 {{ floor.floor_name }}
@@ -64,25 +64,25 @@
 
     <!-- Canvas Area — same grid background as editor -->
     <div
-      ref="canvasContainer"
-      class="flex-grow-1 position-relative overflow-hidden"
-      style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
+        ref="canvasContainer"
+        class="flex-grow-1 position-relative overflow-hidden"
+        style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
     >
       <canvas
-        v-if="canvasSize.width > 0"
-        ref="canvasRef"
-        :width="canvasSize.width"
-        :height="canvasSize.height"
-        style="position:absolute;top:0;left:0;cursor:grab;"
-        @wheel.prevent="handleWheel"
-        @mousedown="onMouseDown"
-        @mousemove="onMouseMove"
-        @mouseup="onMouseUp"
-        @mouseleave="onMouseUp"
-        @click="handleCanvasClick"
-        @touchstart.prevent="onTouchStart"
-        @touchmove.prevent="onTouchMove"
-        @touchend="onTouchEnd"
+          v-if="canvasSize.width > 0"
+          ref="canvasRef"
+          :width="canvasSize.width"
+          :height="canvasSize.height"
+          style="position:absolute;top:0;left:0;cursor:grab;"
+          @wheel.prevent="handleWheel"
+          @mousedown="onMouseDown"
+          @mousemove="onMouseMove"
+          @mouseup="onMouseUp"
+          @mouseleave="onMouseUp"
+          @click="handleCanvasClick"
+          @touchstart.prevent="onTouchStart"
+          @touchmove.prevent="onTouchMove"
+          @touchend="onTouchEnd"
       />
       <div v-else class="d-flex align-items-center justify-content-center h-100">
         <div class="spinner-border text-primary"/>
@@ -97,9 +97,9 @@
 
     <!-- Standing Zone Panel -->
     <div
-      v-if="selectedStandingZone"
-      class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
-      style="z-index:1000;"
+        v-if="selectedStandingZone"
+        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
+        style="z-index:1000;"
     >
       <div class="container" style="max-width:600px;">
         <div class="d-flex justify-content-between align-items-start mb-3">
@@ -145,9 +145,9 @@
 
     <!-- Seated Selection Panel -->
     <div
-      v-if="selectedSeats.length > 0 && !selectedStandingZone"
-      class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
-      style="z-index:1000;"
+        v-if="selectedSeats.length > 0 && !selectedStandingZone"
+        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
+        style="z-index:1000;"
     >
       <div class="container" style="max-width:600px;">
         <div class="d-flex justify-content-between align-items-start mb-3">
@@ -155,9 +155,9 @@
             <h5 class="text-reactive-primary mb-1">{{ $t('event_payment.selection.selected_seats') }}</h5>
             <div class="d-flex flex-wrap gap-1 mt-1">
               <span
-                v-for="seat in selectedSeats" :key="seat.seatId"
-                class="badge d-inline-flex align-items-center gap-1"
-                :style="{ backgroundColor: seat.zoneColor }"
+                  v-for="seat in selectedSeats" :key="seat.seatId"
+                  class="badge d-inline-flex align-items-center gap-1"
+                  :style="{ backgroundColor: seat.zoneColor }"
               >
                 {{ seat.seatId }}<i class="bi bi-x" style="cursor:pointer;" @click="deselectSeat(seat.seatId)"/>
               </span>
@@ -373,7 +373,9 @@ const draw = () => {
     // Seats (sitting zones)
     if (zone.zone_type === 'sitting' && zone.seats.length > 0) {
       const gridPos = getSeatGridPositions(zone)
-      const r = Math.max(4, (floor.layout.seat_size ?? 14) / 2 * scale.value * 0.8)
+      const seatPx = (floor.layout.seat_size ?? 14)
+      const scaleX  = canvasSize.value.width / CANVAS_W
+      const r = Math.max(4, seatPx / 2 * scaleX * scale.value)
 
       for (const seat of zone.seats) {
         const np = gridPos.get(seat.seat_id); if (!np) continue
@@ -409,7 +411,9 @@ const handleCanvasClick = (e: MouseEvent) => {
   for (const zone of floor.layout.zones) {
     if (zone.zone_type !== 'sitting') continue
     const gridPos = getSeatGridPositions(zone)
-    const r = Math.max(4, (floor.layout.seat_size ?? 14) / 2 * scale.value * 0.8) + 4
+    const seatPx = (floor.layout.seat_size ?? 14)
+    const scaleX  = canvasSize.value.width / CANVAS_W
+    const r = Math.max(4, seatPx / 2 * scaleX * scale.value) + 4
     for (const seat of zone.seats) {
       const np = gridPos.get(seat.seat_id); if (!np) continue
       const cp = toCanvas(np.x, np.y)
@@ -459,10 +463,13 @@ const maxStandingAllowed   = computed(() => {
 const addStandingToCart = () => {
   if (!selectedStandingZone.value || standingQuantity.value <= 0) return
   const t = getZoneTicket(selectedStandingZone.value); if (!t) return
+  // Use DB zone name from tickets prop — matches Zone.name in database
+  const dbTicket = props.tickets.find(tk => tk.id === selectedStandingZone.value!.zone_uuid)
+  const zoneName = dbTicket?.name ?? selectedStandingZone.value.display_name ?? selectedStandingZone.value.zone_name
   emit('addTicket',
-    selectedStandingZone.value.zone_uuid ?? selectedStandingZone.value.zone_name,
-    selectedStandingZone.value.display_name ?? selectedStandingZone.value.zone_name,
-    standingQuantity.value, t.price, true
+      selectedStandingZone.value.zone_uuid ?? selectedStandingZone.value.zone_name,
+      zoneName,
+      standingQuantity.value, t.price, true
   )
   selectedStandingZone.value = null; standingQuantity.value = 1
 }
@@ -504,14 +511,17 @@ const addSeatsToCart = () => {
   }, {} as Record<string, SelectedSeatLocal[]>)
   for (const seats of Object.values(byZone)) {
     const f = seats[0]
-    emit('addTicket', f.zoneUuid ?? f.zoneName, f.zoneName, seats.length, f.price, false, seats)
+    // Use DB zone name from tickets prop — matches Zone.name in database
+    const dbTicket = props.tickets.find(t => t.id === f.zoneUuid)
+    const zoneName = dbTicket?.name ?? f.zoneName
+    emit('addTicket', f.zoneUuid ?? f.zoneName, zoneName, seats.length, f.price, false, seats)
   }
   selectedSeats.value = []; draw()
 }
 
 // ── Helpers ────────────────────────────────────────────────
 const getZoneTicket = (zone: LayoutZone): Ticket | undefined =>
-  props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
+    props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
 
 const formatPrice = (price: number) => new Intl.NumberFormat('vi-VN').format(price) + ' đ'
 

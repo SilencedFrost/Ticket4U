@@ -7,3 +7,7 @@
 
 # Docker data 
 **/qdrant_storage/
+ec-public.pem
+ec-private.pem
+localhost+2-key.pem
+localhost+2.pem

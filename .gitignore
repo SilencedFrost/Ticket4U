@@ -9,3 +9,7 @@
 **/qdrant_storage/
 
 **/secrets/
+ec-private.pem
+ec-public.pem
+localhost+2-key.pem
+localhost+2.pem

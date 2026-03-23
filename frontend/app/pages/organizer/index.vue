@@ -2,9 +2,9 @@
   <div class="p-4 p-md-5">
     <div class="mb-5">
       <h2 class="fw-bold text-reactive-primary mb-1">
-        Xin chào, {{ mockProfile.name }} 👋
+        {{ $t('organizer.home.greeting', { name: mockProfile.name }) }} 👋
       </h2>
-      <p class="text-reactive-secondary">Chào mừng trở lại trang quản lý sự kiện của bạn.</p>
+      <p class="text-reactive-secondary">{{ $t('organizer.home.subtitle') }}</p>
     </div>
 
     <!-- Quick stats -->
@@ -25,65 +25,65 @@
 
     <!-- Quick actions -->
     <div class="mb-5">
-      <h5 class="text-reactive-primary fw-semibold mb-3">Thao tác nhanh</h5>
+      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.home.quick_actions') }}</h5>
       <div class="d-flex flex-wrap gap-3">
-        <NuxtLink to="/organizer/events/new" class="btn btn-primary px-4">
-          <i class="bi bi-plus-lg me-2"/>Tạo sự kiện
+        <NuxtLink :to="localePath('/organizer/events/new')" class="btn btn-primary px-4">
+          <i class="bi bi-plus-lg me-2"/>{{ $t('organizer.events.create') }}
         </NuxtLink>
-        <NuxtLink to="/organizer/events" class="btn btn-outline-secondary px-4">
-          <i class="bi bi-calendar-event me-2"/>Xem sự kiện
+        <NuxtLink :to="localePath('/organizer/events')" class="btn btn-outline-secondary px-4">
+          <i class="bi bi-calendar-event me-2"/>{{ $t('organizer.home.view_events') }}
         </NuxtLink>
-        <NuxtLink to="/organizer/reports" class="btn btn-outline-secondary px-4">
-          <i class="bi bi-bar-chart me-2"/>Báo cáo
+        <NuxtLink :to="localePath('/organizer/reports')" class="btn btn-outline-secondary px-4">
+          <i class="bi bi-bar-chart me-2"/>{{ $t('organizer.home.view_reports') }}
         </NuxtLink>
       </div>
     </div>
 
     <!-- Recent events -->
     <div>
-      <h5 class="text-reactive-primary fw-semibold mb-3">Sự kiện gần đây</h5>
+      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.events.title') }}</h5>
       <div class="card bg-reactive-secondary border-0 overflow-hidden">
         <div class="table-responsive">
           <table class="table table-hover mb-0 organizer-table">
             <thead>
-              <tr>
-                <th class="text-reactive-secondary small fw-semibold ps-4">Sự kiện</th>
-                <th class="text-reactive-secondary small fw-semibold">Ngày</th>
-                <th class="text-reactive-secondary small fw-semibold">Trạng thái</th>
-                <th class="text-reactive-secondary small fw-semibold">Vé bán</th>
-                <th class="text-reactive-secondary small fw-semibold pe-4">Doanh thu</th>
-              </tr>
+            <tr>
+              <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('organizer.events.col.event') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.date') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.status') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.tickets') }}</th>
+              <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('organizer.events.col.revenue') }}</th>
+            </tr>
             </thead>
             <tbody>
-              <tr v-for="event in recentEvents" :key="event.id">
-                <td class="ps-4 py-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <img :src="event.bannerUrl" class="event-thumb rounded" alt=""/>
-                    <div>
-                      <div class="fw-semibold text-reactive-primary">{{ event.name }}</div>
-                      <small class="text-reactive-secondary">
-                        <i class="bi bi-geo-alt me-1"/>{{ event.addressLine }}
-                      </small>
-                    </div>
+            <tr v-for="event in recentEvents" :key="event.id">
+              <td class="ps-4 py-3">
+                <div class="d-flex align-items-center gap-3">
+                  <img :src="event.bannerUrl" class="event-thumb rounded" alt=""/>
+                  <div>
+                    <div class="fw-semibold text-reactive-primary">{{ event.name }}</div>
+                    <small class="text-reactive-secondary">
+                      <i class="bi bi-geo-alt me-1"/>{{ event.addressLine }}
+                    </small>
                   </div>
-                </td>
-                <td class="py-3">
-                  <div class="text-reactive-primary small">{{ formatDate(getSessionStart(event)) }}</div>
-                  <small class="text-reactive-secondary">{{ formatTime(getSessionStart(event)) }}</small>
-                </td>
-                <td class="py-3">
+                </div>
+              </td>
+              <td class="py-3">
+                <div class="text-reactive-primary small">{{ formatDate(getSessionStart(event)) }}</div>
+                <small class="text-reactive-secondary">{{ formatTime(getSessionStart(event)) }}</small>
+              </td>
+              <td class="py-3">
                   <span class="badge rounded-pill px-3 py-2" :class="getStatusClass(event.status)">
                     {{ getStatusLabel(event.status) }}
                   </span>
-                </td>
-                <td class="py-3">
-                  <div class="text-reactive-primary small fw-semibold">{{ getTicketsSold(event) }}</div>
-                  <small class="text-reactive-secondary">/ {{ getTotalCapacity(event) }}</small>
-                </td>
-                <td class="py-3 pe-4">
-                  <div class="text-reactive-primary small fw-semibold">{{ formatPrice(getRevenue(event)) }}</div>
-                </td>
-              </tr>
+              </td>
+              <td class="py-3">
+                <div class="text-reactive-primary small fw-semibold">{{ getTicketsSold(event) }}</div>
+                <small class="text-reactive-secondary">/ {{ getTotalCapacity(event) }}</small>
+              </td>
+              <td class="py-3 pe-4">
+                <div class="text-reactive-primary small fw-semibold">{{ formatPrice(getRevenue(event)) }}</div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -106,9 +106,10 @@ import {
   formatPrice,
   formatDate,
   formatTime,
-} from './mock/organizer.data'
+} from './mock.data'
 
-definePageMeta({ layout: 'organizer', middleware: 'organizer' })
+const { t: $t } = useI18n()
+const localePath = useLocalePath()
 
 const recentEvents = mockEvents.slice(0, 5)
 
@@ -118,10 +119,10 @@ const stats = computed(() => {
   const upcoming     = mockEvents.filter(e => ['PREMIERE', 'SELLING'].includes(e.status)).length
   const active       = mockEvents.filter(e => e.status === 'SELLING').length
   return [
-    { label: 'Tổng sự kiện',  value: String(mockEvents.length),         sub: `${upcoming} sắp diễn ra`,  icon: 'bi-calendar-event',    color: '#3b82f6' },
-    { label: 'Vé đã bán',     value: totalSold.toLocaleString('vi-VN'), sub: 'Tất cả thời gian',         icon: 'bi-ticket-perforated', color: '#22c55e' },
-    { label: 'Doanh thu',     value: formatPrice(totalRevenue),          sub: 'Tất cả thời gian',         icon: 'bi-cash-stack',        color: '#f59e0b' },
-    { label: 'Đang bán',      value: String(active),                    sub: 'Đang mở bán',              icon: 'bi-star-fill',         color: '#ec4899' },
+    { label: $t('organizer.home.stats.total_events'), value: String(mockEvents.length),         sub: $t('organizer.home.stats.upcoming', { n: upcoming }), icon: 'bi-calendar-event',    color: '#3b82f6' },
+    { label: $t('organizer.home.stats.tickets_sold'), value: totalSold.toLocaleString('vi-VN'), sub: $t('organizer.home.stats.this_month'),                icon: 'bi-ticket-perforated', color: '#22c55e' },
+    { label: $t('organizer.home.stats.revenue'),      value: formatPrice(totalRevenue),          sub: $t('organizer.home.stats.this_month'),                icon: 'bi-cash-stack',        color: '#f59e0b' },
+    { label: $t('organizer.events.status.selling'),   value: String(active),                    sub: $t('organizer.home.stats.upcoming', { n: active }),   icon: 'bi-star-fill',         color: '#ec4899' },
   ]
 })
 </script>

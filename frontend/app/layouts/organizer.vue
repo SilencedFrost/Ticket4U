@@ -8,10 +8,10 @@
       <div class="sidebar-header px-3 py-4 border-bottom border-secondary">
         <div class="d-flex align-items-center gap-3">
           <img
-            v-if="logoUrl"
-            :src="logoUrl"
-            class="org-avatar rounded-circle flex-shrink-0"
-            alt="org logo"
+              v-if="logoUrl"
+              :src="logoUrl"
+              class="org-avatar rounded-circle flex-shrink-0"
+              alt="org logo"
           />
           <div v-else class="org-avatar-placeholder rounded-circle flex-shrink-0 bg-primary d-flex align-items-center justify-content-center">
             <i class="bi bi-building text-white"/>
@@ -19,7 +19,7 @@
           <transition name="fade-text">
             <div v-if="!sidebarCollapsed" class="overflow-hidden">
               <div class="fw-bold text-reactive-primary text-truncate" style="max-width: 140px;">
-                {{ profile?.name ?? user?.username ?? '...' }}
+                {{ profile?.name ?? 'Organizer' }}
               </div>
               <small class="text-reactive-secondary">{{ roleLabel }}</small>
             </div>
@@ -30,11 +30,11 @@
       <!-- Nav Links -->
       <nav class="flex-grow-1 py-3">
         <NuxtLink
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none"
-          :class="{ active: isActive(item.to) }"
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 text-decoration-none"
+            :class="{ active: isActive(item.to) }"
         >
           <i :class="['bi', item.icon, 'fs-5', 'flex-shrink-0']"/>
           <transition name="fade-text">
@@ -46,21 +46,21 @@
       <!-- Bottom: collapse toggle + logout -->
       <div class="sidebar-footer border-top border-secondary py-3">
         <button
-          class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 w-100 border-0 bg-transparent"
-          @click="sidebarCollapsed = !sidebarCollapsed"
+            class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 w-100 border-0 bg-transparent"
+            @click="sidebarCollapsed = !sidebarCollapsed"
         >
           <i :class="['bi', sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left', 'fs-5', 'flex-shrink-0']"/>
           <transition name="fade-text">
-            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">Thu gọn</span>
+            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">{{ $t('organizer.nav.collapse') }}</span>
           </transition>
         </button>
         <button
-          class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 w-100 border-0 bg-transparent"
-          @click="handleLogout"
+            class="sidebar-link d-flex align-items-center gap-3 px-3 py-2 w-100 border-0 bg-transparent"
+            @click="handleLogout"
         >
           <i class="bi bi-box-arrow-left fs-5 flex-shrink-0 text-danger"/>
           <transition name="fade-text">
-            <span v-if="!sidebarCollapsed" class="text-danger">Đăng xuất</span>
+            <span v-if="!sidebarCollapsed" class="text-danger">{{ $t('organizer.nav.logout') }}</span>
           </transition>
         </button>
       </div>
@@ -77,15 +77,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useOrganizerProfile } from '~/composables/useOrganizerProfile'
-import { useUserStore } from '~/stores/user'
 
-const { user } = useUserStore()
-const route    = useRoute()
-const router   = useRouter()
+const { t: $t } = useI18n()
+const localePath = useLocalePath()
+const route  = useRoute()
+const router = useRouter()
 
 const sidebarCollapsed = ref(false)
 
-// ── Mock profile ───────────────────────────────────────────
+// ── Profile ────────────────────────────────────────────────
 const { profile, fetchProfile, reset } = useOrganizerProfile()
 onMounted(fetchProfile)
 
@@ -93,32 +93,30 @@ const logoUrl = computed(() => profile.value?.logoUrl ?? profile.value?.logo_url
 
 // ── Role label ─────────────────────────────────────────────
 const roleLabel = computed(() => {
-  const roleId = user.value?.roleId
-  if (roleId === 2) return 'Organizer Admin'
-  if (roleId === 1) return 'Event Manager'
-  return ''
+  if (!profile.value) return ''
+  return 'Organizer Admin'
 })
 
-// ── Nav items (hardcoded — no i18n needed for mock) ────────
-const navItems = [
-  { to: '/organizer',                 label: 'Trang chủ',       icon: 'bi-house'          },
-  { to: '/organizer/events',          label: 'Sự kiện',         icon: 'bi-calendar-event' },
-  { to: '/organizer/reports',         label: 'Báo cáo',         icon: 'bi-bar-chart'      },
-  { to: '/organizer/events/archived', label: 'Đã lưu trữ',      icon: 'bi-archive'        },
-]
+// ── Nav items ──────────────────────────────────────────────
+const navItems = computed(() => [
+  { to: localePath('/organizer'),                 label: $t('organizer.nav.home'),     icon: 'bi-house'          },
+  { to: localePath('/organizer/events'),          label: $t('organizer.nav.events'),   icon: 'bi-calendar-event' },
+  { to: localePath('/organizer/reports'),         label: $t('organizer.nav.reports'),  icon: 'bi-bar-chart'      },
+  { to: localePath('/organizer/events/archived'), label: $t('organizer.nav.archived'), icon: 'bi-archive'        },
+])
 
 const isActive = (to: string) => {
   const path = route.path
-  if (to === '/organizer') return path === to || path === '/organizer/'
-  return path.startsWith(to)
+  const cleanPath = path.replace(/^\/(en|vi)/, '')
+  const cleanTo   = to.replace(/^\/(en|vi)/, '')
+  if (cleanTo === '/organizer') return cleanPath === '/organizer' || cleanPath === '/organizer/'
+  return cleanPath.startsWith(cleanTo)
 }
 
 // ── Logout ─────────────────────────────────────────────────
-const { logout } = useUserStore()
-const handleLogout = async () => {
+const handleLogout = () => {
   reset()
-  await logout()
-  router.push('/login')
+  router.push(localePath('/login'))
 }
 </script>
 

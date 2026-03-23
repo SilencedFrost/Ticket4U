@@ -14,9 +14,6 @@ CREATE TABLE IF NOT EXISTS public.role
     role_name varchar(32) NOT NULL
 );
 
-ALTER TABLE IF EXISTS public.role
-    OWNER to postgres;
-
 -- Data: roles
 -- Basic roles, in a hierachy, can access base page, each having their own features + the lower role's
 -- Can access the homepage, buy tickets, view events
@@ -56,9 +53,6 @@ CREATE TABLE IF NOT EXISTS public.users
 		REFERENCES public.role (id)
 );
 
-ALTER TABLE IF EXISTS public.users
-    OWNER to postgres;
-
 -- Table: session
 
 CREATE TABLE IF NOT EXISTS public.session
@@ -76,9 +70,6 @@ CREATE TABLE IF NOT EXISTS public.session
 		REFERENCES public.users (id)
 );
 
-ALTER TABLE IF EXISTS public.session
-    OWNER to postgres;
-
 -- Table: organizer
 
 CREATE TABLE IF NOT EXISTS public.organizer
@@ -91,6 +82,3 @@ CREATE TABLE IF NOT EXISTS public.organizer
     CONSTRAINT organizer_fk_user FOREIGN KEY (id) 
         REFERENCES public.users (id)
 );
-
-ALTER TABLE IF EXISTS public.organizer
-    OWNER to postgres;

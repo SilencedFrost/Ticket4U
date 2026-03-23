@@ -11,3 +11,10 @@
 # Secrets
 **/secrets/
 **/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+### Keys ###
+**/*.pem
+**/*.p12

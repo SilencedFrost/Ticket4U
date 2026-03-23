@@ -30,8 +30,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
     List<Event> findAllPurchasable(Pageable pageable);
 
-    @EntityGraph(value = "Event.withAllEntities")
-    List<Event> findAllByIdIn(List<UUID> ids);
     /**
      * @return list of events, sorted by earliest session start date
      */

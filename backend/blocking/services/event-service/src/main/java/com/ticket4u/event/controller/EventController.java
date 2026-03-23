@@ -30,7 +30,7 @@ public class EventController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.findEvent(id));
+        return ResponseEntity.ok(eventService.findById(id));
     }
 
     /**

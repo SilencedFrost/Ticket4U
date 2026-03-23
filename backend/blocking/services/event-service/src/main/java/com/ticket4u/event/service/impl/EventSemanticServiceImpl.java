@@ -41,7 +41,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
                     event.getName(),
                     event.getAboutVi());
 
-            List<Float> vector = embeddingService.getEmbedding(context);
+            List<Float> vector = embeddingService.getDocumentEmbedding(context);
 
             if (!vector.isEmpty()) {
                 Common.PointId pointId = Common.PointId.newBuilder()
@@ -69,11 +69,10 @@ public class EventSemanticServiceImpl implements EventSemanticService {
     public List<EventSummaryResponse> findSimilarById(UUID id, int limit) {
         return eventRepository.findById(id)
                 .map(event -> {
-                    String context = String.format("Category: %s | Event: %s | Description: %s",
-                            event.getCategory().getName(),
+                    String queryContext = String.format("Tìm các sự kiện tương tự như: %s thuộc thể loại %s",
                             event.getName(),
-                            event.getAboutVi());
-                    return embeddingService.getEmbedding(context);
+                            event.getCategory().getName());
+                    return embeddingService.getQueryEmbedding(queryContext);
                 })
                 .map(vector -> qdrantService.search(COLLECTION, vector, 0.1f, limit + 1))
                 .map(scoredPoints -> extractAndSortIds(scoredPoints, id, limit))

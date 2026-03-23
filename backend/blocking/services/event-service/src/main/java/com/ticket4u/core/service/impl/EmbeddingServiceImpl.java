@@ -22,17 +22,27 @@ public class EmbeddingServiceImpl implements EmbeddingService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${ai.embedding.api-url}")
+    @Value("${application.services.embedding}")
     private String embedApiUrl;
 
-    @Value("${ai.embedding.model-name}")
-    private String modelName;
+    @Override
+    public List<Float> getDocumentEmbedding(String text) {
+        if (text == null || text.isBlank()) return Collections.emptyList();
+        log.info("Generating document embedding for indexing...");
+        return callEmbeddingApi(text, "text");
+    }
 
     @Override
-    public List<Float> getEmbedding(String text) {
+    public List<Float> getQueryEmbedding(String query) {
+        if (query == null || query.isBlank()) return Collections.emptyList();
+        log.info("Generating query embedding for indexing...");
+        return callEmbeddingApi(query, "query");
+    }
+
+    private List<Float> callEmbeddingApi(String input, String mode) {
         Map<String, Object> request = Map.of(
-                "input", text,
-                "model", modelName
+                "texts", List.of(input),
+                "mode", mode
         );
 
         try {
@@ -40,24 +50,21 @@ public class EmbeddingServiceImpl implements EmbeddingService {
                     embedApiUrl,
                     HttpMethod.POST,
                     new HttpEntity<>(request),
-                    new ParameterizedTypeReference<>() {}
+                    new ParameterizedTypeReference<Map<String, Object>>() {}
             );
 
             Map<String, Object> body = response.getBody();
 
-            if (body != null && body.get("data") instanceof List<?> dataList && !dataList.isEmpty()) {
-                if (dataList.getFirst() instanceof Map<?, ?> firstElement) {
-                    Object embedding = firstElement.get("embedding");
-                    if (embedding instanceof List<?> resList) {
-                        return resList.stream()
-                                .filter(Number.class::isInstance)
-                                .map(n -> ((Number) n).floatValue())
-                                .toList();
-                    }
+            if (body != null && body.get("embeddings") instanceof List<?> allEmbeds) {
+                if (!allEmbeds.isEmpty() && allEmbeds.get(0) instanceof List<?> firstEmbed) {
+                    return firstEmbed.stream()
+                            .filter(Number.class::isInstance)
+                            .map(n -> ((Number) n).floatValue())
+                            .toList();
                 }
             }
         } catch (Exception e) {
-            log.error("Embedding failed at {}: {}", embedApiUrl, e.getMessage());
+            log.error("Embedding Error | Mode: {} | Msg: {}", mode, e.getMessage());
         }
         return Collections.emptyList();
     }

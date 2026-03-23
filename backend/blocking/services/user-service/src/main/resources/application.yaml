@@ -3,7 +3,7 @@ spring:
   datasource:
     url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-User}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:tintin7335}
     driver-class-name: org.postgresql.Driver
 
   # JPA/Hibernate Configuration

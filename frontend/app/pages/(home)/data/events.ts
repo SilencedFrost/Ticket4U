@@ -1,4 +1,4 @@
-import type { Event, Place, TrendingEvent } from '../types'
+import type { Event, Place, TrendingEvent } from '../types/home'
 
 export const featuredEvents: Event[] = [
   {

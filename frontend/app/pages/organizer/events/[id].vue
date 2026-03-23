@@ -457,7 +457,7 @@ const eventId = computed(() => {
 })
 const isNew = computed(() => !eventId.value)
 
-// ── Steps ──────────────────────────────────────────────────
+// Steps
 const currentStep = ref(0)
 const steps = computed(() => [
   $t('organizer.event_form.step1.title'),
@@ -475,10 +475,10 @@ const triggerDraftSaved = () => {
   setTimeout(() => { showDraftSaved.value = false }, 2500)
 }
 
-// ── Venue derived ──────────────────────────────────────────
+// Venue derived
 const selectedVenue = computed(() => mockVenues.find(v => v.id === form.value.venueId) ?? null)
 
-// ── Form state ─────────────────────────────────────────────
+// Form state
 const form = ref({
   name: '', categoryId: '' as any, status: 'EDITING' as string,
   addressLine: '', startDate: '', endDate: '', bannerUrl: '', venueId: '',
@@ -488,10 +488,10 @@ const content     = ref({ aboutVi: '', aboutEn: '', termsAndConditions: '', poli
 const contentLang = ref<'vi' | 'en'>('vi')
 const layoutMode  = ref<'venue' | 'custom'>('venue')
 
-// ── Zones ──────────────────────────────────────────────────
+// Zones 
 const zones = ref<MockZone[]>([])
 
-// ── Zone modal ─────────────────────────────────────────────
+// Zone modal
 const showZoneModal = ref(false)
 const editingZone   = ref<MockZone | null>(null)
 const zoneForm      = ref({ name: '', isStanding: false, capacity: 100, price: 0, purchaseLimit: null as number | null, gridRows: 5, gridCols: 10 })
@@ -526,7 +526,7 @@ const saveZone = () => {
 
 const deleteZone = (id: string) => { zones.value = zones.value.filter(z => z.id !== id) }
 
-// ── Load existing event ────────────────────────────────────
+// Load existing event
 onMounted(() => {
   if (!isNew.value && eventId.value) {
     const ev = mockEvents.find(e => e.id === eventId.value)
@@ -548,7 +548,7 @@ onMounted(() => {
   }
 })
 
-// ── Step saves (mock — simulated delay) ───────────────────
+//  Step saves (mock — simulated delay) 
 const validateStep1 = () => {
   errors.value = {}
   if (!form.value.name.trim())        errors.value.name        = $t('organizer.event_form.step1.name') + ' is required'
@@ -587,25 +587,25 @@ const mockSaveLayout = async () => {
 </script>
 
 <style scoped>
-.step-bar { align-items: center; }
-.step-item { cursor: pointer; min-width: 0; }
-.step-dot { width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary); transition: background 0.2s, color 0.2s; }
-.step-item.active .step-dot    { background: var(--bs-primary); color: #fff; }
-.step-item.completed .step-dot { background: #22c55e; color: #fff; }
-.step-label { color: var(--bs-secondary); transition: color 0.2s; }
-.step-item.active .step-label, .step-item.completed .step-label { color: var(--text-reactive-primary, inherit); }
-.step-line { height: 2px; background: rgba(var(--bs-secondary-rgb), 0.25); flex-shrink: 0; min-width: 8px; }
-.step-item.completed .step-line { background: #22c55e; }
-.zone-card { background: rgba(var(--bs-secondary-rgb), 0.15); border-left: 4px solid #6366f1 !important; transition: box-shadow 0.15s; }
-.zone-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-.perk-badge { background: rgba(99,102,241,0.25); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); }
-.modal-backdrop-custom { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-.modal-box { max-width: 520px; width: 100%; }
-.nav-link { color: var(--bs-secondary); background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.5rem 1rem; cursor: pointer; }
-.nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
-.draft-toast-enter-active { transition: opacity 0.3s ease; }
-.draft-toast-leave-active { transition: opacity 0.8s ease; }
-.draft-toast-enter-from, .draft-toast-leave-to { opacity: 0; }
-.zone-palette-badge { background: transparent; border: 1px solid rgba(var(--bs-secondary-rgb), 0.4); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--bs-secondary); cursor: default; }
-.layout-preview-placeholder { border: 1px dashed rgba(var(--bs-secondary-rgb), 0.3); }
+  .step-bar { align-items: center; }
+  .step-item { cursor: pointer; min-width: 0; }
+  .step-dot { width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary); transition: background 0.2s, color 0.2s; }
+  .step-item.active .step-dot    { background: var(--bs-primary); color: #fff; }
+  .step-item.completed .step-dot { background: #22c55e; color: #fff; }
+  .step-label { color: var(--bs-secondary); transition: color 0.2s; }
+  .step-item.active .step-label, .step-item.completed .step-label { color: var(--text-reactive-primary, inherit); }
+  .step-line { height: 2px; background: rgba(var(--bs-secondary-rgb), 0.25); flex-shrink: 0; min-width: 8px; }
+  .step-item.completed .step-line { background: #22c55e; }
+  .zone-card { background: rgba(var(--bs-secondary-rgb), 0.15); border-left: 4px solid #6366f1 !important; transition: box-shadow 0.15s; }
+  .zone-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+  .perk-badge { background: rgba(99,102,241,0.25); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); }
+  .modal-backdrop-custom { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .modal-box { max-width: 520px; width: 100%; }
+  .nav-link { color: var(--bs-secondary); background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.5rem 1rem; cursor: pointer; }
+  .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
+  .draft-toast-enter-active { transition: opacity 0.3s ease; }
+  .draft-toast-leave-active { transition: opacity 0.8s ease; }
+  .draft-toast-enter-from, .draft-toast-leave-to { opacity: 0; }
+  .zone-palette-badge { background: transparent; border: 1px solid rgba(var(--bs-secondary-rgb), 0.4); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--bs-secondary); cursor: default; }
+  .layout-preview-placeholder { border: 1px dashed rgba(var(--bs-secondary-rgb), 0.3); }
 </style>

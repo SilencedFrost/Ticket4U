@@ -1,0 +1,619 @@
+/* ============================================
+   Account Management - Shared Styles
+   Dùng chung cho cả 3 tabs: Users, Organizers, Internal Accounts
+   Sử dụng CSS vars từ bootstrap-custom.scss (chỉ đọc)
+   ============================================ */
+
+/* Page container */
+.am-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--bg-reactive-primary);
+  color: var(--text-reactive-primary);
+}
+
+/* Page header */
+.am-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.am-header__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-reactive-primary);
+}
+
+.am-header__action {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Tab navigation */
+.am-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+  margin-bottom: 1.5rem;
+}
+
+.am-tabs__item {
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: var(--text-reactive-secondary);
+  border-bottom: 3px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition:
+    color 0.3s ease,
+    border-bottom-color 0.3s ease;
+  cursor: pointer;
+}
+
+.am-tabs__item:hover {
+  color: var(--text-reactive-primary);
+}
+
+.am-tabs__item--active,
+.am-tabs__item.router-link-active {
+  color: var(--bs-primary);
+  border-bottom-color: var(--bs-primary);
+}
+
+/* Toolbar: search + filters + actions */
+.am-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.am-toolbar__search {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.am-toolbar__search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-reactive-secondary);
+  font-size: 0.875rem;
+}
+
+.am-toolbar__search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  border: 1px solid rgba(var(--bs-secondary-rgb), 0.3);
+  border-radius: 0.5rem;
+  background-color: var(--bg-reactive-secondary);
+  color: var(--text-reactive-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.am-toolbar__search-input::placeholder {
+  color: var(--text-reactive-secondary);
+}
+
+.am-toolbar__search-input:focus {
+  border-color: var(--bs-primary);
+}
+
+.am-toolbar__spacer {
+  flex: 1;
+}
+
+/* Sort / Filter dropdown */
+.am-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.am-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--bs-primary);
+  border-radius: 0.5rem;
+  background-color: transparent;
+  color: var(--bs-primary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.am-dropdown__trigger:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.am-dropdown__menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 160px;
+  background-color: var(--bg-reactive-secondary);
+  border: 1px solid rgba(var(--bs-secondary-rgb), 0.3);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.am-dropdown__item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: none;
+  color: var(--text-reactive-primary);
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.am-dropdown__item:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.am-dropdown__item--active {
+  color: var(--bs-primary);
+}
+
+/* Table */
+.am-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.am-table thead th {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-reactive-secondary);
+  background-color: var(--bg-reactive-secondary);
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+  white-space: nowrap;
+}
+
+.am-table thead th:first-child {
+  border-radius: 0.5rem 0 0 0;
+}
+
+.am-table thead th:last-child {
+  border-radius: 0 0.5rem 0 0;
+}
+
+.am-table tbody td {
+  padding: 0.625rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--text-reactive-primary);
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
+  vertical-align: middle;
+}
+
+.am-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.am-table tbody tr:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.am-table__email {
+  color: var(--text-reactive-secondary);
+}
+
+/* Status Badge */
+.am-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.625rem;
+  border-radius: 1rem;
+}
+
+.am-status__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.am-status--active {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.am-status--active .am-status__dot {
+  background-color: #22c55e;
+}
+
+.am-status--inactive {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.am-status--inactive .am-status__dot {
+  background-color: #ef4444;
+}
+
+.am-status--pending {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.am-status--pending .am-status__dot {
+  background-color: #f59e0b;
+}
+
+/* Card Grid (Organizers) */
+.am-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .am-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.am-card {
+  background-color: var(--bg-reactive-secondary);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.am-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.am-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.am-card__logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: rgba(var(--bs-primary-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+  flex-shrink: 0;
+}
+
+.am-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.am-card__name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text-reactive-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.am-card__email {
+  font-size: 0.8125rem;
+  color: var(--text-reactive-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.am-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.am-card__events {
+  font-size: 0.8125rem;
+  color: var(--text-reactive-secondary);
+}
+
+.am-card__events strong {
+  color: var(--text-reactive-primary);
+}
+
+.am-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.am-card__actions .btn {
+  flex: 1;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+}
+
+/* Action buttons in tables */
+.am-action-edit {
+  background: none;
+  border: none;
+  color: var(--bs-primary);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.am-action-edit:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.am-action-delete {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.am-action-delete:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.am-action-restricted {
+  font-size: 0.75rem;
+  color: var(--text-reactive-secondary);
+  font-style: italic;
+}
+
+/* Pagination */
+.am-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-top: 1.5rem;
+}
+
+.am-pagination__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--text-reactive-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.am-pagination__btn:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
+}
+
+.am-pagination__btn--active {
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+.am-pagination__btn--active:hover {
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+.am-pagination__btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Primary action button */
+.am-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--bs-primary);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.am-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.am-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   Detail Page Styles
+   (Organizer Detail, User Detail, etc.)
+   ============================================ */
+
+/* Back button */
+.am-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--text-reactive-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.am-back-btn:hover {
+  color: var(--bs-primary);
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+/* Info card */
+.am-info-card {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: var(--bg-reactive-secondary);
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(var(--bs-secondary-rgb), 0.15);
+}
+
+.am-info-card__logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 0.75rem;
+  background-color: rgba(var(--bs-primary-rgb), 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+  flex-shrink: 0;
+}
+
+.am-info-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.am-info-card__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-reactive-primary);
+}
+
+.am-info-card__email {
+  font-size: 0.875rem;
+  color: var(--text-reactive-secondary);
+  margin: 0 0 0.75rem 0;
+}
+
+/* Stats grid inside info card */
+.am-info-card__stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.am-info-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.am-info-card__stat-label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-reactive-secondary);
+}
+
+.am-info-card__stat-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-reactive-primary);
+}
+
+/* Section header for detail sub-sections */
+.am-section {
+  margin-bottom: 2rem;
+}
+
+.am-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.am-section__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-reactive-primary);
+}
+
+/* Event status badges (specific to events table) */
+.am-status--on-sale {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.am-status--on-sale .am-status__dot {
+  background-color: #22c55e;
+}
+
+.am-status--coming-soon {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.am-status--coming-soon .am-status__dot {
+  background-color: #3b82f6;
+}
+
+.am-status--ended {
+  background-color: rgba(107, 114, 128, 0.15);
+  color: #6b7280;
+}
+
+.am-status--ended .am-status__dot {
+  background-color: #6b7280;
+}
+

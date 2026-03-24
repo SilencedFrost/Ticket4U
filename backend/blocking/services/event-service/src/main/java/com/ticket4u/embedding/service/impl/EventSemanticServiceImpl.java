@@ -2,6 +2,7 @@ package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
+import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.embedding.service.QdrantService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -171,5 +173,42 @@ public class EventSemanticServiceImpl implements EventSemanticService {
                 .skip(offset)
                 .limit(limit)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UUID> search(String query, Pageable pageable) {
+        if (query == null || query.isBlank()) { return Collections.emptyList(); }
+
+        int limit = pageable.getPageSize();
+        int offset = (int) pageable.getOffset();
+        int fetchLimit = offset + limit;
+
+        List<Float> queryVector = embeddingService.embed(query, EmbeddingService.MODE.QUERY);
+
+        if (queryVector.isEmpty()) {
+            log.warn("Search cancelled: Could not generate embedding for query: '{}'", query);
+            return Collections.emptyList();
+        }
+
+        try {
+            List<Points.ScoredPoint> scoredPoints = qdrantService.search(
+                    COLLECTION,
+                    queryVector,
+                    SIMILARITY_THRESHOLD,
+                    fetchLimit
+            );
+
+            return scoredPoints.stream()
+                    .map(point -> point.getId().getUuid())
+                    .map(UUID::fromString)
+                    .skip(offset)
+                    .limit(limit)
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Semantic search failed for query: '{}'. Error: {}", query, e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }

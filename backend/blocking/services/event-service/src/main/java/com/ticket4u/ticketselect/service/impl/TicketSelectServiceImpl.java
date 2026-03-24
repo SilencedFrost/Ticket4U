@@ -45,19 +45,23 @@ public class TicketSelectServiceImpl implements TicketSelectService {
 
         EventSession firstSession = event.getSessions().stream()
                 .filter(s -> s.getStartDate() != null)
-                .min((a, b) -> a.getStartDate().compareTo(b.getStartDate()))
+                .min(Comparator.comparing(EventSession::getStartDate))
                 .orElse(null);
+
+        // Build seat lookup per zone from first session
+        Map<UUID, List<SeatResponse>> seatsByZone = new HashMap<>();
+        if (firstSession != null) {
+            seatRepository.findAllBySessionId(firstSession.getId())
+                    .forEach(seat -> seatsByZone
+                            .computeIfAbsent(seat.getZone().getId(), k -> new ArrayList<>())
+                            .add(mapSeat(seat)));
+        }
 
         List<ZoneResponse> zones = event.getSessions().stream()
                 .filter(s -> s.getZones() != null)
                 .flatMap(s -> s.getZones().stream())
-                .map(this::mapZone)
+                .map(zone -> mapZone(zone, seatsByZone.getOrDefault(zone.getId(), Collections.emptyList())))
                 .toList();
-
-        List<SeatResponse> seats = firstSession != null
-                ? seatRepository.findAllBySessionId(firstSession.getId())
-                .stream().map(this::mapSeat).toList()
-                : Collections.emptyList();
 
         return new TicketSelectResponse(
                 event.getId(),
@@ -69,16 +73,10 @@ public class TicketSelectServiceImpl implements TicketSelectService {
                 event.getAboutVi(),
                 event.getAboutEn(),
                 layoutJson,
-                zones,
-                seats
+                zones
         );
     }
 
-    // Layout resolution
-    // 1. event.layout = {"venueMode":true,"zoneLinks":{...}} → inject zone_ids into venue layout
-    // 2. event.layout = custom floors JSON → use as-is
-    // 3. event.layout = null && venue != null → use venue.layout as-is
-    // 4. both null → no layout
     private String resolveLayout(Event event) {
         String stored = event.getLayout();
 
@@ -86,15 +84,12 @@ public class TicketSelectServiceImpl implements TicketSelectService {
             try {
                 JsonNode node = objectMapper.readTree(stored);
                 if (node.has("venueMode") && node.path("venueMode").asBoolean()) {
-                    // Extract zoneLinks: { "VIP": "zone-uuid", "GA": "zone-uuid" }
                     Map<String, String> zoneLinks = new HashMap<>();
                     JsonNode linksNode = node.path("zoneLinks");
                     if (linksNode.isObject()) {
                         linksNode.properties().forEach(entry ->
-                                zoneLinks.put(entry.getKey(), entry.getValue().asText())
-                        );
+                                zoneLinks.put(entry.getKey(), entry.getValue().asText()));
                     }
-
                     if (event.getVenue() != null && event.getVenue().getLayout() != null) {
                         List<Zone> sessionZones = event.getSessions().stream()
                                 .filter(s -> s.getZones() != null)
@@ -108,43 +103,29 @@ public class TicketSelectServiceImpl implements TicketSelectService {
             } catch (Exception e) {
                 log.warn("Event {} layout parse failed: {}", event.getId(), e.getMessage());
             }
-            // Custom layout — return as-is
             return stored;
         }
 
-        // No stored layout — fall back to venue default (no zone links)
         if (event.getVenue() != null && event.getVenue().getLayout() != null) {
             return event.getVenue().getLayout();
         }
-
         return null;
     }
 
-    // Inject zone_ids into venue layout JSON
-    // Venue layout has zones with zone_name but no zone_id.
-    // We inject zone_id from the zoneLinks map so the frontend
-    // can match zones to actual Zone entities and load seats.
     private String injectZoneIds(String venueLayout, Map<String, String> zoneLinks,
                                  List<Zone> sessionZones) {
         if (zoneLinks.isEmpty()) return venueLayout;
         try {
             JsonNode root = objectMapper.readTree(venueLayout);
-
-            // Build zoneId → Zone lookup for isStanding override
             Map<String, Zone> zoneById = new HashMap<>();
-            for (Zone z : sessionZones) {
-                zoneById.put(z.getId().toString(), z);
-            }
+            for (Zone z : sessionZones) zoneById.put(z.getId().toString(), z);
 
-            // Handle both { floors: [...] } and flat { stage, zones } structures
             if (root.has("floors") && root.path("floors").isArray()) {
-                for (JsonNode floor : root.path("floors")) {
+                for (JsonNode floor : root.path("floors"))
                     injectZoneIdsIntoFloor(floor, zoneLinks, zoneById);
-                }
             } else if (root.has("zones") && root.path("zones").isArray()) {
                 injectZoneIdsIntoFloor(root, zoneLinks, zoneById);
             }
-
             return objectMapper.writeValueAsString(root);
         } catch (Exception e) {
             log.warn("Failed to inject zone_ids into venue layout: {}", e.getMessage());
@@ -161,8 +142,6 @@ public class TicketSelectServiceImpl implements TicketSelectService {
             if (zoneName == null || !zoneLinks.containsKey(zoneName)) continue;
             String zoneId = zoneLinks.get(zoneName);
             ((ObjectNode) zone).put("zone_id", zoneId);
-            // Override accessible from actual Zone entity — isStanding is the source of truth,
-            // not the venue layout's original accessible flag
             Zone actual = zoneById.get(zoneId);
             if (actual != null) {
                 boolean isStanding = Boolean.TRUE.equals(actual.getIsStanding());
@@ -171,8 +150,7 @@ public class TicketSelectServiceImpl implements TicketSelectService {
         }
     }
 
-    // Mapping
-    private ZoneResponse mapZone(Zone zone) {
+    private ZoneResponse mapZone(Zone zone, List<SeatResponse> seats) {
         int available = Math.max(0,
                 (zone.getCapacity()     != null ? zone.getCapacity()     : 0) -
                         (zone.getQuantitySold() != null ? zone.getQuantitySold() : 0));
@@ -182,10 +160,12 @@ public class TicketSelectServiceImpl implements TicketSelectService {
                 zone.getName(),
                 zone.getPrice(),
                 available,
+                Boolean.TRUE.equals(zone.getIsStanding()),
                 zone.getDescriptionVi(),
                 zone.getDescriptionEn(),
                 zone.getGiftImageUrl(),
-                zone.getPerks()
+                zone.getPerks(),
+                seats
         );
     }
 

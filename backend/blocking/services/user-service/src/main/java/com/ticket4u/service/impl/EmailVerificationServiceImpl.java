@@ -1,8 +1,8 @@
 package com.ticket4u.service.impl;
 
 import com.ticket4u.constant.TokenType;
-import com.ticket4u.entity.VerificationToken;
 import com.ticket4u.entity.User;
+import com.ticket4u.entity.VerificationToken;
 import com.ticket4u.exception.AccountAlreadyActiveException;
 import com.ticket4u.exception.VerificationEmailSendFailedException;
 import com.ticket4u.repository.UserRepository;
@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Slf4j

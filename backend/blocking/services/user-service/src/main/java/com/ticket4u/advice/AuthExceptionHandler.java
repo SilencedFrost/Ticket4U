@@ -1,12 +1,6 @@
 package com.ticket4u.advice;
 
-import com.ticket4u.exception.AccountAlreadyActiveException;
-import com.ticket4u.exception.InvalidGoogleTokenException;
-import com.ticket4u.exception.UnauthorizedException;
-import com.ticket4u.exception.UserNotFoundException;
-import com.ticket4u.exception.VerificationEmailSendFailedException;
-import com.ticket4u.exception.VerificationTokenExpiredException;
-import com.ticket4u.exception.VerificationTokenNotFoundException;
+import com.ticket4u.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -1,6 +1,5 @@
 <template>
   <div class="seating-map-wrapper h-100 d-flex flex-column">
-
     <!-- Toolbar — matches editor style -->
     <div class="p-3 border-bottom border-secondary bg-reactive-secondary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div class="d-flex align-items-center gap-2">
@@ -271,7 +270,7 @@ const onTouchMove = (e: TouchEvent) => {
 }
 const onTouchEnd = () => { dragging = false; lastTouchDist = 0 }
 
-// ── Coordinate helpers ─────────────────────────────────────
+// Coordinate helpers
 const toCanvas = (nx: number, ny: number) => ({
   x: pan.value.x + ((nx + 1) / 2 * CANVAS_W) * scale.value,
   y: pan.value.y + ((ny + 1) / 2 * CANVAS_H) * scale.value,
@@ -281,7 +280,7 @@ const toNorm = (cx: number, cy: number) => ({
   y: (cy - pan.value.y) / scale.value / CANVAS_H * 2 - 1,
 })
 
-// ── Seat grid positions ────────────────────────────────────
+// Seat grid positions
 const getSeatGridPositions = (zone: LayoutZone): Map<string, { x: number; y: number }> => {
   const seats = zone.seats ?? []
   const map   = new Map<string, { x: number; y: number }>()
@@ -316,7 +315,7 @@ const getSeatGridPositions = (zone: LayoutZone): Map<string, { x: number; y: num
   return map
 }
 
-// ── Draw ───────────────────────────────────────────────────
+// Draw
 const draw = () => {
   const canvas = canvasRef.value; if (!canvas || canvasSize.value.width === 0) return
   const ctx    = canvas.getContext('2d'); if (!ctx) return
@@ -399,7 +398,7 @@ const draw = () => {
   }
 }
 
-// ── Click handling ─────────────────────────────────────────
+// Click handling
 const handleCanvasClick = (e: MouseEvent) => {
   if (dragging) return
   const rect = canvasRef.value!.getBoundingClientRect()
@@ -440,7 +439,7 @@ const isPointInZone = (x: number, y: number, zone: LayoutZone): boolean => {
   return inside
 }
 
-// ── Zone click ─────────────────────────────────────────────
+// Zone click
 const handleZoneClick = (zone: LayoutZone) => {
   const ticket = getZoneTicket(zone)
   if (!ticket || ticket.soldOut) return
@@ -451,7 +450,7 @@ const handleZoneClick = (zone: LayoutZone) => {
   // sitting zones are handled by seat clicks — zone click just highlights it
 }
 
-// ── Standing selection ─────────────────────────────────────
+// Standing selection
 const selectedStandingZone = ref<LayoutZone | null>(null)
 const standingQuantity     = ref(1)
 const maxStandingAllowed   = computed(() => {
@@ -474,7 +473,7 @@ const addStandingToCart = () => {
   selectedStandingZone.value = null; standingQuantity.value = 1
 }
 
-// ── Seated selection ───────────────────────────────────────
+// Seated selection
 const selectedSeats           = ref<SelectedSeatLocal[]>([])
 const selectedSeatsTotalPrice = computed(() => selectedSeats.value.reduce((s, seat) => s + seat.price, 0))
 const isSeatSelected          = (seatId: string) => selectedSeats.value.some(s => s.seatId === seatId)
@@ -519,7 +518,7 @@ const addSeatsToCart = () => {
   selectedSeats.value = []; draw()
 }
 
-// ── Helpers ────────────────────────────────────────────────
+// Helpers
 const getZoneTicket = (zone: LayoutZone): Ticket | undefined =>
     props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
 

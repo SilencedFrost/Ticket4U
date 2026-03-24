@@ -1,9 +1,19 @@
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { Ticket } from '../(types)/ticket.type'
 import type { Event } from '../(types)/event.type'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
 
 // ── Backend response shape ─────────────────────────────────
+interface EventResponse {
+  id: string
+  name: string
+  addressLine: string
+  bannerUrl: string
+  startDate: string
+  endDate: string
+  aboutVi?: string
+  aboutEn?: string
+}
 interface ZoneResponse {
   id:             string
   name:           string
@@ -26,18 +36,10 @@ interface SeatResponse {
   priceOverride: number | null
 }
 
-interface TicketSelectResponse {
-  eventId:     string
-  name:        string
-  addressLine: string
-  bannerUrl:   string
-  startDate:   string
-  endDate:     string
-  aboutVi?:    string
-  aboutEn?:    string
-  layout:      string | null
-  zones:       ZoneResponse[]
-  seats:       SeatResponse[]
+interface SeatingPlanResponse {
+  layout: string | null
+  zones: ZoneResponse[]
+  seats: SeatResponse[]
 }
 
 // ── Parsed layout floor shape ──────────────────────────────
@@ -151,37 +153,45 @@ const buildFloors = (
 }
 
 // ── Map response ───────────────────────────────────────────
-const mapResponse = (data: TicketSelectResponse, locale: string): {
+const mapResponse = (
+  eventData: EventResponse,
+  seatingData: SeatingPlanResponse,
+  locale: string
+): {
   event: Event; tickets: Ticket[]; floors: Floor[]
 } => {
-  const start = new Date(data.startDate)
-  const end   = new Date(data.endDate)
+  const start = new Date(eventData.startDate)
+  const end   = new Date(eventData.endDate)
 
   const event: Event = {
-    id:    data.eventId,
-    title: data.name,
+    id:    eventData.id,
+    title: eventData.name,
     date:  start.toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' }),
     time:  `${start.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`,
-    venue: data.addressLine,
+    venue: eventData.addressLine,
   }
 
-  const tickets: Ticket[] = data.zones.map((zone, i): Ticket => ({
-    id:             zone.id,
-    name:           zone.name,
-    price:          zone.price,
-    color:          FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#6366f1',
-    zone:           zone.name,
-    available:      zone.available,
-    soldOut:        zone.available <= 0,
-    maxPerAccount:  null,
-    isStanding:     false,
-    descriptionVi:  zone.descriptionVi,
-    descriptionEn:  zone.descriptionEn,
-    giftImageUrl:   zone.giftImageUrl,
-    perks:          zone.perks,
+  const tickets: Ticket[] = seatingData.zones.map((zone, i) => ({
+    id: zone.id,
+    name: zone.name,
+    price: zone.price,
+    color: FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#6366f1',
+    zone: zone.name,
+    available: zone.available,
+    soldOut: zone.available <= 0,
+    maxPerAccount: null,
+    isStanding: false,
+    descriptionVi: zone.descriptionVi,
+    descriptionEn: zone.descriptionEn,
+    giftImageUrl: zone.giftImageUrl,
+    perks: zone.perks,
   }))
 
-  const floors = buildFloors(data.layout, data.zones, data.seats)
+  const floors = buildFloors(
+    seatingData.layout,
+    seatingData.zones,
+    seatingData.seats
+  )
 
   // Back-fill isStanding + color from layout zone data
   if (floors.length > 0) {
@@ -212,13 +222,17 @@ export const useTicketSelect = () => {
     loading.value = true
     error.value   = null
     try {
-      const data    = await $fetch<TicketSelectResponse>(
-          `${config.public.apiUrl}/public/ticket-select/${eventId}`
-      )
-      const mapped  = mapResponse(data, locale.value)
+      const [eventRes, seatingRes] = await Promise.all([
+        $fetch<EventResponse>(`${config.public.apiUrl}/public/events/${eventId}`),
+        $fetch<SeatingPlanResponse>(`${config.public.apiUrl}/public/events/${eventId}/seating-plan`)
+      ])
+
+      const mapped = mapResponse(eventRes, seatingRes, locale.value)
+
       event.value   = mapped.event
       tickets.value = mapped.tickets
       floors.value  = mapped.floors
+
     } catch (err: unknown) {
       const e = err as { data?: { message?: string }; message?: string }
       error.value = e?.data?.message ?? e?.message ?? 'Failed to load event data'

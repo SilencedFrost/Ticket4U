@@ -1,6 +1,6 @@
 package com.ticket4u.ticketselect.controller;
 
-import com.ticket4u.ticketselect.dto.TicketSelectResponse;
+import com.ticket4u.ticketselect.dto.SeatingPlanResponse;
 import com.ticket4u.ticketselect.service.TicketSelectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ public class TicketSelectController {
 
     private final TicketSelectService ticketSelectService;
 
-    @GetMapping("/{eventId}/ticket-select")
-    public ResponseEntity<TicketSelectResponse> getTicketSelectData(
+    @GetMapping("/{eventId}/seating-plan")
+    public ResponseEntity<SeatingPlanResponse> getTicketSelectData(
             @PathVariable UUID eventId
     ) {
         return ResponseEntity.ok(ticketSelectService.getTicketSelectData(eventId));

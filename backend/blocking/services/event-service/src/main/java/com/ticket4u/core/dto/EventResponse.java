@@ -34,6 +34,7 @@ public record EventResponse(
         OffsetDateTime startDate,
         OffsetDateTime endDate,
         BigDecimal minPrice,
-        BigDecimal maxPrice
+        BigDecimal maxPrice,
+        String layout
 ) {
 }

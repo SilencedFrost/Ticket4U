@@ -6,7 +6,7 @@ import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
 import com.ticket4u.core.entity.Seat;
 import com.ticket4u.core.entity.Zone;
-import com.ticket4u.ticketselect.dto.TicketSelectResponse;
+import com.ticket4u.ticketselect.dto.SeatingPlanResponse;
 import com.ticket4u.ticketselect.repository.TicketSelectRepository;
 import com.ticket4u.ticketselect.repository.TicketSelectSeatRepository;
 import com.ticket4u.ticketselect.service.TicketSelectService;
@@ -37,7 +37,7 @@ public class TicketSelectServiceImpl implements TicketSelectService {
 
     @Override
     @Transactional(readOnly = true)
-    public TicketSelectResponse getTicketSelectData(UUID eventId) {
+    public SeatingPlanResponse getTicketSelectData(UUID eventId) {
         Event event = ticketSelectRepository.findWithSessionsZonesAndVenueById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
 
@@ -62,18 +62,16 @@ public class TicketSelectServiceImpl implements TicketSelectService {
                 .flatMap(s -> s.getZones().stream())
                 .map(zone -> mapZone(zone, seatsByZone.getOrDefault(zone.getId(), Collections.emptyList())))
                 .toList();
+        List<SeatResponse> allSeats = seatsByZone.values()
+                .stream()
+                .flatMap(List::stream)
+                .toList();
 
-        return new TicketSelectResponse(
-                event.getId(),
-                event.getName(),
-                event.getAddressLine(),
-                event.getBannerUrl(),
-                firstSession != null ? format(firstSession.getStartDate()) : null,
-                firstSession != null ? format(firstSession.getEndDate())   : null,
-                event.getAboutVi(),
-                event.getAboutEn(),
+
+        return new SeatingPlanResponse(
                 layoutJson,
-                zones
+                zones,
+                allSeats
         );
     }
 

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,8 +38,7 @@ public class ManagementServiceImpl implements ManagementService {
     private final CategoryRepository               categoryRepository;
     private final ObjectMapper                     objectMapper;
 
-    // ── Categories ─────────────────────────────────────────
-
+    // Categories
     @Override
     @Transactional(readOnly = true)
     public List<CategorySummaryResponse> getCategories() {
@@ -47,8 +47,7 @@ public class ManagementServiceImpl implements ManagementService {
                 .collect(Collectors.toList());
     }
 
-    // ── Events ─────────────────────────────────────────────
-
+    // Events
     @Override
     @Transactional(readOnly = true)
     public List<ManagementEventResponse> getEvents(UUID organizerId) {
@@ -112,7 +111,7 @@ public class ManagementServiceImpl implements ManagementService {
         eventRepository.save(event);
     }
 
-    // ── Sessions ───────────────────────────────────────────
+    // Sessions
 
     @Override
     @Transactional(readOnly = true)
@@ -135,7 +134,7 @@ public class ManagementServiceImpl implements ManagementService {
         return mapSessionToResponse(sessionRepository.save(session));
     }
 
-    // ── Zones ──────────────────────────────────────────────
+    // Zones
 
     @Override
     @Transactional(readOnly = true)
@@ -188,8 +187,7 @@ public class ManagementServiceImpl implements ManagementService {
         zoneRepository.delete(zone);
     }
 
-    // ── Layout ─────────────────────────────────────────────
-
+    // Layout
     @Override
     @Transactional
     public EventLayoutResponse applyLayout(UUID organizerId, UUID eventId,
@@ -206,7 +204,6 @@ public class ManagementServiceImpl implements ManagementService {
             Venue venue = event.getVenue();
             if (venue != null && venue.getLayout() != null) {
                 layoutJson = venue.getLayout();
-                // Store venue marker JSON to persist zone links for frontend restore
                 try {
                     StringBuilder marker = new StringBuilder("{\"venueMode\":true,\"venueId\":\"")
                             .append(venue.getId()).append("\",\"zoneLinks\":{");
@@ -268,8 +265,7 @@ public class ManagementServiceImpl implements ManagementService {
         return new EventLayoutResponse(eventId, layoutJson);
     }
 
-    // ── Seats ──────────────────────────────────────────────
-
+    // Seats
     @Override
     @Transactional(readOnly = true)
     public List<SeatResponse> getSeats(UUID organizerId, UUID sessionId, UUID zoneId) {
@@ -325,13 +321,12 @@ public class ManagementServiceImpl implements ManagementService {
         seatRepository.deleteAllByZoneId(zone.getId());
     }
 
-    // ── Seat generation from explicit venue zone links ─────
+    // Seat generation
     private void generateSeatsFromZoneLinks(EventSession session,
                                             List<ManagementEventLayoutRequest.VenueZoneLink> links) {
         for (ManagementEventLayoutRequest.VenueZoneLink link : links) {
             if (link.zoneId() == null) continue;
-            Zone zone = zoneRepository.findByIdAndSessionId(link.zoneId(), session.getId())
-                    .orElse(null);
+            Zone zone = zoneRepository.findByIdAndSessionId(link.zoneId(), session.getId()).orElse(null);
             if (zone == null) {
                 log.warn("Zone {} not found in session {}", link.zoneId(), session.getId());
                 continue;
@@ -341,7 +336,7 @@ public class ManagementServiceImpl implements ManagementService {
                 continue;
             }
             if (zone.getCapacity() == null || zone.getCapacity() <= 0) {
-                log.warn("Zone '{}' has no capacity — skipping seat generation", zone.getName());
+                log.warn("Zone '{}' has no capacity — skipping", zone.getName());
                 continue;
             }
             seatRepository.deleteAllByZoneId(zone.getId());
@@ -352,7 +347,6 @@ public class ManagementServiceImpl implements ManagementService {
         }
     }
 
-    // ── Seat generation from grid dimensions ──────────────
     private void generateSeatsFromGrid(Zone zone, int gridRows, int gridCols) {
         List<Seat> seats = new ArrayList<>();
         for (int r = 0; r < gridRows; r++) {
@@ -366,28 +360,22 @@ public class ManagementServiceImpl implements ManagementService {
                 seat.setZone(zone);
                 seat.setName(rowPrefix + c);
                 seat.setRowName(rowPrefix.length() > 5 ? rowPrefix.substring(0, 5) : rowPrefix);
-                seat.setColName(String.valueOf(c).length() > 5
-                        ? String.valueOf(c).substring(0, 5) : String.valueOf(c));
+                seat.setColName(String.valueOf(c).length() > 5 ? String.valueOf(c).substring(0, 5) : String.valueOf(c));
                 seat.setSeatCode(seatCode);
                 seat.setStatus(Seat.SeatStatus.AVAILABLE);
                 seats.add(seat);
             }
         }
         seatRepository.saveAll(seats);
-        log.info("Generated {}x{} = {} seats for zone '{}'",
-                gridRows, gridCols, seats.size(), zone.getName());
+        log.info("Generated {}x{} = {} seats for zone '{}'", gridRows, gridCols, seats.size(), zone.getName());
     }
 
-    // ── Seat generation from layout JSON ───────────────────
     private void generateSeatsFromLayout(EventSession session, String layoutJson) {
         try {
             JsonNode root = objectMapper.readTree(layoutJson);
-
-            // Skip venue marker JSON — no seats to generate from it
             if (root.has("venueMode") && root.path("venueMode").asBoolean()) return;
 
             List<Zone> sessionZones = zoneRepository.findAllBySessionId(session.getId());
-
             List<JsonNode> zoneNodes = new ArrayList<>();
             if (root.has("floors") && root.path("floors").isArray()) {
                 for (JsonNode floor : root.path("floors")) {
@@ -397,39 +385,25 @@ public class ManagementServiceImpl implements ManagementService {
             } else if (root.has("zones") && root.path("zones").isArray()) {
                 for (JsonNode z : root.path("zones")) zoneNodes.add(z);
             }
-
             if (zoneNodes.isEmpty()) return;
 
             for (JsonNode zoneNode : zoneNodes) {
                 String zoneIdStr = zoneNode.path("zone_id").asText(null);
                 String zoneName  = zoneNode.path("zone_name").asText();
-
                 Zone matchedZone = null;
                 if (zoneIdStr != null && !zoneIdStr.isBlank() && !"null".equals(zoneIdStr)) {
                     try {
                         UUID zoneId = UUID.fromString(zoneIdStr);
-                        matchedZone = sessionZones.stream()
-                                .filter(z -> z.getId().equals(zoneId))
-                                .findFirst().orElse(null);
+                        matchedZone = sessionZones.stream().filter(z -> z.getId().equals(zoneId)).findFirst().orElse(null);
                     } catch (IllegalArgumentException ignored) {}
                 }
-                if (matchedZone == null) {
-                    matchedZone = sessionZones.stream()
-                            .filter(z -> z.getName().equalsIgnoreCase(zoneName))
-                            .findFirst().orElse(null);
-                }
-                if (matchedZone == null) {
-                    log.warn("Layout zone '{}' has no matching Zone in session {}", zoneName, session.getId());
-                    continue;
-                }
+                if (matchedZone == null)
+                    matchedZone = sessionZones.stream().filter(z -> z.getName().equalsIgnoreCase(zoneName)).findFirst().orElse(null);
+                if (matchedZone == null) { log.warn("Layout zone '{}' has no matching Zone in session {}", zoneName, session.getId()); continue; }
                 if (Boolean.TRUE.equals(matchedZone.getIsStanding())) continue;
 
                 int existingCount = seatRepository.countByZoneId(matchedZone.getId());
-                if (existingCount > 0) {
-                    log.info("Zone '{}' already has {} seats — skipping layout generation",
-                            matchedZone.getName(), existingCount);
-                    continue;
-                }
+                if (existingCount > 0) { log.info("Zone '{}' already has {} seats — skipping", matchedZone.getName(), existingCount); continue; }
 
                 JsonNode seats = zoneNode.path("seats");
                 if (!seats.isArray() || seats.isEmpty()) {
@@ -440,7 +414,6 @@ public class ManagementServiceImpl implements ManagementService {
                     }
                     continue;
                 }
-
                 seatRepository.deleteAllByZoneId(matchedZone.getId());
                 List<Seat> newSeats = new ArrayList<>();
                 for (JsonNode seatNode : seats) {
@@ -454,15 +427,14 @@ public class ManagementServiceImpl implements ManagementService {
                     newSeats.add(seat);
                 }
                 seatRepository.saveAll(newSeats);
-                log.info("Generated {} seats for zone '{}' in session {}",
-                        newSeats.size(), zoneName, session.getId());
+                log.info("Generated {} seats for zone '{}' in session {}", newSeats.size(), zoneName, session.getId());
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to parse layout JSON: " + e.getMessage(), e);
         }
     }
 
-    // ── Private helpers ────────────────────────────────────
+    // Private helpers
 
     private Event findEvent(UUID organizerId, UUID eventId) {
         return eventRepository.findByIdAndOrganizerId(eventId, organizerId)
@@ -489,10 +461,13 @@ public class ManagementServiceImpl implements ManagementService {
                     .orElseThrow(() -> new EntityNotFoundException("Venue not found: " + req.venueId()));
             event.setVenue(venue);
         }
+        // category → categories (ManyToMany)
         if (req.categoryId() != null) {
-            Category cat = new Category();
-            cat.setId(req.categoryId());
-            event.setCategory(cat);
+            categoryRepository.findById(req.categoryId()).ifPresent(cat -> {
+                LinkedHashSet<Category> cats = new LinkedHashSet<>();
+                cats.add(cat);
+                event.setCategories(cats);
+            });
         }
         if (req.aboutVi() != null)             event.setAboutVi(req.aboutVi());
         if (req.aboutEn() != null)             event.setAboutEn(req.aboutEn());
@@ -537,6 +512,9 @@ public class ManagementServiceImpl implements ManagementService {
                 .map(s -> new ManagementEventResponse.SessionSummary(s.getId(), s.getStartDate(), s.getEndDate()))
                 .collect(Collectors.toList());
 
+        Category firstCat = event.getCategories() != null && !event.getCategories().isEmpty()
+                ? event.getCategories().iterator().next() : null;
+
         return new ManagementEventResponse(
                 event.getId(),
                 event.getName(),
@@ -552,8 +530,8 @@ public class ManagementServiceImpl implements ManagementService {
                 event.getTermsAndConditions(),
                 event.getPolicyRefund(),
                 event.getSeatingPlanImageUrl(),
-                event.getCategory() != null ? event.getCategory().getId() : null,
-                event.getCategory() != null ? event.getCategory().getName() : null,
+                firstCat != null ? firstCat.getId() : null,
+                firstCat != null ? firstCat.getName() : null,
                 ticketsSold,
                 totalCapacity,
                 revenue,
@@ -579,17 +557,10 @@ public class ManagementServiceImpl implements ManagementService {
             return new ManagementZoneResponse(
                     zone.getId(),
                     zone.getSession() != null ? zone.getSession().getId() : null,
-                    zone.getName(),
-                    zone.getIsStanding(),
-                    zone.getCapacity(),
-                    zone.getQuantitySold(),
-                    zone.getPurchaseLimit(),
-                    zone.getPrice(),
-                    zone.getDescriptionVi(),
-                    zone.getDescriptionEn(),
-                    zone.getGiftImageUrl(),
-                    zone.getPerks(),
-                    0, null, null
+                    zone.getName(), zone.getIsStanding(), zone.getCapacity(),
+                    zone.getQuantitySold(), zone.getPurchaseLimit(), zone.getPrice(),
+                    zone.getDescriptionVi(), zone.getDescriptionEn(),
+                    zone.getGiftImageUrl(), zone.getPerks(), 0, null, null
             );
         }
         int seatCount = seatRepository.countByZoneId(zone.getId());
@@ -599,28 +570,17 @@ public class ManagementServiceImpl implements ManagementService {
         return new ManagementZoneResponse(
                 zone.getId(),
                 zone.getSession() != null ? zone.getSession().getId() : null,
-                zone.getName(),
-                zone.getIsStanding(),
-                zone.getCapacity(),
-                zone.getQuantitySold(),
-                zone.getPurchaseLimit(),
-                zone.getPrice(),
-                zone.getDescriptionVi(),
-                zone.getDescriptionEn(),
-                zone.getGiftImageUrl(),
-                zone.getPerks(),
-                seatCount, gridRows, gridCols
+                zone.getName(), zone.getIsStanding(), zone.getCapacity(),
+                zone.getQuantitySold(), zone.getPurchaseLimit(), zone.getPrice(),
+                zone.getDescriptionVi(), zone.getDescriptionEn(),
+                zone.getGiftImageUrl(), zone.getPerks(), seatCount, gridRows, gridCols
         );
     }
 
     private SeatResponse mapSeatToResponse(Seat seat) {
         return new SeatResponse(
-                seat.getId(),
-                seat.getZone().getId(),
-                seat.getName(),
-                seat.getRowName(),
-                seat.getColName(),
-                seat.getSeatCode(),
+                seat.getId(), seat.getZone().getId(), seat.getName(),
+                seat.getRowName(), seat.getColName(), seat.getSeatCode(),
                 seat.getStatus() != null ? seat.getStatus().name() : null,
                 seat.getPriceOverride()
         );

@@ -22,11 +22,7 @@
       <div class="am-toolbar">
         <div class="am-toolbar__search">
           <i class="bi bi-search am-toolbar__search-icon"></i>
-          <input
-            type="text"
-            class="am-toolbar__search-input"
-            placeholder="Search..."
-          />
+          <input type="text" class="am-toolbar__search-input" placeholder="Search..." />
         </div>
         <div class="am-toolbar__spacer"></div>
         <div class="am-dropdown">
@@ -47,11 +43,7 @@
       <div class="am-toolbar">
         <div class="am-toolbar__search">
           <i class="bi bi-search am-toolbar__search-icon"></i>
-          <input
-            type="text"
-            class="am-toolbar__search-input"
-            placeholder="Search..."
-          />
+          <input type="text" class="am-toolbar__search-input" placeholder="Search..." />
         </div>
         <div class="am-toolbar__spacer"></div>
         <div class="am-dropdown">

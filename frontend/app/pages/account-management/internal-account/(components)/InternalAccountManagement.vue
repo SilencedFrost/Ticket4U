@@ -18,11 +18,7 @@
     <div class="am-toolbar">
       <div class="am-toolbar__search">
         <i class="bi bi-search am-toolbar__search-icon"></i>
-        <input
-          type="text"
-          class="am-toolbar__search-input"
-          placeholder="Tìm kiếm..."
-        />
+        <input type="text" class="am-toolbar__search-input" placeholder="Tìm kiếm..." />
       </div>
 
       <!-- Role Filter Dropdown -->

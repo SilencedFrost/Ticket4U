@@ -5,9 +5,7 @@
   -->
   <div class="am-info-card">
     <!-- Logo placeholder -->
-    <div class="am-info-card__logo">
-      VIB
-    </div>
+    <div class="am-info-card__logo">VIB</div>
 
     <!-- Organizer info -->
     <div class="am-info-card__body">

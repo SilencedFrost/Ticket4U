@@ -3,6 +3,7 @@ package com.ticket4u.service.impl;
 import com.nimbusds.jose.JOSEException;
 import com.ticket4u.constant.RoleId;
 import com.ticket4u.constant.TokenConstants;
+import com.ticket4u.constant.TokenType;
 import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.dto.auth.internal.LogoutResult;
@@ -16,13 +17,16 @@ import com.ticket4u.exception.TokenCreationException;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.AuthService;
+import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.SessionService;
+import com.ticket4u.service.VerificationTokenService;
 import com.ticket4u.util.CookieUtil;
 import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.PhoneNumberUtil;
 import com.ticket4u.util.TokenUtil;
 import com.ticket4u.validation.GoogleTokenValidator;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,15 +48,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
     private final CookieUtil cookieUtil;
+    private final UserMapper userMapper;
     private final SessionService sessionService;
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final GoogleTokenValidator googleTokenValidator;
-    private final UserMapper userMapper;
-    private final EntityManager entityManager;
+    private final AuthenticationManager authenticationManager;
+    private final EmailVerificationService emailVerificationService;
+    private final VerificationTokenService verificationTokenService;
 
     @Override
     @Transactional
@@ -212,6 +220,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
+        // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
         if (userRepository.existsByEmailIgnoreCase(request.email())) {
             return new RegisterResponse(
                 null,
@@ -235,7 +244,7 @@ public class AuthServiceImpl implements AuthService {
         user.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
         User savedUser = userRepository.save(user);
 
-        // TODO: Send verification email
+        emailVerificationService.sendVerificationEmail(savedUser);
 
         log.info("User registered successfully with email: {}, userId: {}", savedUser.getEmail(), savedUser.getId());
         return userMapper.toRegisterResponse(savedUser, "user.registration.check_email");
@@ -258,6 +267,12 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findWithRoleByEmailIgnoreCase(userInfo.email())
                 .orElseThrow(() -> new TokenCreationException("Failed to find user after Google authentication"));
+
+        // If user authenticates via OAuth, account will be activated
+        if(!user.getIsActive()) {
+            verificationTokenService.deleteTokensByUserAndType(user.getId(), TokenType.EMAIL_VERIFICATION);
+            user.setIsActive(true);
+        }
 
         CustomUserDetails userDetails = new CustomUserDetails(
                 user.getEmail(),

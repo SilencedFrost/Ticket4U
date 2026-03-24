@@ -1,11 +1,12 @@
 package com.ticket4u.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 public record ZoneResponse(
-        String zoneId,
+        UUID zoneId,
         String zoneName,
         List<SeatResponse> seats,
-        String status
+        Long takenCount
 ) {
 }

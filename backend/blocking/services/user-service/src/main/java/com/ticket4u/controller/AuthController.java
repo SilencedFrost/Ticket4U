@@ -1,14 +1,14 @@
 package com.ticket4u.controller;
 
-import com.ticket4u.dto.auth.LoginRequest;
-import com.ticket4u.dto.auth.OAuth2RegisterRequest;
-import com.ticket4u.dto.auth.RegisterRequest;
+import com.ticket4u.dto.auth.*;
 import com.ticket4u.dto.auth.internal.LoginResult;
 import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
-import com.ticket4u.util.CookieExtratorUtil;
+import com.ticket4u.service.EmailVerificationService;
+import com.ticket4u.service.PasswordResetService;
+import com.ticket4u.util.CookieExtractorUtil;
 import com.ticket4u.util.HttpRequestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,10 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -27,8 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthController {
 
-    private final CookieExtratorUtil cookieExtratorUtil;
+    private final CookieExtractorUtil cookieExtractorUtil;
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     /**
      * POST /api/v1/auth/refresh
@@ -38,7 +39,7 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(
             HttpServletRequest request
     ) {
-        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
+        String refreshToken = cookieExtractorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
         RefreshResult refreshResult = authService.refresh(refreshToken);
 
@@ -56,7 +57,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletRequest request
     ) {
-        String oldRefreshToken = cookieExtratorUtil.getRefreshTokenOrGet(request, null);
+        String oldRefreshToken = cookieExtractorUtil.getRefreshTokenOrGet(request, null);
 
         String ua = HttpRequestUtil.getUserAgent(request);
 
@@ -73,7 +74,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
-        String refreshToken = cookieExtratorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
+        String refreshToken = cookieExtractorUtil.getRefreshTokenOrThrow(request, () -> new UnauthorizedException("No refresh token provided"));
 
         LogoutResult logoutResult = authService.logout(refreshToken);
 
@@ -107,5 +108,29 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, loginResult.accessTokenCookie(), loginResult.refreshTokenCookie())
                 .body(loginResult.authResponse());
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        emailVerificationService.verifyToken(token);
+        return ResponseEntity.ok(Map.of("message", "auth.verification.success"));
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerification(@Valid @RequestBody ResendVerificationRequest request) {
+        emailVerificationService.resendVerification(request.email());
+        return ResponseEntity.ok(Map.of("message", "auth.verification.check_email"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.sendPasswordResetEmail(request.email());
+        return ResponseEntity.ok(Map.of("message", "auth.password_reset.check_email"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.token(), request.password());
+        return ResponseEntity.ok(Map.of("message", "auth.password_reset.success"));
     }
 }

@@ -5,6 +5,7 @@
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
+**/.idea/
 **/*.iws
 **/*.iml
 **/*.ipr
@@ -15,9 +16,8 @@
 ### Mac OS ###
 **/.DS_Store
 
-### Custom ###
+### Keys ###
 **/*.pem
-**/.idea/
 **/*.p12
 
 ### AI ###

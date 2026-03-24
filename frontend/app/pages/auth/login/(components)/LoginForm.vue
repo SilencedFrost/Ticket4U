@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
+import type { LocationQueryValue } from 'vue-router';
 
 const localePath = useLocalePath();
 const router = useRouter();
+const route = useRoute();
 const loading = ref<boolean>(false);
 const useUser = useUserStore();
 const error = reactive({ email: '', password: '', generic: '' });
@@ -24,6 +26,22 @@ const {
   buttonText: 'signin_with',
 });
 
+function isTrueQueryFlag(value: LocationQueryValue | LocationQueryValue[] | undefined): boolean {
+  if (!value) return false;
+  const resolvedValue = Array.isArray(value) ? value[0] : value;
+  return resolvedValue === 'true';
+}
+
+function resolveNoticeMessage(): string {
+  if (isTrueQueryFlag(route.query.verified)) return 'auth.verification.success';
+  if (isTrueQueryFlag(route.query.registered)) return 'auth.register.success';
+  if (isTrueQueryFlag(route.query.passwordResetRequested)) return 'auth.password_reset.check_email';
+  if (isTrueQueryFlag(route.query.passwordReset)) return 'auth.password_reset.success';
+  return '';
+}
+
+const noticeMessage = ref<string>(resolveNoticeMessage());
+
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
   Object.assign(error, { email: '', password: '', generic: '' });
@@ -44,6 +62,7 @@ async function handleGoogleCredential(idToken: string) {
 
 async function login() {
   loading.value = true;
+  noticeMessage.value = '';
   Object.assign(error, { email: '', password: '', generic: '' });
   try {
     await useUser.login(formData.email, formData.password, formData.rememberMe);
@@ -64,6 +83,9 @@ async function login() {
       case 401:
         error.generic = 'auth.error.unauthorized';
         break;
+      case 403:
+        error.generic = 'auth.error.account_not_verified';
+        break;
       default:
         error.generic = 'auth.error.unknown';
         break;
@@ -81,6 +103,14 @@ function togglePassword() {
 <template>
   <div class="form-width">
     <h3 class="text-center text-reactive-primary">{{ $t('auth.login.title') }}</h3>
+    <div
+      v-if="noticeMessage"
+      class="alert alert-success d-flex align-items-center mt-2 mb-0"
+      role="alert"
+    >
+      <i class="bi bi-check-circle-fill me-2" />
+      <span>{{ $t(noticeMessage) }}</span>
+    </div>
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
@@ -177,9 +207,11 @@ function togglePassword() {
         >{{ $t('auth.create_account') }}</nuxt-link-locale
       >
       |
-      <a href="" class="text-decoration-none text-reactive-secondary">{{
-        $t('auth.forgot_password')
-      }}</a>
+      <NuxtLink
+        :to="localePath('/auth/forgot-password')"
+        class="text-decoration-none text-reactive-secondary"
+        >{{ $t('auth.forgot_password') }}</NuxtLink
+      >
     </div>
   </div>
 </template>

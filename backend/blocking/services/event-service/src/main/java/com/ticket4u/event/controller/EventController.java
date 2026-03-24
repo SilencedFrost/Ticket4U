@@ -1,6 +1,6 @@
 package com.ticket4u.event.controller;
 
-import com.ticket4u.core.constants.DefaultParams;
+import com.ticket4u.constants.DefaultParams;
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
@@ -30,7 +30,7 @@ public class EventController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEvent(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventService.findEvent(id));
+        return ResponseEntity.ok(eventService.findById(id));
     }
 
     /**

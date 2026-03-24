@@ -1,3 +1,20 @@
 **/.idea
 **/.vscode
 **/AGENTS.md
+
+# Build and Binary files
+**/automated-tests/bin/
+
+# Docker data 
+**/qdrant_storage/
+
+# Secrets
+**/secrets/
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+### Keys ###
+**/*.pem
+**/*.p12

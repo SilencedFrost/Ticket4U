@@ -2,6 +2,7 @@
 
 DROP TABLE IF EXISTS public.organizer;
 
+DROP TABLE IF EXISTS public.verification_token;
 DROP TABLE IF EXISTS public.session;
 DROP TABLE IF EXISTS public.users;
 DROP TABLE IF EXISTS public.role;
@@ -13,9 +14,6 @@ CREATE TABLE IF NOT EXISTS public.role
 	id int PRIMARY KEY,
     role_name varchar(32) NOT NULL
 );
-
-ALTER TABLE IF EXISTS public.role
-    OWNER to postgres;
 
 -- Data: roles
 -- Basic roles, in a hierachy, can access base page, each having their own features + the lower role's
@@ -56,9 +54,6 @@ CREATE TABLE IF NOT EXISTS public.users
 		REFERENCES public.role (id)
 );
 
-ALTER TABLE IF EXISTS public.users
-    OWNER to postgres;
-
 -- Table: session
 
 CREATE TABLE IF NOT EXISTS public.session
@@ -76,8 +71,16 @@ CREATE TABLE IF NOT EXISTS public.session
 		REFERENCES public.users (id)
 );
 
-ALTER TABLE IF EXISTS public.session
-    OWNER to postgres;
+CREATE TABLE IF NOT EXISTS public.verification_token (
+    id uuid PRIMARY KEY,
+    token_hash char(64) NOT NULL,
+    token_type varchar(32) NOT NULL, -- EMAIL_VERIFICATION, PASSWORD_RESET
+    user_id uuid NOT NULL,
+    expires_at timestamptz NOT NULL,
+    created_at timestamptz NOT NULL,
+    CONSTRAINT vtoken_fk_user FOREIGN KEY (user_id) REFERENCES public.users (id) ON DELETE CASCADE,
+    CONSTRAINT uq_token_hash_type UNIQUE (token_hash, token_type)
+);
 
 -- Table: organizer
 
@@ -92,5 +95,5 @@ CREATE TABLE IF NOT EXISTS public.organizer
         REFERENCES public.users (id)
 );
 
-ALTER TABLE IF EXISTS public.organizer
-    OWNER to postgres;
+CREATE INDEX idx_vtoken_user_id ON public.verification_token (user_id);
+CREATE INDEX idx_vtoken_expires_at ON public.verification_token (expires_at);

@@ -8,12 +8,6 @@ group = "com.ticket4u"
 version = "0.0.1-SNAPSHOT"
 description = "Mail service for Ticket4U"
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
-
 repositories {
 	mavenCentral()
 }
@@ -52,3 +46,15 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+	val profile = project.findProperty("profile")?.toString() ?: "dev"
+
+	sourceResources(sourceSets["main"])
+	systemProperty("spring.profiles.active", profile)
+}
+
+tasks.register("runMail") {
+	dependsOn("bootRun")
+}
+

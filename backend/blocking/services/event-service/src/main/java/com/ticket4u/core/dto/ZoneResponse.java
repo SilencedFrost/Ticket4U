@@ -9,9 +9,11 @@ public record ZoneResponse(
         String name,
         BigDecimal price,
         Integer available,
+        Boolean isStanding,
         String descriptionVi,
         String descriptionEn,
         String giftImageUrl,
-        List<String> perks
+        List<String> perks,
+        List<SeatResponse> seats
 ) {
 }

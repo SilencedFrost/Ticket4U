@@ -1,10 +1,10 @@
 <template>
   <div class="am-page">
     <!-- Back Button -->
-    <NuxtLink to="/account-management/organizer" class="am-back-btn">
+    <NuxtLinkLocale to="/account-management/organizer" class="am-back-btn">
       <i class="bi bi-arrow-left"></i>
       Quay lại danh sách
-    </NuxtLink>
+    </NuxtLinkLocale>
 
     <!-- Page Header -->
     <div class="am-header" style="margin-top: 1rem">

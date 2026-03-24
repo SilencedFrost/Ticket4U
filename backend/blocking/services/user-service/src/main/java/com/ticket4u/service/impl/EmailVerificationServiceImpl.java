@@ -37,6 +37,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
                 "/auth/verify-email"
         );
 
+        // TODO: refactor this with helper method to avoid duplicate code
         if (!asyncDispatch) {
             try {
                 mailServiceClient.sendVerificationEmail(

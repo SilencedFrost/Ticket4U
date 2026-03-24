@@ -74,11 +74,11 @@ public class TicketSelectServiceImpl implements TicketSelectService {
         );
     }
 
-    // ── Layout resolution ──────────────────────────────────
+    // Layout resolution
     // 1. event.layout = {"venueMode":true,"zoneLinks":{...}} → inject zone_ids into venue layout
-    // 2. event.layout = custom floors JSON                   → use as-is
-    // 3. event.layout = null && venue != null                → use venue.layout as-is
-    // 4. both null                                           → no layout
+    // 2. event.layout = custom floors JSON → use as-is
+    // 3. event.layout = null && venue != null → use venue.layout as-is
+    // 4. both null → no layout
     private String resolveLayout(Event event) {
         String stored = event.getLayout();
 
@@ -120,7 +120,7 @@ public class TicketSelectServiceImpl implements TicketSelectService {
         return null;
     }
 
-    // ── Inject zone_ids into venue layout JSON ─────────────
+    // Inject zone_ids into venue layout JSON
     // Venue layout has zones with zone_name but no zone_id.
     // We inject zone_id from the zoneLinks map so the frontend
     // can match zones to actual Zone entities and load seats.
@@ -171,7 +171,7 @@ public class TicketSelectServiceImpl implements TicketSelectService {
         }
     }
 
-    // ── Mapping ────────────────────────────────────────────
+    // Mapping
     private ZoneResponse mapZone(Zone zone) {
         int available = Math.max(0,
                 (zone.getCapacity()     != null ? zone.getCapacity()     : 0) -

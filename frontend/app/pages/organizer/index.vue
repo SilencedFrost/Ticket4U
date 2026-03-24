@@ -128,11 +128,23 @@ const stats = computed(() => {
 </script>
 
 <style scoped>
-.stat-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+.stat-icon {
+  width: 40px; height: 40px; font-size: 1.1rem;
+}
 .organizer-table { color: inherit; }
-.organizer-table thead tr { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
-.organizer-table tbody tr { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
-.organizer-table tbody tr:last-child { border-bottom: none; }
-.organizer-table tbody tr:hover { background: rgba(var(--bs-primary-rgb), 0.04); }
-.event-thumb { width: 52px; height: 36px; object-fit: cover; flex-shrink: 0; }
+.organizer-table thead tr {
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+}
+.organizer-table tbody tr {
+  transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
+}
+.organizer-table tbody tr:last-child {
+  border-bottom: none;
+}
+.organizer-table tbody tr:hover {
+  background: rgba(var(--bs-primary-rgb), 0.04);
+}
+.event-thumb {
+  width: 52px; height: 36px; object-fit: cover; flex-shrink: 0;
+}
 </style>

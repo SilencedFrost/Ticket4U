@@ -198,12 +198,38 @@ const doDelete = () => {
 </script>
 
 <style scoped>
-.organizer-table { color: inherit; }
-.organizer-table thead tr { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
-.organizer-table tbody tr { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
-.organizer-table tbody tr:last-child { border-bottom: none; }
-.organizer-table tbody tr:hover { background: rgba(var(--bs-primary-rgb), 0.04); }
-.event-thumb { width: 52px; height: 36px; object-fit: cover; flex-shrink: 0; }
-.modal-backdrop-custom { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-.modal-box { max-width: 420px; width: 100%; }
+.organizer-table {
+  color: inherit;
+}
+.organizer-table thead tr {
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+}
+.organizer-table tbody tr {
+  transition: background 0.15s;
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
+}
+.organizer-table tbody tr:last-child {
+  border-bottom: none;
+}
+.organizer-table tbody tr:hover {
+  background: rgba(var(--bs-primary-rgb), 0.04);
+}
+.event-thumb {
+  width: 52px;
+  height: 36px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.modal-backdrop-custom {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1050; display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-box {
+  max-width: 420px;
+  width: 100%;
+}
 </style>

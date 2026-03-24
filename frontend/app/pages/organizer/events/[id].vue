@@ -10,16 +10,13 @@
         <h2 class="fw-bold text-reactive-primary mb-0">
           {{ isNew ? $t('organizer.event_form.create_title') : $t('organizer.event_form.edit_title') }}
         </h2>
-        <small class="text-reactive-secondary" v-if="!isNew">ID: {{ eventId }}</small>
+        <small v-if="!isNew" class="text-reactive-secondary">ID: {{ eventId }}</small>
       </div>
       <div v-if="!isNew" class="ms-auto d-flex align-items-center gap-2">
-        <span class="badge" :class="{
-          'bg-secondary':         form.status === 'EDITING',
-          'bg-primary':           form.status === 'PREMIERE',
-          'bg-success':           form.status === 'SELLING',
-          'bg-warning text-dark': form.status === 'PAUSED' || form.status === 'ONGOING',
-          'bg-danger':            form.status === 'CANCELLED' || form.status === 'FINISHED',
-        }">{{ $t(getStatusI18nKey(form.status)) }}</span>
+        <span
+          class="badge"
+          :class="statusBadgeClass"
+        >{{ $t(getStatusI18nKey(form.status)) }}</span>
         <Transition name="draft-toast">
           <span v-if="showDraftSaved" class="badge bg-success d-flex align-items-center gap-1">
             <i class="bi bi-check2"/>{{ $t('organizer.event_form.draft_saved') }}
@@ -31,10 +28,10 @@
     <!-- Step Indicators -->
     <div class="d-flex gap-2 mb-5 step-bar">
       <div
-          v-for="(step, i) in steps" :key="i"
-          class="step-item d-flex align-items-center gap-2 flex-grow-1"
-          :class="{ completed: i < currentStep, active: i === currentStep }"
-          @click="goToStep(i)"
+        v-for="(step, i) in steps" :key="i"
+        class="step-item d-flex align-items-center gap-2 flex-grow-1"
+        :class="{ completed: i < currentStep, active: i === currentStep }"
+        @click="goToStep(i)"
       >
         <div class="step-dot d-flex align-items-center justify-content-center rounded-circle flex-shrink-0">
           <i v-if="i < currentStep" class="bi bi-check2"/>
@@ -130,18 +127,18 @@
             </ul>
             <div class="bg-reactive-primary rounded p-3">
               <textarea
-                  v-if="contentLang === 'vi'"
-                  v-model="content.aboutVi"
-                  class="form-control bg-transparent border-0 text-reactive-primary p-0"
-                  style="min-height:180px; resize:vertical;"
-                  :placeholder="$t('organizer.event_form.step2.about_vi_placeholder')"
+                v-if="contentLang === 'vi'"
+                v-model="content.aboutVi"
+                class="form-control bg-transparent border-0 text-reactive-primary p-0"
+                style="min-height:180px; resize:vertical;"
+                :placeholder="$t('organizer.event_form.step2.about_vi_placeholder')"
               />
               <textarea
-                  v-else
-                  v-model="content.aboutEn"
-                  class="form-control bg-transparent border-0 text-reactive-primary p-0"
-                  style="min-height:180px; resize:vertical;"
-                  :placeholder="$t('organizer.event_form.step2.about_en_placeholder')"
+                v-else
+                v-model="content.aboutEn"
+                class="form-control bg-transparent border-0 text-reactive-primary p-0"
+                style="min-height:180px; resize:vertical;"
+                :placeholder="$t('organizer.event_form.step2.about_en_placeholder')"
               />
             </div>
           </div>
@@ -248,7 +245,7 @@
               <option v-for="v in mockVenues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
             </select>
             <div v-if="selectedVenue" class="mt-2 d-flex align-items-center gap-2">
-              <img :src="selectedVenue.imageUrl" class="rounded" style="width:48px;height:32px;object-fit:cover;"/>
+              <img :src="selectedVenue.imageUrl" class="rounded" style="width:48px;height:32px;object-fit:cover;" :alt="selectedVenue.name"/>
               <small class="text-reactive-secondary"><i class="bi bi-geo-alt me-1"/>{{ selectedVenue.addressLine }}</small>
             </div>
           </div>
@@ -283,10 +280,10 @@
                   <select class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1">
                     <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
                     <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
-                      <option v-for="z in zones.filter(z => !z.isStanding)" :key="z.id" :value="z.id">{{ z.name }}</option>
+                      <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>
                     </optgroup>
                     <optgroup :label="$t('organizer.event_form.step4.standing_zones')">
-                      <option v-for="z in zones.filter(z => z.isStanding)" :key="z.id" :value="z.id">{{ z.name }}</option>
+                      <option v-for="z in standingZones" :key="z.id" :value="z.id">{{ z.name }}</option>
                     </optgroup>
                   </select>
                 </div>
@@ -317,8 +314,8 @@
 
           <!-- Canvas placeholder -->
           <div
-              class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
-              style="height:600px; background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
+            class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
+            style="height:600px; background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
           >
             <!-- Stage bar placeholder -->
             <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">
@@ -386,7 +383,7 @@
               <option :value="true">{{ $t('organizer.event_form.step3.standing') }}</option>
             </select>
           </div>
-          <div class="col-md-6" v-if="zoneForm.isStanding">
+          <div v-if="zoneForm.isStanding" class="col-md-6">
             <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.capacity') }} *</label>
             <input v-model.number="zoneForm.capacity" type="number" min="1" class="form-control bg-reactive-primary border-0 text-reactive-primary"/>
           </div>
@@ -457,7 +454,7 @@ const eventId = computed(() => {
 })
 const isNew = computed(() => !eventId.value)
 
-// Steps
+// ── Steps ──────────────────────────────────────────────────
 const currentStep = ref(0)
 const steps = computed(() => [
   $t('organizer.event_form.step1.title'),
@@ -475,12 +472,21 @@ const triggerDraftSaved = () => {
   setTimeout(() => { showDraftSaved.value = false }, 2500)
 }
 
-// Venue derived
-const selectedVenue = computed(() => mockVenues.find(v => v.id === form.value.venueId) ?? null)
+// ── Venue derived ──────────────────────────────────────────
+const selectedVenue   = computed(() => mockVenues.find(v => v.id === form.value.venueId) ?? null)
+const seatedZones     = computed(() => zones.value.filter(z => !z.isStanding))
+const standingZones   = computed(() => zones.value.filter(z => z.isStanding))
+const statusBadgeClass = computed(() => ({
+  'bg-secondary':         form.value.status === 'EDITING',
+  'bg-primary':           form.value.status === 'PREMIERE' || form.value.status === 'SCHEDULED',
+  'bg-success':           form.value.status === 'SELLING',
+  'bg-warning text-dark': form.value.status === 'PAUSED' || form.value.status === 'ONGOING',
+  'bg-danger':            form.value.status === 'CANCELLED' || form.value.status === 'FINISHED',
+}))
 
-// Form state
+// ── Form state ─────────────────────────────────────────────
 const form = ref({
-  name: '', categoryId: '' as any, status: 'EDITING' as string,
+  name: '', categoryId: '' as number | string, status: 'EDITING' as string,
   addressLine: '', startDate: '', endDate: '', bannerUrl: '', venueId: '',
 })
 const errors      = ref<Record<string, string>>({})
@@ -488,10 +494,10 @@ const content     = ref({ aboutVi: '', aboutEn: '', termsAndConditions: '', poli
 const contentLang = ref<'vi' | 'en'>('vi')
 const layoutMode  = ref<'venue' | 'custom'>('venue')
 
-// Zones 
+// ── Zones ──────────────────────────────────────────────────
 const zones = ref<MockZone[]>([])
 
-// Zone modal
+// ── Zone modal ─────────────────────────────────────────────
 const showZoneModal = ref(false)
 const editingZone   = ref<MockZone | null>(null)
 const zoneForm      = ref({ name: '', isStanding: false, capacity: 100, price: 0, purchaseLimit: null as number | null, gridRows: 5, gridCols: 10 })
@@ -513,8 +519,8 @@ const openZoneModal = (zone: MockZone | null) => {
 const saveZone = () => {
   if (!zoneForm.value.name.trim()) return
   const capacity = zoneForm.value.isStanding
-      ? zoneForm.value.capacity
-      : zoneForm.value.gridRows * zoneForm.value.gridCols
+    ? zoneForm.value.capacity
+    : zoneForm.value.gridRows * zoneForm.value.gridCols
   if (editingZone.value) {
     const idx = zones.value.findIndex(z => z.id === editingZone.value!.id)
     if (idx >= 0) zones.value[idx] = { ...zones.value[idx], ...zoneForm.value, capacity }
@@ -526,7 +532,7 @@ const saveZone = () => {
 
 const deleteZone = (id: string) => { zones.value = zones.value.filter(z => z.id !== id) }
 
-// Load existing event
+// ── Load existing event ────────────────────────────────────
 onMounted(() => {
   if (!isNew.value && eventId.value) {
     const ev = mockEvents.find(e => e.id === eventId.value)
@@ -548,7 +554,7 @@ onMounted(() => {
   }
 })
 
-//  Step saves (mock — simulated delay) 
+// ── Step saves (mock — simulated delay) ───────────────────
 const validateStep1 = () => {
   errors.value = {}
   if (!form.value.name.trim())        errors.value.name        = $t('organizer.event_form.step1.name') + ' is required'
@@ -587,25 +593,22 @@ const mockSaveLayout = async () => {
 </script>
 
 <style scoped>
-  .step-bar { align-items: center; }
-  .step-item { cursor: pointer; min-width: 0; }
-  .step-dot { width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary); transition: background 0.2s, color 0.2s; }
-  .step-item.active .step-dot    { background: var(--bs-primary); color: #fff; }
-  .step-item.completed .step-dot { background: #22c55e; color: #fff; }
-  .step-label { color: var(--bs-secondary); transition: color 0.2s; }
-  .step-item.active .step-label, .step-item.completed .step-label { color: var(--text-reactive-primary, inherit); }
-  .step-line { height: 2px; background: rgba(var(--bs-secondary-rgb), 0.25); flex-shrink: 0; min-width: 8px; }
-  .step-item.completed .step-line { background: #22c55e; }
-  .zone-card { background: rgba(var(--bs-secondary-rgb), 0.15); border-left: 4px solid #6366f1 !important; transition: box-shadow 0.15s; }
-  .zone-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-  .perk-badge { background: rgba(99,102,241,0.25); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); }
-  .modal-backdrop-custom { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-  .modal-box { max-width: 520px; width: 100%; }
-  .nav-link { color: var(--bs-secondary); background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.5rem 1rem; cursor: pointer; }
-  .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
-  .draft-toast-enter-active { transition: opacity 0.3s ease; }
-  .draft-toast-leave-active { transition: opacity 0.8s ease; }
-  .draft-toast-enter-from, .draft-toast-leave-to { opacity: 0; }
-  .zone-palette-badge { background: transparent; border: 1px solid rgba(var(--bs-secondary-rgb), 0.4); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--bs-secondary); cursor: default; }
-  .layout-preview-placeholder { border: 1px dashed rgba(var(--bs-secondary-rgb), 0.3); }
+.step-bar { align-items: center; }
+.step-item { cursor: pointer; min-width: 0; }
+.step-dot { width: 32px; height: 32px; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; background: rgba(var(--bs-secondary-rgb), 0.3); color: var(--bs-secondary); transition: background 0.2s, color 0.2s; }
+.step-item.active .step-dot    { background: var(--bs-primary); color: #fff; }
+.step-item.completed .step-dot { background: #22c55e; color: #fff; }
+.step-label { color: var(--bs-secondary); transition: color 0.2s; }
+.step-item.active .step-label, .step-item.completed .step-label { color: var(--text-reactive-primary, inherit); }
+.step-line { height: 2px; background: rgba(var(--bs-secondary-rgb), 0.25); flex-shrink: 0; min-width: 8px; }
+.step-item.completed .step-line { background: #22c55e; }
+.zone-card { background: rgba(var(--bs-secondary-rgb), 0.15); border-left: 4px solid #6366f1 !important; transition: box-shadow 0.15s; }
+.zone-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.perk-badge { background: rgba(99,102,241,0.25); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); }
+.modal-backdrop-custom { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1050; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+.modal-box { max-width: 520px; width: 100%; }
+.nav-link { color: var(--bs-secondary); background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 0.5rem 1rem; cursor: pointer; }
+.nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
+.zone-palette-badge { background: transparent; border: 1px solid rgba(var(--bs-secondary-rgb), 0.4); border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; color: var(--bs-secondary); cursor: default; }
+.layout-preview-placeholder { border: 1px dashed rgba(var(--bs-secondary-rgb), 0.3); }
 </style>

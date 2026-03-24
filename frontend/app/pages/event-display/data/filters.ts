@@ -1,4 +1,4 @@
-import type { LocationOption, CategoryOption, DatePreset } from '../types/event-display'
+import type { LocationOption, CategoryOption, DatePreset } from '../types/event-display';
 
 export const locations: LocationOption[] = [
   { label: 'Toàn quốc', value: '' },
@@ -6,14 +6,14 @@ export const locations: LocationOption[] = [
   { label: 'Hà Nội', value: 'hanoi' },
   { label: 'Đà Lạt', value: 'dalat' },
   { label: 'Vị trí khác', value: 'other' },
-]
+];
 
 export const categories: CategoryOption[] = [
   { label: 'Nhạc sống', value: 'music' },
   { label: 'Sân khấu & Nghệ thuật', value: 'theatersandart' },
   { label: 'Thể Thao', value: 'sport' },
   { label: 'Khác', value: 'others' },
-]
+];
 
 export const datePresets: DatePreset[] = [
   { label: 'Tất cả các ngày', value: 'all' },
@@ -21,4 +21,4 @@ export const datePresets: DatePreset[] = [
   { label: 'Ngày mai', value: 'tomorrow' },
   { label: 'Cuối tuần này', value: 'this-weekend' },
   { label: 'Tháng này', value: 'this-month' },
-]
+];

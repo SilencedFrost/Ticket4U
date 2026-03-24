@@ -24,7 +24,7 @@ import java.util.UUID;
                 name = "Event.withAllEntities",
                 attributeNodes = {
                         @NamedAttributeNode(value = "sessions", subgraph = "sessions-subgraph"),
-                        @NamedAttributeNode("category"),
+                        @NamedAttributeNode("categories"),
                         @NamedAttributeNode("venue")
                 },
                 subgraphs = {
@@ -73,11 +73,13 @@ public class Event {
     @Column(nullable = false)
     private UUID organizerId;
 
-    // TODO: implement n-n relationship between category and event
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-    // TODO: implement vector embedding of category
+    @ManyToMany
+    @JoinTable(
+            name = "event_categories",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new LinkedHashSet<>();
 
     @Column(nullable = false)
     private String addressLine;

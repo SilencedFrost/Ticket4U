@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@Mapper(componentModel = "spring", uses = {SessionMapper.class, VenueMapper.class})
+@Mapper(componentModel = "spring", uses = {SessionMapper.class, VenueMapper.class, CategoryMapper.class})
 public abstract class EventMapper {
 
     /**
@@ -20,8 +20,6 @@ public abstract class EventMapper {
      * @param event The input entity
      * @return EventSummaryResponse
      */
-    @Mapping(target = "categoryId", source = "category.id")
-    @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "venueName", source = "venue.name")
     // Mappings that require helper method
     @Mapping(target = "startDate", source = "event", qualifiedByName = "toStartDate")
@@ -32,16 +30,16 @@ public abstract class EventMapper {
     /**
      * Use "Event.withAllEntities" entity graph
      * @param event The input entity
-     * @return EventSummaryResponse
+     * @return EventResponse
      */
     // TODO: longitude, latitude, layout custom mappers
-    @Mapping(source = "category.id", target = "categoryId")
-    @Mapping(target = "categoryName", source = "category.name")
     // Mappings that require helper method
     @Mapping(target = "startDate", source = "event", qualifiedByName = "toStartDate")
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
     @Mapping(target = "minPrice", source = "event", qualifiedByName = "toMinPrice")
     @Mapping(target = "maxPrice", source = "event", qualifiedByName = "toMaxPrice")
+    @Mapping(target = "addressLine",
+            expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue().getAddressLine())")
     public abstract EventResponse toDTO(Event event);
 
     @Named("toMinPrice")

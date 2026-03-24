@@ -214,6 +214,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
+        // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
         if (userRepository.existsByEmailIgnoreCase(request.email())) {
             return new RegisterResponse(
                 null,

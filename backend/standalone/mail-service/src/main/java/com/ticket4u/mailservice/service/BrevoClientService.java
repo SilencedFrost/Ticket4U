@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BrevoClientService {
+    // TODO: switch from SMTP to HTTP to prevent long blocking calls
 
     private final JavaMailSender mailSender;
     private final BrevoConfig brevoConfig;

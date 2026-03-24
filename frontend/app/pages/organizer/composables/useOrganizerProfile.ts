@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { mockProfile } from '../mock/organizer.data'
+import { mockProfile } from '../mock.data'
 
 interface OrganizerProfile {
   name: string

@@ -32,7 +32,9 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     public void sendPasswordResetEmail(String email) {
         Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
 
-        if (optionalUser.isEmpty() || Boolean.FALSE.equals(optionalUser.get().getIsActive())) {
+        // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
+        // Or condition short circuit and is active is not nullable
+        if (optionalUser.isEmpty() || !optionalUser.get().getIsActive()) {
             log.debug("Password reset ignored for email: {}", email);
             return;
         }

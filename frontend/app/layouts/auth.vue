@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
 const imageUrl: string = '/logo-gray.png';
 const opacity: number = 0.1;
@@ -8,19 +8,20 @@ const repeat: number = 150;
 const width = ref(0);
 const height = ref(0);
 
+const handleResize = () => {
+  width.value = window.innerWidth;
+  height.value = window.innerHeight;
+};
+
 onMounted(() => {
-  if (typeof window !== 'undefined') {
-    width.value = window.innerWidth;
-    height.value = window.innerHeight;
+  if (typeof window === 'undefined') return;
+  handleResize();
+  window.addEventListener('resize', handleResize);
+});
 
-    const handleResize = () => {
-      width.value = window.innerWidth;
-      height.value = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-    onBeforeUnmount(() => window.removeEventListener('resize', handleResize));
-  }
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return;
+  window.removeEventListener('resize', handleResize);
 });
 
 const horizontalImageCount = computed<number>(() =>

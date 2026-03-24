@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Ticket4U</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Xin chào <span th:text="${userName}">User</span>!</h1>
+        <p th:text="${introText}">Nội dung email.</p>
+        <p style="text-align: center; margin: 30px 0;">
+            <a th:href="${actionLink}" style="color: #fff !important" class="btn" th:text="${actionText}">Hành động</a>
+        </p>
+        <p class="note">
+            <span th:text="${expiryLabel}">Link sẽ hết hạn sau</span> <span th:text="${expiryHours}">24</span> giờ.
+            <span th:text="${ignoreText}">Nếu bạn không yêu cầu thao tác này, vui lòng bỏ qua email này.</span>
+        </p>
+        <div class="footer">
+            <p>&copy; 2026 Ticket4U. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

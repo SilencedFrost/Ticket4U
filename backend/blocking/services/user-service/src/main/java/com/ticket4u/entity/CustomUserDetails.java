@@ -14,7 +14,14 @@ public class CustomUserDetails extends User {
     private final String trueUsername;
 
     public CustomUserDetails(String emailAsUsername, String passwordHash, Collection<? extends GrantedAuthority> authorities, UUID userId, int roleId, String trueUsername) {
-        super(emailAsUsername, passwordHash, authorities);
+        super(emailAsUsername, passwordHash, true, true, true, true, authorities);
+        this.userId = userId;
+        this.roleId = roleId;
+        this.trueUsername = trueUsername;
+    }
+
+    public CustomUserDetails(String emailAsUsername, String passwordHash, boolean enabled, Collection<? extends GrantedAuthority> authorities, UUID userId, int roleId, String trueUsername) {
+        super(emailAsUsername, passwordHash, enabled, true, true, true, authorities);
         this.userId = userId;
         this.roleId = roleId;
         this.trueUsername = trueUsername;

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
+const { isEmailFormatValid } = useEmailValidation();
+const { validatePasswordValue } = usePasswordValidation();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const router = useRouter();
 const userStore = useUserStore();
 const loading = ref<boolean>(false);
 const isViewingPassword = ref<boolean>(false);
-const registerSuccess = ref<boolean>(false);
 const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 
 const {
@@ -37,11 +38,6 @@ async function handleGoogleCredential(idToken: string) {
  =======================*/
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
-const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
-const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
-const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
-const PASSWORD_DIGIT_REGEX = /\d+/;
 
 /**===========
  * Interfaces
@@ -141,7 +137,7 @@ function validateEmail(): boolean {
     return false;
   }
 
-  if (!EMAIL_FORMAT_REGEX.test(val)) {
+  if (!isEmailFormatValid(val)) {
     error.email = 'auth.error.format.email';
     return false;
   }
@@ -171,16 +167,8 @@ function validatePassword(): boolean {
     error.password = ['auth.error.blank.password'];
     return false;
   }
-  const errors: string[] = [];
-  if (val.length < 8) errors.push('auth.error.format.password.length.short');
-  if (val.length > 32) errors.push('auth.error.format.password.length.long');
-  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.format.password.lowercase');
-  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.format.password.uppercase');
-  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val))
-    errors.push('auth.error.format.password.special_char');
-  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.format.password.digit');
-  error.password = errors;
-  return errors.length === 0;
+  error.password = validatePasswordValue(val);
+  return error.password.length === 0;
 }
 
 // Validate the form, return status
@@ -195,32 +183,17 @@ async function register() {
   loading.value = true;
 
   try {
-    const response = await $fetch<{ userId: string | null; message: string }>(
-      `${config.public.authUrl}/register`,
-      {
-        method: 'POST',
-        body: {
-          email: formData.email.trim(),
-          password: formData.password.trim(),
-          phoneNumber: formData.phoneNumber.trim(),
-          fullName: formData.fullName.trim(),
-        },
+    await $fetch<{ userId: string | null; message: string }>(`${config.public.authUrl}/register`, {
+      method: 'POST',
+      body: {
+        email: formData.email.trim(),
+        password: formData.password.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
+        fullName: formData.fullName.trim(),
       },
-    );
+    });
 
-    if (response.userId) {
-      registerSuccess.value = true;
-      Object.assign(formData, {
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phoneNumber: '',
-        fullName: '',
-      });
-      setTimeout(() => goToLogin(), 2000);
-    } else {
-      error.generic = response.message;
-    }
+    await navigateTo({ path: localePath('/auth/login'), query: { registered: 'true' } });
   } catch (err) {
     handleError(err as FetchError);
   } finally {
@@ -265,11 +238,6 @@ function handleError(fetchError: FetchError) {
 // Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
-}
-
-// Helper function to go to login
-function goToLogin() {
-  navigateTo(localePath('/auth/login'));
 }
 
 /**===================
@@ -326,12 +294,7 @@ watch(
     <h3 class="text-center text-reactive-primary">{{ $t('auth.register.title') }}</h3>
     <hr class="my-2" />
 
-    <div v-if="registerSuccess" class="alert alert-success text-center">
-      <i class="bi bi-check-circle me-2" />
-      {{ $t('auth.register.success') }}
-    </div>
-
-    <form v-else novalidate @submit.prevent="register">
+    <form novalidate @submit.prevent="register">
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -501,9 +464,12 @@ watch(
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <a href="#" class="text-decoration-none text-reactive-secondary" @click.prevent="goToLogin">
+      <NuxtLink
+        :to="localePath('/auth/login')"
+        class="text-decoration-none text-reactive-secondary"
+      >
         {{ $t('auth.register.has_account') }}
-      </a>
+      </NuxtLink>
     </div>
   </div>
 </template>

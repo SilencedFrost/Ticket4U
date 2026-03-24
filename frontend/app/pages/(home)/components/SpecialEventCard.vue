@@ -1,17 +1,21 @@
 <template>
   <div class="special-event-card rounded-4 overflow-hidden">
-    <img :src="event.imageUrl" :alt="event.title" class="w-100 h-100 object-fit-cover" />
+    <img
+      :src="event.imageUrl"
+      :alt="event.title"
+      class="w-100 h-100 object-fit-cover"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home';
+import type { Event } from '~/types/home'
 
 interface Props {
-  event: Event;
+  event: Event
 }
 
-defineProps<Props>();
+defineProps<Props>()
 </script>
 
 <style scoped>

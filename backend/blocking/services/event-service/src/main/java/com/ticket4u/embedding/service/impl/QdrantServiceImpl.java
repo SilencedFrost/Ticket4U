@@ -1,7 +1,7 @@
-package com.ticket4u.core.service.impl;
+package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.exceptions.QdrantOperationException;
-import com.ticket4u.core.service.QdrantService;
+import com.ticket4u.embedding.service.QdrantService;
 import io.qdrant.client.QdrantClient;
 import io.qdrant.client.ValueFactory;
 import io.qdrant.client.grpc.Collections;
@@ -101,6 +101,44 @@ public class QdrantServiceImpl implements QdrantService {
     }
 
     /**
+     * Insert or update multiple points in a single network request to Qdrant.
+     * Significantly reduces round-trip overhead compared to calling upsert() per point.
+     *
+     * @param collectionName Target collection name.
+     * @param points         List of {@link UpsertEntry} records — each holding an ID, vector, and payload.
+     * @throws QdrantOperationException if the batch upsert fails.
+     */
+    @Override
+    public void batchUpsert(String collectionName, List<UpsertEntry> points) {
+        if (points == null || points.isEmpty()) {
+            log.warn("batchUpsert called with empty point list for collection '{}', skipping.", collectionName);
+            return;
+        }
+        try {
+            List<Points.PointStruct> structs = points.stream()
+                    .map(entry -> Points.PointStruct.newBuilder()
+                            .setId(entry.id())
+                            .setVectors(vectors(entry.vector()))
+                            .putAllPayload(buildPayload(entry.payload()))
+                            .build())
+                    .collect(Collectors.toList());
+
+            Points.UpsertPoints request = Points.UpsertPoints.newBuilder()
+                    .setCollectionName(collectionName)
+                    .addAllPoints(structs)
+                    .setWait(true)
+                    .setUpdateMode(Points.UpdateMode.Upsert)
+                    .build();
+
+            client.upsertAsync(request).get(timeoutSeconds, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("Qdrant batchUpsert failed on collection '{}' with {} points: {}",
+                    collectionName, points.size(), e.getMessage());
+            throw new QdrantOperationException("batchUpsert", collectionName, "Operation failed");
+        }
+    }
+
+    /**
      * Search for the most similar vectors in a collection.
      * @param collectionName Collection to search in.
      * @param queryVector The vector used for searching.
@@ -136,12 +174,22 @@ public class QdrantServiceImpl implements QdrantService {
      */
     @Override
     public Points.RetrievedPoint getById(String collectionName, Common.PointId id) {
+        return getById(collectionName, id, false);
+    }
+
+    /**
+     * Retrieve a specific point's data using its ID.
+     * @param collectionName Collection to look in.
+     * @param id The ID of the point to retrieve.
+     * @return The retrieved point data.
+     * @throws QdrantOperationException if the ID is not found or connection fails.
+     */
+    @Override
+    public Points.RetrievedPoint getById(String collectionName, Common.PointId id, boolean withVectors) {
         List<Points.RetrievedPoint> results;
         try {
-            results = client.retrieveAsync(collectionName, List.of(id), true, false, null)
+            results = client.retrieveAsync(collectionName, List.of(id), true, withVectors, null)
                     .get(timeoutSeconds, TimeUnit.SECONDS);
-        } catch (QdrantOperationException e) {
-            throw e; // rethrow cleanly if already wrapped
         } catch (Exception e) {
             log.error("Qdrant getById failed on collection '{}': {}", collectionName, e.getMessage());
             throw new QdrantOperationException("getById", collectionName, "Retrieve operation failed");
@@ -150,6 +198,80 @@ public class QdrantServiceImpl implements QdrantService {
         return results.stream()
                 .findFirst()
                 .orElseThrow(() -> new QdrantOperationException("Point ID not found in collection '" + collectionName + "': " + id));
+    }
+
+    @Override
+    public void createCollectionIfAbsent(String collectionName, int vectorSize) {
+        try {
+            createCollection(collectionName, vectorSize);
+        } catch (Exception e) {
+            if (e.getCause() instanceof java.util.concurrent.ExecutionException ex
+                    && ex.getCause() instanceof io.grpc.StatusRuntimeException srex
+                    && srex.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
+                log.info("Collection '{}' already exists, skipping creation.", collectionName);
+                return;
+            }
+            throw new QdrantOperationException("createCollectionIfAbsent", collectionName, "Initialization failed");
+        }
+    }
+
+    /**
+     * Check which point IDs already exist in a collection.
+     * @param collectionName Collection to check against.
+     * @param ids List of point IDs to verify.
+     * @return List of IDs that exist in the collection.
+     * @throws QdrantOperationException if the operation fails.
+     */
+    @Override
+    public List<Common.PointId> filterExistingIds(String collectionName, List<Common.PointId> ids) {
+        try {
+            List<Points.RetrievedPoint> results = client.retrieveAsync(collectionName, ids, false, false, null)
+                    .get(timeoutSeconds, TimeUnit.SECONDS);
+
+            return results.stream()
+                    .map(Points.RetrievedPoint::getId)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Qdrant filterExistingIds failed on collection '{}': {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("filterExistingIds", collectionName, "Operation failed");
+        }
+    }
+
+    @Override
+    public boolean isPointExists(String collectionName, Common.PointId id) {
+        try {
+            getById(collectionName, id);
+            return true;
+        } catch (QdrantOperationException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Search for the most similar vectors using an existing point's ID as the query.
+     * @param collectionName Collection to search in.
+     * @param id The ID of the reference point already in Qdrant.
+     * @param threshold Minimum similarity score to include a result.
+     * @param limit Maximum number of results to return.
+     * @return List of scored points found.
+     * @throws QdrantOperationException if the search fails.
+     */
+    @Override
+    public List<Points.ScoredPoint> search(String collectionName, Common.PointId id, float threshold, int limit) {
+        try {
+            Points.QueryPoints queryPoints = Points.QueryPoints.newBuilder()
+                    .setCollectionName(collectionName)
+                    .setQuery(nearest(id)) // Uses the ID instead of a float list
+                    .setScoreThreshold(threshold)
+                    .setLimit(limit)
+                    .setWithPayload(enable(true))
+                    .build();
+
+            return client.queryAsync(queryPoints).get(timeoutSeconds, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("Qdrant search by ID failed on collection {}: {}", collectionName, e.getMessage());
+            throw new QdrantOperationException("search", collectionName, "Search operation failed");
+        }
     }
 
     private Map<String, JsonWithInt.Value> buildPayload(Map<String, Object> metadata) {
@@ -169,20 +291,20 @@ public class QdrantServiceImpl implements QdrantService {
         }
         return switch (val) {
             // --- integer family ---
-            case Integer i  -> ValueFactory.value(i);
-            case Long l     -> ValueFactory.value(l);
-            case Short s    -> ValueFactory.value((int) s);
-            case Byte b     -> ValueFactory.value((int) b);
+            case Integer i -> ValueFactory.value(i);
+            case Long l -> ValueFactory.value(l);
+            case Short s -> ValueFactory.value((int) s);
+            case Byte b -> ValueFactory.value((int) b);
 
             // --- float family ---
-            case Double d   -> ValueFactory.value(d);
-            case Float f    -> ValueFactory.value((double) f);
+            case Double d -> ValueFactory.value(d);
+            case Float f -> ValueFactory.value((double) f);
 
             // --- boolean (must be before Number to avoid autoboxing ambiguity) ---
-            case Boolean b  -> ValueFactory.value(b);
+            case Boolean b -> ValueFactory.value(b);
 
             // --- string ---
-            case String s   -> ValueFactory.value(s);
+            case String s -> ValueFactory.value(s);
 
             // --- list / array (recursive) ---
             case List<?> list -> JsonWithInt.Value.newBuilder()
@@ -219,20 +341,5 @@ public class QdrantServiceImpl implements QdrantService {
             // --- safe fallback ---
             default -> ValueFactory.value(val.toString());
         };
-    }
-
-    @Override
-    public void createCollectionIfAbsent(String collectionName, int vectorSize) {
-        try {
-            createCollection(collectionName, vectorSize);
-        } catch (Exception e) {
-            if (e.getCause() instanceof java.util.concurrent.ExecutionException ex
-                    && ex.getCause() instanceof io.grpc.StatusRuntimeException srex
-                    && srex.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
-                log.info("Collection '{}' already exists, skipping creation.", collectionName);
-                return;
-            }
-            throw new QdrantOperationException("createCollectionIfAbsent", collectionName, "Initialization failed");
-        }
     }
 }

@@ -38,6 +38,8 @@ public abstract class EventMapper {
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
     @Mapping(target = "minPrice", source = "event", qualifiedByName = "toMinPrice")
     @Mapping(target = "maxPrice", source = "event", qualifiedByName = "toMaxPrice")
+    @Mapping(target = "addressLine",
+            expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue().getAddressLine())")
     public abstract EventResponse toDTO(Event event);
 
     @Named("toMinPrice")

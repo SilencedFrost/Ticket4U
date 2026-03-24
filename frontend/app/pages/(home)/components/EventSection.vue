@@ -10,7 +10,11 @@
         Xem thêm &gt;
       </NuxtLink>
     </div>
-    <EventCarousel :items="events" :items-per-page="4" col-class="col-lg-3 col-md-6 col-sm-12">
+    <EventCarousel
+      :items="events"
+      :items-per-page="4"
+      col-class="col-lg-3 col-md-6 col-sm-12"
+    >
       <template #default="{ item }">
         <div class="event-card-wrapper">
           <EventCard :event="item" />
@@ -21,19 +25,19 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home';
-import EventCarousel from './EventCarousel.vue';
-import EventCard from './EventCard.vue';
+import type { Event } from '~/types/home'
+import EventCarousel from './EventCarousel.vue'
+import EventCard from './EventCard.vue'
 
 interface Props {
-  title: string;
-  events: Event[];
-  showViewAll?: boolean;
+  title: string
+  events: Event[]
+  showViewAll?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   showViewAll: false,
-});
+})
 </script>
 
 <style scoped>

@@ -37,10 +37,12 @@ public class EventDomainServiceImpl implements EventDomainService {
         // Fail fast
         if(events.isEmpty()) return List.of();
 
+        Map<UUID, Float> semanticScoreMap = eventSemanticService.findSimilarEvents(id, PageRequest.of(0, RelatedEvents.WEIGHTS.SEMANTIC_FETCH_LIMIT));
+
         // Score and sort all events (excluding the original)
         return events.parallelStream()
                 .filter(e -> !e.getId().equals(id)) // Exclude the original event
-                .map(e -> new ScoredEvent(e, scoreEvent(event, e)))
+                .map(e -> new ScoredEvent(e, scoreEvent(event, e, semanticScoreMap)))
                 .sorted(Comparator.comparingInt(ScoredEvent::score).reversed()) // Highest score first
                 .limit(RelatedEvents.MAX_COUNT)
                 .map(scoredEvent -> eventMapper.toSummaryDTO(scoredEvent.event))
@@ -48,7 +50,7 @@ public class EventDomainServiceImpl implements EventDomainService {
     }
 
     // This method returns only relevancy in terms of start date for this build
-    private int scoreEvent(Event originalEvent, Event targetEvent) {
+    private int scoreEvent(Event originalEvent, Event targetEvent, Map<UUID, Float> semanticScoreMap) {
         EventResponse originalEventFlatmap = eventMapper.toDTO(originalEvent);
         EventResponse targetEventFlatmap = eventMapper.toDTO(targetEvent);
 
@@ -60,7 +62,7 @@ public class EventDomainServiceImpl implements EventDomainService {
         float proximity = proximityToZero(distanceKm, RelatedEvents.WEIGHTS.LOCATION_CUTOFF);
 
         // Score calculation
-        float semanticScore = eventSemanticService.getSimilarityScore(originalEvent.getId(), targetEvent.getId());
+        float semanticScore = semanticScoreMap.getOrDefault(targetEvent.getId(), 0.1f);
         float locationScore = transformScore(proximity, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
         float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEventFlatmap.startDate(), targetEventFlatmap.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
         float suppressionWeight = 1;

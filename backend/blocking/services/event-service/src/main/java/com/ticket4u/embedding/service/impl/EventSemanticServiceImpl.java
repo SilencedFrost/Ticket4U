@@ -132,7 +132,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<UUID> findSimilarEvents(UUID id, Pageable pageable) {
+    public Map<UUID,Float> findSimilarEvents(UUID id, Pageable pageable) {
         Common.PointId pointId = Common.PointId.newBuilder()
                 .setUuid(id.toString())
                 .build();
@@ -152,7 +152,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
 
             if (queryVector.isEmpty()) {
                 log.warn("Embedding returned empty vector for event: {}", id);
-                return List.of();
+                return Collections.emptyMap();
             }
 
             qdrantService.upsert(COLLECTION, pointId, queryVector, null);
@@ -165,11 +165,17 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         }
 
         return searchResults.stream()
-                .map(p -> UUID.fromString(p.getId().getUuid()))
-                .filter(resultId -> !resultId.equals(id))
+                .map(p -> Map.entry(
+                        UUID.fromString(p.getId().getUuid()),
+                        p.getScore()
+                ))
+                .filter(e -> !e.getKey().equals(id))
                 .skip(offset)
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
     @Override
@@ -206,23 +212,6 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         } catch (Exception e) {
             log.error("Semantic search failed for query: '{}'. Error: {}", query, e.getMessage());
             return Collections.emptyList();
-        }
-    }
-
-    @Override
-    public float getSimilarityScore(UUID originalId, UUID targetId) {
-        try {
-            Common.PointId originPoint = Common.PointId.newBuilder().setUuid(originalId.toString()).build();
-
-            List<Points.ScoredPoint> results = qdrantService.search(COLLECTION, originPoint, 0.0f, 100);
-
-            return (float) results.stream()
-                    .filter(p -> p.getId().getUuid().equals(targetId.toString()))
-                    .mapToDouble(Points.ScoredPoint::getScore)
-                    .findFirst()
-                    .orElse(0.1f);
-        } catch (Exception e) {
-            return 0.1f;
         }
     }
 }

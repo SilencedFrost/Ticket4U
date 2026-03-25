@@ -1,6 +1,10 @@
 <template>
   <div class="position-relative place-card">
-    <img :src="place.imageUrl" :alt="place.name" class="w-100 h-100 object-fit-cover rounded-4" />
+    <img
+      :src="place.imageUrl"
+      :alt="place.name"
+      class="w-100 h-100 object-fit-cover rounded-4"
+    />
     <div class="place-overlay">
       <h3 class="text-white fw-bold text-center">
         {{ place.name }}
@@ -10,13 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Place } from '~/types/home';
+import type { Place } from '~/types/home'
 
 interface Props {
-  place: Place;
+  place: Place
 }
 
-defineProps<Props>();
+defineProps<Props>()
 </script>
 
 <style scoped>

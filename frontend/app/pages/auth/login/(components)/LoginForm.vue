@@ -7,11 +7,11 @@ const router = useRouter();
 const route = useRoute();
 const loading = ref<boolean>(false);
 const useUser = useUserStore();
-const error = reactive({ email: '', password: '', generic: '' });
+const error = reactive({ identifier: '', password: '', generic: '' });
 const isViewingPassword = ref<boolean>(false);
 const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 const formData = reactive({
-  email: '',
+  identifier: '',
   password: '',
   rememberMe: false,
 });
@@ -44,7 +44,7 @@ const noticeMessage = ref<string>(resolveNoticeMessage());
 
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
-  Object.assign(error, { email: '', password: '', generic: '' });
+  Object.assign(error, { identifier: '', password: '', generic: '' });
   try {
     await useUser.loginWithGoogle(idToken);
     router.push(localePath('/'));
@@ -63,9 +63,9 @@ async function handleGoogleCredential(idToken: string) {
 async function login() {
   loading.value = true;
   noticeMessage.value = '';
-  Object.assign(error, { email: '', password: '', generic: '' });
+  Object.assign(error, { identifier: '', password: '', generic: '' });
   try {
-    await useUser.login(formData.email, formData.password, formData.rememberMe);
+    await useUser.login(formData.identifier, formData.password, formData.rememberMe);
     router.push(localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
@@ -77,7 +77,7 @@ async function login() {
 
     switch (fetchError.statusCode) {
       case 400:
-        error.email = fetchError.data?.email || '';
+        error.identifier = fetchError.data?.identifier || '';
         error.password = fetchError.data?.password || '';
         break;
       case 401:
@@ -114,22 +114,22 @@ function togglePassword() {
     <hr class="my-2" />
     <form novalidate>
       <div class="mb-2">
-        <label for="email" class="form-label text-reactive-primary user-select-none"
-          >{{ $t('common.email') }}:</label
+        <label for="identifier" class="form-label text-reactive-primary user-select-none"
+          >{{ $t('auth.identifier') }}:</label
         >
         <input
-          id="email"
-          v-model="formData.email"
-          type="email"
+          id="identifier"
+          v-model="formData.identifier"
+          type="text"
           :class="[
             'form-control',
             'bg-reactive-primary',
             'text-reactive-primary',
-            { 'is-invalid': error.email },
+            { 'is-invalid': error.identifier },
           ]"
         />
-        <div v-if="error.email" id="error-email" class="invalid-feedback">
-          {{ $t(error.email) }}
+        <div v-if="error.identifier" id="error-identifier" class="invalid-feedback">
+          {{ $t(error.identifier) }}
         </div>
       </div>
       <div class="mb-2">
@@ -181,7 +181,7 @@ function togglePassword() {
           :disabled="loading"
           @click.prevent.stop="login()"
         >
-          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
+          <span v-if="loading" class="spinner-border spinner-border-sm me-2" />
           {{ $t('auth.login.action') }}
         </button>
         <div ref="hiddenGoogleBtn" class="d-none" />

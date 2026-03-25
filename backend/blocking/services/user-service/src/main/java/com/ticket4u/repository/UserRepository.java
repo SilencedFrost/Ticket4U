@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository <User, UUID> {
     
     boolean existsByPhoneNumber(String phoneNumber);
 
+    Optional<User> findByPhoneNumber(String phoneNumber);
+
     @Modifying
     @Query("DELETE FROM User u WHERE u.isActive = false AND u.createdAt < :cutoffDate")
     int deleteInactiveAccounts(@Param("cutoffDate") OffsetDateTime cutoffDate);

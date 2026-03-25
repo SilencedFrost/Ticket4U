@@ -3,6 +3,7 @@ import type { Ticket } from '../(types)/ticket.type'
 import type { Event } from '../(types)/event.type'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
 
+<<<<<<< Updated upstream
 // ── Backend response shape ─────────────────────────────────
 interface EventResponse {
   id: string
@@ -25,6 +26,9 @@ interface ZoneResponse {
   perks?:         string[]
 }
 
+=======
+// Backend response shape
+>>>>>>> Stashed changes
 interface SeatResponse {
   id:            string
   zoneId:        string
@@ -36,13 +40,43 @@ interface SeatResponse {
   priceOverride: number | null
 }
 
+<<<<<<< Updated upstream
 interface SeatingPlanResponse {
   layout: string | null
   zones: ZoneResponse[]
   seats: SeatResponse[]
+=======
+interface ZoneResponse {
+  id:             string
+  name:           string
+  price:          number
+  available:      number
+  isStanding:     boolean
+  descriptionVi?: string
+  descriptionEn?: string
+  giftImageUrl?:  string
+  perks?:         string[]
+  seats:          SeatResponse[]
+>>>>>>> Stashed changes
 }
 
-// ── Parsed layout floor shape ──────────────────────────────
+// Matches SeatingPlanResponse on backend
+interface SeatingPlanResponse {
+  layout:  string | null
+  zones:   ZoneResponse[]
+  seats:   SeatResponse[]
+}
+
+// Minimal event info for the header
+interface EventInfoResponse {
+  id:          string
+  name:        string
+  addressLine: string
+  startDate:   string
+  endDate:     string
+}
+
+// Parsed layout floor shape
 interface RawLayoutFloor {
   floor_order?:      number
   floor_name?:       string
@@ -63,17 +97,16 @@ interface RawLayoutZone {
   corner4:     { x: number; y: number }
 }
 
-// ── Fallback colors ────────────────────────────────────────
+// Fallback colors
 const FALLBACK_COLORS = [
   '#E53E3E', '#06B6D4', '#22D3EE', '#D69E2E',
   '#805AD5', '#38A169', '#DD6B20', '#3182CE',
 ]
 
-// ── Build floors from layout JSON + seats ──────────────────
+// Build floors from layout JSON
 const buildFloors = (
     layoutJson: string | null,
-    zones: ZoneResponse[],
-    seats: SeatResponse[]
+    zones: ZoneResponse[]
 ): Floor[] => {
   if (!layoutJson) return []
 
@@ -81,38 +114,27 @@ const buildFloors = (
   try { parsed = JSON.parse(layoutJson) as typeof parsed }
   catch { return [] }
 
-  // Venue marker without floors — backend should have resolved but guard anyway
   if (parsed.venueMode) return []
 
-  // Handle both multi-floor { floors: [...] } and single-floor { stage, zones } shapes
   let rawFloors: RawLayoutFloor[]
   if (parsed.floors && parsed.floors.length > 0) {
     rawFloors = parsed.floors
   } else if (parsed.stage || parsed.zones) {
-    // Flat single-floor venue layout
     rawFloors = [{ floor_order: 1, floor_name: 'Main Floor', stage: parsed.stage as RawLayoutFloor['stage'], zones: parsed.zones }]
   } else {
     return []
   }
 
-  // Seat lookup by zoneId
-  const seatsByZone = new Map<string, SeatResponse[]>()
-  for (const seat of seats) {
-    if (!seatsByZone.has(seat.zoneId)) seatsByZone.set(seat.zoneId, [])
-    seatsByZone.get(seat.zoneId)!.push(seat)
-  }
-
-  // Zone lookup by id
+  // Zone lookup by id — seats live inside each zone
   const zoneById = new Map(zones.map(z => [z.id, z]))
 
   return rawFloors
       .sort((a, b) => (a.floor_order ?? 0) - (b.floor_order ?? 0))
       .map((fl): Floor => {
         const layoutZones: LayoutZone[] = (fl.zones ?? []).map((z): LayoutZone => {
-          const zoneId    = z.zone_id ?? null
-          const _zoneData = zoneId ? zoneById.get(zoneId) : undefined  // reserved for future use
-          void _zoneData
-          const zoneSeats = zoneId ? (seatsByZone.get(zoneId) ?? []) : []
+          const zoneId   = z.zone_id ?? null
+          const zoneData = zoneId ? zoneById.get(zoneId) : undefined
+          const zoneSeats = zoneData?.seats ?? []
 
           const layoutSeats: LayoutSeat[] = zoneSeats.map((s): LayoutSeat => ({
             seat_name:     s.name,
@@ -152,6 +174,7 @@ const buildFloors = (
       })
 }
 
+<<<<<<< Updated upstream
 // ── Map response ───────────────────────────────────────────
 const mapResponse = (
   eventData: EventResponse,
@@ -192,22 +215,45 @@ const mapResponse = (
     seatingData.zones,
     seatingData.seats
   )
+=======
+// Map seating plan
+const mapSeatingPlan = (data: SeatingPlanResponse): {
+  tickets: Ticket[]; floors: Floor[]
+} => {
+  const tickets: Ticket[] = data.zones.map((zone, i): Ticket => ({
+    id:             zone.id,
+    name:           zone.name,
+    price:          zone.price,
+    color:          FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#6366f1',
+    zone:           zone.name,
+    available:      zone.available,
+    soldOut:        zone.available <= 0,
+    maxPerAccount:  null,
+    isStanding:     zone.isStanding ?? false,
+    descriptionVi:  zone.descriptionVi,
+    descriptionEn:  zone.descriptionEn,
+    giftImageUrl:   zone.giftImageUrl,
+    perks:          zone.perks,
+  }))
 
-  // Back-fill isStanding + color from layout zone data
+  const floors = buildFloors(data.layout, data.zones)
+>>>>>>> Stashed changes
+
+  // Back-fill color from layout zone data
   if (floors.length > 0) {
     for (const ticket of tickets) {
       const layoutZone = floors[0]?.layout.zones.find(z => z.zone_uuid === ticket.id)
       if (layoutZone) {
-        ticket.isStanding = layoutZone.zone_type === 'standing'
         ticket.color      = layoutZone.color
+        ticket.isStanding = layoutZone.zone_type === 'standing'
       }
     }
   }
 
-  return { event, tickets, floors }
+  return { tickets, floors }
 }
 
-// ── Composable ─────────────────────────────────────────────
+// Composable
 export const useTicketSelect = () => {
   const event   = ref<Event | null>(null)
   const tickets = ref<Ticket[]>([])
@@ -222,6 +268,7 @@ export const useTicketSelect = () => {
     loading.value = true
     error.value   = null
     try {
+<<<<<<< Updated upstream
       const [eventRes, seatingRes] = await Promise.all([
         $fetch<EventResponse>(`${config.public.apiUrl}/public/events/${eventId}`),
         $fetch<SeatingPlanResponse>(`${config.public.apiUrl}/public/events/${eventId}/seating-plan`)
@@ -230,6 +277,25 @@ export const useTicketSelect = () => {
       const mapped = mapResponse(eventRes, seatingRes, locale.value)
 
       event.value   = mapped.event
+=======
+      // Fetch event info and seating plan in parallel
+      const [eventData, seatingData] = await Promise.all([
+        $fetch<EventInfoResponse>(`${config.public.apiUrl}/public/events/${eventId}`),
+        $fetch<SeatingPlanResponse>(`${config.public.apiUrl}/public/events/${eventId}/seating-plan`),
+      ])
+
+      const start = new Date(eventData.startDate)
+      const end   = new Date(eventData.endDate)
+      event.value = {
+        id:    eventData.id,
+        title: eventData.name,
+        date:  start.toLocaleDateString(locale.value, { day: 'numeric', month: 'long', year: 'numeric' }),
+        time:  `${start.toLocaleTimeString(locale.value, { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString(locale.value, { hour: '2-digit', minute: '2-digit' })}`,
+        venue: eventData.addressLine,
+      }
+
+      const mapped  = mapSeatingPlan(seatingData)
+>>>>>>> Stashed changes
       tickets.value = mapped.tickets
       floors.value  = mapped.floors
 

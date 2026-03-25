@@ -1,7 +1,11 @@
 <template>
   <div class="event-card">
     <div class="event-card-img mb-3 position-relative overflow-hidden rounded-4">
-      <img :src="event.imageUrl" :alt="event.title" class="w-100 h-100 object-fit-cover" />
+      <img
+        :src="event.imageUrl"
+        :alt="event.title"
+        class="w-100 h-100 object-fit-cover"
+      />
     </div>
 
     <div v-if="showDetails">
@@ -21,20 +25,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '~/types/home';
+  import type { Event } from '~/types/home'
 
 interface Props {
-  event: Event;
-  showDetails?: boolean;
+  event: Event
+  showDetails?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   showDetails: true,
-});
+})
 
 const formatPrice = (price: number) => {
-  return `Từ ${price.toLocaleString('vi-VN')}đ`;
-};
+  return `Từ ${price.toLocaleString('vi-VN')}đ`
+}
 </script>
 
 <style scoped>

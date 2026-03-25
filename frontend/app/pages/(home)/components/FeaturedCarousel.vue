@@ -1,5 +1,5 @@
 <template>
-  <section
+  <section 
     class="mb-5 position-relative"
     @touchstart="handleTouchStart"
     @touchmove="handleTouchMove"
@@ -12,8 +12,14 @@
         :class="isMobile ? 'col-12' : 'col-md-6'"
       >
         <div class="event-card-large position-relative rounded-4 overflow-hidden">
-          <img :src="event.imageUrl" :alt="event.title" class="w-100 h-100 object-fit-cover" />
-          <button class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2">
+          <img
+            :src="event.imageUrl"
+            :alt="event.title"
+            class="w-100 h-100 object-fit-cover"
+          />
+          <button
+            class="btn btn-light position-absolute bottom-0 start-0 m-3 rounded-2"
+          >
             Xem chi tiết
           </button>
         </div>
@@ -52,82 +58,90 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import type { Event } from '~/types/home';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import type { Event } from '~/types/home'
 
 interface Props {
-  events: Event[];
+  events: Event[]
 }
 
-const props = defineProps<Props>();
-const currentSlide = ref(0);
-const isMobile = ref(false);
+const props = defineProps<Props>()
+const currentSlide = ref(0)
+const isMobile = ref(false)
 
-const touchStartX = ref(0);
-const touchEndX = ref(0);
-const minSwipeDistance = 50;
+const touchStartX = ref(0)
+const touchEndX = ref(0)
+const minSwipeDistance = 50
 
-const itemsPerSlide = computed(() => (isMobile.value ? 1 : 2));
+const itemsPerSlide = computed(() => isMobile.value ? 1 : 2)
 
-const totalSlides = computed(() => Math.ceil(props.events.length / itemsPerSlide.value));
+const totalSlides = computed(() =>
+  Math.ceil(props.events.length / itemsPerSlide.value)
+)
 
 const visibleSlides = computed(() => {
-  const start = currentSlide.value * itemsPerSlide.value;
-  return props.events.slice(start, start + itemsPerSlide.value);
-});
+  const start = currentSlide.value * itemsPerSlide.value
+  return props.events.slice(start, start + itemsPerSlide.value)
+})
 
 const updateViewport = () => {
   if (typeof window !== 'undefined') {
-    isMobile.value = window.innerWidth < 768;
+    isMobile.value = window.innerWidth < 768
   }
-};
+}
 
 const handleTouchStart = (e: TouchEvent) => {
   if (e.touches && e.touches[0]) {
-    touchStartX.value = e.touches[0].clientX;
+    touchStartX.value = e.touches[0].clientX
   }
-};
+}
 
 const handleTouchMove = (e: TouchEvent) => {
   if (e.touches && e.touches[0]) {
-    touchEndX.value = e.touches[0].clientX;
+    touchEndX.value = e.touches[0].clientX
   }
-};
+}
 
 const handleTouchEnd = () => {
-  const distance = touchStartX.value - touchEndX.value;
-  const isLeftSwipe = distance > minSwipeDistance;
-  const isRightSwipe = distance < -minSwipeDistance;
+  const distance = touchStartX.value - touchEndX.value
+  const isLeftSwipe = distance > minSwipeDistance
+  const isRightSwipe = distance < -minSwipeDistance
 
   if (isLeftSwipe) {
-    goNext();
+    goNext()
   } else if (isRightSwipe) {
-    goPrev();
+    goPrev()
   }
-};
+}
 
 const goPrev = () => {
-  currentSlide.value = currentSlide.value === 0 ? totalSlides.value - 1 : currentSlide.value - 1;
-};
+  currentSlide.value =
+    currentSlide.value === 0
+      ? totalSlides.value - 1
+      : currentSlide.value - 1
+}
 
 const goNext = () => {
-  currentSlide.value = currentSlide.value === totalSlides.value - 1 ? 0 : currentSlide.value + 1;
-};
+  currentSlide.value =
+    currentSlide.value === totalSlides.value - 1
+      ? 0
+      : currentSlide.value + 1
+}
 
 const goToSlide = (index: number) => {
-  currentSlide.value = index;
-};
+  currentSlide.value = index
+}
 
 onMounted(() => {
-  updateViewport();
-  window.addEventListener('resize', updateViewport);
-});
+  updateViewport()
+  window.addEventListener('resize', updateViewport)
+})
 
 onUnmounted(() => {
   if (typeof window !== 'undefined') {
-    window.removeEventListener('resize', updateViewport);
+    window.removeEventListener('resize', updateViewport)
   }
-});
+})
 </script>
 
 <style scoped>
@@ -201,6 +215,6 @@ section {
 }
 
 .carousel-indicators-dots .dot.active {
-  background-color: #07b3df;
+  background-color: #07B3DF;
 }
 </style>

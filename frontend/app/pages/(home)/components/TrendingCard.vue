@@ -5,34 +5,38 @@
     </div>
 
     <div class="trendy-card flex-grow-1 rounded-3 overflow-hidden">
-      <img :src="event.imageUrl" :alt="event.title" class="w-100 h-100 object-fit-cover" />
+      <img
+        :src="event.imageUrl"
+        :alt="event.title"
+        class="w-100 h-100 object-fit-cover"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { TrendBadgeOne, TrendBadgeTwo, TrendBadgeThree } from '~/components/icons';
-import type { TrendingEvent } from '~/types/home';
+import { computed } from 'vue'
+import { TrendBadgeOne, TrendBadgeTwo, TrendBadgeThree } from '~/components/icons'
+import type { TrendingEvent } from '~/types/home'
 
 interface Props {
-  event: TrendingEvent;
+  event: TrendingEvent
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
 const badgeComponent = computed(() => {
   switch (props.event.rank) {
     case 1:
-      return TrendBadgeOne;
+      return TrendBadgeOne
     case 2:
-      return TrendBadgeTwo;
+      return TrendBadgeTwo
     case 3:
-      return TrendBadgeThree;
+      return TrendBadgeThree
     default:
-      return TrendBadgeOne;
+      return TrendBadgeOne
   }
-});
+})
 </script>
 
 <style scoped>

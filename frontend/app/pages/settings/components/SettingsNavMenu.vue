@@ -13,7 +13,7 @@
         <!-- Personal Info Tab (Active by default per instructions) -->
         <li>
           <NuxtLinkLocale
-            to="/settings/personal-information"
+            to="/settings/account"
             class="nav-item d-flex align-items-center px-3 py-3 w-100 rounded text-decoration-none settings-nav__item active"
             style="gap: 8px"
           >
@@ -39,13 +39,13 @@
 }
 
 .settings-nav__item:hover {
-  background-color: var(--bg-reactive-gray);
+  background-color: var(--settings-nav-bg-active);
   color: var(--text-reactive-primary);
 }
 
 .settings-nav__item.active,
 .settings-nav__item.router-link-exact-active {
-  background-color: var(--bg-reactive-gray);
+  background-color: var(--settings-nav-bg-active);
   border-left-color: var(--bs-primary);
   color: var(--bs-primary) !important;
 }

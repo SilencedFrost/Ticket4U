@@ -25,12 +25,5 @@ import PersonalInfoFields from './PersonalInfoFields.vue'
 </script>
 
 <style scoped>
-/* Ensure child components match input-underline behavior */
-:deep(.input-underline) {
-  border-bottom: 2px solid transparent !important;
-}
-:deep(.input-underline:focus) {
-  box-shadow: none;
-  border-bottom-color: var(--bs-primary) !important;
-}
+/* Scoped styles reserved for inner layout components */
 </style>

@@ -10,5 +10,5 @@ import { navigateTo } from '#app'
 // <!-- TODO: wire up script -->
 // Redirect settings index to the personal information tab
 // TODO: replace with useLocalePath()
-navigateTo('/settings/personal-information')
+navigateTo('/settings/account')
 </script>

@@ -16,6 +16,7 @@
 
 <script setup>
 import SettingsNavMenu from './SettingsNavMenu.vue'
+import '../style/settings.css'
 
 // <!-- TODO: wire up script -->
 </script>

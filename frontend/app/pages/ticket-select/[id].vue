@@ -1,3 +1,54 @@
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useTicketSelect } from './composables/use-ticket-select'
+import { useEventPayment } from './composables/use-event-payment'
+import SeatingMap from './(components)/SeatingMap.vue'
+import EventInfo from './(components)/EventInfo.vue'
+import CartSummary from './(components)/CartSummary.vue'
+import type { SelectedSeat } from './(types)/ticket.type'
+
+definePageMeta({ layout: 'minimal' })
+
+const route = useRoute()
+const id    = route.params.id as string
+if (!id) navigateTo('/')
+
+const { event, tickets, floors, loading, error, fetchTicketSelect } = useTicketSelect()
+const { cart, totalPrice, totalTickets, addToCart, removeFromCart, formatPrice } = useEventPayment()
+
+const drawerOpen = ref(true)
+const cartWidth  = ref(420)
+
+onMounted(() => fetchTicketSelect(id))
+const retry = () => fetchTicketSelect(id)
+
+const handleAddTicket = (
+  zoneId:     string,
+  zoneName:   string,
+  quantity:   number,
+  price:      number,
+  isStanding: boolean,
+  seats?:     SelectedSeat[]
+) => {
+  addToCart(zoneId, zoneName, quantity, price, isStanding, seats)
+  drawerOpen.value = true
+}
+
+const handleBack        = () => navigateTo(`/events/${id}`)
+const proceedToCheckout = () => {
+  if (cart.value.length > 0)
+    navigateTo({ path: '/checkout', query: { cart: JSON.stringify(cart.value), eventId: event.value?.id } })
+}
+
+const startResize = (e: MouseEvent) => {
+  const startX = e.clientX, startWidth = cartWidth.value
+  const onMove = (ev: MouseEvent) => { cartWidth.value = Math.min(700, Math.max(300, startWidth + startX - ev.clientX)) }
+  const onUp   = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  window.addEventListener('mousemove', onMove)
+  window.addEventListener('mouseup', onUp)
+}
+</script>
+
 <template>
   <div class="event-payment-wrapper container-fluid bg-reactive-primary text-reactive-primary vh-100 overflow-hidden p-0">
 
@@ -77,66 +128,56 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useTicketSelect } from './composables/use-ticket-select'
-import { useEventPayment } from './composables/use-event-payment'
-import SeatingMap from './(components)/SeatingMap.vue'
-import EventInfo from './(components)/EventInfo.vue'
-import CartSummary from './(components)/CartSummary.vue'
-import type { SelectedSeat } from './(types)/ticket.type'
-
-definePageMeta({ layout: 'minimal' })
-
-const route = useRoute()
-const id    = route.params.id as string
-if (!id) navigateTo('/')
-
-const { event, tickets, floors, loading, error, fetchTicketSelect } = useTicketSelect()
-const { cart, totalPrice, totalTickets, addToCart, removeFromCart, formatPrice } = useEventPayment()
-
-const drawerOpen = ref(true)
-const cartWidth  = ref(420)
-
-onMounted(() => fetchTicketSelect(id))
-const retry = () => fetchTicketSelect(id)
-
-const handleAddTicket = (
-  zoneId:     string,
-  zoneName:   string,
-  quantity:   number,
-  price:      number,
-  isStanding: boolean,
-  seats?:     SelectedSeat[]
-) => {
-  addToCart(zoneId, zoneName, quantity, price, isStanding, seats)
-  drawerOpen.value = true
-}
-
-const handleBack        = () => navigateTo(`/events/${id}`)
-const proceedToCheckout = () => {
-  if (cart.value.length > 0)
-    navigateTo({ path: '/checkout', query: { cart: JSON.stringify(cart.value), eventId: event.value?.id } })
-}
-
-const startResize = (e: MouseEvent) => {
-  const startX = e.clientX, startWidth = cartWidth.value
-  const onMove = (ev: MouseEvent) => { cartWidth.value = Math.min(700, Math.max(300, startWidth + startX - ev.clientX)) }
-  const onUp   = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
-  window.addEventListener('mousemove', onMove)
-  window.addEventListener('mouseup', onUp)
-}
-</script>
-
 <style scoped>
-.resize-handle { width:5px; cursor:col-resize; background:transparent; flex-shrink:0; transition:background 0.2s; z-index:10; }
-.resize-handle:hover, .resize-handle:active { background: var(--bs-primary); }
-.bottom-drawer { position:absolute; bottom:0; left:0; right:0; border-radius:16px 16px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.15); transition:transform 0.35s cubic-bezier(.4,0,.2,1); transform:translateY(calc(100% - 58px)); z-index:200; display:flex; flex-direction:column; max-height:85vh; }
-.bottom-drawer.open { transform:translateY(0); }
-.drawer-handle { min-height:58px; cursor:pointer; border-radius:16px 16px 0 0; flex-shrink:0; position:relative; }
-.drawer-handle::before { content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; background:currentColor; border-radius:2px; opacity:0.2; }
-.drawer-content { flex-grow:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:199; }
-.fade-enter-active, .fade-leave-active { transition:opacity 0.25s ease; }
-.fade-enter-from, .fade-leave-to { opacity:0; }
+.resize-handle {
+  width:5px; cursor:col-resize;
+  background:transparent;
+  flex-shrink:0;
+  transition:background 0.2s;
+  z-index:10;
+}
+.resize-handle:hover, .resize-handle:active {
+  background: var(--bs-primary);
+}
+.bottom-drawer {
+  position:absolute; bottom:0; left:0; right:0;
+  border-radius:16px 16px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.15);
+  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+  transform:translateY(calc(100% - 58px)); z-index:200;
+  display:flex;
+  flex-direction:column;
+  max-height:85vh;
+}
+.bottom-drawer.open {
+  transform:translateY(0);
+}
+.drawer-handle {
+  min-height:58px;
+  cursor:pointer;
+  border-radius:16px 16px 0 0;
+  flex-shrink:0;
+  position:relative; }
+.drawer-handle::before {
+  content:'';
+  position:absolute;
+  top:8px;
+  left:50%;
+  transform:translateX(-50%);
+  width:36px;
+  height:4px;
+  background:currentColor;
+  border-radius:2px;
+  opacity:0.2;
+}
+.drawer-content {
+  flex-grow:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.drawer-backdrop {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  z-index:199;
+}
 </style>

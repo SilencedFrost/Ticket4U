@@ -1,182 +1,3 @@
-<template>
-  <div class="seating-map-wrapper h-100 d-flex flex-column">
-    <!-- Toolbar — matches editor style -->
-    <div class="p-3 border-bottom border-secondary bg-reactive-secondary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary" @click="$emit('back')">
-          <i class="bi bi-arrow-left me-1"/>{{ $t('event_payment.header.back') }}
-        </button>
-
-        <!-- Floor dropdown -->
-        <div v-if="floors.length > 1" class="dropdown">
-          <button
-              class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
-              type="button"
-              data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-layers me-1"/>
-            {{ activeFloor?.floor_name ?? $t('event_payment.floor.select') }}
-          </button>
-          <ul class="dropdown-menu">
-            <li v-for="floor in floors" :key="floor.id">
-              <button
-                  class="dropdown-item d-flex align-items-center gap-2"
-                  :class="{ active: activeFloorId === floor.id }"
-                  @click="activeFloorId = floor.id"
-              >
-                <i class="bi bi-check2 me-1" :style="{ opacity: activeFloorId === floor.id ? 1 : 0 }"/>
-                {{ floor.floor_name }}
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Zoom controls -->
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-secondary" @click="zoomIn" title="Zoom in"><i class="bi bi-plus-lg"/></button>
-          <button class="btn btn-outline-secondary" @click="zoomOut" title="Zoom out"><i class="bi bi-dash-lg"/></button>
-          <button class="btn btn-outline-secondary" @click="resetZoom" title="Reset zoom"><i class="bi bi-arrows-fullscreen"/></button>
-        </div>
-      </div>
-
-      <div class="text-center">
-        <h6 class="text-primary mb-0">{{ $t('event_payment.header.title') }}</h6>
-        <small class="text-reactive-secondary">{{ $t('event_payment.header.subtitle') }}</small>
-      </div>
-
-      <!-- Legend -->
-      <div class="d-flex gap-3 align-items-center">
-        <div class="d-flex align-items-center gap-1">
-          <div class="legend-dot" style="background:#22c55e"/>
-          <small class="text-reactive-secondary">{{ $t('event_payment.legend.available') }}</small>
-        </div>
-        <div class="d-flex align-items-center gap-1">
-          <div class="legend-dot" style="background:#3b82f6"/>
-          <small class="text-reactive-secondary">{{ $t('event_payment.legend.selected') }}</small>
-        </div>
-        <div class="d-flex align-items-center gap-1">
-          <div class="legend-dot" style="background:#6b7280"/>
-          <small class="text-reactive-secondary">{{ $t('event_payment.legend.unavailable') }}</small>
-        </div>
-      </div>
-    </div>
-
-    <!-- Canvas Area — same grid background as editor -->
-    <div
-        ref="canvasContainer"
-        class="flex-grow-1 position-relative overflow-hidden"
-        style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
-    >
-      <canvas
-          v-if="canvasSize.width > 0"
-          ref="canvasRef"
-          :width="canvasSize.width"
-          :height="canvasSize.height"
-          style="position:absolute;top:0;left:0;cursor:grab;"
-          @wheel.prevent="handleWheel"
-          @mousedown="onMouseDown"
-          @mousemove="onMouseMove"
-          @mouseup="onMouseUp"
-          @mouseleave="onMouseUp"
-          @click="handleCanvasClick"
-          @touchstart.prevent="onTouchStart"
-          @touchmove.prevent="onTouchMove"
-          @touchend="onTouchEnd"
-      />
-      <div v-else class="d-flex align-items-center justify-content-center h-100">
-        <div class="spinner-border text-primary"/>
-      </div>
-
-      <!-- No layout message -->
-      <div v-if="canvasSize.width > 0 && floors.length === 0" class="position-absolute top-50 start-50 translate-middle text-center text-reactive-secondary">
-        <i class="bi bi-map fs-1 d-block mb-2"/>
-        <p>{{ $t('event_payment.no_layout') }}</p>
-      </div>
-    </div>
-
-    <!-- Standing Zone Panel -->
-    <div
-        v-if="selectedStandingZone"
-        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
-        style="z-index:1000;"
-    >
-      <div class="container" style="max-width:600px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div>
-            <h5 class="text-reactive-primary mb-1">{{ selectedStandingZone.display_name ?? selectedStandingZone.zone_name }}</h5>
-            <small class="text-reactive-secondary">
-              <i class="bi bi-people me-1"/>{{ getZoneTicket(selectedStandingZone)?.available ?? 0 }} {{ $t('event_payment.selection.available') }}
-            </small>
-          </div>
-          <button class="btn-close" @click="selectedStandingZone = null"/>
-        </div>
-
-        <div v-if="getZoneTicket(selectedStandingZone)?.soldOut" class="alert alert-danger mb-0">
-          <i class="bi bi-exclamation-triangle me-2"/>{{ $t('event_payment.selection.sold_out_message') }}
-        </div>
-
-        <div v-else class="row g-3">
-          <div v-if="standingQuantity >= maxStandingAllowed" class="col-12">
-            <div class="alert alert-warning mb-0 py-2">
-              <i class="bi bi-exclamation-triangle me-2"/>{{ $t('event_payment.validation.max_reached', { max: maxStandingAllowed }) }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.quantity') }}</label>
-            <div class="d-flex gap-2">
-              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
-              <input type="number" class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold" v-model.number="standingQuantity" :max="maxStandingAllowed" min="0"/>
-              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.min(maxStandingAllowed, standingQuantity + 1)" :disabled="standingQuantity >= maxStandingAllowed"><i class="bi bi-plus"/></button>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.total') }}</label>
-            <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
-          </div>
-          <div class="col-12">
-            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0" @click="addStandingToCart">
-              <i class="bi bi-cart-plus me-2"/>{{ $t('event_payment.selection.add_to_cart') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Seated Selection Panel -->
-    <div
-        v-if="selectedSeats.length > 0 && !selectedStandingZone"
-        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
-        style="z-index:1000;"
-    >
-      <div class="container" style="max-width:600px;">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div class="flex-grow-1">
-            <h5 class="text-reactive-primary mb-1">{{ $t('event_payment.selection.selected_seats') }}</h5>
-            <div class="d-flex flex-wrap gap-1 mt-1">
-              <span
-                  v-for="seat in selectedSeats" :key="seat.seatId"
-                  class="badge d-inline-flex align-items-center gap-1"
-                  :style="{ backgroundColor: seat.zoneColor }"
-              >
-                {{ seat.seatId }}<i class="bi bi-x" style="cursor:pointer;" @click="deselectSeat(seat.seatId)"/>
-              </span>
-            </div>
-          </div>
-          <button class="btn-close ms-2" @click="selectedSeats = []"/>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-reactive-secondary">{{ $t('event_payment.selection.total') }}:</span>
-          <span class="text-primary fw-bold fs-5">{{ formatPrice(selectedSeatsTotalPrice) }}</span>
-        </div>
-        <button class="btn btn-primary w-100 py-2 fw-semibold" @click="addSeatsToCart">
-          <i class="bi bi-cart-plus me-2"/>{{ $t('event_payment.selection.add_to_cart') }} ({{ selectedSeats.length }})
-        </button>
-      </div>
-    </div>
-
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import type { Ticket } from '../(types)/ticket.type'
@@ -526,6 +347,184 @@ const formatPrice = (price: number) => new Intl.NumberFormat('vi-VN').format(pri
 
 watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick(() => draw()), { deep: true })
 </script>
+<template>
+  <div class="seating-map-wrapper h-100 d-flex flex-column">
+    <!-- Toolbar — matches editor style -->
+    <div class="p-3 border-bottom border-secondary bg-reactive-secondary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-secondary" @click="$emit('back')">
+          <i class="bi bi-arrow-left me-1"/>{{ $t('event_payment.header.back') }}
+        </button>
+
+        <!-- Floor dropdown -->
+        <div v-if="floors.length > 1" class="dropdown">
+          <button
+              class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2"
+              type="button"
+              data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-layers me-1"/>
+            {{ activeFloor?.floor_name ?? $t('event_payment.floor.select') }}
+          </button>
+          <ul class="dropdown-menu">
+            <li v-for="floor in floors" :key="floor.id">
+              <button
+                  class="dropdown-item d-flex align-items-center gap-2"
+                  :class="{ active: activeFloorId === floor.id }"
+                  @click="activeFloorId = floor.id"
+              >
+                <i class="bi bi-check2 me-1" :style="{ opacity: activeFloorId === floor.id ? 1 : 0 }"/>
+                {{ floor.floor_name }}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Zoom controls -->
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-secondary" @click="zoomIn" title="Zoom in"><i class="bi bi-plus-lg"/></button>
+          <button class="btn btn-outline-secondary" @click="zoomOut" title="Zoom out"><i class="bi bi-dash-lg"/></button>
+          <button class="btn btn-outline-secondary" @click="resetZoom" title="Reset zoom"><i class="bi bi-arrows-fullscreen"/></button>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h6 class="text-primary mb-0">{{ $t('event_payment.header.title') }}</h6>
+        <small class="text-reactive-secondary">{{ $t('event_payment.header.subtitle') }}</small>
+      </div>
+
+      <!-- Legend -->
+      <div class="d-flex gap-3 align-items-center">
+        <div class="d-flex align-items-center gap-1">
+          <div class="legend-dot" style="background:#22c55e"/>
+          <small class="text-reactive-secondary">{{ $t('event_payment.legend.available') }}</small>
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <div class="legend-dot" style="background:#3b82f6"/>
+          <small class="text-reactive-secondary">{{ $t('event_payment.legend.selected') }}</small>
+        </div>
+        <div class="d-flex align-items-center gap-1">
+          <div class="legend-dot" style="background:#6b7280"/>
+          <small class="text-reactive-secondary">{{ $t('event_payment.legend.unavailable') }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas Area — same grid background as editor -->
+    <div
+        ref="canvasContainer"
+        class="flex-grow-1 position-relative overflow-hidden"
+        style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
+    >
+      <canvas
+          v-if="canvasSize.width > 0"
+          ref="canvasRef"
+          :width="canvasSize.width"
+          :height="canvasSize.height"
+          style="position:absolute;top:0;left:0;cursor:grab;"
+          @wheel.prevent="handleWheel"
+          @mousedown="onMouseDown"
+          @mousemove="onMouseMove"
+          @mouseup="onMouseUp"
+          @mouseleave="onMouseUp"
+          @click="handleCanvasClick"
+          @touchstart.prevent="onTouchStart"
+          @touchmove.prevent="onTouchMove"
+          @touchend="onTouchEnd"
+      />
+      <div v-else class="d-flex align-items-center justify-content-center h-100">
+        <div class="spinner-border text-primary"/>
+      </div>
+
+      <!-- No layout message -->
+      <div v-if="canvasSize.width > 0 && floors.length === 0" class="position-absolute top-50 start-50 translate-middle text-center text-reactive-secondary">
+        <i class="bi bi-map fs-1 d-block mb-2"/>
+        <p>{{ $t('event_payment.no_layout') }}</p>
+      </div>
+    </div>
+
+    <!-- Standing Zone Panel -->
+    <div
+        v-if="selectedStandingZone"
+        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
+        style="z-index:1000;"
+    >
+      <div class="container" style="max-width:600px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="text-reactive-primary mb-1">{{ selectedStandingZone.display_name ?? selectedStandingZone.zone_name }}</h5>
+            <small class="text-reactive-secondary">
+              <i class="bi bi-people me-1"/>{{ getZoneTicket(selectedStandingZone)?.available ?? 0 }} {{ $t('event_payment.selection.available') }}
+            </small>
+          </div>
+          <button class="btn-close" @click="selectedStandingZone = null"/>
+        </div>
+
+        <div v-if="getZoneTicket(selectedStandingZone)?.soldOut" class="alert alert-danger mb-0">
+          <i class="bi bi-exclamation-triangle me-2"/>{{ $t('event_payment.selection.sold_out_message') }}
+        </div>
+
+        <div v-else class="row g-3">
+          <div v-if="standingQuantity >= maxStandingAllowed" class="col-12">
+            <div class="alert alert-warning mb-0 py-2">
+              <i class="bi bi-exclamation-triangle me-2"/>{{ $t('event_payment.validation.max_reached', { max: maxStandingAllowed }) }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.quantity') }}</label>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
+              <input type="number" class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold" v-model.number="standingQuantity" :max="maxStandingAllowed" min="0"/>
+              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.min(maxStandingAllowed, standingQuantity + 1)" :disabled="standingQuantity >= maxStandingAllowed"><i class="bi bi-plus"/></button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-reactive-primary fw-semibold small">{{ $t('event_payment.selection.total') }}</label>
+            <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0" @click="addStandingToCart">
+              <i class="bi bi-cart-plus me-2"/>{{ $t('event_payment.selection.add_to_cart') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seated Selection Panel -->
+    <div
+        v-if="selectedSeats.length > 0 && !selectedStandingZone"
+        class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
+        style="z-index:1000;"
+    >
+      <div class="container" style="max-width:600px;">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="flex-grow-1">
+            <h5 class="text-reactive-primary mb-1">{{ $t('event_payment.selection.selected_seats') }}</h5>
+            <div class="d-flex flex-wrap gap-1 mt-1">
+              <span
+                  v-for="seat in selectedSeats" :key="seat.seatId"
+                  class="badge d-inline-flex align-items-center gap-1"
+                  :style="{ backgroundColor: seat.zoneColor }"
+              >
+                {{ seat.seatId }}<i class="bi bi-x" style="cursor:pointer;" @click="deselectSeat(seat.seatId)"/>
+              </span>
+            </div>
+          </div>
+          <button class="btn-close ms-2" @click="selectedSeats = []"/>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-reactive-secondary">{{ $t('event_payment.selection.total') }}:</span>
+          <span class="text-primary fw-bold fs-5">{{ formatPrice(selectedSeatsTotalPrice) }}</span>
+        </div>
+        <button class="btn btn-primary w-100 py-2 fw-semibold" @click="addSeatsToCart">
+          <i class="bi bi-cart-plus me-2"/>{{ $t('event_payment.selection.add_to_cart') }} ({{ selectedSeats.length }})
+        </button>
+      </div>
+    </div>
+
+  </div>
+</template>
 
 <style scoped>
 .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }

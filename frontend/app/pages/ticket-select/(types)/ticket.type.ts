@@ -19,8 +19,3 @@ export interface SelectedSeat {
   seatName: string    // display name e.g. "Seat A1"
   seatUuid: string    // actual DB UUID — used for booking
 }
-
-export interface SelectedTicket {
-  ticket:   Ticket
-  quantity: number
-}

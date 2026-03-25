@@ -5,8 +5,8 @@ export interface SeatPos {
 
 export interface LayoutSeat {
   seat_name:      string
-  seat_id:        string              // seatCode e.g. "A1"
-  seat_uuid?:     string              // actual DB UUID
+  seat_id:        string
+  seat_uuid?:     string
   seat_pos:       SeatPos
   seat_rotation:  number
   status?:        'AVAILABLE' | 'BOOKED' | 'HOLD'

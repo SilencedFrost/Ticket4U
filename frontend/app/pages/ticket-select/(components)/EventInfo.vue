@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import type { Event } from '../(types)/event.type'
+defineProps<{ event: Event }>()
+</script>
 <template>
   <div class="event-info-wrapper mb-4">
     <h4 class="mb-3 text-reactive-primary">{{ event.title }}</h4>
@@ -13,8 +17,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { Event } from '../(types)/event.type'
-defineProps<{ event: Event }>()
-</script>

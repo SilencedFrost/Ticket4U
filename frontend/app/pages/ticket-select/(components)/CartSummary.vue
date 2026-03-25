@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { Ticket } from '../(types)/ticket.type'
+import type { CartItem } from '../(types)/event-payment.type'
+
+const { t, locale } = useI18n()
+
+const props = defineProps<{
+  tickets:      Ticket[]
+  cart:         CartItem[]
+  totalPrice:   number
+  totalTickets: number
+}>()
+
+defineEmits<{ (e: 'removeItem', index: number): void }>()
+
+// Expanded state for details dropdown
+const expandedIds = ref<Set<string>>(new Set())
+const toggleExpanded = (id: string) => {
+  if (expandedIds.value.has(id)) expandedIds.value.delete(id)
+  else expandedIds.value.add(id)
+}
+
+// Helpers
+const hasDetails = (ticket: Ticket) =>
+    !!(ticket.descriptionVi || ticket.descriptionEn || ticket.perks?.length || ticket.giftImageUrl)
+
+const isUnlimited    = (ticket: Ticket) => !ticket.maxPerAccount
+const getMaxLimitText = (ticket: Ticket) =>
+    isUnlimited(ticket)
+        ? t('event_payment.validation.unlimited')
+        : t('event_payment.validation.max_per_account', { max: ticket.maxPerAccount })
+
+const getTicketColor = (zoneId: string): string =>
+    props.tickets.find(t => t.id === zoneId)?.color ?? '#6366f1'
+
+const formatPrice = (price: number) =>
+    new Intl.NumberFormat('vi-VN').format(price) + ' đ'
+</script>
+
 <template>
   <div class="cart-summary-wrapper">
 
@@ -149,45 +189,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { Ticket } from '../(types)/ticket.type'
-import type { CartItem } from '../(types)/event-payment.type'
-
-const { t, locale } = useI18n()
-
-const props = defineProps<{
-  tickets:      Ticket[]
-  cart:         CartItem[]
-  totalPrice:   number
-  totalTickets: number
-}>()
-
-defineEmits<{ (e: 'removeItem', index: number): void }>()
-
-// ── Expanded state for details dropdown ────────────────────
-const expandedIds = ref<Set<string>>(new Set())
-const toggleExpanded = (id: string) => {
-  if (expandedIds.value.has(id)) expandedIds.value.delete(id)
-  else expandedIds.value.add(id)
-}
-
-// ── Helpers ────────────────────────────────────────────────
-const hasDetails = (ticket: Ticket) =>
-    !!(ticket.descriptionVi || ticket.descriptionEn || ticket.perks?.length || ticket.giftImageUrl)
-
-const isUnlimited    = (ticket: Ticket) => !ticket.maxPerAccount
-const getMaxLimitText = (ticket: Ticket) =>
-    isUnlimited(ticket)
-        ? t('event_payment.validation.unlimited')
-        : t('event_payment.validation.max_per_account', { max: ticket.maxPerAccount })
-
-const getTicketColor = (zoneId: string): string =>
-    props.tickets.find(t => t.id === zoneId)?.color ?? '#6366f1'
-
-const formatPrice = (price: number) =>
-    new Intl.NumberFormat('vi-VN').format(price) + ' đ'
-</script>
 
 <style scoped>
 .ticket-card { background: rgba(var(--bs-secondary-rgb), 0.15); }

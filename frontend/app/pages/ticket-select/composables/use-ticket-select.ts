@@ -196,7 +196,7 @@ export const useTicketSelect = () => {
       // Fetch event info and seating plan in parallel
       const [eventData, seatingData] = await Promise.all([
         $fetch<EventInfoResponse>(`${config.public.apiUrl}/public/events/${eventId}`),
-        $fetch<SeatingPlanResponse>(`${config.public.apiUrl}/public/events/${eventId}/seating-plan`),
+        $fetch<SeatingPlanResponse>(`${config.public.apiUrl}/public/events/${eventId}/layout`),
       ])
 
       const start = new Date(eventData.startDate)

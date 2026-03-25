@@ -21,7 +21,7 @@
       Nguyễn Minh Quang
     </h3>
     <p class="text-reactive-secondary small mb-1 fw-bold">@minhquangdev</p>
-    <p class="text-reactive-secondary small mb-3">Thành viên từ Tháng 12, 2023</p>
+    <p class="text-reactive-secondary small mb-3">{{ $t('settings.personalInformation.memberSince') }} {{ $d(new Date('2023-12-01'), 'short') }}</p>
     <div class="d-flex gap-2">
       <span
         class="badge"

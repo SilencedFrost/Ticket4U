@@ -2,9 +2,9 @@
   <SettingsLayout>
     <!-- Page header: title + subtitle, full width -->
     <div class="page-header mb-4">
-      <h1 class="h3 fw-bold text-reactive-primary mb-1">Thông tin cá nhân</h1>
+      <h1 class="h3 fw-bold text-reactive-primary mb-1">{{ $t('settings.personalInformation.title') }}</h1>
       <p class="text-reactive-secondary mb-0">
-        Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.
+        {{ $t('settings.personalInformation.subtitle') }}
       </p>
     </div>
 
@@ -27,12 +27,15 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
 import SettingsLayout from '../components/SettingsLayout.vue';
 import AvatarUpload from './components/AvatarUpload.vue';
 import PersonalInfoForm from './components/PersonalInfoForm.vue';
 
+const { t } = useI18n();
+
 useHead({
-  title: 'Settings',
+  title: t('settings.title'),
 });
 // <!-- TODO: wire up script -->
 </script>

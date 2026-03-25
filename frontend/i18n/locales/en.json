@@ -122,5 +122,32 @@
       "ticket_info": "Ticket Information",
       "related": "You May Also Like"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage account",
+    "nav": {
+      "personalInformation": "Personal Information"
+    },
+    "personalInformation": {
+      "title": "Personal Information",
+      "subtitle": "Update your profile for a smoother booking experience.",
+      "memberSince": "Member since",
+      "basicInfo": {
+        "sectionTitle": "Basic Information",
+        "lastName": "Last Name",
+        "lastNameHint": "Max 32 characters",
+        "firstName": "First Name",
+        "firstNameHint": "Max 32 characters",
+        "username": "Username",
+        "usernameHint": "Max 64 characters",
+        "birthday": "Date of Birth",
+        "phone": "Phone Number",
+        "phoneHint": "Format: +84xxxxxxxxx"
+      },
+      "actions": {
+        "save": "Save changes"
+      }
+    }
   }
 }

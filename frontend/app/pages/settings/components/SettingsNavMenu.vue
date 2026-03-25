@@ -2,8 +2,8 @@
   <div class="d-flex flex-column h-100 pt-3">
     <!-- Header -->
     <div class="px-3 mb-4 border-bottom border-light pb-3">
-      <h2 class="h5 fw-bold text-reactive-primary mb-1">Settings</h2>
-      <p class="small text-reactive-secondary mb-0 text-nowrap">Quản lý tài khoản</p>
+      <h2 class="h5 fw-bold text-reactive-primary mb-1">{{ $t('settings.title') }}</h2>
+      <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
     </div>
 
     <!-- Tab Navigation List -->
@@ -12,14 +12,14 @@
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <!-- Personal Info Tab (Active by default per instructions) -->
         <li>
-          <NuxtLink
+          <NuxtLinkLocale
             to="/settings/personal-information"
             class="nav-item d-flex align-items-center px-3 py-3 w-100 rounded text-decoration-none settings-nav__item active"
             style="gap: 8px"
           >
             <i class="bi bi-person fw-bold fs-5"></i>
-            <span class="fw-medium small fw-bold text-nowrap">Thông tin cá nhân</span>
-          </NuxtLink>
+            <span class="fw-medium small fw-bold text-nowrap">{{ $t('settings.nav.personalInformation') }}</span>
+          </NuxtLinkLocale>
         </li>
       </ul>
     </nav>

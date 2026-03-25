@@ -1,4 +1,4 @@
-import type { Event, Place, TrendingEvent } from '../types'
+import type { Event, Place, TrendingEvent } from '../types';
 
 export const featuredEvents: Event[] = [
   {
@@ -29,8 +29,7 @@ export const featuredEvents: Event[] = [
     price: 600000,
     date: '15.01.2026',
   },
-
-]
+];
 
 export const specialEvents: Event[] = [
   {
@@ -61,7 +60,7 @@ export const specialEvents: Event[] = [
     price: 200000,
     date: '25.12.2025',
   },
-]
+];
 
 export const trendingEvents: TrendingEvent[] = [
   {
@@ -88,7 +87,7 @@ export const trendingEvents: TrendingEvent[] = [
     date: '20.01.2026',
     rank: 3,
   },
-]
+];
 
 export const suggestedEvents: Event[] = [
   {
@@ -119,7 +118,7 @@ export const suggestedEvents: Event[] = [
     price: 375000,
     date: '25 Tháng 11,2025',
   },
-]
+];
 
 export const musicEvents: Event[] = [
   {
@@ -150,7 +149,7 @@ export const musicEvents: Event[] = [
     price: 375000,
     date: '25 Tháng 11,2025',
   },
-]
+];
 
 export const places: Place[] = [
   {
@@ -173,4 +172,4 @@ export const places: Place[] = [
     name: 'Vị trí khác',
     imageUrl: 'https://www.figma.com/api/mcp/asset/3b6430ca-6643-4b1b-bc55-fb22bc865764',
   },
-]
+];

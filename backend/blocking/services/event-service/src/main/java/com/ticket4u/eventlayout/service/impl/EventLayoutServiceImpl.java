@@ -6,6 +6,8 @@ import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
 import com.ticket4u.core.entity.Seat;
 import com.ticket4u.core.entity.Zone;
+import com.ticket4u.core.mapper.SeatMapper;
+import com.ticket4u.core.mapper.ZoneMapper;
 import com.ticket4u.eventlayout.dto.EventLayoutResponse;
 import com.ticket4u.eventlayout.repository.EventLayoutRepository;
 import com.ticket4u.eventlayout.repository.EventLayoutSeatRepository;
@@ -28,6 +30,8 @@ public class EventLayoutServiceImpl implements EventLayoutService {
 
     private final EventLayoutRepository     eventLayoutRepository;
     private final EventLayoutSeatRepository seatRepository;
+    private final SeatMapper                seatMapper;
+    private final ZoneMapper                zoneMapper;
     private final ObjectMapper              objectMapper;
 
     @Override
@@ -129,23 +133,10 @@ public class EventLayoutServiceImpl implements EventLayoutService {
     }
 
     private ZoneResponse mapZone(Zone zone, List<SeatResponse> seats) {
-        int available = Math.max(0,
-                (zone.getCapacity()     != null ? zone.getCapacity()     : 0) -
-                        (zone.getQuantitySold() != null ? zone.getQuantitySold() : 0));
-        return new ZoneResponse(
-                zone.getId(), zone.getName(), zone.getPrice(), available,
-                Boolean.TRUE.equals(zone.getIsStanding()),
-                zone.getDescriptionVi(), zone.getDescriptionEn(),
-                zone.getGiftImageUrl(), zone.getPerks(), seats
-        );
+        return zoneMapper.toDTO(zone);
     }
 
     private SeatResponse mapSeat(Seat seat) {
-        return new SeatResponse(
-                seat.getId(), seat.getZone().getId(), seat.getName(),
-                seat.getRowName(), seat.getColName(), seat.getSeatCode(),
-                seat.getStatus() != null ? seat.getStatus().name() : "AVAILABLE",
-                seat.getPriceOverride()
-        );
+        return seatMapper.toDTO(seat);
     }
 }

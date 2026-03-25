@@ -1,4 +1,4 @@
-package com.ticket4u.ticketselect.service.impl;
+package com.ticket4u.seatingmap.service.impl;
 
 import com.ticket4u.core.dto.SeatResponse;
 import com.ticket4u.core.dto.ZoneResponse;
@@ -6,10 +6,9 @@ import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
 import com.ticket4u.core.entity.Seat;
 import com.ticket4u.core.entity.Zone;
-import com.ticket4u.ticketselect.dto.SeatingPlanResponse;
-import com.ticket4u.ticketselect.repository.TicketSelectRepository;
-import com.ticket4u.ticketselect.repository.TicketSelectSeatRepository;
-import com.ticket4u.ticketselect.service.TicketSelectService;
+import com.ticket4u.seatingmap.dto.SeatingPlanResponse;
+import com.ticket4u.seatingmap.repository.SeatingPlanRepository;
+import com.ticket4u.seatingmap.repository.SeatingPlanSeatRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +25,10 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TicketSelectServiceImpl implements TicketSelectService {
+public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.service.SeatingMapServiceImpl {
 
-    private final TicketSelectRepository     ticketSelectRepository;
-    private final TicketSelectSeatRepository seatRepository;
+    private final SeatingPlanRepository seatingPlanRepository;
+    private final SeatingPlanSeatRepository seatRepository;
     private final ObjectMapper               objectMapper;
 
     private static final DateTimeFormatter DT_FMT =
@@ -38,7 +37,7 @@ public class TicketSelectServiceImpl implements TicketSelectService {
     @Override
     @Transactional(readOnly = true)
     public SeatingPlanResponse getTicketSelectData(UUID eventId) {
-        Event event = ticketSelectRepository.findWithSessionsZonesAndVenueById(eventId)
+        Event event = seatingPlanRepository.findWithSessionsZonesAndVenueById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
 
         String layoutJson = resolveLayout(event);

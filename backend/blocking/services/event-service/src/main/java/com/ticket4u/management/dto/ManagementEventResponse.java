@@ -9,27 +9,14 @@ import java.util.UUID;
 
 public record ManagementEventResponse(
         UUID id,
-        String name,
-        String addressLine,
-        OffsetDateTime firstSessionStart,
         Event.EventStatus status,
-        String bannerUrl,
-        UUID venueId,
-        String venueName,
+        // Layout — not in public EventResponse
         String layout,
-        String aboutVi,
-        String aboutEn,
-        String termsAndConditions,
-        String policyRefund,
-        String seatingPlanImageUrl,
-        Integer categoryId,
-        String categoryName,
+        // Stats — management only
         Integer ticketsSold,
         Integer totalCapacity,
         BigDecimal revenue,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt,
-        // Included on create so frontend gets sessionId immediately
+        // Sessions — management needs full session list with IDs
         List<SessionSummary> sessions
 ) {
     public record SessionSummary(UUID id, OffsetDateTime startDate, OffsetDateTime endDate) {}

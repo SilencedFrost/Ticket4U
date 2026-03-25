@@ -1,10 +1,8 @@
 package com.ticket4u.management.service.impl;
 
-import com.ticket4u.core.dto.EventLayoutResponse;
-import com.ticket4u.core.dto.SeatResponse;
+import com.ticket4u.core.dto.*;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSessionResponse;
 import com.ticket4u.core.entity.*;
 import com.ticket4u.core.repository.CategoryRepository;
@@ -38,7 +36,8 @@ public class ManagementServiceImpl implements ManagementService {
     private final CategoryRepository               categoryRepository;
     private final ObjectMapper                     objectMapper;
 
-    // Categories
+    // ── Categories ─────────────────────────────────────────
+
     @Override
     @Transactional(readOnly = true)
     public List<CategorySummaryResponse> getCategories() {
@@ -47,7 +46,8 @@ public class ManagementServiceImpl implements ManagementService {
                 .collect(Collectors.toList());
     }
 
-    // Events
+    // ── Events ─────────────────────────────────────────────
+
     @Override
     @Transactional(readOnly = true)
     public List<ManagementEventResponse> getEvents(UUID organizerId) {
@@ -111,7 +111,7 @@ public class ManagementServiceImpl implements ManagementService {
         eventRepository.save(event);
     }
 
-    // Sessions
+    // ── Sessions ───────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -134,7 +134,7 @@ public class ManagementServiceImpl implements ManagementService {
         return mapSessionToResponse(sessionRepository.save(session));
     }
 
-    // Zones
+    // ── Zones ──────────────────────────────────────────────
 
     @Override
     @Transactional(readOnly = true)
@@ -187,7 +187,8 @@ public class ManagementServiceImpl implements ManagementService {
         zoneRepository.delete(zone);
     }
 
-    // Layout
+    // ── Layout ─────────────────────────────────────────────
+
     @Override
     @Transactional
     public EventLayoutResponse applyLayout(UUID organizerId, UUID eventId,
@@ -265,7 +266,8 @@ public class ManagementServiceImpl implements ManagementService {
         return new EventLayoutResponse(eventId, layoutJson);
     }
 
-    // Seats
+    // ── Seats ──────────────────────────────────────────────
+
     @Override
     @Transactional(readOnly = true)
     public List<SeatResponse> getSeats(UUID organizerId, UUID sessionId, UUID zoneId) {
@@ -321,24 +323,16 @@ public class ManagementServiceImpl implements ManagementService {
         seatRepository.deleteAllByZoneId(zone.getId());
     }
 
-    // Seat generation
+    // ── Seat generation ────────────────────────────────────
+
     private void generateSeatsFromZoneLinks(EventSession session,
                                             List<ManagementEventLayoutRequest.VenueZoneLink> links) {
         for (ManagementEventLayoutRequest.VenueZoneLink link : links) {
             if (link.zoneId() == null) continue;
             Zone zone = zoneRepository.findByIdAndSessionId(link.zoneId(), session.getId()).orElse(null);
-            if (zone == null) {
-                log.warn("Zone {} not found in session {}", link.zoneId(), session.getId());
-                continue;
-            }
-            if (Boolean.TRUE.equals(zone.getIsStanding())) {
-                log.info("Zone '{}' is standing — no seats generated", zone.getName());
-                continue;
-            }
-            if (zone.getCapacity() == null || zone.getCapacity() <= 0) {
-                log.warn("Zone '{}' has no capacity — skipping", zone.getName());
-                continue;
-            }
+            if (zone == null) { log.warn("Zone {} not found in session {}", link.zoneId(), session.getId()); continue; }
+            if (Boolean.TRUE.equals(zone.getIsStanding())) { log.info("Zone '{}' is standing — no seats generated", zone.getName()); continue; }
+            if (zone.getCapacity() == null || zone.getCapacity() <= 0) { log.warn("Zone '{}' has no capacity — skipping", zone.getName()); continue; }
             seatRepository.deleteAllByZoneId(zone.getId());
             int cols = (int) Math.round(Math.sqrt(zone.getCapacity()));
             int rows = (int) Math.ceil((double) zone.getCapacity() / cols);
@@ -434,7 +428,7 @@ public class ManagementServiceImpl implements ManagementService {
         }
     }
 
-    // Private helpers
+    // ── Private helpers ────────────────────────────────────
 
     private Event findEvent(UUID organizerId, UUID eventId) {
         return eventRepository.findByIdAndOrganizerId(eventId, organizerId)
@@ -501,45 +495,21 @@ public class ManagementServiceImpl implements ManagementService {
         BigDecimal revenue       = includeStats ? eventRepository.sumRevenueByEventId(event.getId()) : BigDecimal.ZERO;
 
         List<EventSession> sessionList = sessionRepository.findAllByEventIdOrderByStartDateAsc(event.getId());
-
-        OffsetDateTime firstSessionStart = sessionList.stream()
-                .map(EventSession::getStartDate)
-                .filter(d -> d != null)
-                .min(OffsetDateTime::compareTo)
-                .orElse(null);
-
         List<ManagementEventResponse.SessionSummary> sessions = sessionList.stream()
                 .map(s -> new ManagementEventResponse.SessionSummary(s.getId(), s.getStartDate(), s.getEndDate()))
                 .collect(Collectors.toList());
 
-        Category firstCat = event.getCategories() != null && !event.getCategories().isEmpty()
-                ? event.getCategories().iterator().next() : null;
-
         return new ManagementEventResponse(
                 event.getId(),
-                event.getName(),
-                event.getAddressLine(),
-                firstSessionStart,
                 event.getStatus(),
-                event.getBannerUrl(),
-                event.getVenue() != null ? event.getVenue().getId() : null,
-                event.getVenue() != null ? event.getVenue().getName() : null,
                 event.getLayout(),
-                event.getAboutVi(),
-                event.getAboutEn(),
-                event.getTermsAndConditions(),
-                event.getPolicyRefund(),
-                event.getSeatingPlanImageUrl(),
-                firstCat != null ? firstCat.getId() : null,
-                firstCat != null ? firstCat.getName() : null,
                 ticketsSold,
                 totalCapacity,
                 revenue,
-                event.getCreatedAt(),
-                event.getUpdatedAt(),
                 sessions
         );
     }
+
 
     private EventSessionResponse mapSessionToResponse(EventSession s) {
         return new EventSessionResponse(

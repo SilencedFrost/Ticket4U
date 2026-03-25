@@ -19,6 +19,7 @@
     "@vueuse/core": "^14.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "eslint": "^9.39.1",
     "i18n-unused": "^0.19.0",
     "nuxt": "^4.2.1",
     "pinia": "^3.0.4",
@@ -30,9 +31,7 @@
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^24.10.1",
-    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
     "prettier": "3.6.2",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.1.3"

@@ -35,7 +35,7 @@ public class EmailUtil {
         return email.substring(0, email.indexOf('@')).trim();
     }
 
-    private static String getDomain(String email, boolean safe) {
+    public static String getDomain(String email, boolean safe) {
         if(!handleSafety(email, safe)) return null;
         return email.substring(email.indexOf('@') + 1).trim();
     }
@@ -47,6 +47,8 @@ public class EmailUtil {
         if(localPart == null || domain == null) return null;
 
         List<NORMALIZATION_RULE> activeRules = NORMALIZATION_MAPPING.get(domain.toLowerCase());
+
+        if(activeRules == null || activeRules.isEmpty()) return null;
 
         for(NORMALIZATION_RULE currentRule: NORMALIZATION_ORDER) {
 

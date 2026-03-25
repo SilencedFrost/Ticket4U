@@ -127,23 +127,23 @@
     "title": "Settings",
     "subtitle": "Quản lý tài khoản",
     "nav": {
-      "personalInformation": "Thông tin cá nhân"
+      "personal_information": "Thông tin cá nhân"
     },
-    "personalInformation": {
+    "personal_information": {
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
-      "memberSince": "Thành viên từ",
-      "basicInfo": {
-        "sectionTitle": "Thông tin cơ bản",
-        "lastName": "Họ",
-        "lastNameHint": "Tối đa 32 ký tự",
-        "firstName": "Tên",
-        "firstNameHint": "Tối đa 32 ký tự",
+      "member_since": "Thành viên từ",
+      "basic_info": {
+        "section_title": "Thông tin cơ bản",
+        "last_name": "Họ",
+        "last_name_hint": "Tối đa 32 ký tự",
+        "first_name": "Tên",
+        "first_name_hint": "Tối đa 32 ký tự",
         "username": "Tên người dùng",
-        "usernameHint": "Tối đa 64 ký tự",
+        "username_hint": "Tối đa 64 ký tự",
         "birthday": "Ngày sinh",
         "phone": "Số điện thoại",
-        "phoneHint": "Định dạng: +84xxxxxxxxx"
+        "phone_hint": "Định dạng: +84xxxxxxxxx"
       },
       "actions": {
         "save": "Lưu thay đổi"

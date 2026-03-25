@@ -1,9 +1,13 @@
+<script setup lang="ts">
+// <!-- TODO: wire up script -->
+</script>
+
 <template>
   <div class="row g-3">
     <!-- Họ & Tên -->
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personalInformation.basicInfo.lastName')
+        $t('settings.personal_information.basic_info.last_name')
       }}</label>
       <input
         type="text"
@@ -12,12 +16,12 @@
         maxlength="32"
       />
       <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personalInformation.basicInfo.lastNameHint')
+        $t('settings.personal_information.basic_info.last_name_hint')
       }}</span>
     </div>
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personalInformation.basicInfo.firstName')
+        $t('settings.personal_information.basic_info.first_name')
       }}</label>
       <input
         type="text"
@@ -26,14 +30,14 @@
         maxlength="32"
       />
       <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personalInformation.basicInfo.firstNameHint')
+        $t('settings.personal_information.basic_info.first_name_hint')
       }}</span>
     </div>
 
     <!-- Tên người dùng -->
     <div class="col-12">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personalInformation.basicInfo.username')
+        $t('settings.personal_information.basic_info.username')
       }}</label>
       <input
         type="text"
@@ -42,14 +46,14 @@
         maxlength="64"
       />
       <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personalInformation.basicInfo.usernameHint')
+        $t('settings.personal_information.basic_info.username_hint')
       }}</span>
     </div>
 
     <!-- Ngày sinh -->
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personalInformation.basicInfo.birthday')
+        $t('settings.personal_information.basic_info.birthday')
       }}</label>
       <input
         type="date"
@@ -61,7 +65,7 @@
     <!-- Số điện thoại -->
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personalInformation.basicInfo.phone')
+        $t('settings.personal_information.basic_info.phone')
       }}</label>
       <input
         type="tel"
@@ -71,15 +75,11 @@
         maxlength="15"
       />
       <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personalInformation.basicInfo.phoneHint')
+        $t('settings.personal_information.basic_info.phone_hint')
       }}</span>
     </div>
   </div>
 </template>
-
-<script setup>
-// <!-- TODO: wire up script -->
-</script>
 
 <style scoped>
 .tracking-wide {

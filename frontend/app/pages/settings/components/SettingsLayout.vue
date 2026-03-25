@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import SettingsNavMenu from './SettingsNavMenu.vue';
+import '../style/settings.css';
+
+// <!-- TODO: wire up script -->
+</script>
+
 <template>
   <div class="container py-3 min-vh-100">
     <div class="row gx-3 h-100 flex-nowrap">
@@ -5,7 +12,7 @@
       <aside class="d-none d-md-flex flex-column h-100 settings-sidebar me-3">
         <SettingsNavMenu />
       </aside>
-      
+
       <!-- Right Content Slot -->
       <main class="settings-content pb-4">
         <slot />
@@ -13,13 +20,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import SettingsNavMenu from './SettingsNavMenu.vue'
-import '../style/settings.css'
-
-// <!-- TODO: wire up script -->
-</script>
 
 <style scoped>
 .min-vh-100 {

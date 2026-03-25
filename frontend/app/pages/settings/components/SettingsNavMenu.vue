@@ -1,3 +1,7 @@
+<script setup lang="ts">
+// <!-- TODO: wire up script -->
+</script>
+
 <template>
   <div class="d-flex flex-column h-100 pt-3">
     <!-- Header -->
@@ -18,17 +22,13 @@
             style="gap: 8px"
           >
             <i class="bi bi-person fw-bold fs-5"></i>
-            <span class="fw-medium small fw-bold text-nowrap">{{ $t('settings.nav.personalInformation') }}</span>
+            <span class="fw-medium small fw-bold text-nowrap">{{ $t('settings.nav.personal_information') }}</span>
           </NuxtLinkLocale>
         </li>
       </ul>
     </nav>
   </div>
 </template>
-
-<script setup>
-// <!-- TODO: wire up script -->
-</script>
 
 <style scoped>
 .settings-nav__item {

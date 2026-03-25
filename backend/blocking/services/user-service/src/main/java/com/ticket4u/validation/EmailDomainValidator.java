@@ -1,6 +1,6 @@
 package com.ticket4u.validation;
 
-import com.ticket4u.constant.ValidationConstants;
+import com.ticket4u.constant.MailNormalization;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -21,6 +21,6 @@ public class EmailDomainValidator implements ConstraintValidator<ValidEmailDomai
 
         // Validate domain
         String domain = email.substring(atIndex + 1);
-        return ValidationConstants.ALLOWED_EMAIL_DOMAIN.contains(domain);
+        return MailNormalization.ALLOWED_EMAIL_DOMAIN.contains(domain);
     }
 }

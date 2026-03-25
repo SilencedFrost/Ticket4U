@@ -2,12 +2,10 @@ package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
-import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.embedding.service.QdrantService;
 import com.ticket4u.embedding.service.EventSemanticService;
-import io.qdrant.client.VectorOutputHelper;
 import io.qdrant.client.grpc.Common;
 import io.qdrant.client.grpc.Points;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -209,6 +206,23 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         } catch (Exception e) {
             log.error("Semantic search failed for query: '{}'. Error: {}", query, e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public float getSimilarityScore(UUID originalId, UUID targetId) {
+        try {
+            Common.PointId originPoint = Common.PointId.newBuilder().setUuid(originalId.toString()).build();
+
+            List<Points.ScoredPoint> results = qdrantService.search(COLLECTION, originPoint, 0.0f, 100);
+
+            return (float) results.stream()
+                    .filter(p -> p.getId().getUuid().equals(targetId.toString()))
+                    .mapToDouble(Points.ScoredPoint::getScore)
+                    .findFirst()
+                    .orElse(0.1f);
+        } catch (Exception e) {
+            return 0.1f;
         }
     }
 }

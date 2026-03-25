@@ -1,6 +1,5 @@
 package com.ticket4u.embedding.service;
 
-import com.ticket4u.core.dto.EventSummaryResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -11,4 +10,5 @@ public interface EventSemanticService {
     void storeEventVectors(List<UUID> ids, boolean override);
     List<UUID> findSimilarEvents(UUID id, Pageable pageable);
     List<UUID> search(String query, Pageable pageable);
+    float getSimilarityScore(UUID originalId, UUID targetId);
 }

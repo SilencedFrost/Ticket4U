@@ -22,7 +22,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -32,17 +31,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
-    private final AuthJwkSupplier authJwkSupplier;
+    private final JwtUtil          jwtUtil;
+    private final CookieUtil       cookieUtil;
+    private final AuthJwkSupplier  authJwkSupplier;
+
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-
-        // Skip filter for public endpoints
-        return (pathMatcher.match("/api/*/public/**", path));
+        return pathMatcher.match("/api/*/public/**", path)
+                || pathMatcher.match("/.well-known/**", path);
     }
 
     @Override
@@ -54,49 +53,73 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         JWK authJwk = authJwkSupplier.getJwkSafe().orElse(null);
 
-        if(SecurityContextHolder.getContext().getAuthentication() == null && request.getCookies() != null && authJwk != null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null
+                && request.getCookies() != null
+                && authJwk != null) {
 
             String accessToken = (String) request.getAttribute("newAccessToken");
-
             if (accessToken == null) {
-                accessToken = cookieUtil.getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey()).orElse(null);
+                accessToken = cookieUtil
+                        .getCookie(request.getCookies(), TokenConstants.ACCESS_TOKEN.getCookieKey())
+                        .orElse(null);
             }
 
-            // If access token is there and valid (original or refreshed)
-            if(accessToken != null && jwtUtil.validate(accessToken, authJwk)) {
+            if (accessToken != null && jwtUtil.validate(accessToken, authJwk)) {
                 try {
                     UUID userId = UUID.fromString(jwtUtil.extractSubject(accessToken, authJwk));
 
-                    Collection<? extends GrantedAuthority> authorities = List.of();
+                    // Roles are stored as integers in JWT — map to role name strings
+                    Collection<? extends GrantedAuthority> authorities = jwtUtil.extractClaim(
+                            accessToken, authJwk, claims -> {
+                                try {
+                                    // Try integer list first (e.g. [1, 2])
+                                    Object raw = claims.getClaim("roles");
+                                    if (raw instanceof List<?> list && !list.isEmpty()
+                                            && list.get(0) instanceof Number) {
+                                        return list.stream()
+                                                .map(id -> new SimpleGrantedAuthority(
+                                                        "ROLE_" + roleIdToName(((Number) id).longValue())))
+                                                .toList();
+                                    }
+                                } catch (Exception ignored) {}
+                                try {
+                                    // Fallback: string list (e.g. ["EVENT_MANAGER"])
+                                    List<String> roleNames = claims.getStringListClaim("roles");
+                                    if (roleNames != null && !roleNames.isEmpty()) {
+                                        return roleNames.stream()
+                                                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.toUpperCase()))
+                                                .toList();
+                                    }
+                                } catch (Exception ignored) {}
+                                return List.<SimpleGrantedAuthority>of();
+                            });
 
-                    // Extract and convert roles to Spring Security Authorities
-                    List<String> roles = jwtUtil.extractClaim(accessToken, authJwk,claims -> {
-                        try {
-                            return claims.getStringListClaim("roles");
-                        } catch (ParseException e) {
-                            return List.of();
-                        }
-                    });
-
-                    if(!roles.isEmpty()) {
-                        authorities = roles.stream()
-                                .map(role -> "ROLE_" + role.toUpperCase())
-                                .map(SimpleGrantedAuthority::new)
-                                .toList();
-                    }
-
-                    // Construct CustomUserDetails, put it in Security Context
                     CustomUserDetails user = new CustomUserDetails(authorities, userId);
-
                     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                    log.info("Auth successful - userId: {}, authorities: {}", userId, authorities);
+
                 } catch (Exception e) {
-                    log.info("Failed to process valid Access Token claims: ", e);
+                    log.warn("Failed to process JWT claims: {}", e.getMessage());
                 }
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    // ── Role ID → name mapping ─────────────────────────────
+    private static String roleIdToName(long roleId) {
+        return switch ((int) roleId) {
+            case 0  -> "CUSTOMER";
+            case 1  -> "EVENT_MANAGER";
+            case 2  -> "ORGANIZER_ADMIN";
+            case 3  -> "ADMIN";
+            case 4  -> "SYSTEM_ADMIN";
+            case 10 -> "GATEKEEPER";
+            case 11 -> "SUPPORT_AGENT";
+            case 12 -> "FINANCE_MANAGER";
+            default -> "UNKNOWN_" + roleId;
+        };
     }
 }

@@ -1,4 +1,4 @@
-package com.ticket4u.seatingmap.service.impl;
+package com.ticket4u.eventlayout.service.impl;
 
 import com.ticket4u.core.dto.SeatResponse;
 import com.ticket4u.core.dto.ZoneResponse;
@@ -6,9 +6,10 @@ import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
 import com.ticket4u.core.entity.Seat;
 import com.ticket4u.core.entity.Zone;
-import com.ticket4u.seatingmap.dto.SeatingPlanResponse;
-import com.ticket4u.seatingmap.repository.SeatingPlanRepository;
-import com.ticket4u.seatingmap.repository.SeatingPlanSeatRepository;
+import com.ticket4u.eventlayout.dto.EventLayoutResponse;
+import com.ticket4u.eventlayout.repository.EventLayoutRepository;
+import com.ticket4u.eventlayout.repository.EventLayoutSeatRepository;
+import com.ticket4u.eventlayout.service.EventLayoutService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,26 +19,21 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.service.SeatingMapServiceImpl {
+public class EventLayoutServiceImpl implements EventLayoutService {
 
-    private final SeatingPlanRepository seatingPlanRepository;
-    private final SeatingPlanSeatRepository seatRepository;
-    private final ObjectMapper               objectMapper;
-
-    private static final DateTimeFormatter DT_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+    private final EventLayoutRepository     eventLayoutRepository;
+    private final EventLayoutSeatRepository seatRepository;
+    private final ObjectMapper              objectMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public SeatingPlanResponse getTicketSelectData(UUID eventId) {
-        Event event = seatingPlanRepository.findWithSessionsZonesAndVenueById(eventId)
+    public EventLayoutResponse getLayout(UUID eventId) {
+        Event event = eventLayoutRepository.findWithSessionsZonesAndVenueById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
 
         String layoutJson = resolveLayout(event);
@@ -47,7 +43,6 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
                 .min(Comparator.comparing(EventSession::getStartDate))
                 .orElse(null);
 
-        // Build seat lookup per zone from first session
         Map<UUID, List<SeatResponse>> seatsByZone = new HashMap<>();
         if (firstSession != null) {
             seatRepository.findAllBySessionId(firstSession.getId())
@@ -61,22 +56,12 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
                 .flatMap(s -> s.getZones().stream())
                 .map(zone -> mapZone(zone, seatsByZone.getOrDefault(zone.getId(), Collections.emptyList())))
                 .toList();
-        List<SeatResponse> allSeats = seatsByZone.values()
-                .stream()
-                .flatMap(List::stream)
-                .toList();
 
-
-        return new SeatingPlanResponse(
-                layoutJson,
-                zones,
-                allSeats
-        );
+        return new EventLayoutResponse(layoutJson, zones);
     }
 
     private String resolveLayout(Event event) {
         String stored = event.getLayout();
-
         if (stored != null) {
             try {
                 JsonNode node = objectMapper.readTree(stored);
@@ -102,10 +87,8 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
             }
             return stored;
         }
-
-        if (event.getVenue() != null && event.getVenue().getLayout() != null) {
+        if (event.getVenue() != null && event.getVenue().getLayout() != null)
             return event.getVenue().getLayout();
-        }
         return null;
     }
 
@@ -116,7 +99,6 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
             JsonNode root = objectMapper.readTree(venueLayout);
             Map<String, Zone> zoneById = new HashMap<>();
             for (Zone z : sessionZones) zoneById.put(z.getId().toString(), z);
-
             if (root.has("floors") && root.path("floors").isArray()) {
                 for (JsonNode floor : root.path("floors"))
                     injectZoneIdsIntoFloor(floor, zoneLinks, zoneById);
@@ -141,8 +123,7 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
             ((ObjectNode) zone).put("zone_id", zoneId);
             Zone actual = zoneById.get(zoneId);
             if (actual != null) {
-                boolean isStanding = Boolean.TRUE.equals(actual.getIsStanding());
-                ((ObjectNode) zone).put("accessible", !isStanding);
+                ((ObjectNode) zone).put("accessible", !Boolean.TRUE.equals(actual.getIsStanding()));
             }
         }
     }
@@ -151,35 +132,20 @@ public class SeatingMapServiceImplImpl implements com.ticket4u.seatingmap.servic
         int available = Math.max(0,
                 (zone.getCapacity()     != null ? zone.getCapacity()     : 0) -
                         (zone.getQuantitySold() != null ? zone.getQuantitySold() : 0));
-
         return new ZoneResponse(
-                zone.getId(),
-                zone.getName(),
-                zone.getPrice(),
-                available,
+                zone.getId(), zone.getName(), zone.getPrice(), available,
                 Boolean.TRUE.equals(zone.getIsStanding()),
-                zone.getDescriptionVi(),
-                zone.getDescriptionEn(),
-                zone.getGiftImageUrl(),
-                zone.getPerks(),
-                seats
+                zone.getDescriptionVi(), zone.getDescriptionEn(),
+                zone.getGiftImageUrl(), zone.getPerks(), seats
         );
     }
 
     private SeatResponse mapSeat(Seat seat) {
         return new SeatResponse(
-                seat.getId(),
-                seat.getZone().getId(),
-                seat.getName(),
-                seat.getRowName(),
-                seat.getColName(),
-                seat.getSeatCode(),
+                seat.getId(), seat.getZone().getId(), seat.getName(),
+                seat.getRowName(), seat.getColName(), seat.getSeatCode(),
                 seat.getStatus() != null ? seat.getStatus().name() : "AVAILABLE",
                 seat.getPriceOverride()
         );
-    }
-
-    private String format(OffsetDateTime dt) {
-        return dt == null ? null : dt.format(DT_FMT);
     }
 }

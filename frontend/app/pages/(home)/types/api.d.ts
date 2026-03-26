@@ -15,7 +15,7 @@ export interface EventCardResponse {
   startDate: string; // ISO timestamp
   endDate: string;
   minPrice: number;
-  categoryName?: string;
+  categories?: CategorySummary[];
 }
 
 // Backend response type for places

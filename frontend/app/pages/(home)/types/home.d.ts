@@ -6,7 +6,7 @@ export interface Event {
   startDate: string;
   endDate: string;
   minPrice: number;
-  categoryName?: string;
+  categories?: CategorySummary[];
 }
 
 export interface Place {

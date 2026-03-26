@@ -33,7 +33,7 @@ export interface EventDetailResponse {
   address: string;
   minPrice: number;
   maxPrice: number;
-  categoryId: number;
+  categories: CategorySummary[];
   aboutVi: string;
   aboutEn: string;
   imgEvent: EventImages;

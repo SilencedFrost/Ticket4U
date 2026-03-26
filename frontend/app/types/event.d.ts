@@ -5,8 +5,7 @@ declare global {
     id: string;
     name: string;
     organizerId: string;
-    categoryId: number;
-    categoryName: string;
+    categories: CategorySummary[];
     status: string;
     bannerUrl: string;
     venueName: string;

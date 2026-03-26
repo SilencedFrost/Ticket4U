@@ -11,7 +11,7 @@ interface EventApiResponse {
   aboutEn: string;
   minPrice: number;
   maxPrice: number;
-  categoryId: number;
+  categories: CategorySummary[];
   bannerUrl: string;
   seatingPlanImageUrl: string;
   organizerId?: string;
@@ -91,7 +91,7 @@ export const useEventStore = defineStore('event', () => {
       address: data.addressLine,
       aboutVi: data.aboutVi,
       aboutEn: data.aboutEn,
-      categoryId: data.categoryId,
+      categories: data.categories || [],
       organizerId: data.organizerId,
       startDate: data.startDate || '',
       minPrice: data.minPrice,

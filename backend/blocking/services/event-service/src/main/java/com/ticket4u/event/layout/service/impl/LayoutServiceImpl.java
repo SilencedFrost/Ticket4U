@@ -42,6 +42,7 @@ public class LayoutServiceImpl implements LayoutService {
         return new LayoutResponse(layoutJson, zones);
     }
 
+    // TODO: read and untangle
     private String resolveLayout(Event event) {
         String stored = event.getLayout();
         if (stored != null) {

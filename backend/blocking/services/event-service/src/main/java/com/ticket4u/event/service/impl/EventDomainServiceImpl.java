@@ -1,5 +1,6 @@
 package com.ticket4u.event.service.impl;
 
+import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.entity.Event;
@@ -11,6 +12,7 @@ import com.ticket4u.event.service.EventDomainService;
 import com.ticket4u.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,74 +22,104 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EventDomainServiceImpl implements EventDomainService {
 
+    private static final double EARTH_RADIUS_KM = 6371.0;
+
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
     private final SecureRandom secureRandom = new SecureRandom();
     private final EventSemanticService eventSemanticService;
 
+    private List<Event> filterPurchasable(List<Event> events) {
+        return events.stream()
+                .filter(e -> e.getStatus() == Event.EventStatus.PREMIERE || e.getStatus() == Event.EventStatus.SELLING)
+                .toList();
+    }
+
+    private List<Event> filterPurchasable(Page<Event> events) {
+        return filterPurchasable(events.toList());
+    }
+
     @Override
     public List<EventSummaryResponse> findRelatedEvents(UUID id) {
         // Fail fast
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-        EventResponse originalDTO = eventMapper.toDTO(event);
+        EventResponse rootEvent = eventMapper.toDTO(event);
 
-        int dynamicLimit = RelatedEvents.MAX_COUNT * RelatedEvents.WEIGHTS.FETCH_LIMIT_MULTIPLIER;
+        int dynamicLimit = RelatedEvents.MAX_COUNT * RelatedEvents.FETCH_LIMIT_MULTIPLIER;
         Map<UUID, Float> semanticMap = eventSemanticService.findSimilarEvents(id, PageRequest.of(0, dynamicLimit));
 
-        List<Event> candidates;
-        if (semanticMap.isEmpty()) {
-            candidates = eventRepository.findAllPurchasable().stream()
-                    .filter(e -> !e.getId().equals(id))
-                    .toList();
-            log.info("Semantic search empty. Falling back to all purchasable events for ranking.");
+        // Resolve semantic service failure
+        List<EventResponse> candidateEvents;
+        if (!semanticMap.isEmpty()) {
+            log.info("Semantic map acquired: {}", semanticMap.toString());
+            candidateEvents = filterPurchasable(eventRepository.findAllById(semanticMap.keySet())).stream().map(eventMapper::toDTO).toList();
         } else {
-            candidates = eventRepository.findAllById(semanticMap.keySet());
+            log.info("Semantic search empty. Falling back to all purchasable events matching category for ranking.");
+            candidateEvents = eventRepository.findAllPurchasableInCategory(rootEvent.categories()
+                            .stream()
+                            .map(CategorySummaryResponse::id)
+                            .toList(), Limit.of(dynamicLimit))
+                    .stream()
+                    .filter(e -> !e.getId().equals(id))
+                    .map(eventMapper::toDTO)
+                    .toList();
         }
 
         // Score and sort all events (excluding the original)
-        return candidates.stream()
-                .map(e -> new ScoredEvent(e, scoreEvent(originalDTO, e, semanticMap)))
+        return candidateEvents.stream()
+                .map(candidateEvent -> new ScoredEvent(candidateEvent, scoreEvent(rootEvent, candidateEvent, semanticMap.get(candidateEvent.id()))))
                 .sorted(Comparator.comparingInt(ScoredEvent::score).reversed())
                 .limit(RelatedEvents.MAX_COUNT)
                 .map(scoredEvent -> eventMapper.toSummaryDTO(scoredEvent.event))
                 .toList();
     }
 
-    // This method returns only relevancy in terms of start date for this build
-    private int scoreEvent(EventResponse originalEvent, Event targetEvent, Map<UUID, Float> semanticScoreMap) {
-        EventResponse targetEventFlatmap = eventMapper.toDTO(targetEvent);
+    // Score event based on semantic score, location, date, if semantic score is null, falls back to category matching
+    private int scoreEvent(EventResponse originalEvent, EventResponse targetEvent, Float semanticSimilarity) {
+        log.info("=> Scoring similarity for \"{}\" and \"{}\" with input similarity of: {}", originalEvent.name(), targetEvent.name(), semanticSimilarity);
 
         float distanceKm = (float) calculateDistance(
                 originalEvent.latitude(), originalEvent.longitude(),
-                targetEvent.getLatitude(), targetEvent.getLongitude()
+                targetEvent.latitude(), targetEvent.longitude()
         );
 
-        float proximity = proximityToZero(distanceKm, RelatedEvents.WEIGHTS.LOCATION_CUTOFF);
-
         // Score calculation
-        float semanticScore = semanticScoreMap.getOrDefault(targetEvent.getId(), 0.1f);
-        float locationScore = transformScore(proximity, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
-        float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEvent.startDate(), targetEventFlatmap.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
+        float locationScore = transformScore(proximityToZero(distanceKm, RelatedEvents.WEIGHTS.LOCATION_CUTOFF), RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
+        float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEvent.startDate(), targetEvent.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
         float suppressionWeight = 1;
 
-        if (locationScore < 0.2 && semanticScore < 0.7) {
+        if (locationScore < 0.2 && (semanticSimilarity == null || semanticSimilarity < 0.7)) {
             suppressionWeight = 0.5f;
         }
 
+        log.info("Location score: {}; Date score: {}", locationScore, dateScore);
+
+        float weightedPrimaryScore;
+        if(semanticSimilarity != null) {
+            weightedPrimaryScore = semanticSimilarity * RelatedEvents.WEIGHTS.SEMANTIC;
+            log.info("Semantic similarity found, final weighted score: {}", weightedPrimaryScore);
+        } else {
+            Set<Integer> targetCategories = targetEvent.categories().stream().map(CategorySummaryResponse::id).collect(Collectors.toSet());
+            long matchedCount = originalEvent.categories().stream()
+                    .filter(category -> targetCategories.contains(category.id()))
+                    .count();
+            weightedPrimaryScore = matchedCount * RelatedEvents.WEIGHTS.CATEGORY;
+            log.info("Semantic not found, matched {} categories, final weighted score: {}", matchedCount, weightedPrimaryScore);
+        }
+
         // Multiply by weights, sum all
-        float weightedScore =
-                (semanticScore * (RelatedEvents.WEIGHTS.NAME + RelatedEvents.WEIGHTS.CATEGORY)) +
-                (locationScore * RelatedEvents.WEIGHTS.LOCATION) +
-                (dateScore * RelatedEvents.WEIGHTS.DATE);
+        float weightedSecondaryScore = (locationScore * RelatedEvents.WEIGHTS.LOCATION) + (dateScore * RelatedEvents.WEIGHTS.DATE);
+        log.info("Final unsuppressed score for \"{}\" and \"{}\": {}; and suppression weight of: {}", originalEvent.name(), targetEvent.name(), weightedPrimaryScore + weightedSecondaryScore, suppressionWeight);
 
         // Suppress if needed
-        return Math.round(weightedScore * suppressionWeight);
+        return Math.round((weightedPrimaryScore + weightedSecondaryScore) * suppressionWeight);
     }
 
     /**
@@ -118,8 +150,7 @@ public class EventDomainServiceImpl implements EventDomainService {
      * @return The distance in kilometers (km).
      * If any coordinate is null, it returns the default LOCATION_CUTOFF.
      */
-    private double calculateDistance(BigDecimal lat1, BigDecimal lon1,
-                                     BigDecimal lat2, BigDecimal lon2) {
+    private double calculateDistance(BigDecimal lat1, BigDecimal lon1, BigDecimal lat2, BigDecimal lon2) {
         if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) {
             return RelatedEvents.WEIGHTS.LOCATION_CUTOFF;
         }
@@ -132,12 +163,11 @@ public class EventDomainServiceImpl implements EventDomainService {
         double dLat = Math.toRadians(l2 - l1);
         double dLon = Math.toRadians(ln2 - ln1);
 
-        double a = haversine(dLat) +
-                Math.cos(Math.toRadians(l1)) * Math.cos(Math.toRadians(l2)) * haversine(dLon);
+        double a = haversine(dLat) + Math.cos(Math.toRadians(l1)) * Math.cos(Math.toRadians(l2)) * haversine(dLon);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return RelatedEvents.WEIGHTS.EARTH_RADIUS_KM * c;
+        return EARTH_RADIUS_KM * c;
     }
 
     /**
@@ -147,7 +177,7 @@ public class EventDomainServiceImpl implements EventDomainService {
         return 1 - (input/ max);
     }
 
-    private record ScoredEvent(Event event, int score) {}
+    private record ScoredEvent(EventResponse event, int score) {}
 
     @Override
     public List<EventSummaryResponse> findUpcomingPurchasableEventsLimit(Integer limit) {
@@ -166,11 +196,7 @@ public class EventDomainServiceImpl implements EventDomainService {
             if (eventPage.isEmpty()) break;
 
             // Filter and map matching events
-            List<EventSummaryResponse> batch = eventPage.stream()
-                    .filter(e -> e.getStatus() == Event.EventStatus.PREMIERE ||
-                            e.getStatus() == Event.EventStatus.SELLING)
-                    .map(eventMapper::toSummaryDTO)
-                    .toList();
+            List<EventSummaryResponse> batch = filterPurchasable(eventPage).stream().map(eventMapper::toSummaryDTO).toList();
 
             results.addAll(batch);
             page++;
@@ -191,7 +217,7 @@ public class EventDomainServiceImpl implements EventDomainService {
     public List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier) {
         if(limit < 1 || samplingMultiplier < 1) return List.of();
 
-        List<Event> samplingSpace = eventRepository.findAllPurchasable(PageRequest.of(0, limit * samplingMultiplier));
+        List<Event> samplingSpace = eventRepository.findAllPurchasable(PageRequest.of(0, limit * samplingMultiplier)).toList();
 
         if(samplingSpace.size() <= limit) return samplingSpace.stream().map(eventMapper::toSummaryDTO).toList();
 

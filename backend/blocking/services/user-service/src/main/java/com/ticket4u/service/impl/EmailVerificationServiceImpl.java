@@ -9,6 +9,7 @@ import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.MailServiceClient;
 import com.ticket4u.service.VerificationTokenService;
+import com.ticket4u.util.EmailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     @Transactional
     public void resendVerification(String email) {
-        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+        Optional<User> optionalUser = userRepository.findByNormalizedEmail(EmailUtil.normalizeEmail(email));
 
         if (optionalUser.isEmpty() || Boolean.TRUE.equals(optionalUser.get().getIsActive())) {
             log.debug("Resend verification ignored for email: {}", email);

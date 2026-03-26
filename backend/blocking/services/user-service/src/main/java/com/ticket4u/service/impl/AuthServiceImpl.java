@@ -20,10 +20,7 @@ import com.ticket4u.service.AuthService;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.SessionService;
 import com.ticket4u.service.VerificationTokenService;
-import com.ticket4u.util.CookieUtil;
-import com.ticket4u.util.JwtUtil;
-import com.ticket4u.util.PhoneNumberUtil;
-import com.ticket4u.util.TokenUtil;
+import com.ticket4u.util.*;
 import com.ticket4u.validation.GoogleTokenValidator;
 import com.ticket4u.validation.ValidationPatterns;
 import jakarta.persistence.EntityManager;
@@ -228,7 +225,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
         // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
-        if (userRepository.existsByEmailIgnoreCase(request.email())) {
+
+        if (userRepository.existsByNormalizedEmail(EmailUtil.normalizeEmail(request.email()))) {
             return new RegisterResponse(
                 null,
                 request.email(),
@@ -265,7 +263,7 @@ public class AuthServiceImpl implements AuthService {
         GoogleIdToken idToken = new GoogleIdToken(idTokenValue);
         GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
 
-        if (!userRepository.existsByEmailIgnoreCase(userInfo.email())) {
+        if (!userRepository.existsByNormalizedEmail(EmailUtil.normalizeEmail(userInfo.email()))) {
             User newUser = userMapper.toEntityFromGoogle(userInfo);
             newUser.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
             userRepository.saveAndFlush(newUser);
@@ -273,7 +271,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("User registered via Google: {}, userId: {}", newUser.getEmail(), newUser.getId());
         }
 
-        User user = userRepository.findWithRoleByEmailIgnoreCase(userInfo.email())
+        User user = userRepository.findWithRoleByNormalizedEmail(EmailUtil.normalizeEmail(userInfo.email()))
                 .orElseThrow(() -> new TokenCreationException("Failed to find user after Google authentication"));
 
         // If user authenticates via OAuth, account will be activated

@@ -11,13 +11,10 @@
       }}</label>
       <input
         type="text"
-        class="form-control settings-input text-reactive-primary border-0 rounded-3 py-2 px-3 input-underline"
+        class="form-control settings-input text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
         value="Nguyễn"
         maxlength="32"
       />
-      <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personal_information.basic_info.last_name_hint')
-      }}</span>
     </div>
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
@@ -25,13 +22,10 @@
       }}</label>
       <input
         type="text"
-        class="form-control settings-input text-reactive-primary border-0 rounded-3 py-2 px-3 input-underline"
+        class="form-control settings-input text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
         value="Minh Quang"
         maxlength="32"
       />
-      <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personal_information.basic_info.first_name_hint')
-      }}</span>
     </div>
 
     <!-- Tên người dùng -->
@@ -41,13 +35,10 @@
       }}</label>
       <input
         type="text"
-        class="form-control settings-input text-reactive-primary border-0 rounded-3 py-2 px-3 input-underline"
+        class="form-control settings-input text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
         value="minhquangdev"
         maxlength="64"
       />
-      <span class="small text-reactive-secondary mt-1 px-1 d-block" aria-live="polite">{{
-        $t('settings.personal_information.basic_info.username_hint')
-      }}</span>
     </div>
 
     <!-- Ngày sinh -->
@@ -57,7 +48,7 @@
       }}</label>
       <input
         type="date"
-        class="form-control settings-input text-reactive-primary border-0 rounded-3 py-2 px-3 input-underline"
+        class="form-control settings-input text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
         value="1995-08-15"
       />
     </div>
@@ -69,7 +60,7 @@
       }}</label>
       <input
         type="tel"
-        class="form-control settings-input text-reactive-primary border-0 rounded-3 py-2 px-3 input-underline"
+        class="form-control settings-input text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
         placeholder="+84xxxxxxxxx"
         value="+84 901 234 567"
         maxlength="15"

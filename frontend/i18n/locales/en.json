@@ -139,10 +139,7 @@
       "member_since": "Member since",
       "basic_info": {
         "section_title": "Basic Information",
-        "last_name_hint": "Max 32 characters",
-        "first_name_hint": "Max 32 characters",
         "username": "Username",
-        "username_hint": "Max 64 characters",
         "birthday": "Date of Birth",
         "phone": "Phone Number",
         "phone_hint": "Format: +84xxxxxxxxx"

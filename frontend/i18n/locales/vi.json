@@ -139,10 +139,7 @@
       "member_since": "Thành viên từ",
       "basic_info": {
         "section_title": "Thông tin cơ bản",
-        "last_name_hint": "Tối đa 32 ký tự",
-        "first_name_hint": "Tối đa 32 ký tự",
         "username": "Tên người dùng",
-        "username_hint": "Tối đa 64 ký tự",
         "birthday": "Ngày sinh",
         "phone": "Số điện thoại",
         "phone_hint": "Định dạng: +84xxxxxxxxx"

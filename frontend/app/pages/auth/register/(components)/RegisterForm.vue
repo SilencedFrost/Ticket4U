@@ -183,15 +183,18 @@ async function register() {
   loading.value = true;
 
   try {
-    await $fetch<{ userId: string | null; message: string }>(`${config.public.authUrl}/register`, {
-      method: 'POST',
-      body: {
-        email: formData.email.trim(),
-        password: formData.password.trim(),
-        phoneNumber: formData.phoneNumber.trim(),
-        fullName: formData.fullName.trim(),
+    await $fetch<{ userId: string | null; message: string }>(
+      `${config.public.userServiceUrl}/auth/register`,
+      {
+        method: 'POST',
+        body: {
+          email: formData.email.trim(),
+          password: formData.password.trim(),
+          phoneNumber: formData.phoneNumber.trim(),
+          fullName: formData.fullName.trim(),
+        },
       },
-    });
+    );
 
     await navigateTo({ path: localePath('/auth/login'), query: { registered: 'true' } });
   } catch (err) {

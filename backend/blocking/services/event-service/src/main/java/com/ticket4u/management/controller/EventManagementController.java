@@ -30,7 +30,7 @@ public class EventManagementController {
         );
     }
 
-    // ── Categories ─────────────────────────────────────────
+    // ── Categories
 
     @GetMapping("/categories")
     public ResponseEntity<List<CategorySummaryResponse>> getCategories() {
@@ -39,17 +39,17 @@ public class EventManagementController {
 
     // ── Events ─────────────────────────────────────────────
 
-    @GetMapping("/events")
+    @GetMapping("/")
     public ResponseEntity<List<ManagementEventResponse>> getEvents() {
         return ResponseEntity.ok(managementService.getEvents(currentUserId()));
     }
 
-    @GetMapping("/events/{eventId}")
+    @GetMapping("/{eventId}")
     public ResponseEntity<ManagementEventResponse> getEvent(@PathVariable UUID eventId) {
         return ResponseEntity.ok(managementService.getEvent(currentUserId(), eventId));
     }
 
-    @PostMapping("/events")
+    @PostMapping("/")
     public ResponseEntity<ManagementEventResponse> createEvent(
             @Valid @RequestBody ManagementEventRequest request) {
         return ResponseEntity
@@ -57,14 +57,14 @@ public class EventManagementController {
                 .body(managementService.createEvent(currentUserId(), request));
     }
 
-    @PutMapping("/events/{eventId}")
+    @PutMapping("/{eventId}")
     public ResponseEntity<ManagementEventResponse> updateEvent(
             @PathVariable UUID eventId,
             @Valid @RequestBody ManagementEventRequest request) {
         return ResponseEntity.ok(managementService.updateEvent(currentUserId(), eventId, request));
     }
 
-    @DeleteMapping("/events/{eventId}")
+    @DeleteMapping("/{eventId}")
     @PreAuthorize("hasRole('ORGANIZER_ADMIN')")
     public ResponseEntity<Void> deleteEvent(@PathVariable UUID eventId) {
         managementService.deleteEvent(currentUserId(), eventId);
@@ -73,12 +73,12 @@ public class EventManagementController {
 
     // ── Sessions ───────────────────────────────────────────
 
-    @GetMapping("/events/{eventId}/sessions")
+    @GetMapping("/{eventId}/sessions")
     public ResponseEntity<List<EventSessionResponse>> getSessions(@PathVariable UUID eventId) {
         return ResponseEntity.ok(managementService.getSessions(currentUserId(), eventId));
     }
 
-    @PutMapping("/events/{eventId}/sessions/{sessionId}")
+    @PutMapping("/{eventId}/sessions/{sessionId}")
     public ResponseEntity<EventSessionResponse> updateSession(
             @PathVariable UUID eventId,
             @PathVariable UUID sessionId,
@@ -122,12 +122,12 @@ public class EventManagementController {
 
     // ── Layout ─────────────────────────────────────────────
 
-    @GetMapping("/events/{eventId}/layout")
+    @GetMapping("/{eventId}/layout")
     public ResponseEntity<EventLayoutResponse> getLayout(@PathVariable UUID eventId) {
         return ResponseEntity.ok(managementService.getLayout(currentUserId(), eventId));
     }
 
-    @PutMapping("/events/{eventId}/layout")
+    @PutMapping("/{eventId}/layout")
     public ResponseEntity<EventLayoutResponse> applyLayout(
             @PathVariable UUID eventId,
             @RequestBody ManagementEventLayoutRequest request) {

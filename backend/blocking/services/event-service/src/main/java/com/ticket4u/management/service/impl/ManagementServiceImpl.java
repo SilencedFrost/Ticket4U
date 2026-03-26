@@ -36,7 +36,7 @@ public class ManagementServiceImpl implements ManagementService {
     private final CategoryRepository               categoryRepository;
     private final ObjectMapper                     objectMapper;
 
-    // ── Categories ─────────────────────────────────────────
+    // Categories
 
     @Override
     @Transactional(readOnly = true)
@@ -46,7 +46,7 @@ public class ManagementServiceImpl implements ManagementService {
                 .collect(Collectors.toList());
     }
 
-    // ── Events ─────────────────────────────────────────────
+    // Events
 
     @Override
     @Transactional(readOnly = true)

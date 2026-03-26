@@ -32,15 +32,21 @@ public abstract class EventMapper {
      * @param event The input entity
      * @return EventResponse
      */
-    // TODO: longitude, latitude, layout custom mappers
     // Mappings that require helper method
     @Mapping(target = "startDate", source = "event", qualifiedByName = "toStartDate")
     @Mapping(target = "endDate", source = "event", qualifiedByName = "toEndDate")
     @Mapping(target = "minPrice", source = "event", qualifiedByName = "toMinPrice")
     @Mapping(target = "maxPrice", source = "event", qualifiedByName = "toMaxPrice")
+    @Mapping(target = "latitude",
+        expression = "java(event.getLatitude() != null? event.getLatitude() : event.getVenue() != null? event.getVenue().getLatitude() : null)")
+    @Mapping(target = "longitude",
+        expression = "java(event.getLongitude() != null? event.getLongitude() : event.getVenue() != null? event.getVenue().getLongitude() : null)")
     @Mapping(target = "addressLine",
-            expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue().getAddressLine())")
+        expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue() != null ? event.getVenue().getAddressLine() : null)")
     public abstract EventResponse toDTO(Event event);
+
+    @Mapping(target = "venueName", source = "venue.name")
+    public abstract EventSummaryResponse toSummaryDTO(EventResponse eventResponse);
 
     @Named("toMinPrice")
     protected BigDecimal calculateMinPrice(Event event) {

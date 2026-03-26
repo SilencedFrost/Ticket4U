@@ -14,12 +14,12 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository <User, UUID> {
-    Optional<User> findByEmailIgnoreCase(String email);
+    Optional<User> findByNormalizedEmail(String email);
 
     @EntityGraph(attributePaths = "role")
-    Optional<User> findWithRoleByEmailIgnoreCase(String email);
+    Optional<User> findWithRoleByNormalizedEmail(String email);
     
-    boolean existsByEmailIgnoreCase(String email);
+    boolean existsByNormalizedEmail(String email);
     
     boolean existsByPhoneNumber(String phoneNumber);
 

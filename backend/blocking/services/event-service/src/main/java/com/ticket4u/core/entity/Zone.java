@@ -37,7 +37,6 @@ public class Zone {
     private Boolean isStanding;
 
     private Integer capacity;
-    private Integer quantitySold;
     private Integer purchaseLimit;
 
     @Column(nullable = false, precision = 10, scale = 2)

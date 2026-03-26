@@ -2,10 +2,10 @@ package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
-import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.core.service.EventService;
-import com.ticket4u.embedding.service.QdrantService;
+import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.embedding.service.EventSemanticService;
+import com.ticket4u.embedding.service.QdrantService;
 import io.qdrant.client.grpc.Common;
 import io.qdrant.client.grpc.Points;
 import lombok.RequiredArgsConstructor;

@@ -7,9 +7,10 @@ import java.util.UUID;
 public record ZoneResponse(
         UUID id,
         String name,
-        BigDecimal price,
-        Integer available,
         Boolean isStanding,
+        Integer capacity,
+        Integer purchaseLimit,
+        BigDecimal price,
         String descriptionVi,
         String descriptionEn,
         String giftImageUrl,

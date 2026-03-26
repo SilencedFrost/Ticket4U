@@ -1,18 +1,14 @@
-package com.ticket4u.eventlayout.service.impl;
+package com.ticket4u.event.layout.service.impl;
 
-import com.ticket4u.core.dto.SeatResponse;
+import com.ticket4u.core.dto.LayoutResponse;
 import com.ticket4u.core.dto.ZoneResponse;
 import com.ticket4u.core.entity.Event;
 import com.ticket4u.core.entity.EventSession;
-import com.ticket4u.core.entity.Seat;
 import com.ticket4u.core.entity.Zone;
-import com.ticket4u.core.mapper.SeatMapper;
-import com.ticket4u.core.mapper.ZoneMapper;
-import com.ticket4u.eventlayout.dto.EventLayoutResponse;
-import com.ticket4u.eventlayout.repository.EventLayoutRepository;
-import com.ticket4u.eventlayout.repository.EventLayoutSeatRepository;
-import com.ticket4u.eventlayout.service.EventLayoutService;
-import jakarta.persistence.EntityNotFoundException;
+import com.ticket4u.event.layout.exceptions.EventSessionNotFoundException;
+import com.ticket4u.event.layout.mapper.ZoneMapper;
+import com.ticket4u.event.layout.repository.SessionRepository;
+import com.ticket4u.event.layout.service.LayoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,47 +17,29 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EventLayoutServiceImpl implements EventLayoutService {
+public class LayoutServiceImpl implements LayoutService {
 
-    private final EventLayoutRepository     eventLayoutRepository;
-    private final EventLayoutSeatRepository seatRepository;
-    private final SeatMapper                seatMapper;
-    private final ZoneMapper                zoneMapper;
-    private final ObjectMapper              objectMapper;
+    private final ZoneMapper zoneMapper;
+    private final ObjectMapper objectMapper;
+    private final SessionRepository sessionRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public EventLayoutResponse getLayout(UUID eventId) {
-        Event event = eventLayoutRepository.findWithSessionsZonesAndVenueById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Event not found: " + eventId));
+    public LayoutResponse getLayout(UUID sessionId) {
 
-        String layoutJson = resolveLayout(event);
+        EventSession session = sessionRepository.findById(sessionId).orElseThrow(() -> new EventSessionNotFoundException(sessionId));
 
-        EventSession firstSession = event.getSessions().stream()
-                .filter(s -> s.getStartDate() != null)
-                .min(Comparator.comparing(EventSession::getStartDate))
-                .orElse(null);
-
-        Map<UUID, List<SeatResponse>> seatsByZone = new HashMap<>();
-        if (firstSession != null) {
-            seatRepository.findAllBySessionId(firstSession.getId())
-                    .forEach(seat -> seatsByZone
-                            .computeIfAbsent(seat.getZone().getId(), k -> new ArrayList<>())
-                            .add(mapSeat(seat)));
-        }
-
-        List<ZoneResponse> zones = event.getSessions().stream()
-                .filter(s -> s.getZones() != null)
-                .flatMap(s -> s.getZones().stream())
-                .map(zone -> mapZone(zone, seatsByZone.getOrDefault(zone.getId(), Collections.emptyList())))
-                .toList();
-
-        return new EventLayoutResponse(layoutJson, zones);
+        String layoutJson = resolveLayout(session.getEvent());
+        List<ZoneResponse> zones = session.getZones().stream().map(zoneMapper::toDTO).toList();
+        return new LayoutResponse(layoutJson, zones);
     }
 
     private String resolveLayout(Event event) {
@@ -130,13 +108,5 @@ public class EventLayoutServiceImpl implements EventLayoutService {
                 ((ObjectNode) zone).put("accessible", !Boolean.TRUE.equals(actual.getIsStanding()));
             }
         }
-    }
-
-    private ZoneResponse mapZone(Zone zone, List<SeatResponse> seats) {
-        return zoneMapper.toDTO(zone);
-    }
-
-    private SeatResponse mapSeat(Seat seat) {
-        return seatMapper.toDTO(seat);
     }
 }

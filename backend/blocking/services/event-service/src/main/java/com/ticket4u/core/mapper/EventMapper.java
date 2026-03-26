@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Objects;
 
 @Mapper(componentModel = "spring", uses = {SessionMapper.class, VenueMapper.class, CategoryMapper.class})
 public abstract class EventMapper {

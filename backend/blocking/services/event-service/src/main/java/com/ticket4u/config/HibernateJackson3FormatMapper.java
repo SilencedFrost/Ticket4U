@@ -6,6 +6,7 @@ import org.hibernate.type.format.AbstractJsonFormatMapper;
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.JsonParser;
 import tools.jackson.databind.json.JsonMapper;
+
 import java.lang.reflect.Type;
 
 public final class HibernateJackson3FormatMapper extends AbstractJsonFormatMapper {

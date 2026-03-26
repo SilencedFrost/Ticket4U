@@ -5,8 +5,6 @@ import com.ticket4u.core.dto.EventResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.event.service.EventDomainService;
-import com.ticket4u.eventlayout.dto.EventLayoutResponse;
-import com.ticket4u.eventlayout.service.EventLayoutService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +23,6 @@ public class EventController {
 
     private final EventService eventService;
     private final EventDomainService eventDomainService;
-    private final EventLayoutService eventLayoutService;
 
     /**
      * GET /api/v1/public/events/{id}
@@ -82,10 +79,5 @@ public class EventController {
     // TODO implement event suggestion using ML and user behavior analysis
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
         return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
-    }
-
-    @GetMapping("/{id}/layout")
-    public ResponseEntity<EventLayoutResponse> getLayout(@PathVariable UUID id) {
-        return ResponseEntity.ok(eventLayoutService.getLayout(id));
     }
 }

@@ -2,16 +2,16 @@ package com.ticket4u.event.constants;
 
 public class RelatedEvents {
     public static final int MAX_COUNT = 8;
+    public static final int FETCH_LIMIT_MULTIPLIER = 5;
     /**
      * Weights and cutoff for relevancy feature
-     * Outside of cutoff = 0 relevance
-     * For weights with cutoff, it's treated as the max on x axis for sigmoid curve
+     * Outside of cutoff ~ 0 relevance
      */
     public static final class WEIGHTS {
-        // Based on multiple studies, semantic meaning of event names can be misleading
-        // In "discovery mode" when users look at related events, category matching would be better
-        public static final int NAME = 300;
-        public static final int CATEGORY = 450;
+        // General weight for semantic similarity
+        public static final int SEMANTIC = 600;
+        // Fallback weight is semantic is not available
+        public static final int CATEGORY = 300;
         // Locational data is somewhat important, because concerts and events tends to have "exclusivity" so users tend to spend more time travelling to it
         // TODO: implement dynamic location weight based on event size (fanbase) and user behavior
         public static final int LOCATION = 150;

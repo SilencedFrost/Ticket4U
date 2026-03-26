@@ -94,11 +94,19 @@
       "less": "Ẩn bớt"
     },
     "action": {
+      "allow": "Cho phép",
+      "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem"
     },
     "full_name": "Họ và tên",
     "phone": "Số điện thoại"
+  },
+  "permissions": {
+    "location": {
+      "title": "Cho phép truy cập vị trí",
+      "message": "Tìm các sự kiện gần bạn. Cho phép truy cập vị trí để xem các buổi hòa nhạc và chương trình biểu diễn đang diễn ra trong khu vực của bạn."
+    }
   },
   "brand": {
     "name": "Ticket4U",

@@ -8,7 +8,7 @@
       <div
         class="avatar-container rounded-circle p-1 border border-primary border-opacity-25 border-4"
       >
-        <!-- TODO: vì sau tôi định fill avatar từ database còn ảnh này chỉ là ảnh mẫu -->
+        <!-- TODO: vì sau định fill avatar từ database còn ảnh này chỉ là ảnh mẫu -->
         <img
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzWVY-moE0L4lXQv8B0vU0SZMKWpHaS6H-1BieYaLKH8AVFHNe8neO4aspGKVjCu2_PJRpo7B90rxZKf3kxzv51lkCKJ5qYcra71eLTVvlFTaK7g82KXRJ6d42mGEJw7ZLCruei9V6k_YWyTMbv9EggdWvncukchj5sTuvhB8v6GER1Gv2TEj8zDqYIJlxqNVX7DcW6MoXp_eY-ohGlsid8CEIPo2U9momjPfKwhtpxzqyZQfa_csYyhgXAxPazypcaZ4jXPvAw7k"
           alt="Profile avatar"

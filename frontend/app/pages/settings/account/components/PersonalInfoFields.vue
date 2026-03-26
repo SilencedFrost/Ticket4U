@@ -7,7 +7,7 @@
     <!-- Họ & Tên -->
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personal_information.basic_info.last_name')
+        $t('common.last_name')
       }}</label>
       <input
         type="text"
@@ -21,7 +21,7 @@
     </div>
     <div class="col-md-6">
       <label class="form-label text-reactive-secondary small fw-bold tracking-wide mb-1 px-1">{{
-        $t('settings.personal_information.basic_info.first_name')
+        $t('common.first_name')
       }}</label>
       <input
         type="text"

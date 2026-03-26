@@ -98,6 +98,8 @@
       "view": "View"
     },
     "full_name": "Full name",
+    "first_name": "First Name",
+    "last_name": "Last Name",
     "phone": "Phone number"
   },
   "brand": {
@@ -137,9 +139,7 @@
       "member_since": "Member since",
       "basic_info": {
         "section_title": "Basic Information",
-        "last_name": "Last Name",
         "last_name_hint": "Max 32 characters",
-        "first_name": "First Name",
         "first_name_hint": "Max 32 characters",
         "username": "Username",
         "username_hint": "Max 64 characters",

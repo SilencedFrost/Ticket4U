@@ -98,6 +98,8 @@
       "view": "Xem"
     },
     "full_name": "Họ và tên",
+    "first_name": "Tên",
+    "last_name": "Họ",
     "phone": "Số điện thoại"
   },
   "brand": {
@@ -137,9 +139,7 @@
       "member_since": "Thành viên từ",
       "basic_info": {
         "section_title": "Thông tin cơ bản",
-        "last_name": "Họ",
         "last_name_hint": "Tối đa 32 ký tự",
-        "first_name": "Tên",
         "first_name_hint": "Tối đa 32 ký tự",
         "username": "Tên người dùng",
         "username_hint": "Tối đa 64 ký tự",

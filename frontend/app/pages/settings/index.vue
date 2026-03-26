@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { navigateTo } from '#app';
-
-// <!-- TODO: wire up script -->
+const localePath = useLocalePath();
 // Redirect settings index to the personal information tab
-// TODO: replace with useLocalePath()
-navigateTo('/settings/account');
+navigateTo(localePath('/settings/account'));
 </script>
 
 <template>

@@ -46,6 +46,9 @@ public abstract class EventMapper {
         expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue() != null ? event.getVenue().getAddressLine() : null)")
     public abstract EventResponse toDTO(Event event);
 
+    @Mapping(target = "venueName", source = "venue.name")
+    public abstract EventSummaryResponse toSummaryDTO(EventResponse eventResponse);
+
     @Named("toMinPrice")
     protected BigDecimal calculateMinPrice(Event event) {
         return event.getSessions().stream()

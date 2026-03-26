@@ -2,12 +2,10 @@ package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
-import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.embedding.service.QdrantService;
 import com.ticket4u.embedding.service.EventSemanticService;
-import io.qdrant.client.VectorOutputHelper;
 import io.qdrant.client.grpc.Common;
 import io.qdrant.client.grpc.Points;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,7 +132,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<UUID> findSimilarEvents(UUID id, Pageable pageable) {
+    public Map<UUID,Float> findSimilarEvents(UUID id, Pageable pageable) {
         Common.PointId pointId = Common.PointId.newBuilder()
                 .setUuid(id.toString())
                 .build();
@@ -155,10 +152,10 @@ public class EventSemanticServiceImpl implements EventSemanticService {
 
             if (queryVector.isEmpty()) {
                 log.warn("Embedding returned empty vector for event: {}", id);
-                return List.of();
+                return Collections.emptyMap();
             }
 
-            qdrantService.upsert(COLLECTION, pointId, queryVector, null);
+            qdrantService.upsert(COLLECTION, pointId, queryVector, Collections.emptyMap());
 
             // Use the vector directly for the first search to ensure zero-latency availability
             searchResults = qdrantService.search(COLLECTION, queryVector, SIMILARITY_THRESHOLD, fetchLimit);
@@ -168,11 +165,17 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         }
 
         return searchResults.stream()
-                .map(p -> UUID.fromString(p.getId().getUuid()))
-                .filter(resultId -> !resultId.equals(id))
+                .map(p -> Map.entry(
+                        UUID.fromString(p.getId().getUuid()),
+                        p.getScore()
+                ))
+                .filter(e -> !e.getKey().equals(id))
                 .skip(offset)
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
     @Override

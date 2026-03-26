@@ -4,6 +4,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
+  hooks: {
+    'pages:extend'(pages) {
+      if (process.env.NODE_ENV === 'production') {
+        const devPages = pages.filter((page) => page.file?.includes('pages/dev'));
+        devPages.forEach((page) => {
+          const index = pages.indexOf(page);
+          if (index !== -1) pages.splice(index, 1);
+        });
+      }
+    },
+  },
+
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
@@ -27,8 +39,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      userHealthUrl: 'https://localhost:8080/health',
       userServiceUrl: 'https://localhost:8080/api/v1',
+      userHealthUrl: 'https://localhost:8080/health',
       ticketServiceUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
       eventServiceUrl: 'https://localhost:8083/api/v1',

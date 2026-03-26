@@ -1,5 +1,6 @@
 package com.ticket4u.entity;
 
+import com.ticket4u.util.EmailUtil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 254)
     private String email;
+
+    @Column(nullable = false, unique = true, length = 254)
+    private String normalizedEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
@@ -75,6 +79,14 @@ public class User {
         this.role = role;
         if(role != null) {
             role.getUsers().add(this);
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void normalizeEmailField() {
+        if (this.email != null) {
+            this.normalizedEmail = EmailUtil.normalizeEmail(this.email);
         }
     }
 }

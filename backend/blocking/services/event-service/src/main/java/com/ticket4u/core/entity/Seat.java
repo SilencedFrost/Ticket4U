@@ -33,16 +33,6 @@ public class Seat {
     @Column(length = 20)
     private String seatCode;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private SeatStatus status;
-
     @Column(precision = 10, scale = 2)
     private BigDecimal priceOverride;
-
-    public enum SeatStatus {
-        AVAILABLE,
-        BOOKED,
-        HOLD
-    }
 }

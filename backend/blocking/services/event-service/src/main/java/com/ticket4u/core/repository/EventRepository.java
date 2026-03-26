@@ -1,6 +1,5 @@
 package com.ticket4u.core.repository;
 
-import com.ticket4u.core.entity.Category;
 import com.ticket4u.core.entity.Event;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;

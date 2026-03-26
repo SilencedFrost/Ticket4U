@@ -4,7 +4,17 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n', '@pinia/nuxt'],
 
-  ignore: [process.env.NODE_ENV === 'production' ? 'pages/dev/**' : ''].filter(Boolean),
+  hooks: {
+    'pages:extend'(pages) {
+      if (process.env.NODE_ENV === 'production') {
+        const devPages = pages.filter((page) => page.file?.includes('pages/dev'));
+        devPages.forEach((page) => {
+          const index = pages.indexOf(page);
+          if (index !== -1) pages.splice(index, 1);
+        });
+      }
+    },
+  },
 
   i18n: {
     locales: [

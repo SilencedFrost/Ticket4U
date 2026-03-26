@@ -1,6 +1,7 @@
 package com.ticket4u.validation;
 
-import com.ticket4u.constant.ValidationConstants;
+import com.ticket4u.constant.MailNormalization;
+import com.ticket4u.util.EmailUtil;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -13,14 +14,10 @@ public class EmailDomainValidator implements ConstraintValidator<ValidEmailDomai
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
-        if (email == null || email.isBlank()) return false;
+        String domain = EmailUtil.getDomain(email, true);
 
-        // Validate the @ symbol
-        int atIndex = email.indexOf('@');
-        if (atIndex == -1 || atIndex == email.length() - 1) return false;
+        if(domain == null || domain.isBlank()) return false;
 
-        // Validate domain
-        String domain = email.substring(atIndex + 1);
-        return ValidationConstants.ALLOWED_EMAIL_DOMAIN.contains(domain);
+        return MailNormalization.ALLOWED_EMAIL_DOMAIN.contains(domain.toLowerCase());
     }
 }

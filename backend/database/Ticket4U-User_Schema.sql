@@ -2,6 +2,7 @@
 
 DROP TABLE IF EXISTS public.organizer;
 
+DROP TABLE IF EXISTS public.verification_token;
 DROP TABLE IF EXISTS public.session;
 DROP TABLE IF EXISTS public.users;
 DROP TABLE IF EXISTS public.role;
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS public.users
 (
     id uuid PRIMARY KEY,
     email varchar(254) NOT NULL UNIQUE,
+	normalized_email varchar(254) NOT NULL UNIQUE,
 	role_id int NOT NULL,
 	username varchar(64) NOT NULL,
 	first_name varchar(32),
@@ -70,6 +72,17 @@ CREATE TABLE IF NOT EXISTS public.session
 		REFERENCES public.users (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.verification_token (
+    id uuid PRIMARY KEY,
+    token_hash char(64) NOT NULL,
+    token_type varchar(32) NOT NULL, -- EMAIL_VERIFICATION, PASSWORD_RESET
+    user_id uuid NOT NULL,
+    expires_at timestamptz NOT NULL,
+    created_at timestamptz NOT NULL,
+    CONSTRAINT vtoken_fk_user FOREIGN KEY (user_id) REFERENCES public.users (id) ON DELETE CASCADE,
+    CONSTRAINT uq_token_hash_type UNIQUE (token_hash, token_type)
+);
+
 -- Table: organizer
 
 CREATE TABLE IF NOT EXISTS public.organizer
@@ -82,3 +95,6 @@ CREATE TABLE IF NOT EXISTS public.organizer
     CONSTRAINT organizer_fk_user FOREIGN KEY (id) 
         REFERENCES public.users (id)
 );
+
+CREATE INDEX idx_vtoken_user_id ON public.verification_token (user_id);
+CREATE INDEX idx_vtoken_expires_at ON public.verification_token (expires_at);

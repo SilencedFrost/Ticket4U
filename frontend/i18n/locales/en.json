@@ -15,8 +15,9 @@
       "google": "Register with Google",
       "password_hint": "8-32 characters, uppercase, lowercase, number, and special char",
       "has_account": "Already have an account? Log in",
-      "success": "Registration successful! Redirecting to login..."
+      "success": "Registration successful! Please check your email to verify your account."
     },
+    "identifier": "Email or phone number",
     "password": "Password",
     "create_account": "Create account",
     "forgot_password": "Forgot password",
@@ -42,20 +43,45 @@
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",
+        "identifier": "Email or phone number can't be blank",
         "phone": "Phone number can't be blank",
         "full_name": "Full name can't be blank"
       },
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data",
-      "google_unavailable": "Google Sign-In is unavailable. Please use email instead."
+      "google_unavailable": "Google Sign-In is unavailable. Please use email instead.",
+      "account_not_verified": "Your account is not verified. Please check your email for the verification link."
     },
     "session": {
       "invalid": "Invalid session"
-    }
-  },
-  "user": {
-    "registration": {
-      "check_email": "Please check your email to verify your account"
+    },
+    "verification": {
+      "verifying": "Verifying your email...",
+      "success": "Your email has been verified. You can now log in.",
+      "send_failed": "Unable to send verification email right now. Please try again in a moment.",
+      "token_expired": "Verification link has expired. Please register again.",
+      "expired_title": "Link expired",
+      "token_invalid": "Invalid verification link.",
+      "error_title": "Verification failed",
+      "already_active": "This account has already been verified.",
+      "already_active_title": "Already verified",
+      "resend_prompt": "Enter your email to receive a new verification link.",
+      "resend_action": "Resend",
+      "resend_success": "If this email is registered, a new verification link has been sent."
+    },
+    "password_reset": {
+      "title": "Reset password",
+      "instruction": "Enter your email address and we'll send you a link to reset your password.",
+      "send_action": "Send reset link",
+      "check_email": "If this email is registered, a password reset link has been sent.",
+      "new_password_hint": "Enter your new password.",
+      "action": "Reset password",
+      "success": "Your password has been reset. You can now log in with your new password.",
+      "token_expired": "Password reset link has expired.",
+      "expired_title": "Link expired",
+      "token_invalid": "Invalid password reset link.",
+      "error_title": "Reset failed",
+      "request_again": "Request new link"
     }
   },
   "common": {

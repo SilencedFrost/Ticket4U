@@ -3,6 +3,7 @@ package com.ticket4u.service;
 import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.entity.User;
 import com.ticket4u.repository.UserRepository;
+import com.ticket4u.util.EmailUtil;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,12 +23,13 @@ public class DaoUserDetailsService implements UserDetailsService {
     @Override
     @Nonnull
     public UserDetails loadUserByUsername(@Nonnull String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
+        User user = userRepository.findByNormalizedEmail(EmailUtil.normalizeEmail(email)).orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
         String authority = user.getRole().getRoleName();
         Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(authority));
         return new CustomUserDetails(
                 user.getEmail(),
                 user.getPasswordHash(),
+                Boolean.TRUE.equals(user.getIsActive()),
                 authorities,
                 user.getId(),
                 user.getRole().getId(),

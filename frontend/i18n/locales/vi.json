@@ -15,8 +15,9 @@
       "google": "Đăng ký với Google",
       "password_hint": "8-32 ký tự, chữ hoa, chữ thường, số, và ký tự đặc biệt",
       "has_account": "Đã có tài khoản? Đăng nhập",
-      "success": "Đăng ký thành công! Đang chuyển hướng..."
+      "success": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản."
     },
+    "identifier": "Email hoặc số điện thoại",
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
     "forgot_password": "Quên mật khẩu",
@@ -42,20 +43,45 @@
       "blank": {
         "password": "Mật khẩu không được để trống",
         "email": "Email không được để trống",
+        "identifier": "Email hoặc số điện thoại không được để trống",
         "phone": "Số điện thoại không được để trống",
         "full_name": "Họ và tên không được để trống"
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ",
-      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế."
+      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế.",
+      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực."
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
-    }
-  },
-  "user": {
-    "registration": {
-      "check_email": "Vui lòng kiểm tra email để xác thực tài khoản"
+    },
+    "verification": {
+      "verifying": "Đang xác thực email...",
+      "success": "Email đã được xác thực thành công. Bạn có thể đăng nhập ngay.",
+      "send_failed": "Không thể gửi email xác thực lúc này. Vui lòng thử lại sau ít phút.",
+      "token_expired": "Link xác thực đã hết hạn. Vui lòng đăng ký lại.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link xác thực không hợp lệ.",
+      "error_title": "Xác thực thất bại",
+      "already_active": "Tài khoản đã được xác thực trước đó.",
+      "already_active_title": "Đã xác thực",
+      "resend_prompt": "Nhập email để nhận link xác thực mới.",
+      "resend_action": "Gửi lại",
+      "resend_success": "Nếu email đã đăng ký, link xác thực mới đã được gửi."
+    },
+    "password_reset": {
+      "title": "Đặt lại mật khẩu",
+      "instruction": "Nhập email của bạn, chúng tôi sẽ gửi link đặt lại mật khẩu.",
+      "send_action": "Gửi link đặt lại",
+      "check_email": "Nếu email đã đăng ký, link đặt lại mật khẩu đã được gửi.",
+      "new_password_hint": "Nhập mật khẩu mới của bạn.",
+      "action": "Đặt lại mật khẩu",
+      "success": "Mật khẩu đã được đặt lại. Bạn có thể đăng nhập với mật khẩu mới.",
+      "token_expired": "Link đặt lại mật khẩu đã hết hạn.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",
+      "error_title": "Đặt lại thất bại",
+      "request_again": "Yêu cầu link mới"
     }
   },
   "common": {

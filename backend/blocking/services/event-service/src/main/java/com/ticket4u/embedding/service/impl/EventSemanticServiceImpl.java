@@ -6,7 +6,6 @@ import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.embedding.service.QdrantService;
 import com.ticket4u.embedding.service.EventSemanticService;
-import io.qdrant.client.VectorOutputHelper;
 import io.qdrant.client.grpc.Common;
 import io.qdrant.client.grpc.Points;
 import lombok.RequiredArgsConstructor;
@@ -133,7 +132,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<UUID> findSimilarEvents(UUID id, Pageable pageable) {
+    public Map<UUID,Float> findSimilarEvents(UUID id, Pageable pageable) {
         Common.PointId pointId = Common.PointId.newBuilder()
                 .setUuid(id.toString())
                 .build();
@@ -153,10 +152,10 @@ public class EventSemanticServiceImpl implements EventSemanticService {
 
             if (queryVector.isEmpty()) {
                 log.warn("Embedding returned empty vector for event: {}", id);
-                return List.of();
+                return Collections.emptyMap();
             }
 
-            qdrantService.upsert(COLLECTION, pointId, queryVector, null);
+            qdrantService.upsert(COLLECTION, pointId, queryVector, Collections.emptyMap());
 
             // Use the vector directly for the first search to ensure zero-latency availability
             searchResults = qdrantService.search(COLLECTION, queryVector, SIMILARITY_THRESHOLD, fetchLimit);
@@ -166,10 +165,53 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         }
 
         return searchResults.stream()
-                .map(p -> UUID.fromString(p.getId().getUuid()))
-                .filter(resultId -> !resultId.equals(id))
+                .map(p -> Map.entry(
+                        UUID.fromString(p.getId().getUuid()),
+                        p.getScore()
+                ))
+                .filter(e -> !e.getKey().equals(id))
                 .skip(offset)
                 .limit(limit)
-                .toList();
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UUID> search(String query, Pageable pageable) {
+        if (query == null || query.isBlank()) { return Collections.emptyList(); }
+
+        int limit = pageable.getPageSize();
+        int offset = (int) pageable.getOffset();
+        int fetchLimit = offset + limit;
+
+        List<Float> queryVector = embeddingService.embed(query, EmbeddingService.MODE.QUERY);
+
+        if (queryVector.isEmpty()) {
+            log.warn("Search cancelled: Could not generate embedding for query: '{}'", query);
+            return Collections.emptyList();
+        }
+
+        try {
+            List<Points.ScoredPoint> scoredPoints = qdrantService.search(
+                    COLLECTION,
+                    queryVector,
+                    SIMILARITY_THRESHOLD,
+                    fetchLimit
+            );
+
+            return scoredPoints.stream()
+                    .map(point -> point.getId().getUuid())
+                    .map(UUID::fromString)
+                    .skip(offset)
+                    .limit(limit)
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("Semantic search failed for query: '{}'. Error: {}", query, e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }

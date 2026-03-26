@@ -11,4 +11,7 @@ public class BrevoConfig {
 
     private String from;
     private String fromName;
+    private int retryMaxAttempts = 3;
+    private long retryInitialBackoffMs = 1000L;
+    private double retryBackoffMultiplier = 2.0D;
 }

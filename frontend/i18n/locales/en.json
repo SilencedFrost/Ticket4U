@@ -17,6 +17,7 @@
       "has_account": "Already have an account? Log in",
       "success": "Registration successful! Please check your email to verify your account."
     },
+    "identifier": "Email or phone number",
     "password": "Password",
     "create_account": "Create account",
     "forgot_password": "Forgot password",
@@ -42,6 +43,7 @@
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",
+        "identifier": "Email or phone number can't be blank",
         "phone": "Phone number can't be blank",
         "full_name": "Full name can't be blank"
       },

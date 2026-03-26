@@ -15,11 +15,11 @@ export const useUserStore = defineStore('user', () => {
   const user = computed(() => _user.value);
   const isLoggedIn = computed(() => _user.value.roleId >= 0);
 
-  async function login(email: string, password: string, rememberMe: boolean) {
+  async function login(identifier: string, password: string, rememberMe: boolean) {
     _user.value = await $fetch(`${config.public.authUrl}/login`, {
       credentials: 'include',
       method: 'POST',
-      body: { email, password, rememberMe },
+      body: { identifier, password, rememberMe },
     });
   }
 

@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record LoginRequest(
-        @NotBlank(message = "auth.error.blank.email")
-        String email,
+        @NotBlank(message = "auth.error.blank.identifier")
+        String identifier,
 
         @NotBlank(message = "auth.error.blank.password")
         String password,

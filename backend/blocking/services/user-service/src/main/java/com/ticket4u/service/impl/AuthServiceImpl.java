@@ -25,6 +25,7 @@ import com.ticket4u.util.JwtUtil;
 import com.ticket4u.util.PhoneNumberUtil;
 import com.ticket4u.util.TokenUtil;
 import com.ticket4u.validation.GoogleTokenValidator;
+import com.ticket4u.validation.ValidationPatterns;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -69,9 +70,15 @@ public class AuthServiceImpl implements AuthService {
             String oldRefreshToken,
             String userAgent
     ) {
+        // If it's a phone number, extract the user's email for verification
+        String email = null;
+        if(loginRequest.identifier().matches(ValidationPatterns.PHONE_NUMBER)) {
+            email = userRepository.findByPhoneNumber(PhoneNumberUtil.normalize(loginRequest.identifier())).map(User::getEmail).orElse(null);
+        }
+
         // Get CustomUserDetails, will fail here if invalid credentials were provided
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
+                new UsernamePasswordAuthenticationToken(email == null? loginRequest.identifier() : email, loginRequest.password())
         );
 
         // Retrieve authenticated user data
@@ -229,6 +236,7 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
+        // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
         if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
             String normalizedPhone = PhoneNumberUtil.normalize(request.phoneNumber());
             if (userRepository.existsByPhoneNumber(normalizedPhone)) {

@@ -31,7 +31,7 @@
       {{ $d(new Date('2023-12-01'), 'short') }}
     </p>
     <div class="d-flex gap-2">
-      <span class="badge vip-badge"> Hạng Vàng </span>
+      <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold vip-badge"> Hạng Vàng </span>
     </div>
   </div>
 </template>
@@ -62,10 +62,6 @@
   color: #af88ff;
   background-color: rgba(175, 136, 255, 0.1);
   border: 1px solid rgba(175, 136, 255, 0.2);
-  border-radius: 9999px;
-  padding: 0.4rem 1rem;
-  text-transform: uppercase;
-  font-weight: bold;
   letter-spacing: 0.05em;
 }
 </style>

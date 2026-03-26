@@ -39,13 +39,13 @@
 }
 
 .settings-nav__item:hover {
-  background-color: var(--settings-nav-bg-active);
+  background-color: var(--bg-reactive-secondary);
   color: var(--text-reactive-primary);
 }
 
 .settings-nav__item.active,
 .settings-nav__item.router-link-exact-active {
-  background-color: var(--settings-nav-bg-active);
+  background-color: var(--bg-reactive-secondary);
   border-left-color: var(--bs-primary);
   color: var(--bs-primary) !important;
 }

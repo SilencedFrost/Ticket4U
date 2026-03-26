@@ -1,19 +1,4 @@
-/* Custom reactive variables exclusively for Settings feature */
-
-:root {
-  /* Light theme values */
-  --settings-input-bg: #ffffff;
-  /* Use lighter gray for nav hover/active in light mode */
-  --settings-nav-bg-active: var(--bg-reactive-secondary); 
-}
-
-[data-bs-theme="dark"] {
-  /* Keep the dark mode values exactly as they were */
-  --settings-input-bg: var(--bg-reactive-gray);
-  --settings-nav-bg-active: var(--bg-reactive-gray);
-}
-
 /* Shared input class for all forms inside settings */
 .settings-input {
-  background-color: var(--settings-input-bg) !important;
+  background-color: var(--bg-reactive-primary) !important;
 }

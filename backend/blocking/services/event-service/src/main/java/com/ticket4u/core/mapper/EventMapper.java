@@ -43,7 +43,7 @@ public abstract class EventMapper {
     @Mapping(target = "longitude",
         expression = "java(event.getLongitude() != null? event.getLongitude() : event.getVenue() != null? event.getVenue().getLongitude() : null)")
     @Mapping(target = "addressLine",
-        expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue() != null ? event.getVenut().getAddressLine() : null)")
+        expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue() != null ? event.getVenue().getAddressLine() : null)")
     public abstract EventResponse toDTO(Event event);
 
     @Named("toMinPrice")

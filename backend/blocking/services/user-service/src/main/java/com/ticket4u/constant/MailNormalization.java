@@ -92,6 +92,9 @@ public class MailNormalization {
      * Allows O(1) normalization: ALIAS_DOMAIN_LOOKUP.getOrDefault(domain, domain)
      */
     public static final Map<String, String> ALIAS_DOMAIN_LOOKUP = Map.of(
+            // Gmail
+            "googlemail.com", "gmail.com",
+
             // Apple — icloud.com is the canonical domain
             "me.com",  "icloud.com",
             "mac.com", "icloud.com",

@@ -3,9 +3,11 @@ package com.ticket4u.util;
 import static com.ticket4u.constant.MailNormalization.*;
 import com.ticket4u.exception.NotAnEmailException;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 @UtilityClass
 public class EmailUtil {
 
@@ -55,7 +57,9 @@ public class EmailUtil {
             if(activeRules.contains(currentRule)) {
                 // Special case for alias resolve, after resolving alias, refresh active ruleset to use canonical's ruleset
                 if(currentRule.equals(NORMALIZATION_RULE.RESOLVE_ALIAS_DOMAIN)) {
+                    log.error("Old domain:");
                     domain = ALIAS_DOMAIN_LOOKUP.get(domain.toLowerCase());
+
                     activeRules = NORMALIZATION_MAPPING.get(domain.toLowerCase());
                 // Switch case processing for every case
                 } else {

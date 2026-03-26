@@ -8,6 +8,7 @@ import com.ticket4u.repository.UserRepository;
 import com.ticket4u.service.MailServiceClient;
 import com.ticket4u.service.PasswordResetService;
 import com.ticket4u.service.VerificationTokenService;
+import com.ticket4u.util.EmailUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     @Override
     @Transactional
     public void sendPasswordResetEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+        Optional<User> optionalUser = userRepository.findByNormalizedEmail(EmailUtil.normalizeEmail(email));
 
         // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
         // Or condition short circuit and is active is not nullable

@@ -17,6 +17,7 @@
       "has_account": "Đã có tài khoản? Đăng nhập",
       "success": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản."
     },
+    "identifier": "Email hoặc số điện thoại",
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
     "forgot_password": "Quên mật khẩu",
@@ -42,6 +43,7 @@
       "blank": {
         "password": "Mật khẩu không được để trống",
         "email": "Email không được để trống",
+        "identifier": "Email hoặc số điện thoại không được để trống",
         "phone": "Số điện thoại không được để trống",
         "full_name": "Họ và tên không được để trống"
       },

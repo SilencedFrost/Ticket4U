@@ -20,11 +20,9 @@ import com.ticket4u.service.AuthService;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.SessionService;
 import com.ticket4u.service.VerificationTokenService;
-import com.ticket4u.util.CookieUtil;
-import com.ticket4u.util.JwtUtil;
-import com.ticket4u.util.PhoneNumberUtil;
-import com.ticket4u.util.TokenUtil;
+import com.ticket4u.util.*;
 import com.ticket4u.validation.GoogleTokenValidator;
+import com.ticket4u.validation.ValidationPatterns;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -69,9 +67,15 @@ public class AuthServiceImpl implements AuthService {
             String oldRefreshToken,
             String userAgent
     ) {
+        // If it's a phone number, extract the user's email for verification
+        String email = null;
+        if(loginRequest.identifier().matches(ValidationPatterns.PHONE_NUMBER)) {
+            email = userRepository.findByPhoneNumber(PhoneNumberUtil.normalize(loginRequest.identifier())).map(User::getEmail).orElse(null);
+        }
+
         // Get CustomUserDetails, will fail here if invalid credentials were provided
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password())
+                new UsernamePasswordAuthenticationToken(email == null? loginRequest.identifier() : email, loginRequest.password())
         );
 
         // Retrieve authenticated user data
@@ -221,7 +225,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public RegisterResponse registerWithEmail(@Valid RegisterRequest request) {
         // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
-        if (userRepository.existsByEmailIgnoreCase(request.email())) {
+
+        if (userRepository.existsByNormalizedEmail(EmailUtil.normalizeEmail(request.email()))) {
             return new RegisterResponse(
                 null,
                 request.email(),
@@ -229,6 +234,7 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
+        // TODO: add synthetic delay based on last N delay observed by mail service with variance to eliminate timing attacks
         if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
             String normalizedPhone = PhoneNumberUtil.normalize(request.phoneNumber());
             if (userRepository.existsByPhoneNumber(normalizedPhone)) {
@@ -257,7 +263,7 @@ public class AuthServiceImpl implements AuthService {
         GoogleIdToken idToken = new GoogleIdToken(idTokenValue);
         GoogleUserInfo userInfo = googleTokenValidator.verifyAndExtract(idToken);
 
-        if (!userRepository.existsByEmailIgnoreCase(userInfo.email())) {
+        if (!userRepository.existsByNormalizedEmail(EmailUtil.normalizeEmail(userInfo.email()))) {
             User newUser = userMapper.toEntityFromGoogle(userInfo);
             newUser.assignRole(new Role() {{ setId(RoleId.CUSTOMER); }});
             userRepository.saveAndFlush(newUser);
@@ -265,7 +271,7 @@ public class AuthServiceImpl implements AuthService {
             log.info("User registered via Google: {}, userId: {}", newUser.getEmail(), newUser.getId());
         }
 
-        User user = userRepository.findWithRoleByEmailIgnoreCase(userInfo.email())
+        User user = userRepository.findWithRoleByNormalizedEmail(EmailUtil.normalizeEmail(userInfo.email()))
                 .orElseThrow(() -> new TokenCreationException("Failed to find user after Google authentication"));
 
         // If user authenticates via OAuth, account will be activated

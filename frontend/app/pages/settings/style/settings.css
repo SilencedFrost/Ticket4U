@@ -1,4 +1,80 @@
-/* Shared input class for all forms inside settings */
-.settings-input {
-  background-color: var(--bg-reactive-primary) !important;
+/* Bottom Navigation Bar exactly per PM */
+.settings-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: var(--bg-reactive-primary);
+  border-top: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+  padding: 0.25rem 0;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.settings-bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  color: var(--text-reactive-secondary);
+  text-decoration: none;
+  font-size: 0.7rem;
+  gap: 2px;
+  border-top: 2px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.settings-bottom-nav-item.active,
+.settings-bottom-nav-item:hover {
+  color: var(--bs-primary);
+  border-top-color: var(--bs-primary);
+}
+
+.settings-bottom-nav-item i {
+  font-size: 1.25rem;
+}
+
+/* Avatar card styling */
+.settings-avatar-card {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 767px) {
+  .settings-main-content {
+    padding-bottom: 5rem;
+  }
+
+  .settings-avatar-card .avatar-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .settings-form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .settings-form-actions .btn {
+    width: 100%;
+  }
+
+  .personal-info-form .card {
+    padding: 1rem !important;
+  }
+}
+
+.tracking-wide {
+  letter-spacing: 0.05em;
+}
+
+.settings-label {
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  color: var(--text-reactive-secondary);
+  margin-bottom: 0.25rem;
+  padding: 0 0.25rem;
 }

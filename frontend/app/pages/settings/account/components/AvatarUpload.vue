@@ -1,5 +1,8 @@
 <script setup lang="ts">
-// <!-- TODO: wire up script -->
+import { ref } from 'vue';
+
+// TODO: Replace this mock value with the actual ranking from user store / API result, <if unnecessary, remove this>
+const currentRank = ref<'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond'>('gold');
 </script>
 
 <template>
@@ -30,8 +33,13 @@
       {{ $t('settings.personal_information.member_since') }}
       {{ $d(new Date('2023-12-01'), 'short') }}
     </p>
-    <div class="d-flex gap-2">
-      <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold vip-badge"> Hạng Vàng </span>
+    <div class="d-flex gap-2 justify-content-center">
+      <span
+        class="badge rounded-pill px-3 py-2 text-uppercase fw-bold rank-badge"
+        :class="`rank-badge--${currentRank}`"
+      >
+        {{ $t(`settings.personal_information.rank.${currentRank}`) }}
+      </span>
     </div>
   </div>
 </template>
@@ -58,10 +66,38 @@
   transform: translate(10%, -10%) scale(1.1);
 }
 
-.vip-badge {
+.rank-badge {
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.rank-badge--bronze {
+  color: #cd7f32;
+  background-color: rgba(205, 127, 50, 0.1);
+  border: 1px solid rgba(205, 127, 50, 0.2);
+}
+
+.rank-badge--silver {
+  color: #aeb5bc;
+  background-color: rgba(174, 181, 188, 0.1);
+  border: 1px solid rgba(174, 181, 188, 0.2);
+}
+
+.rank-badge--gold {
+  color: #f5b82e;
+  background-color: rgba(245, 184, 46, 0.1);
+  border: 1px solid rgba(245, 184, 46, 0.2);
+}
+
+.rank-badge--platinum {
+  color: #08c7f7;
+  background-color: rgba(8, 199, 247, 0.1);
+  border: 1px solid rgba(8, 199, 247, 0.2);
+}
+
+.rank-badge--diamond {
   color: #af88ff;
   background-color: rgba(175, 136, 255, 0.1);
   border: 1px solid rgba(175, 136, 255, 0.2);
-  letter-spacing: 0.05em;
 }
 </style>

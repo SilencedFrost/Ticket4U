@@ -8,10 +8,12 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
 
 <template>
   <SettingsLayout>
-    <Title>{{ $t('settings.title') }}</Title>
+    <Title>{{ $t('settings.personal_information.title') }}</Title>
     <!-- Page header: title + subtitle, full width -->
     <div class="page-header mb-4">
-      <h1 class="h3 fw-bold text-reactive-primary mb-1">{{ $t('settings.personal_information.title') }}</h1>
+      <h1 class="h3 fw-bold text-reactive-primary mb-1">
+        {{ $t('settings.personal_information.title') }}
+      </h1>
       <p class="text-reactive-secondary mb-0">
         {{ $t('settings.personal_information.subtitle') }}
       </p>
@@ -20,7 +22,9 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
     <!-- Main content: avatar LEFT + form RIGHT, side by side -->
     <div class="personal-info-content d-flex flex-column flex-lg-row align-items-lg-start gap-4">
       <!-- LEFT column: fixed ~180px -->
-      <div class="personal-info-avatar-col card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary">
+      <div
+        class="personal-info-avatar-col card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary"
+      >
         <AvatarUpload />
       </div>
 
@@ -35,8 +39,14 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
 
 <style scoped>
 .personal-info-avatar-col {
-  width: 240px;
+  width: 100%;
   flex-shrink: 0;
+}
+
+@media (min-width: 992px) {
+  .personal-info-avatar-col {
+    width: 240px;
+  }
 }
 
 .personal-info-form-col {

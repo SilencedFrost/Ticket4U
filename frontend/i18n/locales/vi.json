@@ -128,15 +128,23 @@
     }
   },
   "settings": {
-    "title": "Settings",
+    "title": "Cài đặt",
     "subtitle": "Quản lý tài khoản",
     "nav": {
-      "personal_information": "Thông tin cá nhân"
+      "personal_information": "Thông tin cá nhân",
+      "security": "Mật khẩu và bảo mật"
     },
     "personal_information": {
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
       "member_since": "Thành viên từ",
+      "rank": {
+        "bronze": "Hạng Đồng",
+        "silver": "Hạng Bạc",
+        "gold": "Hạng Vàng",
+        "platinum": "Hạng Bạch kim",
+        "diamond": "Hạng Kim cương"
+      },
       "basic_info": {
         "section_title": "Thông tin cơ bản",
         "username": "Tên người dùng",
@@ -146,6 +154,20 @@
       },
       "actions": {
         "save": "Lưu thay đổi"
+      }
+    },
+    "security": {
+      "title": "Mật khẩu và bảo mật",
+      "subtitle": "Quản lý mật khẩu và các thiết lập bảo mật cho tài khoản của bạn.",
+      "change_password": {
+        "title": "Đổi mật khẩu",
+        "current_password": "Mật khẩu hiện tại",
+        "current_password_placeholder": "Nhập mật khẩu hiện tại",
+        "new_password": "Mật khẩu mới",
+        "new_password_placeholder": "Nhập mật khẩu mới",
+        "new_password_hint": "Mật khẩu phải chứa ít nhất 8 ký tự.",
+        "confirm_password": "Xác nhận mật khẩu mới",
+        "confirm_password_placeholder": "Nhập lại mật khẩu mới"
       }
     }
   }

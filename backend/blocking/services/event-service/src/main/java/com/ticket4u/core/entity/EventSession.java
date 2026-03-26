@@ -16,6 +16,23 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "event_sessions", schema = "public")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "EventSession.withAllEntities",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "zones", subgraph = "zones-subgraph"),
+                        @NamedAttributeNode(value = "event")
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "zones-subgraph",
+                                attributeNodes = {
+                                        @NamedAttributeNode("seats")
+                                }
+                        )
+                }
+        )
+})
 public class EventSession {
 
     @Id

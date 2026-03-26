@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
 	name 				VARCHAR(255) NOT NULL,
 	is_standing 		BOOLEAN NOT NULL,
 	capacity 			INTEGER,
-	quantity_sold 		INTEGER,
-	purchase_limit 		INTEGER,
+	purchase_limit      INTEGER,
+	
 	price 				DECIMAL(10, 2) NOT NULL,
 
 	description_vi 		TEXT,
@@ -118,7 +118,6 @@ CREATE TABLE IF NOT EXISTS public.seats (
 	row_name 		VARCHAR(5),
 	col_name 		VARCHAR(5),
 	seat_code 		VARCHAR(20),
-	status 			VARCHAR(50) NOT NULL,
 	price_override 	DECIMAL(10, 2),
 
 	CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id)

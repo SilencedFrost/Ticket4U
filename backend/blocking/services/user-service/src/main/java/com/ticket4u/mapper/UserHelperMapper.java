@@ -11,7 +11,7 @@ public class UserHelperMapper {
 
     @Named("extractUsername")
     public String extractUsername(String email) {
-        return email != null ? EmailUtil.extractUsername(email) : null;
+        return EmailUtil.getLocalPart(email, true);
     }
 
     @Named("normalizePhone")

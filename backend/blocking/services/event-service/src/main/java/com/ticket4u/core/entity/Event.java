@@ -23,40 +23,9 @@ import java.util.UUID;
         @NamedEntityGraph(
                 name = "Event.withAllEntities",
                 attributeNodes = {
-                        @NamedAttributeNode(value = "sessions", subgraph = "sessions-subgraph"),
+                        @NamedAttributeNode("sessions"),
                         @NamedAttributeNode("categories"),
                         @NamedAttributeNode("venue")
-                },
-                subgraphs = {
-                        @NamedSubgraph(
-                                name = "sessions-subgraph",
-                                attributeNodes = {
-                                        @NamedAttributeNode("zones")
-                                }
-                        )
-                }
-        ),
-        @NamedEntityGraph(
-                name = "Event.withSessionsAndZones",
-                attributeNodes = {
-                        @NamedAttributeNode(
-                                value = "sessions",
-                                subgraph = "sessions-subgraph"
-                        )
-                },
-                subgraphs = {
-                        @NamedSubgraph(
-                                name = "sessions-subgraph",
-                                attributeNodes = {
-                                        @NamedAttributeNode("zones")
-                                }
-                        )
-                }
-        ),
-        @NamedEntityGraph(
-                name = "Event.withSessions",
-                attributeNodes = {
-                        @NamedAttributeNode("sessions")
                 }
         )
 })

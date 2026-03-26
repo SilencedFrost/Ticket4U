@@ -117,7 +117,7 @@ const formatPrice = (price: number) =>
 
                 <!-- Gift image -->
                 <div v-if="ticket.giftImageUrl" class="mt-2">
-                  <img :src="ticket.giftImageUrl" class="rounded" style="max-height:80px;object-fit:cover;width:100%;"/>
+                  <img :src="ticket.giftImageUrl" class="rounded" style="max-height:80px;object-fit:cover;width:100%;" alt="GiftImage"/>
                 </div>
               </div>
             </Transition>

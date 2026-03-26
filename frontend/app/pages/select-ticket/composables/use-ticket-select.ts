@@ -3,7 +3,7 @@ import type { Ticket } from '../(types)/ticket.type'
 import type { Event } from '../(types)/event.type'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
 
-// ── Backend response shape ─────────────────────────────────
+// Backend response shape
 interface SeatResponse {
   id:            string
   zoneId:        string
@@ -44,7 +44,7 @@ interface EventInfoResponse {
   endDate:     string
 }
 
-// ── Parsed layout floor shape ──────────────────────────────
+// Parsed layout floor shape
 interface RawLayoutFloor {
   floor_order?:      number
   floor_name?:       string
@@ -65,13 +65,13 @@ interface RawLayoutZone {
   corner4:     { x: number; y: number }
 }
 
-// ── Fallback colors ────────────────────────────────────────
+// Fallback colors
 const FALLBACK_COLORS = [
   '#E53E3E', '#06B6D4', '#22D3EE', '#D69E2E',
   '#805AD5', '#38A169', '#DD6B20', '#3182CE',
 ]
 
-// ── Build floors from layout JSON ──────────────────────────
+// Build floors from layout JSON
 const buildFloors = (
     layoutJson: string | null,
     zones: ZoneResponse[]
@@ -142,7 +142,7 @@ const buildFloors = (
       })
 }
 
-// ── Map seating plan ───────────────────────────────────────
+// Map seating plan
 const mapSeatingPlan = (data: SeatingPlanResponse): {
   tickets: Ticket[]; floors: Floor[]
 } => {
@@ -178,7 +178,7 @@ const mapSeatingPlan = (data: SeatingPlanResponse): {
   return { tickets, floors }
 }
 
-// ── Composable ─────────────────────────────────────────────
+// Composable
 export const useTicketSelect = () => {
   const event   = ref<Event | null>(null)
   const tickets = ref<Ticket[]>([])

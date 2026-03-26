@@ -22,7 +22,7 @@ watch(() => props.floors, floors => {
 }, { immediate: true })
 watch(activeFloor, () => nextTick(() => draw()))
 
-// ── Canvas ─────────────────────────────────────────────────
+// Canvas
 const canvasContainer = ref<HTMLElement | null>(null)
 const canvasRef       = ref<HTMLCanvasElement | null>(null)
 const canvasSize      = ref({ width: 0, height: 0 })
@@ -37,7 +37,7 @@ const updateSize = () => {
 onMounted(() => { updateSize(); window.addEventListener('resize', updateSize) })
 onUnmounted(() => window.removeEventListener('resize', updateSize))
 
-// ── Pan / Zoom ─────────────────────────────────────────────
+// Pan / Zoom
 const scale     = ref(1)
 const pan       = ref({ x: 0, y: 0 })
 const ZOOM_STEP = 0.15

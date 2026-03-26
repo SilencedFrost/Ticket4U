@@ -7,8 +7,6 @@ import EventInfo from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'
 import type { SelectedSeat } from './(types)/ticket.type'
 
-definePageMeta({ layout: 'minimal' })
-
 const route = useRoute()
 const id    = route.params.id as string
 if (!id) navigateTo('/')

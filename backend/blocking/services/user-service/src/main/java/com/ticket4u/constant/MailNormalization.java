@@ -99,8 +99,8 @@ public class MailNormalization {
             "me.com",  "icloud.com",
             "mac.com", "icloud.com",
 
-            // Proton — protonmail.com is the canonical domain
-            "proton.me", "protonmail.com",
+            // Proton — proton.me is the canonical domain
+            "protonmail.com", "proton.me",
 
             // Microsoft — all route to the same mailbox system, outlook.com is canonical
             "hotmail.com",    "outlook.com",
@@ -157,13 +157,13 @@ public class MailNormalization {
         Map.entry("mac.com", List.of(NORMALIZATION_RULE.RESOLVE_ALIAS_DOMAIN)),
 
         // Protonmail & aliases
-        Map.entry("protonmail.com", List.of(
+        Map.entry("proton.me", List.of(
                 NORMALIZATION_RULE.LOWERCASE_LOCAL_PART,
                 NORMALIZATION_RULE.LOWERCASE_DOMAIN,
                 NORMALIZATION_RULE.REMOVE_DOTS_IN_LOCAL_PART,
                 NORMALIZATION_RULE.STRIP_SUFFIX
         )),
-        Map.entry("proton.me", List.of(NORMALIZATION_RULE.RESOLVE_ALIAS_DOMAIN)),
+        Map.entry("protonmail.com", List.of(NORMALIZATION_RULE.RESOLVE_ALIAS_DOMAIN)),
 
         //
         Map.entry("aol.com", List.of(

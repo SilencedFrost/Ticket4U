@@ -11,25 +11,21 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const localePath = useLocalePath();
+const { formatPrice, formatLongDate } = useFormatter();
 
 const handleClick = () => {
   navigateTo(localePath(`/event-detail/${props.event.id}`));
 };
 
-const formatPrice = (price: number) => {
-  if (price === 0) return $t('common.price.from') + ' 0đ';
-  return price !== null
-    ? `${$t('common.price.from')} ${price.toLocaleString('vi-VN')}đ`
-    : $t('common.price.not_updated');
+const formatEventPrice = (price: number | null | undefined) => {
+  if (price === null || price === undefined) {
+    return $t('common.price.not_updated');
+  }
+
+  return `${$t('common.price.from')} ${formatPrice(price)}`;
 };
 
-const formatDate = (isoDate: string) => {
-  const date = new Date(isoDate);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${day} tháng ${month}, ${year}`; //07 tháng 02, 2026
-};
+const formatDate = (isoDate: string) => formatLongDate(isoDate);
 </script>
 
 <template>
@@ -50,7 +46,7 @@ const formatDate = (isoDate: string) => {
       </h3>
 
       <p class="text-primary fw-medium mb-1">
-        {{ formatPrice(event.minPrice) }}
+        {{ formatEventPrice(event.minPrice) }}
       </p>
 
       <p class="text-reactive-secondary mb-0">

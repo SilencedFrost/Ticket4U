@@ -8,7 +8,8 @@ public class RelatedEvents {
      * For weights with cutoff, it's treated as the max on x axis for sigmoid curve
      */
     public static final class WEIGHTS {
-        public static final int SEMANTIC_FETCH_LIMIT = 100;
+        public static final int FETCH_LIMIT_MULTIPLIER = 3;
+        public static final double EARTH_RADIUS_KM = 6371.0;
         // Based on multiple studies, semantic meaning of event names can be misleading
         // In "discovery mode" when users look at related events, category matching would be better
         public static final int NAME = 300;

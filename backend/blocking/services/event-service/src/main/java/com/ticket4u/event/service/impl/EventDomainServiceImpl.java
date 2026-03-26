@@ -10,6 +10,7 @@ import com.ticket4u.event.constants.RelatedEvents;
 import com.ticket4u.event.service.EventDomainService;
 import com.ticket4u.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventDomainServiceImpl implements EventDomainService {
 
     private final EventMapper eventMapper;
@@ -33,29 +35,36 @@ public class EventDomainServiceImpl implements EventDomainService {
     public List<EventSummaryResponse> findRelatedEvents(UUID id) {
         // Fail fast
         Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-        List<Event> events = eventRepository.findAllPurchasable(); // Only include premiering and selling events
-        // Fail fast
-        if(events.isEmpty()) return List.of();
+        EventResponse originalDTO = eventMapper.toDTO(event);
 
-        Map<UUID, Float> semanticScoreMap = eventSemanticService.findSimilarEvents(id, PageRequest.of(0, RelatedEvents.WEIGHTS.SEMANTIC_FETCH_LIMIT));
+        int dynamicLimit = RelatedEvents.MAX_COUNT * RelatedEvents.WEIGHTS.FETCH_LIMIT_MULTIPLIER;
+        Map<UUID, Float> semanticMap = eventSemanticService.findSimilarEvents(id, PageRequest.of(0, dynamicLimit));
+
+        List<Event> candidates;
+        if (semanticMap.isEmpty()) {
+            candidates = eventRepository.findAllPurchasable().stream()
+                    .filter(e -> !e.getId().equals(id))
+                    .toList();
+            log.info("Semantic search empty. Falling back to all purchasable events for ranking.");
+        } else {
+            candidates = eventRepository.findAllById(semanticMap.keySet());
+        }
 
         // Score and sort all events (excluding the original)
-        return events.parallelStream()
-                .filter(e -> !e.getId().equals(id)) // Exclude the original event
-                .map(e -> new ScoredEvent(e, scoreEvent(event, e, semanticScoreMap)))
-                .sorted(Comparator.comparingInt(ScoredEvent::score).reversed()) // Highest score first
+        return candidates.stream()
+                .map(e -> new ScoredEvent(e, scoreEvent(originalDTO, e, semanticMap)))
+                .sorted(Comparator.comparingInt(ScoredEvent::score).reversed())
                 .limit(RelatedEvents.MAX_COUNT)
                 .map(scoredEvent -> eventMapper.toSummaryDTO(scoredEvent.event))
                 .toList();
     }
 
     // This method returns only relevancy in terms of start date for this build
-    private int scoreEvent(Event originalEvent, Event targetEvent, Map<UUID, Float> semanticScoreMap) {
-        EventResponse originalEventFlatmap = eventMapper.toDTO(originalEvent);
+    private int scoreEvent(EventResponse originalEvent, Event targetEvent, Map<UUID, Float> semanticScoreMap) {
         EventResponse targetEventFlatmap = eventMapper.toDTO(targetEvent);
 
         float distanceKm = (float) calculateDistance(
-                originalEvent.getLatitude(), originalEvent.getLongitude(),
+                originalEvent.latitude(), originalEvent.longitude(),
                 targetEvent.getLatitude(), targetEvent.getLongitude()
         );
 
@@ -64,7 +73,7 @@ public class EventDomainServiceImpl implements EventDomainService {
         // Score calculation
         float semanticScore = semanticScoreMap.getOrDefault(targetEvent.getId(), 0.1f);
         float locationScore = transformScore(proximity, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
-        float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEventFlatmap.startDate(), targetEventFlatmap.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
+        float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEvent.startDate(), targetEventFlatmap.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
         float suppressionWeight = 1;
 
         if (locationScore < 0.2 && semanticScore < 0.7) {
@@ -95,6 +104,10 @@ public class EventDomainServiceImpl implements EventDomainService {
         return inverse ? 1 - result : result;
     }
 
+    private static double haversine(double val) {
+        return Math.sin(val / 2) * Math.sin(val / 2);
+    }
+
     /**
      * Calculate the real-world distance between two points using latitude and longitude.
      * This method uses the Haversine formula to find the distance over the Earth's surface.
@@ -111,16 +124,20 @@ public class EventDomainServiceImpl implements EventDomainService {
             return RelatedEvents.WEIGHTS.LOCATION_CUTOFF;
         }
 
-        double r = 6371;
-        double dLat = Math.toRadians(lat2.doubleValue() - lat1.doubleValue());
-        double dLon = Math.toRadians(lon2.doubleValue() - lon1.doubleValue());
+        double l1 = lat1.doubleValue();
+        double ln1 = lon1.doubleValue();
+        double l2 = lat2.doubleValue();
+        double ln2 = lon2.doubleValue();
 
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1.doubleValue())) * Math.cos(Math.toRadians(lat2.doubleValue())) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double dLat = Math.toRadians(l2 - l1);
+        double dLon = Math.toRadians(ln2 - ln1);
+
+        double a = haversine(dLat) +
+                Math.cos(Math.toRadians(l1)) * Math.cos(Math.toRadians(l2)) * haversine(dLon);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return r * c;
+
+        return RelatedEvents.WEIGHTS.EARTH_RADIUS_KM * c;
     }
 
     /**

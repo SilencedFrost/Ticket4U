@@ -155,7 +155,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
                 return Collections.emptyMap();
             }
 
-            qdrantService.upsert(COLLECTION, pointId, queryVector, null);
+            qdrantService.upsert(COLLECTION, pointId, queryVector, Collections.emptyMap());
 
             // Use the vector directly for the first search to ensure zero-latency availability
             searchResults = qdrantService.search(COLLECTION, queryVector, SIMILARITY_THRESHOLD, fetchLimit);

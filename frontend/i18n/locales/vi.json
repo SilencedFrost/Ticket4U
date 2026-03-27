@@ -103,6 +103,13 @@
       "remove_filter": "Xóa bộ lọc"
     },
     "loading": "Đang tải...",
+    "error": {
+      "not_found_title": "Không tìm thấy sự kiện",
+      "not_found_description": "Sự kiện có thể đã bị gỡ hoặc liên kết không hợp lệ.",
+      "generic_title": "Đã có lỗi xảy ra",
+      "generic_description": "Vui lòng thử lại sau.",
+      "back_home": "Về trang chủ"
+    },
     "full_name": "Họ và tên",
     "phone": "Số điện thoại",
     "category": {

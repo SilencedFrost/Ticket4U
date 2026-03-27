@@ -103,6 +103,13 @@
       "remove_filter": "Remove filter"
     },
     "loading": "Loading...",
+    "error": {
+      "not_found_title": "Event not found",
+      "not_found_description": "This event may have been removed or the link is invalid.",
+      "generic_title": "Something went wrong",
+      "generic_description": "Please try again later.",
+      "back_home": "Back to home"
+    },
     "full_name": "Full name",
     "phone": "Phone number",
     "category": {

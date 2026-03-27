@@ -4,9 +4,9 @@ services:
   user-service:
     image: user-service:latest
     container_name: ticket4u-service-user
-    env_file: .env.user-service
-    ports:
-      - "8080:8080"
+    env_file:
+      - .env.user-service
+      - .env.services
     volumes:
       - ./keys/user-service/ec-private.pem:/keys/ec-private.pem:ro
       - ./keys/user-service/ec-public.pem:/keys/ec-public.pem:ro

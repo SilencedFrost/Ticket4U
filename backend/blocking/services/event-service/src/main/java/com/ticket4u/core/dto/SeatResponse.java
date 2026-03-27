@@ -5,11 +5,9 @@ import java.util.UUID;
 
 public record SeatResponse(
         UUID id,
-        UUID zoneId,
         String name,
         String rowName,
         String colName,
         String seatCode,
-        String status,
         BigDecimal priceOverride
 ) {}

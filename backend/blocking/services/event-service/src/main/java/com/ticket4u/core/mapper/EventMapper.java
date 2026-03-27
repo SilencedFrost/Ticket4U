@@ -11,7 +11,6 @@ import org.mapstruct.Named;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Objects;
 
 @Mapper(componentModel = "spring", uses = {SessionMapper.class, VenueMapper.class, CategoryMapper.class})
 public abstract class EventMapper {
@@ -45,6 +44,9 @@ public abstract class EventMapper {
     @Mapping(target = "addressLine",
         expression = "java(event.getAddressLine() != null && !event.getAddressLine().isEmpty() ? event.getAddressLine() : event.getVenue() != null ? event.getVenue().getAddressLine() : null)")
     public abstract EventResponse toDTO(Event event);
+
+    @Mapping(target = "venueName", source = "venue.name")
+    public abstract EventSummaryResponse toSummaryDTO(EventResponse eventResponse);
 
     @Named("toMinPrice")
     protected BigDecimal calculateMinPrice(Event event) {

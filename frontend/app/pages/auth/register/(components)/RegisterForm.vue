@@ -184,7 +184,7 @@ async function register() {
 
   try {
     await $fetch<{ userId: string | null; message: string }>(
-      `${config.public.userHealthUrl}/auth/register`,
+      `${config.public.userServiceUrl}/auth/register`,
       {
         method: 'POST',
         body: {

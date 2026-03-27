@@ -21,6 +21,8 @@ interface ZoneResponse {
   price:          number
   available:      number
   isStanding:     boolean
+  capacity:       number
+  purchaseLimit:  number | null
   descriptionVi?: string
   descriptionEn?: string
   giftImageUrl?:  string
@@ -42,6 +44,7 @@ interface EventInfoResponse {
   addressLine: string
   startDate:   string
   endDate:     string
+  sessions:    { id: string }[]
 }
 
 // Parsed layout floor shape
@@ -152,9 +155,9 @@ const mapSeatingPlan = (data: SeatingPlanResponse): {
     price:          zone.price,
     color:          FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#6366f1',
     zone:           zone.name,
-    available:      zone.available,
-    soldOut:        zone.available <= 0,
-    maxPerAccount:  null,
+    capacity:      zone.capacity,
+    soldOut:        zone.capacity <= 0,
+    maxPerAccount: zone.purchaseLimit ?? null,
     isStanding:     zone.isStanding ?? false,
     descriptionVi:  zone.descriptionVi,
     descriptionEn:  zone.descriptionEn,
@@ -193,11 +196,19 @@ export const useTicketSelect = () => {
     loading.value = true
     error.value   = null
     try {
-      // Fetch event info and seating plan in parallel
-      const [eventData, seatingData] = await Promise.all([
-        $fetch<EventInfoResponse>(`${config.public.eventUrl}/public/events/${eventId}`),
-        $fetch<SeatingPlanResponse>(`${config.public.eventUrl}/public/events/${eventId}/layout`),
-      ])
+      //fetch event info
+      const eventData = await $fetch<EventInfoResponse>(
+          `${config.public.eventServiceUrl}/public/events/${eventId}`
+      )
+
+      //get first sessionId
+      const sessionId = eventData.sessions?.[0]?.id
+      if (!sessionId) throw new Error('No session found for this event')
+
+      //fetch layout using sessionId
+      const seatingData = await $fetch<SeatingPlanResponse>(
+          `${config.public.eventServiceUrl}/public/sessions/${sessionId}/layout`
+      )
 
       const start = new Date(eventData.startDate)
       const end   = new Date(eventData.endDate)

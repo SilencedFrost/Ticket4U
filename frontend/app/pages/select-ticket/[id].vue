@@ -10,9 +10,14 @@ import type { SelectedSeat } from './(types)/ticket.type'
 const route = useRoute()
 const id    = route.params.id as string
 if (!id) navigateTo('/')
+const seatingMapRef = ref()
 
 const { event, tickets, floors, loading, error, fetchTicketSelect } = useTicketSelect()
 const { cart, totalPrice, totalTickets, addToCart, removeFromCart, formatPrice } = useEventPayment()
+
+watch(cart, (newCart) => {
+  seatingMapRef.value?.syncCartSeats(newCart)
+}, { deep: true })
 
 const drawerOpen = ref(true)
 const cartWidth  = ref(420)
@@ -75,7 +80,7 @@ const startResize = (e: MouseEvent) => {
       <!-- Desktop -->
       <div class="d-none d-lg-flex h-100">
         <div class="flex-grow-1 h-100 overflow-hidden" style="min-width:0">
-          <SeatingMap :tickets="tickets" :floors="floors" @back="handleBack" @add-ticket="handleAddTicket"/>
+          <SeatingMap ref="seatingMapRef" :tickets="tickets" :floors="floors" @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <div class="resize-handle" @mousedown="startResize"/>
         <div class="cart-sidebar bg-reactive-secondary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">

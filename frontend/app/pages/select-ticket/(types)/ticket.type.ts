@@ -4,7 +4,7 @@ export interface Ticket {
   price:          number
   color:          string
   zone:           string
-  available:      number
+  capacity:      number
   soldOut:        boolean
   maxPerAccount:  number | null
   isStanding:     boolean
@@ -15,7 +15,11 @@ export interface Ticket {
 }
 
 export interface SelectedSeat {
-  seatId:   string    // seatCode e.g. "A1" — matches DB seatCode field
-  seatName: string    // display name e.g. "Seat A1"
-  seatUuid: string    // actual DB UUID — used for booking
+  seatId:    string
+  seatName:  string
+  seatUuid:  string
+  zoneUuid?: string
+  zoneName:  string
+  zoneColor: string
+  price:     number
 }

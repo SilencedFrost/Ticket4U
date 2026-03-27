@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import type { Ticket } from '../(types)/ticket.type'
+import type { Ticket, SelectedSeat} from '../(types)/ticket.type'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
-
-interface SelectedSeatLocal {
-  seatId: string; seatName: string; seatUuid?: string
-  zoneUuid?: string; zoneName: string; zoneColor: string; price: number
-}
+import type { CartItem } from '../(types)/event-payment.type'
 
 const props = defineProps<{ tickets: Ticket[]; floors: Floor[] }>()
 const emit  = defineEmits<{
   (e: 'back'): void
-  (e: 'addTicket', zoneId: string, zoneName: string, quantity: number, price: number, isStanding: boolean, seats?: SelectedSeatLocal[]): void
+  (e: 'addTicket', zoneId: string, zoneName: string, quantity: number, price: number, isStanding: boolean, seats?: SelectedSeat[]): void
 }>()
 
 // ── Floor state ────────────────────────────────────────────
@@ -102,7 +98,7 @@ const toNorm = (cx: number, cy: number) => ({
 })
 
 // Seat grid positions
-const getSeatGridPositions = (zone: LayoutZone): Map<string, { x: number; y: number }> => {
+const getSeatGridPositions = (zone: LayoutZone, seatSize: number): Map<string, { x: number; y: number }> => {
   const seats = zone.seats ?? []
   const map   = new Map<string, { x: number; y: number }>()
   if (!seats.length) return map
@@ -117,20 +113,23 @@ const getSeatGridPositions = (zone: LayoutZone): Map<string, { x: number; y: num
   const maxX = Math.max(zone.corner2.x, zone.corner3.x)
   const minY = Math.min(zone.corner1.y, zone.corner2.y)
   const maxY = Math.max(zone.corner3.y, zone.corner4.y)
-  const PAD  = 0.04
 
   const rows = [...new Set(sorted.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
   const cols = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
-  const rowH = rows.length > 1 ? (maxY - minY - PAD * 2) / rows.length : 0
-  const colW = cols > 1        ? (maxX - minX - PAD * 2) / cols        : 0
+
+  // Calculate cell size based on zone dimensions and seat count
+  const zoneW = maxX - minX
+  const zoneH = maxY - minY
+  const cellW = zoneW / (cols + 1)   // +1 for padding
+  const cellH = zoneH / (rows.length + 1)
 
   for (const seat of sorted) {
     const row = seat.seat_id.replace(/\d/g, '').toUpperCase()
     const col = parseInt(seat.seat_id.replace(/\D/g, '') || '1') - 1
     const ri  = rows.indexOf(row)
     map.set(seat.seat_id, {
-      x: minX + PAD + colW * col + colW / 2,
-      y: minY + PAD + rowH * ri  + rowH / 2,
+      x: minX + cellW * (col + 0.5) + cellW / 2,
+      y: minY + cellH * (ri + 0.5) + cellH / 2,
     })
   }
   return map
@@ -192,10 +191,15 @@ const draw = () => {
 
     // Seats (sitting zones)
     if (zone.zone_type === 'sitting' && zone.seats.length > 0) {
-      const gridPos = getSeatGridPositions(zone)
-      const seatPx = (floor.layout.seat_size ?? 14)
-      const scaleX  = canvasSize.value.width / CANVAS_W
-      const r = Math.max(4, seatPx / 2 * scaleX * scale.value)
+      const gridPos = getSeatGridPositions(zone, floor.layout.seat_size ?? 14)
+      const zoneW   = (Math.max(zone.corner2.x, zone.corner3.x) - Math.min(zone.corner1.x, zone.corner4.x))
+      const zoneH   = (Math.max(zone.corner3.y, zone.corner4.y) - Math.min(zone.corner1.y, zone.corner2.y))
+      const rows    = [...new Set(zone.seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+      const cols    = Math.max(...rows.map(r => zone.seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+      const cellW   = (zoneW / (cols + 1)) * CANVAS_W * scale.value
+      const cellH   = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
+      const maxR    = Math.min(cellW, cellH) / 2 * 0.7
+      const r       = Math.min(Math.max(4, (floor.layout.seat_size ?? 14) / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR)
 
       for (const seat of zone.seats) {
         const np = gridPos.get(seat.seat_id); if (!np) continue
@@ -277,7 +281,7 @@ const standingQuantity     = ref(1)
 const maxStandingAllowed   = computed(() => {
   if (!selectedStandingZone.value) return 0
   const t = getZoneTicket(selectedStandingZone.value); if (!t) return 0
-  return !t.maxPerAccount ? t.available : Math.min(t.available, t.maxPerAccount)
+  return !t.maxPerAccount ? t.capacity : Math.min(t.capacity, t.maxPerAccount)
 })
 
 const addStandingToCart = () => {
@@ -295,23 +299,30 @@ const addStandingToCart = () => {
 }
 
 // Seated selection
-const selectedSeats           = ref<SelectedSeatLocal[]>([])
+const selectedSeats           = ref<SelectedSeat[]>([])
+const cartSeats               = ref<Set<string>>(new Set())
 const selectedSeatsTotalPrice = computed(() => selectedSeats.value.reduce((s, seat) => s + seat.price, 0))
-const isSeatSelected          = (seatId: string) => selectedSeats.value.some(s => s.seatId === seatId)
+const isSeatSelected = (seatId: string) =>
+    selectedSeats.value.some(s => s.seatId === seatId) || cartSeats.value.has(seatId)
 
 const handleSeatClick = (seat: LayoutSeat, zone: LayoutZone) => {
+  selectedStandingZone.value = null
   if (seat.status === 'BOOKED' || seat.status === 'HOLD') return
   const t = getZoneTicket(zone); if (!t || t.soldOut) return
   const idx = selectedSeats.value.findIndex(s => s.seatId === seat.seat_id)
   if (idx >= 0) { selectedSeats.value.splice(idx, 1) }
   else {
-    const max = !t.maxPerAccount ? t.available : t.maxPerAccount
+    const max = !t.maxPerAccount ? t.capacity : t.maxPerAccount
     if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length >= max) return
     const price = seat.priceOverride != null ? seat.priceOverride : t.price
     selectedSeats.value.push({
-      seatId: seat.seat_id, seatName: seat.seat_name, seatUuid: seat.seat_uuid,
-      zoneUuid: zone.zone_uuid, zoneName: zone.display_name ?? zone.zone_name,
-      zoneColor: zone.color, price
+      seatId:    seat.seat_id,
+      seatName:  seat.seat_name,
+      seatUuid:  seat.seat_uuid ?? '',  // <- handle undefined
+      zoneUuid:  zone.zone_uuid,
+      zoneName:  zone.display_name ?? zone.zone_name,
+      zoneColor: zone.color,
+      price
     })
   }
   draw()
@@ -328,7 +339,7 @@ const addSeatsToCart = () => {
     const k = s.zoneUuid ?? s.zoneName
     if (!acc[k]) acc[k] = []
     acc[k].push(s); return acc
-  }, {} as Record<string, SelectedSeatLocal[]>)
+  }, {} as Record<string, SelectedSeat[]>)
   for (const seats of Object.values(byZone)) {
     const f = seats[0]
     // Use DB zone name from tickets prop — matches Zone.name in database
@@ -338,6 +349,13 @@ const addSeatsToCart = () => {
   }
   selectedSeats.value = []; draw()
 }
+const syncCartSeats = (items: CartItem[]) => {               // ← add here
+  cartSeats.value = new Set(
+      items.flatMap(item => item.seats?.map(s => s.seatId) ?? [])
+  )
+  draw()
+}
+defineExpose({ syncCartSeats })
 
 // Helpers
 const getZoneTicket = (zone: LayoutZone): Ticket | undefined =>
@@ -382,9 +400,9 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
 
         <!-- Zoom controls -->
         <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-secondary" @click="zoomIn" title="Zoom in"><i class="bi bi-plus-lg"/></button>
-          <button class="btn btn-outline-secondary" @click="zoomOut" title="Zoom out"><i class="bi bi-dash-lg"/></button>
-          <button class="btn btn-outline-secondary" @click="resetZoom" title="Reset zoom"><i class="bi bi-arrows-fullscreen"/></button>
+          <button class="btn btn-outline-secondary" title="Zoom in" @click="zoomIn"><i class="bi bi-plus-lg"/></button>
+          <button class="btn btn-outline-secondary" title="Zoom out" @click="zoomOut"><i class="bi bi-dash-lg"/></button>
+          <button class="btn btn-outline-secondary" title="Reset zoom" @click="resetZoom"><i class="bi bi-arrows-fullscreen"/></button>
         </div>
       </div>
 
@@ -443,7 +461,7 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
       </div>
     </div>
 
-    <!-- Standing Zone Panel -->
+    <!-- Standing Zone Popup Panel -->
     <div
         v-if="selectedStandingZone"
         class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
@@ -452,9 +470,13 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
       <div class="container" style="max-width:600px;">
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div>
-            <h5 class="text-reactive-primary mb-1">{{ selectedStandingZone.display_name ?? selectedStandingZone.zone_name }}</h5>
+            <h5 class="text-reactive-primary mb-1">
+              {{ getZoneTicket(selectedStandingZone!)?.name }}
+              <small class="text-reactive-secondary fw-normal ms-1">({{ selectedStandingZone?.display_name ?? selectedStandingZone?.zone_name }})</small>
+            </h5>
             <small class="text-reactive-secondary">
-              <i class="bi bi-people me-1"/>{{ getZoneTicket(selectedStandingZone)?.available ?? 0 }} {{ $t('select_ticket.selection.available') }}
+              <i class="bi bi-people me-1"/>{{ getZoneTicket(selectedStandingZone)?.capacity ?? 0 }}
+              {{ $t('select_ticket.selection.available') }}
             </small>
           </div>
           <button class="btn-close" @click="selectedStandingZone = null"/>
@@ -474,8 +496,15 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
             <label class="form-label text-reactive-primary fw-semibold small">{{ $t('select_ticket.selection.quantity') }}</label>
             <div class="d-flex gap-2">
               <button class="btn btn-outline-secondary" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
-              <input type="number" class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold" v-model.number="standingQuantity" :max="maxStandingAllowed" min="0"/>
-              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.min(maxStandingAllowed, standingQuantity + 1)" :disabled="standingQuantity >= maxStandingAllowed"><i class="bi bi-plus"/></button>
+              <input
+                  v-model.number="standingQuantity"
+                  type="number"
+                  class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
+                  :max="maxStandingAllowed"
+                  min="1"
+                  @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 1 : v }"
+              />
+              <button class="btn btn-outline-secondary" :disabled="standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed, standingQuantity + 1)"><i class="bi bi-plus"/></button>
             </div>
           </div>
           <div class="col-md-6">
@@ -491,7 +520,7 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
       </div>
     </div>
 
-    <!-- Seated Selection Panel -->
+    <!-- Seated Selection Popup Panel -->
     <div
         v-if="selectedSeats.length > 0 && !selectedStandingZone"
         class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
@@ -500,7 +529,10 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
       <div class="container" style="max-width:600px;">
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div class="flex-grow-1">
-            <h5 class="text-reactive-primary mb-1">{{ $t('select_ticket.selection.selected_seats') }}</h5>
+            <h5 class="text-reactive-primary mb-1">
+              {{ getZoneTicket(activeFloor?.layout.zones.find(z => z.zone_uuid === selectedSeats[0]?.zoneUuid)!)?.name }}
+              <small class="text-reactive-secondary fw-normal ms-1">({{ selectedSeats[0]?.zoneName }})</small>
+            </h5>
             <div class="d-flex flex-wrap gap-1 mt-1">
               <span
                   v-for="seat in selectedSeats" :key="seat.seatId"
@@ -527,7 +559,22 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
 </template>
 
 <style scoped>
-.legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-.selection-panel { animation: slideUp 0.25s ease; }
-@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.selection-panel {
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  } to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+}
 </style>

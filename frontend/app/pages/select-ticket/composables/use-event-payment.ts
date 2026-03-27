@@ -14,19 +14,26 @@ export const useEventPayment = () => {
   )
 
   const addToCart = (
-    zoneId:     string,
-    zoneName:   string,
-    quantity:   number,
-    price:      number,
-    isStanding: boolean,
-    seats?:     SelectedSeat[]
+      zoneId:     string,
+      zoneName:   string,
+      quantity:   number,
+      price:      number,
+      isStanding: boolean,
+      seats?:     SelectedSeat[]
   ) => {
     if (isStanding) {
       const existing = cart.value.find(item => item.zoneId === zoneId && item.isStanding)
       if (existing) { existing.quantity += quantity }
       else { cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: true }) }
     } else {
-      cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: false, seats: seats ?? [] })
+      // Merge seats into existing cart item for same zone
+      const existing = cart.value.find(item => item.zoneId === zoneId && !item.isStanding)
+      if (existing) {
+        existing.quantity += quantity
+        existing.seats = [...(existing.seats ?? []), ...(seats ?? [])]
+      } else {
+        cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: false, seats: seats ?? [] })
+      }
     }
   }
 

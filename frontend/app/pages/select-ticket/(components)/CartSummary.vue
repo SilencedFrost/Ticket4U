@@ -63,7 +63,7 @@ const formatPrice = (price: number) =>
 
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
                   <small class="text-reactive-secondary">
-                    <i class="bi bi-people me-1"/>{{ ticket.available }} {{ $t('select_ticket.ticket_info.available') }}
+                    <i class="bi bi-people me-1"/>{{ ticket.capacity }} {{ $t('select_ticket.ticket_info.available') }}
                   </small>
                   <span class="badge" :class="ticket.isStanding ? 'bg-secondary' : 'bg-info text-dark'">
                     {{ ticket.isStanding ? $t('select_ticket.ticket_info.standing') : $t('select_ticket.ticket_info.seated') }}

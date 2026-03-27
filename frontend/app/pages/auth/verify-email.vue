@@ -45,7 +45,7 @@ onMounted(async () => {
 
   try {
     verifyRequestController.value = new AbortController();
-    await $fetch(`${config.public.authUrl}/verify-email`, {
+    await $fetch(`${config.public.userServiceUrl}/auth/verify-email`, {
       method: 'GET',
       params: { token },
       signal: verifyRequestController.value.signal,
@@ -99,7 +99,7 @@ async function resendVerification() {
   resendError.value = '';
 
   try {
-    await $fetch(`${config.public.authUrl}/resend-verification`, {
+    await $fetch(`${config.public.userServiceUrl}/auth/resend-verification`, {
       method: 'POST',
       body: { email: resendEmail.value.trim() },
     });

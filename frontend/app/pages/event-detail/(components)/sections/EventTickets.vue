@@ -110,7 +110,7 @@ const hasZoneDetails = (zone: Zone) => {
                         v-if="zone.price === 0"
                         class="mx-1 text-success fw-bold fs-6 fs-md-5 mb-0 text-nowrap"
                       >
-                        Free
+                        {{ $t('event_display.label.free') }}
                       </p>
                       <p v-else class="mx-1 text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
                         {{ formatPrice(zone.price) }}

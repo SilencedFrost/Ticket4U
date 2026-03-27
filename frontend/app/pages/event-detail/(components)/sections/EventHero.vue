@@ -44,7 +44,11 @@ const emit = defineEmits(['buyClick']);
                     class="fw-bold mb-2 fs-3"
                     :class="event.minPrice === 0 ? 'text-success' : 'text-primary'"
                   >
-                    {{ event.minPrice === 0 ? 'Free' : formatPrice(event.minPrice) }}
+                    {{
+                      event.minPrice === 0
+                        ? $t('event_display.label.free')
+                        : formatPrice(event.minPrice)
+                    }}
                   </p>
                   <button
                     class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"

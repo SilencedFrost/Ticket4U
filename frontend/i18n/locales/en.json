@@ -99,8 +99,10 @@
     },
     "action": {
       "buy": "Buy tickets now",
-      "view": "View"
+      "view": "View",
+      "remove_filter": "Remove filter"
     },
+    "loading": "Loading...",
     "full_name": "Full name",
     "phone": "Phone number",
     "category": {

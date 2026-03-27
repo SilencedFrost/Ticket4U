@@ -99,8 +99,10 @@
     },
     "action": {
       "buy": "Mua vé ngay",
-      "view": "Xem"
+      "view": "Xem",
+      "remove_filter": "Xóa bộ lọc"
     },
+    "loading": "Đang tải...",
     "full_name": "Họ và tên",
     "phone": "Số điện thoại",
     "category": {

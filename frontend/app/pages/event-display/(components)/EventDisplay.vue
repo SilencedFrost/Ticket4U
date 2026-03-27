@@ -196,7 +196,9 @@ const removeFilter = (key: string, value: string) => {
 // Fetch events with current filters
 const fetchWithFilters = () => {
   // Convert selected category strings to integers
-  const categoryIds = selectedCategories.value.map((id) => parseInt(id));
+  const categoryIds = selectedCategories.value
+    .map((id) => Number.parseInt(id, 10))
+    .filter((id) => Number.isFinite(id));
 
   eventDisplayStore.fetchEvents({
     startDate: startDate.value || null,
@@ -407,13 +409,13 @@ onUnmounted(() => {
         <div class="d-flex flex-wrap gap-2 align-items-center">
           <div
             v-for="filter in activeFilters"
-            :key="filter.key"
+            :key="`${filter.key}-${filter.value}`"
             class="filter-tag d-flex align-items-center gap-2"
           >
             <button
               type="button"
               class="btn-remove-filter"
-              :aria-label="`Xóa bộ lọc ${filter.label}`"
+              :aria-label="`${$t('common.action.remove_filter')} ${filter.label}`"
               @click="removeFilter(filter.key, filter.value)"
             >
               <i class="bi bi-x-circle-fill" />
@@ -426,7 +428,7 @@ onUnmounted(() => {
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-5">
         <div class="spinner-border text-light" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ $t('common.loading') }}</span>
         </div>
       </div>
 

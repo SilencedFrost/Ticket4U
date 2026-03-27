@@ -54,7 +54,7 @@ async function submit() {
 
   loading.value = true;
   try {
-    await $fetch(`${config.public.authUrl}/reset-password`, {
+    await $fetch(`${config.public.userServiceUrl}/auth/reset-password`, {
       method: 'POST',
       body: { token: token.value, password: password.value.trim() },
     });

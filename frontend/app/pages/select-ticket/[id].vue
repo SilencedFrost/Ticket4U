@@ -80,7 +80,9 @@ const startResize = (e: MouseEvent) => {
       <!-- Desktop -->
       <div class="d-none d-lg-flex h-100">
         <div class="flex-grow-1 h-100 overflow-hidden" style="min-width:0">
-          <SeatingMap ref="seatingMapRef" :tickets="tickets" :floors="floors" @back="handleBack" @add-ticket="handleAddTicket"/>
+          <SeatingMap
+              ref="seatingMapRef" :tickets="tickets" :floors="floors" :cart="cart"
+                      @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <div class="resize-handle" @mousedown="startResize"/>
         <div class="cart-sidebar bg-reactive-secondary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">
@@ -99,7 +101,9 @@ const startResize = (e: MouseEvent) => {
       <!-- Mobile -->
       <div class="d-flex d-lg-none flex-column h-100 position-relative">
         <div class="flex-grow-1 overflow-hidden">
-          <SeatingMap :tickets="tickets" :floors="floors" @back="handleBack" @add-ticket="handleAddTicket"/>
+          <SeatingMap
+              ref="seatingMapRef" :tickets="tickets" :floors="floors" :cart="cart"
+                      @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <transition name="fade">
           <div v-if="drawerOpen" class="drawer-backdrop" @click="drawerOpen = false"/>

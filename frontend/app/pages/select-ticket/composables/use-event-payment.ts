@@ -26,7 +26,6 @@ export const useEventPayment = () => {
       if (existing) { existing.quantity += quantity }
       else { cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: true }) }
     } else {
-      // Merge seats into existing cart item for same zone
       const existing = cart.value.find(item => item.zoneId === zoneId && !item.isStanding)
       if (existing) {
         existing.quantity += quantity

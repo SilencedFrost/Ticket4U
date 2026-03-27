@@ -71,7 +71,7 @@ const formatPrice = (price: number) =>
                   <span v-if="ticket.soldOut" class="badge bg-danger">{{ $t('select_ticket.ticket_info.sold_out') }}</span>
                 </div>
 
-                <small :class="isUnlimited(ticket) ? 'text-success' : 'text-warning'">
+                <small :class="isUnlimited(ticket) ? 'text-success' : 'text-primary'">
                   <i class="bi bi-ticket me-1"/>{{ getMaxLimitText(ticket) }}
                 </small>
               </div>
@@ -81,7 +81,7 @@ const formatPrice = (price: number) =>
           <!-- Detailed info dropdown -->
           <div v-if="hasDetails(ticket)">
             <button
-                class="btn btn-sm w-100 d-flex align-items-center justify-content-between px-3 py-2 border-top border-secondary text-reactive-secondary"
+                class="btn btn-sm w-100 d-flex align-items-center justify-content-between px-3 py-2 text-reactive-primary"
                 style="background:transparent;border-radius:0;"
                 @click="toggleExpanded(ticket.id)"
             >
@@ -96,7 +96,7 @@ const formatPrice = (price: number) =>
                   <small class="text-reactive-secondary fw-semibold d-block mb-1">
                     <i class="bi bi-info-circle me-1"/>{{ $t('select_ticket.ticket_info.description') }}
                   </small>
-                  <small class="text-reactive-secondary">{{ locale === 'vi' ? (ticket.descriptionVi || ticket.descriptionEn) : (ticket.descriptionEn || ticket.descriptionVi) }}</small>
+                  <small class="text-reactive-primary">{{ locale === 'vi' ? (ticket.descriptionVi || ticket.descriptionEn) : (ticket.descriptionEn || ticket.descriptionVi) }}</small>
                 </div>
 
                 <!-- Perks -->
@@ -108,7 +108,7 @@ const formatPrice = (price: number) =>
                   <span
                       v-for="perk in ticket.perks" :key="perk"
                       class="badge small"
-                      style="background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3);"
+                      style="background:rgba(var(--bs-primary-rgb),0.15);color:var(--bs-primary);border:1px solid rgba(var(--bs-primary-rgb),0.4);"
                   >
                     <i class="bi bi-check2 me-1"/>{{ perk }}
                   </span>

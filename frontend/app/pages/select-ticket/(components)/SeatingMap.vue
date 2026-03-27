@@ -4,7 +4,7 @@ import type { Ticket, SelectedSeat} from '../(types)/ticket.type'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
 import type { CartItem } from '../(types)/event-payment.type'
 
-const props = defineProps<{ tickets: Ticket[]; floors: Floor[] }>()
+const props = defineProps<{ tickets: Ticket[]; floors: Floor[]; cart: CartItem[] }>()
 const emit  = defineEmits<{
   (e: 'back'): void
   (e: 'addTicket', zoneId: string, zoneName: string, quantity: number, price: number, isStanding: boolean, seats?: SelectedSeat[]): void
@@ -178,15 +178,38 @@ const draw = () => {
     const label = zone.display_name ?? zone.zone_name
     const price = ticket ? formatPrice(ticket.price) : ''
 
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'
+    // Zone label + price
+    ctx.fillStyle = getTextColor()
+    ctx.font = 'bold 12px sans-serif'
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText(label, lp.x, lp.y - (price ? 8 : 0))
-    if (price) { ctx.font = '11px sans-serif'; ctx.fillStyle = '#d1d5db'; ctx.fillText(price, lp.x, lp.y + 8) }
+    if (price) {
+      ctx.font = '11px sans-serif'
+      ctx.fillStyle = getTextColor()  // ← was '#d1d5db'
+      ctx.fillText(price, lp.x, lp.y + 8)
+    }
 
     // Standing badge
     if (zone.zone_type === 'standing' && !soldOut) {
       ctx.font = '10px sans-serif'; ctx.fillStyle = zone.color + 'cc'
       ctx.fillText('[ Standing ]', lp.x, lp.y + 22)
+    }
+
+    // Only show zone label if standing or no seats loaded
+    if (zone.zone_type === 'standing' || zone.seats.length === 0) {
+      ctx.fillStyle = getTextColor()
+      ctx.font = 'bold 12px sans-serif'
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+      ctx.fillText(label, lp.x, lp.y - (price ? 8 : 0))
+      if (price) {
+        ctx.font = '11px sans-serif'
+        ctx.fillStyle = getTextColor()
+        ctx.fillText(price, lp.x, lp.y + 8)
+      }
+      if (zone.zone_type === 'standing' && !soldOut) {
+        ctx.font = '10px sans-serif'; ctx.fillStyle = zone.color + 'cc'
+        ctx.fillText('[ Standing ]', lp.x, lp.y + 22)
+      }
     }
 
     // Seats (sitting zones)
@@ -278,11 +301,22 @@ const handleZoneClick = (zone: LayoutZone) => {
 // Standing selection
 const selectedStandingZone = ref<LayoutZone | null>(null)
 const standingQuantity     = ref(1)
-const maxStandingAllowed   = computed(() => {
+
+// limits the maximum number of seats user can add to cart
+const maxStandingAllowed = computed(() => {
   if (!selectedStandingZone.value) return 0
   const t = getZoneTicket(selectedStandingZone.value); if (!t) return 0
-  return !t.maxPerAccount ? t.capacity : Math.min(t.capacity, t.maxPerAccount)
+  const cap = t.capacity ?? 0
+  const inCart = props.cart
+      .find(item => item.zoneId === selectedStandingZone.value?.zone_uuid && item.isStanding)
+      ?.quantity ?? 0
+  const max = !t.maxPerAccount ? cap : Math.min(cap, t.maxPerAccount)
+  return Math.max(0, max - inCart)
 })
+watch(selectedStandingZone, () => {
+  standingQuantity.value = 1
+})
+
 
 const addStandingToCart = () => {
   if (!selectedStandingZone.value || standingQuantity.value <= 0) return
@@ -302,6 +336,7 @@ const addStandingToCart = () => {
 const selectedSeats           = ref<SelectedSeat[]>([])
 const cartSeats               = ref<Set<string>>(new Set())
 const selectedSeatsTotalPrice = computed(() => selectedSeats.value.reduce((s, seat) => s + seat.price, 0))
+const seatLimitReached        = ref(false)
 const isSeatSelected = (seatId: string) =>
     selectedSeats.value.some(s => s.seatId === seatId) || cartSeats.value.has(seatId)
 
@@ -310,15 +345,25 @@ const handleSeatClick = (seat: LayoutSeat, zone: LayoutZone) => {
   if (seat.status === 'BOOKED' || seat.status === 'HOLD') return
   const t = getZoneTicket(zone); if (!t || t.soldOut) return
   const idx = selectedSeats.value.findIndex(s => s.seatId === seat.seat_id)
-  if (idx >= 0) { selectedSeats.value.splice(idx, 1) }
-  else {
+  if (idx >= 0) {
+    selectedSeats.value.splice(idx, 1)
+    seatLimitReached.value = false
+  } else {
+    const seatsInCart = props.cart
+        .find(item => item.zoneId === zone.zone_uuid && !item.isStanding)
+        ?.seats?.length ?? 0
     const max = !t.maxPerAccount ? t.capacity : t.maxPerAccount
-    if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length >= max) return
+    if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length + seatsInCart >= max) {
+      seatLimitReached.value = true
+      setTimeout(() => { seatLimitReached.value = false }, 2500)
+      return
+    }
+    seatLimitReached.value = false
     const price = seat.priceOverride != null ? seat.priceOverride : t.price
     selectedSeats.value.push({
       seatId:    seat.seat_id,
       seatName:  seat.seat_name,
-      seatUuid:  seat.seat_uuid ?? '',  // <- handle undefined
+      seatUuid:  seat.seat_uuid ?? '',
       zoneUuid:  zone.zone_uuid,
       zoneName:  zone.display_name ?? zone.zone_name,
       zoneColor: zone.color,
@@ -361,6 +406,10 @@ defineExpose({ syncCartSeats })
 const getZoneTicket = (zone: LayoutZone): Ticket | undefined =>
     props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
 
+// Get dark text for layout
+const getTextColor = () =>
+    document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#ffffff' : '#111111'
+
 const formatPrice = (price: number) => new Intl.NumberFormat('vi-VN').format(price) + ' đ'
 
 watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick(() => draw()), { deep: true })
@@ -368,9 +417,9 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
 <template>
   <div class="seating-map-wrapper h-100 d-flex flex-column">
     <!-- Toolbar — matches editor style -->
-    <div class="p-3 border-bottom border-secondary bg-reactive-secondary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="p-3 bg-reactive-secondary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary" @click="$emit('back')">
+        <button class="btn btn-sm" @click="$emit('back')">
           <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
         </button>
 
@@ -396,13 +445,6 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
               </button>
             </li>
           </ul>
-        </div>
-
-        <!-- Zoom controls -->
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-secondary" title="Zoom in" @click="zoomIn"><i class="bi bi-plus-lg"/></button>
-          <button class="btn btn-outline-secondary" title="Zoom out" @click="zoomOut"><i class="bi bi-dash-lg"/></button>
-          <button class="btn btn-outline-secondary" title="Reset zoom" @click="resetZoom"><i class="bi bi-arrows-fullscreen"/></button>
         </div>
       </div>
 
@@ -432,8 +474,19 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
     <div
         ref="canvasContainer"
         class="flex-grow-1 position-relative overflow-hidden"
-        style="background: repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px), repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.04) 39px,rgba(255,255,255,.04) 40px);"
     >
+      <!-- Zoom controls -->
+      <div class="position-absolute d-flex flex-column gap-1" style="top:12px;left:12px;z-index:10;">
+        <button class="btn btn-sm btn-primary" @click="zoomIn" title="Zoom in">
+          <i class="bi bi-plus-lg"/>
+        </button>
+        <button class="btn btn-sm btn-primary" @click="zoomOut" title="Zoom out">
+          <i class="bi bi-dash-lg"/>
+        </button>
+        <button class="btn btn-sm btn-primary" @click="resetZoom" title="Reset zoom">
+          <i class="bi bi-arrows-fullscreen"/>
+        </button>
+      </div>
       <canvas
           v-if="canvasSize.width > 0"
           ref="canvasRef"
@@ -549,6 +602,12 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
           <span class="text-reactive-secondary">{{ $t('select_ticket.selection.total') }}:</span>
           <span class="text-primary fw-bold fs-5">{{ formatPrice(selectedSeatsTotalPrice) }}</span>
         </div>
+        <Transition name="fade">
+          <div v-if="seatLimitReached" class="alert alert-warning py-2 small mb-2">
+            <i class="bi bi-exclamation-triangle me-1"/>
+            {{ $t('select_ticket.validation.max_reached', { max: selectedSeats.length }) }}
+          </div>
+        </Transition>
         <button class="btn btn-primary w-100 py-2 fw-semibold" @click="addSeatsToCart">
           <i class="bi bi-cart-plus me-2"/>{{ $t('select_ticket.selection.add_to_cart') }} ({{ selectedSeats.length }})
         </button>

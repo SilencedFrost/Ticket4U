@@ -51,10 +51,6 @@ const currentRank = ref<'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond'>('
   transition: border-color 0.3s ease;
 }
 
-.avatar-container:hover {
-  border-color: var(--bs-primary) !important;
-}
-
 .edit-btn {
   width: 36px;
   height: 36px;

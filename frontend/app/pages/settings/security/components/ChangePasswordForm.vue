@@ -1,7 +1,22 @@
 <script setup lang="ts">
 import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
 
-// <!-- TODO: wire up script -->
+const currentPassword = ref('');
+const newPassword = ref('');
+const isViewingCurrentPassword = ref(false);
+const isViewingNewPassword = ref(false);
+
+function toggleCurrentPasswordVisibility() {
+  isViewingCurrentPassword.value = !isViewingCurrentPassword.value;
+}
+
+function toggleNewPasswordVisibility() {
+  isViewingNewPassword.value = !isViewingNewPassword.value;
+}
+
+function submitChangePassword() {
+  // TODO: wire up API submit.
+}
 </script>
 
 <template>
@@ -12,50 +27,60 @@ import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
         {{ $t('settings.security.change_password.title') }}
       </h2>
 
-      <div class="row g-3">
-        <!-- Mật khẩu hiện tại -->
-        <div class="col-12 col-md-8 col-lg-6">
-          <label for="current-password" class="form-label settings-label">{{ $t('settings.security.change_password.current_password') }}</label>
-          <input
-            id="current-password"
-            type="password"
-            class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
-            :placeholder="$t('settings.security.change_password.current_password_placeholder')"
-          />
+      <form @submit.prevent="submitChangePassword">
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="current-password" class="form-label settings-label">
+              {{ $t('settings.security.change_password.current_password') }}
+            </label>
+            <div class="input-group">
+              <input
+                id="current-password"
+                v-model="currentPassword"
+                :type="isViewingCurrentPassword ? 'text' : 'password'"
+                class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-start-3 py-2 px-3"
+                autocomplete="current-password"
+              />
+              <button
+                class="btn btn-outline-secondary bg-reactive-primary"
+                type="button"
+                @mousedown.prevent="toggleCurrentPasswordVisibility"
+              >
+                <i :class="isViewingCurrentPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
+              </button>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="new-password" class="form-label settings-label">
+              {{ $t('settings.security.change_password.new_password') }}
+            </label>
+            <div class="input-group">
+              <input
+                id="new-password"
+                v-model="newPassword"
+                :type="isViewingNewPassword ? 'text' : 'password'"
+                class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-start-3 py-2 px-3"
+                autocomplete="new-password"
+              />
+              <button
+                class="btn btn-outline-secondary bg-reactive-primary"
+                type="button"
+                @mousedown.prevent="toggleNewPasswordVisibility"
+              >
+                <i :class="isViewingNewPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
+              </button>
+            </div>
+            <span class="small text-reactive-secondary mt-1 px-1 d-block">
+              {{ $t('settings.security.change_password.new_password_hint') }}
+            </span>
+          </div>
         </div>
 
-        <div class="w-100 d-none d-md-block m-0"></div>
-
-        <!-- Mật khẩu mới -->
-        <div class="col-12 col-md-8 col-lg-6">
-          <label for="new-password" class="form-label settings-label">{{ $t('settings.security.change_password.new_password') }}</label>
-          <input
-            id="new-password"
-            type="password"
-            class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
-            :placeholder="$t('settings.security.change_password.new_password_placeholder')"
-          />
-          <span class="small text-reactive-secondary mt-1 px-1 d-block">{{ $t('settings.security.change_password.new_password_hint') }}</span>
+        <div class="settings-form-actions d-flex justify-content-end mt-4">
+          <SettingsSaveButton />
         </div>
-
-        <div class="w-100 d-none d-md-block m-0"></div>
-
-        <!-- Xác nhận mật khẩu mới -->
-        <div class="col-12 col-md-8 col-lg-6">
-          <label for="confirm-password" class="form-label settings-label">{{ $t('settings.security.change_password.confirm_password') }}</label>
-          <input
-            id="confirm-password"
-            type="password"
-            class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
-            :placeholder="$t('settings.security.change_password.confirm_password_placeholder')"
-          />
-        </div>
-      </div>
-
-      <!-- Save button -->
-      <div class="settings-form-actions d-flex justify-content-end mt-4">
-        <SettingsSaveButton />
-      </div>
+      </form>
     </div>
   </div>
 </template>

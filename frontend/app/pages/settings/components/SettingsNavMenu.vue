@@ -48,7 +48,7 @@ const navItems = [
 }
 
 .settings-nav-desktop__nav {
-  padding-top: 8px;
+  padding: 8px ;
 }
 
 .settings-nav__item {

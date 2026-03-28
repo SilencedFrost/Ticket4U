@@ -7,7 +7,7 @@
   --settings-divider: rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.24);
   --settings-accent: var(--bs-primary, #00bcd4);
 }
-
+/* Dark theme variables (because if we use global css, card background will blend into background) */
 [data-bs-theme='dark'] {
   --settings-page-bg: var(--bg-reactive-primary, #111111);
   --settings-menu-bg: var(--bg-reactive-secondary, #181818);

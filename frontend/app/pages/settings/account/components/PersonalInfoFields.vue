@@ -64,11 +64,10 @@
         id="phone"
         type="tel"
         class="form-control bg-reactive-primary text-reactive-primary border border-secondary-subtle rounded-3 py-2 px-3"
-        placeholder="VD: 0912 345 678"
         value="0901234567"
-        pattern="^(0[3|5|7|8|9])+([0-9]{8})$"
-        title="Số điện thoại không hợp lệ. VD: 0912345678"
-        maxlength="12"
+        pattern="0[35789][0-9]{8}"
+        title="Nhập theo định dạng: 0912345678"
+        maxlength="10"
       />
     </div>
   </div>

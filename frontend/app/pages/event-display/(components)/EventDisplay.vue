@@ -435,7 +435,7 @@ onUnmounted(() => {
 
       <!-- Error State -->
       <div v-else-if="error" class="alert alert-danger">
-        {{ error }}
+        {{ $t(error) }}
       </div>
 
       <!-- Events Grid -->

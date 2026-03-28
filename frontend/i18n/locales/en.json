@@ -6,7 +6,6 @@
       "google": "Log in with Google"
     },
     "logout": {
-      "title": "Logout",
       "action": "Log out"
     },
     "register": {
@@ -58,7 +57,6 @@
     "verification": {
       "verifying": "Verifying your email...",
       "success": "Your email has been verified. You can now log in.",
-      "send_failed": "Unable to send verification email right now. Please try again in a moment.",
       "token_expired": "Verification link has expired. Please register again.",
       "expired_title": "Link expired",
       "token_invalid": "Invalid verification link.",
@@ -99,7 +97,6 @@
     },
     "action": {
       "buy": "Buy tickets now",
-      "view": "View",
       "remove_filter": "Remove filter"
     },
     "loading": "Loading...",
@@ -148,11 +145,14 @@
     "section": {
       "locational": "Events near you",
       "trending": "Trending Events",
-      "recommended": "Recommended for You",
-      "places": "Destinations"
+      "recommended": "Recommended for You"
     },
-    "label": {
-      "view_detail": "View details"
+    "error": {
+      "load_featured": "Failed to load featured events",
+      "load_locational": "Failed to load locational events",
+      "load_trending": "Failed to load trending events",
+      "load_suggested": "Failed to load suggested events",
+      "load_categories": "Failed to load categories"
     }
   },
   "event_display": {
@@ -165,8 +165,6 @@
       "this_weekend": "This weekend",
       "this_month": "This month",
       "free": "Free",
-      "date_from": "From",
-      "date_to": "To",
       "not_found": "No events found"
     },
     "button": {
@@ -177,6 +175,9 @@
       "category": "Category",
       "price": "Price",
       "place": "Place"
+    },
+    "error": {
+      "load_events": "Failed to load events"
     }
   }
 }

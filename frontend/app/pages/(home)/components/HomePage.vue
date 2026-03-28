@@ -45,7 +45,7 @@ const {
 
       <!-- Error state for featured -->
       <div v-else-if="errors.featured" class="alert alert-danger">
-        {{ errors.featured }}
+        {{ $t(errors.featured) }}
       </div>
 
       <section class="mb-5">
@@ -68,7 +68,7 @@ const {
             <LocationalEventCard :event="item" />
           </template>
         </EventCarousel>
-        <div v-else-if="errors.locational" class="alert alert-danger">{{ errors.locational }}</div>
+        <div v-else-if="errors.locational" class="alert alert-danger">{{ $t(errors.locational) }}</div>
       </section>
 
       <section class="mb-5">
@@ -91,7 +91,7 @@ const {
             <TrendingCard :event="item" />
           </template>
         </EventCarousel>
-        <div v-else-if="errors.trending" class="alert alert-danger">{{ errors.trending }}</div>
+        <div v-else-if="errors.trending" class="alert alert-danger">{{ $t(errors.trending) }}</div>
       </section>
 
       <EventSection

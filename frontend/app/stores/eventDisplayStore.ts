@@ -106,7 +106,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       if (requestId !== latestRequestId) {
         return;
       }
-      error.value = 'Failed to load events';
+      error.value = 'event_display.error.load_events';
       console.error('Error fetching events:', err);
     } finally {
       if (requestId === latestRequestId) {

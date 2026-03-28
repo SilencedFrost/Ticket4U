@@ -31,85 +31,76 @@ export const useHomeStore = defineStore('home', () => {
     categories: null as string | null,
   });
 
+  type HomeEventKey = 'featured' | 'locational' | 'trending' | 'suggested';
+
+  async function fetchHomeEvents(
+    key: HomeEventKey,
+    endpoint: string,
+    errorKey: string,
+    onSuccess: (data: EventSummary[]) => void,
+  ) {
+    loading.value[key] = true;
+    errors.value[key] = null;
+    try {
+      const data = await $fetch<EventSummary[]>(`${config.public.eventServiceUrl}${endpoint}`, {
+        credentials: 'include',
+      });
+      onSuccess(data);
+    } catch (error) {
+      errors.value[key] = errorKey;
+      console.error(`Error fetching ${key} events:`, error);
+    } finally {
+      loading.value[key] = false;
+    }
+  }
+
   // Actions
   async function fetchFeaturedEvents() {
-    loading.value.featured = true;
-    errors.value.featured = null;
-    try {
-      const data = await $fetch<EventSummary[]>(
-        `${config.public.eventServiceUrl}/public/events/featured`,
-        {
-          credentials: 'include',
-        },
-      );
-      featuredEvents.value = data;
-    } catch (error) {
-      errors.value.featured = 'Failed to load featured events';
-      console.error('Error fetching featured events:', error);
-    } finally {
-      loading.value.featured = false;
-    }
+    await fetchHomeEvents(
+      'featured',
+      '/public/events/featured',
+      'home_page.error.load_featured',
+      (data) => {
+        featuredEvents.value = data;
+      },
+    );
   }
 
   async function fetchLocationalEvents() {
-    loading.value.locational = true;
-    errors.value.locational = null;
-    try {
-      const data = await $fetch<EventSummary[]>(
-        `${config.public.eventServiceUrl}/public/events/locational`,
-        {
-          credentials: 'include',
-        },
-      );
-      locationalEvents.value = data;
-    } catch (error) {
-      errors.value.locational = 'Failed to load locational events';
-      console.error('Error fetching locational events:', error);
-    } finally {
-      loading.value.locational = false;
-    }
+    await fetchHomeEvents(
+      'locational',
+      '/public/events/locational',
+      'home_page.error.load_locational',
+      (data) => {
+        locationalEvents.value = data;
+      },
+    );
   }
 
   async function fetchTrendingEvents() {
-    loading.value.trending = true;
-    errors.value.trending = null;
-    try {
-      const data = await $fetch<EventSummary[]>(
-        `${config.public.eventServiceUrl}/public/events/trending`,
-        {
-          credentials: 'include',
-        },
-      );
-      // Backend returns top 3, assign ranks
-      trendingEvents.value = data.slice(0, 3).map((event, index) => ({
-        ...event,
-        rank: (index + 1) as 1 | 2 | 3,
-      }));
-    } catch (error) {
-      errors.value.trending = 'Failed to load trending events';
-      console.error('Error fetching trending events:', error);
-    } finally {
-      loading.value.trending = false;
-    }
+    await fetchHomeEvents(
+      'trending',
+      '/public/events/trending',
+      'home_page.error.load_trending',
+      (data) => {
+        // Backend returns top 3, assign ranks
+        trendingEvents.value = data.slice(0, 3).map((event, index) => ({
+          ...event,
+          rank: (index + 1) as 1 | 2 | 3,
+        }));
+      },
+    );
   }
 
   async function fetchSuggestedEvents() {
-    loading.value.suggested = true;
-    errors.value.suggested = null;
-    try {
-      const data = await $fetch<EventSummary[]>(
-        `${config.public.eventServiceUrl}/public/events/suggested`,
-        {
-          credentials: 'include',
-        },
-      );
-      suggestedEvents.value = data;
-    } catch (error) {
-      errors.value.suggested = 'Failed to load suggested events';
-      console.error('Error fetching suggested events:', error);
-    } finally {
-      loading.value.suggested = false;
-    }
+    await fetchHomeEvents(
+      'suggested',
+      '/public/events/suggested',
+      'home_page.error.load_suggested',
+      (data) => {
+        suggestedEvents.value = data;
+      },
+    );
   }
 
   async function fetchCategories(): Promise<CategorySummary[]> {
@@ -123,7 +114,7 @@ export const useHomeStore = defineStore('home', () => {
       return data;
     } catch (error) {
       console.error('Error fetching categories:', error);
-      throw new Error('Failed to load categories');
+      throw new Error('home_page.error.load_categories');
     }
   }
   async function fetchCategoriesWithEvents() {
@@ -150,10 +141,10 @@ export const useHomeStore = defineStore('home', () => {
         .map((result) => result.value);
 
       if (categories.value.length === 0 && results.some((result) => result.status === 'rejected')) {
-        errors.value.categories = 'Failed to load categories';
+        errors.value.categories = 'home_page.error.load_categories';
       }
     } catch (error) {
-      errors.value.categories = 'Failed to load categories';
+      errors.value.categories = 'home_page.error.load_categories';
       console.error('Error fetching events in categories:', error);
     } finally {
       loading.value.categories = false;

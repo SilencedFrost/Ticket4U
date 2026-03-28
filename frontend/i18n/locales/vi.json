@@ -6,7 +6,6 @@
       "google": "Đăng nhập với google"
     },
     "logout": {
-      "title": "Đăng xuất",
       "action": "Đăng xuất"
     },
     "register": {
@@ -58,7 +57,6 @@
     "verification": {
       "verifying": "Đang xác thực email...",
       "success": "Email đã được xác thực thành công. Bạn có thể đăng nhập ngay.",
-      "send_failed": "Không thể gửi email xác thực lúc này. Vui lòng thử lại sau ít phút.",
       "token_expired": "Link xác thực đã hết hạn. Vui lòng đăng ký lại.",
       "expired_title": "Link đã hết hạn",
       "token_invalid": "Link xác thực không hợp lệ.",
@@ -99,7 +97,6 @@
     },
     "action": {
       "buy": "Mua vé ngay",
-      "view": "Xem",
       "remove_filter": "Xóa bộ lọc"
     },
     "loading": "Đang tải...",
@@ -148,11 +145,14 @@
     "section": {
       "locational": "Sự kiện gần bạn",
       "trending": "Sự kiện xu hướng",
-      "recommended": "Dành cho bạn",
-      "places": "Điểm đến"
+      "recommended": "Dành cho bạn"
     },
-    "label": {
-      "view_detail": "Xem chi tiết"
+    "error": {
+      "load_featured": "Không thể tải sự kiện nổi bật",
+      "load_locational": "Không thể tải sự kiện gần bạn",
+      "load_trending": "Không thể tải sự kiện xu hướng",
+      "load_suggested": "Không thể tải sự kiện gợi ý",
+      "load_categories": "Không thể tải danh mục"
     }
   },
   "event_display": {
@@ -165,8 +165,6 @@
       "this_weekend": "Cuối tuần này",
       "this_month": "Tháng này",
       "free": "Miễn phí",
-      "date_from": "Từ ngày",
-      "date_to": "Đến ngày",
       "not_found": "Không tìm thấy sự kiện nào"
     },
     "button": {
@@ -177,6 +175,9 @@
       "category": "Thể loại",
       "price": "Giá tiền",
       "place": "Địa điểm"
+    },
+    "error": {
+      "load_events": "Không thể tải danh sách sự kiện"
     }
   }
 }

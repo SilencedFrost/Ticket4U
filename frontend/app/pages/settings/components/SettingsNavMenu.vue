@@ -15,12 +15,12 @@ const navItems = [
 
 <template>
   <div class="settings-nav-desktop d-flex flex-column h-100 pt-3">
-    <div class="settings-nav-desktop__header px-3 mb-3 pb-3">
+    <div class="settings-nav-desktop__header">
       <h2 class="h5 fw-bold text-reactive-primary mb-1">{{ $t('settings.title') }}</h2>
       <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
     </div>
 
-    <nav class="d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
+    <nav class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <li v-for="item in navItems" :key="item.to">
           <NuxtLinkLocale
@@ -42,7 +42,13 @@ const navItems = [
 
 <style scoped>
 .settings-nav-desktop__header {
+  padding: 16px 20px;
+  margin-bottom: 0;
   border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.25);
+}
+
+.settings-nav-desktop__nav {
+  padding-top: 8px;
 }
 
 .settings-nav__item {

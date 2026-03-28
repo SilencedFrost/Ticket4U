@@ -29,6 +29,8 @@
 .settings-desktop-shell .settings-sidebar {
   border-radius: 12px;
   background-color: var(--settings-menu-bg);
+  /* Sidebar needs a visible edge in both themes, especially dark mode. */
+  border: 1px solid var(--settings-divider);
 }
 
 .settings-desktop-shell .settings-main-content {
@@ -218,6 +220,15 @@
   color: var(--text-reactive-secondary);
   margin-bottom: 0.25rem;
   padding: 0 0.25rem;
+}
+
+/* Email is readonly by intent, so keep it legible and not disabled-looking. */
+.settings-email-field[readonly] {
+  cursor: default;
+  opacity: 1;
+  background-color: var(--settings-page-bg);
+  color: var(--settings-muted);
+  border-color: var(--settings-divider);
 }
 
 @keyframes settings-slide-to-content {

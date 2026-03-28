@@ -36,9 +36,9 @@
       <input
         id="email"
         type="email"
-        class="form-control text-reactive-secondary border border-secondary-subtle rounded-3 py-2 px-3"
+        class="form-control settings-email-field text-reactive-secondary border border-secondary-subtle rounded-3 py-2 px-3"
         value="minhquangdev@gmail.com"
-        disabled
+        readonly
       />
     </div>
 

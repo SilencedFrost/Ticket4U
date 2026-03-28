@@ -6,8 +6,8 @@ const currentRank = ref<'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond'>('
 </script>
 
 <template>
-  <div class="d-flex flex-column align-items-center text-center">
-    <div class="position-relative mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center text-center w-100 h-100">
+    <div class="position-relative mb-3">
       <div
         class="avatar-container rounded-circle p-1 border border-primary border-opacity-25 border-4"
       >

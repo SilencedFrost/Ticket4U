@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
+
 // <!-- TODO: wire up script -->
 </script>
 
@@ -52,11 +54,7 @@
 
       <!-- Save button -->
       <div class="settings-form-actions d-flex justify-content-end mt-4">
-        <button
-          class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2 text-white"
-        >
-          <i class="bi bi-floppy2-fill"></i> {{ $t('settings.personal_information.actions.save') }}
-        </button>
+        <SettingsSaveButton />
       </div>
     </div>
   </div>

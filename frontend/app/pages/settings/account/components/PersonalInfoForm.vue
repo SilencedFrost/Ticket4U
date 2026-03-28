@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PersonalInfoFields from './PersonalInfoFields.vue';
+import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
 
 // <!-- TODO: wire up script -->
 </script>
@@ -15,13 +16,9 @@ import PersonalInfoFields from './PersonalInfoFields.vue';
       <PersonalInfoFields />
 
       <!-- Save button inside the card, bottom right -->
-      <div class="form-actions d-flex justify-content-end mt-4">
+      <div class="form-actions d-flex justify-content-end mt-3">
         <!-- TODO: wire up save handler -->
-        <button
-          class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2 text-white"
-        >
-          <i class="bi bi-floppy2-fill"></i> {{ $t('settings.personal_information.actions.save') }}
-        </button>
+        <SettingsSaveButton />
       </div>
     </div>
   </div>

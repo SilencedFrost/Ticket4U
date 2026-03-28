@@ -1,20 +1,20 @@
 :root {
-  --settings-page-bg: #f5f5f5;
-  --settings-menu-bg: #ffffff;
-  --settings-header-bg: #ffffff;
-  --settings-text: #1a1a1a;
-  --settings-muted: #8e8e8e;
-  --settings-divider: #e0e0e0;
-  --settings-accent: #00bcd4;
+  --settings-page-bg: var(--bg-reactive-secondary, #ececec);
+  --settings-menu-bg: var(--bg-reactive-primary, #fcfcfc);
+  --settings-header-bg: var(--bg-reactive-primary, #fcfcfc);
+  --settings-text: var(--text-reactive-primary, #1a1a1a);
+  --settings-muted: var(--text-reactive-secondary, #8e8e8e);
+  --settings-divider: rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.24);
+  --settings-accent: var(--bs-primary, #00bcd4);
 }
 
 [data-bs-theme='dark'] {
-  --settings-page-bg: #121212;
-  --settings-menu-bg: #1e1e1e;
-  --settings-header-bg: #1e1e1e;
-  --settings-text: #f5f5f5;
-  --settings-muted: #8e8e8e;
-  --settings-divider: #2c2c2c;
+  --settings-page-bg: var(--bg-reactive-primary, #111111);
+  --settings-menu-bg: var(--bg-reactive-secondary, #181818);
+  --settings-header-bg: var(--bg-reactive-secondary, #181818);
+  --settings-text: var(--text-reactive-primary, #fcfcfc);
+  --settings-muted: var(--text-reactive-secondary, #979797);
+  --settings-divider: rgba(var(--bs-secondary-rgb, 108, 117, 125), 0.32);
 }
 
 .settings-desktop-shell {
@@ -40,7 +40,13 @@
 .settings-desktop-content {
   flex: 1 1 0;
   min-width: 0;
-  overflow-x: hidden;
+  /* overflow-x removed to avoid clipping card border-radius on desktop. */
+}
+
+/* Prevent row-level clipping so avatar card radius remains fully visible. */
+.settings-desktop-shell .personal-info-content {
+  --bs-gutter-x: 12px;
+  overflow: visible !important;
 }
 
 .settings-desktop-shell .page-header {
@@ -48,6 +54,14 @@
   padding: 24px;
   background-color: var(--settings-menu-bg);
   border: 1px solid var(--settings-divider);
+  /* Keep consistent spacing across tabs even when templates still use Bootstrap mb-* utilities. */
+  margin-bottom: 12px !important;
+}
+
+/* Normalize action-row spacing across settings forms (Account + Security) on desktop. */
+.settings-desktop-shell .form-actions,
+.settings-desktop-shell .settings-form-actions {
+  margin-top: 1rem !important;
 }
 
 .settings-desktop-shell .personal-info-avatar-col,
@@ -58,6 +72,10 @@
   background-color: var(--settings-menu-bg) !important;
   border: 1px solid var(--settings-divider) !important;
   box-shadow: none !important;
+}
+
+.settings-desktop-shell .personal-info-avatar-col {
+  box-sizing: border-box !important;
 }
 
 .settings-mobile-shell {

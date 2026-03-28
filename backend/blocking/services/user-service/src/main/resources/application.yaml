@@ -33,7 +33,7 @@ application:
   service:
     mail:
       url: ${MAIL_SERVICE_URL:http://localhost:8082}
-      api-key: ${MAIL_SERVICE_API_KEY}
+      api-key: ${USER_MAIL_API_KEY}
   verification:
     token-expiry-hours: 24
     reset-token-expiry-hours: 1

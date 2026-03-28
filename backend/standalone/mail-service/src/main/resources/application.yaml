@@ -21,9 +21,9 @@ mail:
 
 security:
   api-keys:
-    - ${API_KEY_USER_SERVICE}
-    - ${API_KEY_EVENT_SERVICE}
-    - ${API_KEY_TICKET_SERVICE}
+    - ${USER_MAIL_API_KEY}
+    - ${EVENT_MAIL_API_KEY}
+    - ${TICKET_MAIL_API_KEY}
 
 logging:
   level:

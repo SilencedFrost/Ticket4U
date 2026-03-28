@@ -22,7 +22,7 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
     <!-- Main content: avatar LEFT + form RIGHT, side by side -->
     <div class="row g-3 align-items-stretch personal-info-content">
       <!-- LEFT column: fixed ~180px -->
-      <div class="col-md-auto d-flex flex-column align-self-stretch">
+      <div class="col-12 col-lg-auto d-flex flex-column align-self-stretch">
         <div
           class="personal-info-avatar-col card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary d-flex flex-column h-100"
         >
@@ -31,7 +31,7 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
       </div>
 
       <!-- RIGHT column: flex-1, takes remaining width -->
-      <div class="col personal-info-form-col">
+      <div class="col-12 col-lg personal-info-form-col">
         <!-- PersonalInfoForm renders form content + save button -->
         <PersonalInfoForm />
       </div>

@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.named
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
 	java
 	id("org.springframework.boot") version "4.0.2"
@@ -14,8 +17,7 @@ repositories {
 
 dependencies {
 	// Spring Boot Core
-	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	
@@ -54,7 +56,15 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 	systemProperty("spring.profiles.active", profile)
 }
 
+tasks.named<BootBuildImage>("bootBuildImage") {
+	imageName.set("${project.name}:latest")
+}
+
 tasks.register("runMail") {
 	dependsOn("bootRun")
+}
+
+tasks.register("buildMail") {
+	dependsOn("bootBuildImage")
 }
 

@@ -5,8 +5,6 @@ import com.ticket4u.mailservice.dto.response.EmailResponse;
 import com.ticket4u.mailservice.enums.TemplateType;
 import com.ticket4u.mailservice.service.EmailService;
 import com.ticket4u.mailservice.service.AuditService;
-import com.ticket4u.mailservice.health.SmtpHealthIndicator;
-import com.ticket4u.mailservice.health.SmtpHealthIndicator.HealthStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,7 +26,6 @@ public class EmailController {
 
     private final EmailService emailService;
     private final AuditService auditService;
-    private final SmtpHealthIndicator smtpHealthIndicator;
 
     @PostMapping("/send")
     @Operation(
@@ -55,15 +52,5 @@ public class EmailController {
                 ))
                 .toList();
         return ResponseEntity.ok(templates);
-    }
-
-    @GetMapping("/health")
-    @Operation(summary = "Health check với SMTP connection test")
-    public ResponseEntity<HealthStatus> health() {
-        HealthStatus health = smtpHealthIndicator.check();
-        if (health.status().equals("UP")) {
-            return ResponseEntity.ok(health);
-        }
-        return ResponseEntity.status(503).body(health);
     }
 }

@@ -271,9 +271,14 @@ function handleCanvasClick(e: MouseEvent) {
   for (const zone of floor.layout.zones) {
     if (zone.zone_type !== 'sitting') continue
     const gridPos = getSeatGridPositions(zone, floor.layout.seat_size ?? 14)
-    const seatPx  = floor.layout.seat_size ?? 14
-    const scaleX  = canvasSize.value.width / CANVAS_W
-    const r = Math.max(4, seatPx / 2 * scaleX * scale.value) + 4
+    const zoneW = Math.max(zone.corner2.x, zone.corner3.x) - Math.min(zone.corner1.x, zone.corner4.x)
+    const zoneH = Math.max(zone.corner3.y, zone.corner4.y) - Math.min(zone.corner1.y, zone.corner2.y)
+    const rows  = [...new Set(zone.seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+    const cols  = Math.max(...rows.map(r => zone.seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+    const cellW = (zoneW / (cols + 1)) * CANVAS_W * scale.value
+    const cellH = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
+    const maxR  = Math.min(cellW, cellH) / 2 * 0.7
+    const r     = Math.min(Math.max(4, (floor.layout.seat_size ?? 14) / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR) + 4
     for (const seat of zone.seats) {
       const np = gridPos.get(seat.seat_id); if (!np) continue
       const cp = toCanvas(np.x, np.y)
@@ -350,6 +355,7 @@ const selectedSeats           = ref<SelectedSeat[]>([])
 const cartSeats               = ref<Set<string>>(new Set())
 const selectedSeatsTotalPrice = computed(() => selectedSeats.value.reduce((s, seat) => s + seat.price, 0))
 const seatLimitReached        = ref(false)
+const seatLimitMax = ref(0)
 const isSeatSelected = (seatId: string) =>
     selectedSeats.value.some(s => s.seatId === seatId) || cartSeats.value.has(seatId)
 
@@ -368,6 +374,7 @@ function handleSeatClick(seat: LayoutSeat, zone: LayoutZone) {
     const max = !zoneTicket.maxPerAccount ? zoneTicket.capacity : zoneTicket.maxPerAccount
     if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length + seatsInCart >= max) {
       seatLimitReached.value = true
+      seatLimitMax.value = max
       setTimeout(() => { seatLimitReached.value = false }, 2500)
       return
     }
@@ -618,7 +625,7 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
         <Transition name="fade">
           <div v-if="seatLimitReached" class="alert alert-warning py-2 small mb-2">
             <i class="bi bi-exclamation-triangle me-1"/>
-            {{ $t('select_ticket.validation.max_reached', { max: selectedSeats.length }) }}
+            {{ $t('select_ticket.validation.max_reached', { max: seatLimitMax }) }}
           </div>
         </Transition>
         <button class="btn btn-primary w-100 py-2 fw-semibold" @click="addSeatsToCart">

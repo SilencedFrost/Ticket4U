@@ -1,23 +1,8 @@
-spring:
-  mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-
 mail:
-  from: ${MAIL_FROM}
-  from-name: ${MAIL_FROM_NAME}
+  resend:
+    api-key: ${RESEND_API_KEY}
+  from: ${MAIL_FROM:noreply@ticket4u.uk}
+  from-name: ${MAIL_FROM_NAME:Ticket4U}
 
 security:
   api-keys:

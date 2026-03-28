@@ -1,9 +1,11 @@
-package com.ticket4u.mailservice.service;
+package com.ticket4u.mailservice.service.impl;
 
+import com.ticket4u.mailservice.client.ResendClient;
 import com.ticket4u.mailservice.dto.request.EmailRequest;
 import com.ticket4u.mailservice.dto.response.EmailResponse;
 import com.ticket4u.mailservice.enums.TemplateType;
 import com.ticket4u.mailservice.processor.TemplateProcessor;
+import com.ticket4u.mailservice.service.EmailService;
 import com.ticket4u.mailservice.validator.EmailValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final BrevoClientService brevoClientService;
+    private final ResendClient resendClient;
     private final TemplateProcessor templateProcessor;
     private final EmailValidator emailValidator;
 
@@ -44,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
         
         String htmlContent = templateProcessor.process(templateType, request.getTemplateData());
 
-        brevoClientService.sendEmail(
+        resendClient.sendEmail(
                 request.getTo(),
                 request.getSubject(),
                 htmlContent,
@@ -68,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
                     messageId, templateType.name(), request.getTo());
             
             String htmlContent = templateProcessor.process(templateType, request.getTemplateData());
-            brevoClientService.sendEmail(
+            resendClient.sendEmail(
                     request.getTo(),
                     request.getSubject(),
                     htmlContent,

@@ -1,13 +1,11 @@
 # Development Configuration
-spring:
-  mail:
-    username:
-    password:
 
 # Custom mail settings
 mail:
-  from:
-  from-name:
+  resend:
+    api-key:
+  from: noreply-dev@ticket4u.uk
+  from-name: Ticket4U-Dev
 
 # API Keys
 security:

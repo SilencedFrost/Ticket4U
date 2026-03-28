@@ -68,7 +68,9 @@ const {
             <LocationalEventCard :event="item" />
           </template>
         </EventCarousel>
-        <div v-else-if="errors.locational" class="alert alert-danger">{{ $t(errors.locational) }}</div>
+        <div v-else-if="errors.locational" class="alert alert-danger">
+          {{ $t(errors.locational) }}
+        </div>
       </section>
 
       <section class="mb-5">

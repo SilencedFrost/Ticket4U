@@ -27,7 +27,7 @@ security:
 
 logging:
   level:
-    root: WARN
+    root: ${LOGGING_LEVEL:WARN}
 
 server:
   port: ${SERVER_PORT:8082}

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useTicketSelect } from './composables/use-ticket-select'
-import { useEventPayment } from './composables/use-event-payment'
-import SeatingMap from './(components)/SeatingMap.vue'
-import EventInfo from './(components)/EventInfo.vue'
-import CartSummary from './(components)/CartSummary.vue'
-import type { SelectedSeat } from './(types)/ticket.type'
+import { useTicketSelect } from '~/pages/event/book/seats/composables/use-ticket-select'
+import { useEventPayment } from '~/pages/event/book/seats/composables/use-event-payment'
+import SeatingMap from '~/pages/event/book/seats/(components)/SeatingMap.vue'
+import EventInfo from '~/pages/event/book/seats/(components)/EventInfo.vue'
+import CartSummary from '~/pages/event/book/seats/(components)/CartSummary.vue'
+import type { SelectedSeat } from '~/pages/event/book/seats/(types)/ticket.type'
 
 const route = useRoute()
 const id    = route.params.id as string

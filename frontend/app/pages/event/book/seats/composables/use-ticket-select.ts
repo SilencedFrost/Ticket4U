@@ -1,7 +1,7 @@
 import { ref } from 'vue'
-import type { Ticket } from '../(types)/ticket.type'
-import type { Event } from '../(types)/event.type'
-import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
+import type { Ticket } from '~/pages/event/book/seats/(types)/ticket.type'
+import type { Event } from '~/pages/event/book/seats/(types)/event.type'
+import type { Floor, LayoutZone, LayoutSeat } from '~/pages/event/book/seats/(types)/seating-layout.type'
 
 // Backend response shape
 interface SeatResponse {

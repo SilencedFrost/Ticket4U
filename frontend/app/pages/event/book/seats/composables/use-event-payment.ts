@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
-import type { CartItem } from '../(types)/event-payment.type'
-import type { SelectedSeat } from '../(types)/ticket.type'
+import type { CartItem } from '~/pages/event/book/seats/(types)/event-payment.type'
+import type { SelectedSeat } from '~/pages/event/book/seats/(types)/ticket.type'
 
 export const useEventPayment = () => {
   const cart = ref<CartItem[]>([])

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Ticket } from '~/pages/event/book/seats/(types)/ticket.type'
-import type { CartItem } from '~/pages/event/book/seats/(types)/event-payment.type'
+import type { Ticket } from '../(types)/ticket.type'
+import type { CartItem } from '../(types)/event-payment.type'
 
-const { t, locale } = useI18n()
+const { t: translate, locale } = useI18n()
 
 const props = defineProps<{
   tickets:      Ticket[]
@@ -22,20 +22,27 @@ const toggleExpanded = (id: string) => {
 }
 
 // Helpers
-const hasDetails = (ticket: Ticket) =>
-    !!(ticket.descriptionVi || ticket.descriptionEn || ticket.perks?.length || ticket.giftImageUrl)
+function hasDetails(ticket: Ticket): boolean {
+  return !!(ticket.descriptionVi || ticket.descriptionEn || ticket.perks?.length || ticket.giftImageUrl)
+}
 
-const isUnlimited    = (ticket: Ticket) => !ticket.maxPerAccount
-const getMaxLimitText = (ticket: Ticket) =>
-    isUnlimited(ticket)
-        ? t('select_ticket.validation.unlimited')
-        : t('select_ticket.validation.max_per_account', { max: ticket.maxPerAccount })
+function isUnlimited(ticket: Ticket): boolean {
+  return !ticket.maxPerAccount
+}
 
-const getTicketColor = (zoneId: string): string =>
-    props.tickets.find(t => t.id === zoneId)?.color ?? '#6366f1'
+function getMaxLimitText(ticket: Ticket): string {
+  return isUnlimited(ticket)
+      ? translate('select_ticket.validation.unlimited')
+      : translate('select_ticket.validation.max_per_account', { max: ticket.maxPerAccount })
+}
 
-const formatPrice = (price: number) =>
-    new Intl.NumberFormat('vi-VN').format(price) + ' đ'
+function getTicketColor(zoneId: string): string {
+  return props.tickets.find(ticket => ticket.id === zoneId)?.color ?? '#6366f1'
+}
+
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
+}
 </script>
 
 <template>

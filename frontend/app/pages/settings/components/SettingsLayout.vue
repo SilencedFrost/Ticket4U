@@ -2,48 +2,233 @@
 import SettingsNavMenu from './SettingsNavMenu.vue';
 import '../style/settings.css';
 
-// <!-- TODO: wire up script -->
+type SettingsTab = 'account' | 'security';
+
+const route = useRoute();
+const router = useRouter();
+const localePath = useLocalePath();
+const { locales } = useI18n();
+const previousPageUrl = ref<string | null>(null);
+
+const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
+
+const tabs = [
+  {
+    key: 'account' as const,
+    icon: 'bi bi-person',
+    labelKey: 'settings.nav.personal_information',
+  },
+  {
+    key: 'security' as const,
+    icon: 'bi bi-shield-lock',
+    labelKey: 'settings.nav.security',
+  },
+];
+
+const normalizedPath = computed(() => {
+  const path = route.path.replace(/^\/(en|vi)(?=\/|$)/, '');
+  if (path.length > 1 && path.endsWith('/')) {
+    return path.slice(0, -1);
+  }
+
+  return path;
+});
+
+watch(
+  normalizedPath,
+  (path) => {
+    if (path.startsWith('/settings/account')) {
+      activeTab.value = 'account';
+      return;
+    }
+
+    if (path.startsWith('/settings/security')) {
+      activeTab.value = 'security';
+      return;
+    }
+
+    if (path === '/settings') {
+      activeTab.value = null;
+    }
+  },
+  { immediate: true },
+);
+
+const activeTabTitle = computed(() => {
+  if (activeTab.value === 'security') {
+    return 'settings.nav.security';
+  }
+
+  return 'settings.nav.personal_information';
+});
+
+const mobileTrackClass = computed(() => ({
+  'is-menu': activeTab.value === null,
+  'is-content': activeTab.value !== null,
+}));
+
+const settingsLocalePrefixes = computed(() =>
+  locales.value
+    .map((locale) => (typeof locale === 'string' ? locale : locale.code))
+    .filter(Boolean)
+    .map((code) => `/${code}/settings`),
+);
+
+// Shared helpers
+
+/**
+ * Normalize a URL or path-like string into a pathname.
+ * This supports both absolute URLs and plain relative paths.
+ */
+function getPathname(urlOrPath: string) {
+  try {
+    return new URL(urlOrPath, window.location.origin).pathname;
+  } catch {
+    return urlOrPath;
+  }
+}
+
+/**
+ * Check whether a URL/path points to the Settings section,
+ * including locale-prefixed variants like /en/settings.
+ */
+function isSettingsPath(urlOrPath: string) {
+  const pathname = getPathname(urlOrPath);
+
+  if (pathname.startsWith('/settings')) {
+    return true;
+  }
+
+  return settingsLocalePrefixes.value.some((prefix) => pathname.startsWith(prefix));
+}
+
+// Mobile-only handlers
+
+/**
+ * Save the pre-settings route once when the layout mounts.
+ * This allows the mobile back button on /settings to return to the entry page
+ * instead of stepping back to an internal settings route.
+ */
+onMounted(() => {
+  const back = router.options.history.state?.back as string | undefined;
+
+  if (back && !isSettingsPath(back)) {
+    previousPageUrl.value = back;
+  }
+});
+
+/**
+ * Open a settings tab and sync the route with the selected tab.
+ * A no-op guard prevents duplicate navigation to the same destination.
+ */
+function openTab(tab: SettingsTab) {
+  if (activeTab.value === tab && normalizedPath.value === `/settings/${tab}`) {
+    return;
+  }
+
+  activeTab.value = tab;
+  router.push(localePath(`/settings/${tab}`));
+}
+
+/**
+ * Return from a tab content screen to the mobile settings menu list.
+ * If the user is already on /settings, only state is updated.
+ */
+function goBackToMenu() {
+  if (normalizedPath.value === '/settings') {
+    activeTab.value = null;
+    return;
+  }
+
+  activeTab.value = null;
+  router.push(localePath('/settings'));
+}
+
+/**
+ * Leave the Settings section and go back to the page visited before entering it.
+ * Falls back to the localized home route if no valid previous page is available.
+ */
+function goBackToPreviousPage() {
+  if (previousPageUrl.value) {
+    router.push(previousPageUrl.value);
+    return;
+  }
+
+  router.push(localePath('/'));
+}
 </script>
 
 <template>
-  <div class="container py-3 min-vh-100">
-    <div class="row gx-3 h-100">
-      <!-- Left Sidebar Nav Menu -->
-      <aside class="d-none d-md-flex flex-column h-100 settings-sidebar me-3 bg-reactive-primary rounded-4 p-2 shadow-sm">
-        <SettingsNavMenu />
-      </aside>
+  <div>
+    <div class="settings-desktop-shell d-none d-md-block">
+      <div class="settings-desktop-layout">
+        <aside class="d-flex flex-column h-100 settings-sidebar bg-reactive-primary shadow-sm">
+          <SettingsNavMenu />
+        </aside>
 
-      <!-- Right Content Slot -->
-      <main class="settings-content settings-main-content pb-4">
-        <slot />
-      </main>
+        <main class="settings-content settings-main-content settings-desktop-content pb-4">
+          <slot />
+        </main>
+      </div>
+    </div>
+
+    <div class="settings-mobile-shell d-md-none">
+      <div class="settings-mobile-track" :class="mobileTrackClass">
+        <section class="settings-mobile-panel settings-mobile-menu-screen">
+          <header class="settings-mobile-header">
+            <button
+              type="button"
+              class="settings-mobile-back"
+              aria-label="Back"
+              @click="goBackToPreviousPage"
+            >
+              <i class="bi bi-arrow-left"></i>
+            </button>
+            <h1 class="settings-mobile-title">{{ $t('settings.title') }}</h1>
+          </header>
+
+          <nav class="settings-mobile-menu-list" :aria-label="$t('settings.title')">
+            <button
+              v-for="tab in tabs"
+              :key="tab.key"
+              type="button"
+              class="settings-mobile-menu-item"
+              @click="openTab(tab.key)"
+            >
+              <span class="settings-mobile-menu-item-left">
+                <i :class="tab.icon"></i>
+                <span>{{ $t(tab.labelKey) }}</span>
+              </span>
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </nav>
+        </section>
+
+        <section class="settings-mobile-panel">
+          <header class="settings-mobile-header">
+            <button
+              type="button"
+              class="settings-mobile-back"
+              aria-label="Back"
+              @click="goBackToMenu"
+            >
+              <i class="bi bi-arrow-left"></i>
+            </button>
+            <h2 class="settings-mobile-title">{{ $t(activeTabTitle) }}</h2>
+          </header>
+
+          <div class="settings-mobile-content">
+            <slot />
+          </div>
+        </section>
+      </div>
     </div>
   </div>
-
-  <!-- Mobile: bottom nav bar -->
-  <nav class="d-flex d-md-none settings-bottom-nav">
-    <NuxtLinkLocale
-      to="/settings/account"
-      class="settings-bottom-nav-item"
-      exact-active-class="active"
-    >
-      <i class="bi bi-person"></i>
-      <span class="text-center">{{ $t('settings.nav.personal_information') }}</span>
-    </NuxtLinkLocale>
-    <NuxtLinkLocale
-      to="/settings/security"
-      class="settings-bottom-nav-item"
-      exact-active-class="active"
-    >
-      <i class="bi bi-shield-lock"></i>
-      <span class="text-center">{{ $t('settings.nav.security') }}</span>
-    </NuxtLinkLocale>
-  </nav>
 </template>
 
 <style scoped>
 .settings-sidebar {
-  width: fit-content;
+  width: 280px;
   min-width: 240px;
   flex-shrink: 0;
 }
@@ -51,5 +236,11 @@ import '../style/settings.css';
 .settings-content {
   flex: 1;
   min-width: 0;
+}
+
+.settings-desktop-layout {
+  display: flex;
+  gap: 1rem;
+  min-height: calc(100vh - 6rem);
 }
 </style>

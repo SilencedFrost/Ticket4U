@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import SettingsLayout from './components/SettingsLayout.vue';
+
 const localePath = useLocalePath();
-// Redirect settings index to the personal information tab
-navigateTo(localePath('/settings/account'));
+
+onMounted(() => {
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    navigateTo(localePath('/settings/account'), { replace: true });
+  }
+});
 </script>
 
 <template>
-  <div>
-    <!-- Redirects to the personal-information tab -->
-  </div>
+  <SettingsLayout>
+    <Title>{{ $t('settings.title') }} | Ticket4U</Title>
+  </SettingsLayout>
 </template>

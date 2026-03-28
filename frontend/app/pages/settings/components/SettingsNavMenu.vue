@@ -1,45 +1,38 @@
 <script setup lang="ts">
-// <!-- TODO: wire up script -->
+const navItems = [
+  {
+    to: '/settings/account',
+    icon: 'bi bi-person',
+    labelKey: 'settings.nav.personal_information',
+  },
+  {
+    to: '/settings/security',
+    icon: 'bi bi-shield-lock',
+    labelKey: 'settings.nav.security',
+  },
+];
 </script>
 
 <template>
-  <div class="d-flex flex-column h-100 pt-3">
-    <!-- Header -->
-    <div class="px-3 mb-4 border-bottom border-secondary-subtle pb-3">
+  <div class="settings-nav-desktop d-flex flex-column h-100 pt-3">
+    <div class="settings-nav-desktop__header px-3 mb-3 pb-3">
       <h2 class="h5 fw-bold text-reactive-primary mb-1">{{ $t('settings.title') }}</h2>
       <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
     </div>
 
-    <!-- Tab Navigation List -->
     <nav class="d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
-      <!-- Tabbing Structure -->
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
-        <!-- Personal Info Tab (Active by default per instructions) -->
-        <li>
+        <li v-for="item in navItems" :key="item.to">
           <NuxtLinkLocale
-            to="/settings/account"
-            class="d-flex align-items-center px-3 py-3 w-100 text-decoration-none menu-item-left settings-nav__item"
+            :to="item.to"
+            class="settings-nav__item"
             exact-active-class="active"
-            style="gap: 8px"
           >
-            <i class="bi bi-person fw-bold fs-5"></i>
-            <span class="fw-medium small fw-bold text-nowrap">{{
-              $t('settings.nav.personal_information')
-            }}</span>
-          </NuxtLinkLocale>
-        </li>
-        <!-- Security Tab (for testing UI) -->
-        <li>
-          <NuxtLinkLocale
-            to="/settings/security"
-            class="d-flex align-items-center px-3 py-3 w-100 text-decoration-none menu-item-left settings-nav__item"
-            exact-active-class="active"
-            style="gap: 8px"
-          >
-            <i class="bi bi-shield-lock fw-bold fs-5"></i>
-            <span class="fw-medium small fw-bold text-nowrap">{{
-              $t('settings.nav.security')
-            }}</span>
+            <span class="settings-nav__item-left">
+              <i :class="item.icon"></i>
+              <span>{{ $t(item.labelKey) }}</span>
+            </span>
+            <i class="bi bi-chevron-right settings-nav__chevron"></i>
           </NuxtLinkLocale>
         </li>
       </ul>
@@ -48,16 +41,47 @@
 </template>
 
 <style scoped>
-.menu-item-left {
-  transition: all 0.2s ease-in-out;
+.settings-nav-desktop__header {
+  border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.25);
 }
 
-.menu-item-left.active {
-  background-color: var(--bg-reactive-secondary);
-  border-left-color: var(--bs-primary);
+.settings-nav__item {
+  min-height: 56px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: var(--text-reactive-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.menu-item-left.active > * {
-  color: var(--bs-primary) !important;
+.settings-nav__item-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.settings-nav__item-left > i,
+.settings-nav__chevron {
+  color: #8e8e8e;
+  font-size: 1.1rem;
+}
+
+.settings-nav__item:hover {
+  background-color: rgba(var(--bs-secondary-rgb), 0.14);
+}
+
+.settings-nav__item.active {
+  background-color: rgba(0, 188, 212, 0.14);
+}
+
+.settings-nav__item.active .settings-nav__item-left,
+.settings-nav__item.active .settings-nav__item-left > i,
+.settings-nav__item.active .settings-nav__chevron {
+  color: var(--settings-accent);
 }
 </style>

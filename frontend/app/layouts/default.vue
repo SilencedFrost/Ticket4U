@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import NavBar from './components/navigation/NavBar.vue';
 import FooterComp from './components/footer/FooterComp.vue';
+
 const { currentTheme } = useTheme();
+const route = useRoute();
+
+const isSettingsRoute = computed(() => {
+    const pathWithoutLocale = route.path.replace(/^\/(en|vi)(?=\/|$)/, '');
+    return pathWithoutLocale.startsWith('/settings');
+});
 </script>
 
 <template>
@@ -16,7 +23,7 @@ const { currentTheme } = useTheme();
             ]" style="min-height: 100%">
                 <nuxt-page />
             </main>
-            <footer><footer-comp /></footer>
+            <footer v-if="!isSettingsRoute"><footer-comp /></footer>
         </div>
     </div>
 </template>

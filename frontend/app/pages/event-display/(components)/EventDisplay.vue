@@ -204,6 +204,7 @@ const fetchWithFilters = () => {
     startDate: startDate.value || null,
     endDate: endDate.value || null,
     categoryIds: categoryIds,
+    location: selectedLocation.value || null,
     isFreeOnly: isFreeEvent.value,
     page: 0, // Reset to first page when filters change
   });

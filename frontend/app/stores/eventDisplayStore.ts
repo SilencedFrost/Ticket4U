@@ -6,6 +6,7 @@ interface EventDisplayFilters {
   startDate: string | null;
   endDate: string | null;
   categoryIds: Array<number | string>;
+  location: string | null;
   isFreeOnly: boolean;
   tzOffset: number;
   page: number;
@@ -14,6 +15,7 @@ interface EventDisplayFilters {
 
 export const useEventDisplayStore = defineStore('eventDisplay', () => {
   const config = useRuntimeConfig();
+  let latestRequestId = 0;
 
   // State
   const events = ref<Event[]>([]);
@@ -32,6 +34,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
     startDate: null,
     endDate: null,
     categoryIds: [],
+    location: null,
     isFreeOnly: false,
     tzOffset: new Date().getTimezoneOffset(),
     page: 0,
@@ -40,6 +43,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
 
   // Fetch events with filters
   async function fetchEvents(filters?: Partial<EventDisplayFilters>) {
+    const requestId = ++latestRequestId;
     loading.value = true;
     error.value = null;
 
@@ -64,6 +68,9 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
           .filter((id) => id !== null && id !== undefined && id !== '')
           .forEach((id) => params.append('categoryIds', String(id)));
       }
+      if (appliedFilters.location) {
+        params.append('location', appliedFilters.location);
+      }
       if (appliedFilters.isFreeOnly) {
         params.append('isFreeOnly', 'true');
       }
@@ -83,6 +90,10 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
         credentials: 'include',
       });
 
+      if (requestId !== latestRequestId) {
+        return;
+      }
+
       // Update pagination state
       currentPage.value = page;
       pageSize.value = size;
@@ -92,10 +103,15 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
 
       events.value = data;
     } catch (err) {
+      if (requestId !== latestRequestId) {
+        return;
+      }
       error.value = 'Failed to load events';
       console.error('Error fetching events:', err);
     } finally {
-      loading.value = false;
+      if (requestId === latestRequestId) {
+        loading.value = false;
+      }
     }
   }
 
@@ -126,6 +142,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
       startDate: null,
       endDate: null,
       categoryIds: [],
+      location: null,
       isFreeOnly: false,
       tzOffset: new Date().getTimezoneOffset(),
       page: 0,

@@ -135,8 +135,7 @@ export const useHomeStore = defineStore('home', () => {
         categories.value = [];
         return;
       }
-      const data = await Promise.all(
-        //Promise.all: để chạy song song call API
+      const results = await Promise.allSettled(
         categoriesList.map((category) =>
           $fetch<Category>(
             `${config.public.eventServiceUrl}/public/categories/${category.id}/events/upcoming?limit=4`,
@@ -144,7 +143,15 @@ export const useHomeStore = defineStore('home', () => {
           ),
         ),
       );
-      categories.value = data;
+      categories.value = results
+        .filter(
+          (result): result is PromiseFulfilledResult<Category> => result.status === 'fulfilled',
+        )
+        .map((result) => result.value);
+
+      if (categories.value.length === 0 && results.some((result) => result.status === 'rejected')) {
+        errors.value.categories = 'Failed to load categories';
+      }
     } catch (error) {
       errors.value.categories = 'Failed to load categories';
       console.error('Error fetching events in categories:', error);

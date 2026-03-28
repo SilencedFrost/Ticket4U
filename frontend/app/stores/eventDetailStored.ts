@@ -46,7 +46,7 @@ export const useEventStore = defineStore('event', () => {
       currentEvent.value = mapEventResponse(data);
 
       if (data.organizerId) {
-        void fetchOrganizer(data.organizerId);
+        void fetchOrganizer(data.organizerId, data.id);
       }
 
       await fetchRelatedEvents(data.id);
@@ -70,17 +70,18 @@ export const useEventStore = defineStore('event', () => {
     }
   }
 
-  async function fetchOrganizer(organizerId: string) {
+  async function fetchOrganizer(organizerId: string, eventId: string) {
     try {
       const organizerData = await $fetch<Organizer>(
         `${config.public.userServiceUrl}/public/organizers/${organizerId}`,
       );
-      if (currentEvent.value) {
+      if (currentEvent.value && currentEvent.value.eventId === eventId) {
         currentEvent.value.organizer = organizerData;
       }
     } catch (err) {
       console.error('Failed to fetch organizer:', err);
-      if (currentEvent.value) currentEvent.value.organizer = null;
+      if (currentEvent.value && currentEvent.value.eventId === eventId)
+        currentEvent.value.organizer = null;
     }
   }
 

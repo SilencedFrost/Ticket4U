@@ -1,0 +1,27 @@
+# Development Configuration
+spring:
+  mail:
+    username:
+    password:
+
+# Custom mail settings
+mail:
+  from:
+  from-name:
+
+# API Keys
+security:
+  api-keys:
+    -
+    -
+    -
+
+# Logging
+logging:
+  level:
+    root: INFO
+
+# Rate Limiting
+rate-limit:
+  requests-per-minute: 60
+  requests-per-hour: 500

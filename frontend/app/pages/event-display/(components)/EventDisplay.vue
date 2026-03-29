@@ -443,7 +443,7 @@ onUnmounted(() => {
 
       <!-- Pagination -->
       <Pagination
-        v-if="!loading && !error && events.length > 0"
+        v-if="!loading && !error && (events.length > 0 || currentPage > 0)"
         :current-page="currentPage"
         :page-size="pageSize"
         :has-more="hasMore"

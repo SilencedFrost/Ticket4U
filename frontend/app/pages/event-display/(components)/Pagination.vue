@@ -38,7 +38,7 @@ const showingText = computed(() => {
   const page = props.currentPage ?? 0;
   const size = props.pageSize ?? 20;
   const displayed = props.totalDisplayed ?? 0;
-  const start = page * size + 1;
+  const start = displayed > 0 ? page * size + 1 : 0;
   const end = page * size + displayed;
   return `(${start}-${end})`;
 });

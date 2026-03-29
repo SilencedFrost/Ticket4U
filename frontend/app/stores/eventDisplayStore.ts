@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { Event } from '~/pages/(home)/types/home';
 import type { CategoryOption } from '~/pages/event-display/types/event-display';
+import { useCategoryApi } from '~/composables/useCategoryApi';
 
 interface EventDisplayFilters {
   startDate: string | null;
@@ -15,6 +16,7 @@ interface EventDisplayFilters {
 
 export const useEventDisplayStore = defineStore('eventDisplay', () => {
   const config = useRuntimeConfig();
+  const { fetchPublicCategories } = useCategoryApi();
   let latestRequestId = 0;
 
   // State
@@ -119,12 +121,7 @@ export const useEventDisplayStore = defineStore('eventDisplay', () => {
   async function fetchCategories() {
     loadingCategories.value = true;
     try {
-      const data = await $fetch<Array<{ id: number; name: string }>>(
-        `${config.public.eventServiceUrl}/public/categories`,
-        {
-          credentials: 'include',
-        },
-      );
+      const data = await fetchPublicCategories(config.public.eventServiceUrl);
       categories.value = data.map((cat) => ({
         label: cat.name,
         value: cat.id.toString(),

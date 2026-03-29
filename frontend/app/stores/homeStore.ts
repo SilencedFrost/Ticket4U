@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
+import { useCategoryApi } from '~/composables/useCategoryApi';
 
 export const useHomeStore = defineStore('home', () => {
   const config = useRuntimeConfig();
+  const { fetchPublicCategories } = useCategoryApi();
 
   // State
   const featuredEvents = ref<EventSummary[]>([]);
@@ -105,12 +107,7 @@ export const useHomeStore = defineStore('home', () => {
 
   async function fetchCategories(): Promise<CategorySummary[]> {
     try {
-      const data = await $fetch<CategorySummary[]>(
-        `${config.public.eventServiceUrl}/public/categories`,
-        {
-          credentials: 'include',
-        },
-      );
+      const data = await fetchPublicCategories(config.public.eventServiceUrl);
       return data;
     } catch (error) {
       console.error('Error fetching categories:', error);

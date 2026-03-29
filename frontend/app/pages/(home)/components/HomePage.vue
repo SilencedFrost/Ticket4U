@@ -32,7 +32,7 @@ const {
       <!-- Loading state for featured -->
       <div v-if="loading.featured" class="text-center py-5">
         <div class="spinner-border text-light" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ $t('common.loading') }}</span>
         </div>
       </div>
 
@@ -54,7 +54,7 @@ const {
         </h2>
         <div v-if="loading.locational" class="text-center">
           <div class="spinner-border text-light" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ $t('common.loading') }}</span>
           </div>
         </div>
         <EventCarousel
@@ -79,7 +79,7 @@ const {
         </h2>
         <div v-if="loading.trending" class="text-center">
           <div class="spinner-border text-light" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ $t('common.loading') }}</span>
           </div>
         </div>
         <EventCarousel

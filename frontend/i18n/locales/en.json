@@ -176,6 +176,11 @@
       "price": "Price",
       "place": "Place"
     },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
     "error": {
       "load_events": "Failed to load events"
     }

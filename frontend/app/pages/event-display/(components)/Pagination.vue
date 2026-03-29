@@ -76,12 +76,12 @@ const goToPageInput = () => {
       @click="goToPrevious"
     >
       <i class="bi bi-chevron-left"></i>
-      <span class="d-none d-md-inline ms-2">Previous</span>
+      <span class="d-none d-md-inline ms-2">{{ $t('event_display.pagination.previous') }}</span>
     </button>
 
     <!-- Page Info -->
     <div class="page-info d-flex align-items-center gap-2">
-      <span class="text-muted">Page</span>
+      <span class="text-muted">{{ $t('event_display.pagination.page') }}</span>
       <input
         v-model.number="pageInput"
         type="number"
@@ -96,7 +96,7 @@ const goToPageInput = () => {
 
     <!-- Next Button -->
     <button class="btn btn-pagination" :disabled="!hasMore || loading" @click="goToNext">
-      <span class="d-none d-md-inline me-2">Next</span>
+      <span class="d-none d-md-inline me-2">{{ $t('event_display.pagination.next') }}</span>
       <i class="bi bi-chevron-right"></i>
     </button>
   </div>

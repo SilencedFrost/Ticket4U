@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useCarousel } from '../composables/use-carousel';
 
 interface Props {
   items: any[];
@@ -15,90 +16,45 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const isMobile = ref(false);
-const trackRef = ref<HTMLElement | null>(null);
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const minSwipeDistance = 50;
 
-const maxScrollLeft = ref(0);
-const scrollLeft = ref(0);
+const { currentIndex, totalPages, canGoPrev, canGoNext, visibleItems, goNext, goPrev, goToPage } =
+  useCarousel(props.items, props.itemsPerPage);
 
-const canGoPrev = computed(() => scrollLeft.value > 0);
-// Small threshold for visual rounding on varying pixel densities
-const canGoNext = computed(() => scrollLeft.value < maxScrollLeft.value - 2);
-
-const buttonTopOffset = ref<number | null>(null);
-
-// Calculate button position based on carousel height
-const updateButtonPosition = () => {
-  if (!trackRef.value) return;
-
-  // Get the parent element of the track (the section) to calculate relative position
-  const sectionEl = trackRef.value.parentElement;
-  // Find the first image element
-  const firstImage = trackRef.value.querySelector('img');
-
-  if (sectionEl && firstImage) {
-    // Lấy tọa độ thực tế của thẻ section và thẻ ảnh trên màn hình
-    const sectionRect = sectionEl.getBoundingClientRect();
-    const imgRect = firstImage.getBoundingClientRect();
-
-    // Công thức: (Khoảng cách từ đỉnh section đến đỉnh ảnh) + (Một nửa chiều cao ảnh)
-    const exactCenterOffset = imgRect.top - sectionRect.top + imgRect.height / 2;
-
-    if (exactCenterOffset > 0) {
-      buttonTopOffset.value = exactCenterOffset;
-    }
-  }
-};
 const updateViewport = () => {
   if (typeof window !== 'undefined') {
     isMobile.value = window.innerWidth < 768;
-    updateScrollState();
-    updateButtonPosition();
   }
 };
 
-const updateScrollState = () => {
-  if (trackRef.value) {
-    scrollLeft.value = trackRef.value.scrollLeft;
-    // max scroll left is scrollWidth minus clientWidth
-    maxScrollLeft.value = trackRef.value.scrollWidth - trackRef.value.clientWidth;
+const handleTouchStart = (e: TouchEvent) => {
+  if (e.touches && e.touches[0]) {
+    touchStartX.value = e.touches[0].clientX;
   }
 };
 
-const handleScroll = () => {
-  updateScrollState();
+const handleTouchMove = (e: TouchEvent) => {
+  if (e.touches && e.touches[0]) {
+    touchEndX.value = e.touches[0].clientX;
+  }
 };
 
-const scrollByAmount = () => {
-  if (!trackRef.value) return 0;
-  return trackRef.value.clientWidth;
-};
+const handleTouchEnd = () => {
+  const distance = touchStartX.value - touchEndX.value;
+  const isLeftSwipe = distance > minSwipeDistance;
+  const isRightSwipe = distance < -minSwipeDistance;
 
-const goPrev = () => {
-  if (!trackRef.value) return;
-  trackRef.value.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' });
+  if (isLeftSwipe && canGoNext.value) {
+    goNext();
+  } else if (isRightSwipe && canGoPrev.value) {
+    goPrev();
+  }
 };
-
-const goNext = () => {
-  if (!trackRef.value) return;
-  trackRef.value.scrollBy({ left: scrollByAmount(), behavior: 'smooth' });
-};
-
-// If items change, we need to update maxScrollState
-watch(
-  () => props.items,
-  () => {
-    setTimeout(() => {
-      updateScrollState();
-      updateButtonPosition();
-    }, 150); // Delay to allow DOM to update with new items
-  },
-  { deep: true },
-);
 
 onMounted(() => {
   updateViewport();
-  setTimeout(updateScrollState, 100);
-  setTimeout(updateButtonPosition, 500); // Đảm bảo ảnh đã kịp render
   window.addEventListener('resize', updateViewport);
 });
 
@@ -110,14 +66,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="position-relative">
-    <div class="carousel-track row g-3 flex-nowrap" ref="trackRef" @scroll="handleScroll">
-      <div
-        v-for="(item, index) in items"
-        :key="item.id || index"
-        :class="colClass"
-        class="carousel-slide flex-shrink-0"
-      >
+  <section
+    class="position-relative"
+    @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove"
+    @touchend="handleTouchEnd"
+  >
+    <div class="row g-3">
+      <div v-for="item in visibleItems" :key="item.id" :class="colClass">
         <slot :item="item" />
       </div>
     </div>
@@ -125,56 +81,87 @@ onUnmounted(() => {
     <button
       v-if="canGoPrev && !isMobile"
       class="carousel-nav-btn prev"
-      :style="buttonTopOffset ? { top: `${buttonTopOffset}px` } : {}"
       @click="goPrev"
       aria-label="Previous"
     >
-      &#10094;
+      &lt;
     </button>
 
     <button
       v-if="canGoNext && !isMobile"
       class="carousel-nav-btn next"
-      :style="buttonTopOffset ? { top: `${buttonTopOffset}px` } : {}"
       @click="goNext"
       aria-label="Next"
     >
-      &#10095;
+      &gt;
     </button>
+
+    <div v-if="showDots" class="carousel-indicators-dots">
+      <button
+        v-for="(_, index) in totalPages"
+        :key="index"
+        class="dot"
+        :class="{ active: currentIndex === index }"
+        :aria-label="`Go to page ${index + 1}`"
+        @click="goToPage(index)"
+      />
+    </div>
   </section>
 </template>
 
 <style scoped>
-@import '../styles/carousel.css';
-
 section {
   position: relative;
 }
 
-.carousel-track {
-  padding-bottom: 10px; /* Prevent box-shadow or content clipping */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 70px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 100;
+  transition: background-color 0.3s;
+  cursor: pointer;
 }
 
-/* Include negative margins of bootstrap's row to avoid horizontal scrollbar on body
-   Wait, if carousel-track is overflow-x: auto, the negative margin of `row` might cause issue.
-   To fix, we can ensure the negative margins are handled, but we use them so grid col sizes work correctly.
- */
-/* .carousel-track {
-  margin-left: 0;
-  margin-right: 0;
-} */
+.carousel-nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
-.carousel-slide {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+.carousel-nav-btn.prev {
+  left: 0;
+}
+
+.carousel-nav-btn.next {
+  right: 0;
 }
 
 .carousel-indicators-dots {
+  position: absolute;
   bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
 }
 
 .carousel-indicators-dots .dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  padding: 0;
 }
 
 .carousel-indicators-dots .dot:hover {

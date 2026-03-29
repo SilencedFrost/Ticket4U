@@ -10,9 +10,10 @@ import EventAds from './sections/EventAds.vue';
 
 const eventStore = useEventStore();
 const event = computed(() => eventStore.currentEvent);
+const { t } = useI18n();
 
 useHead({
-  title: () => event.value?.eventTitle || 'Loading Event...',
+  title: () => event.value?.eventTitle || t('common.loading'),
   titleTemplate: (title) => `${title}`,
 });
 </script>
@@ -32,5 +33,5 @@ useHead({
     </div>
     <event-related :event-data="eventStore.relatedEvents" />
   </div>
-  <div v-else>Loading event...</div>
+  <div v-else>{{ $t('common.loading') }}</div>
 </template>

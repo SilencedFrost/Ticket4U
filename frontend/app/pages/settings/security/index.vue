@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SettingsLayout from '../components/SettingsLayout.vue';
 import ChangePasswordForm from './components/ChangePasswordForm.vue';
+import SessionList from './components/SessionList.vue';
 
 // <!-- TODO: wire up script -->
 </script>
@@ -18,7 +19,10 @@ import ChangePasswordForm from './components/ChangePasswordForm.vue';
 
     <!-- Main content: full width form -->
     <div class="security-content">
-      <ChangePasswordForm />
+      <div class="d-flex flex-column gap-3">
+        <ChangePasswordForm />
+        <SessionList />
+      </div>
     </div>
   </SettingsLayout>
 </template>

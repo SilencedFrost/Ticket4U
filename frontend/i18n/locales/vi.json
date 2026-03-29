@@ -168,6 +168,15 @@
         "new_password_hint": "Mật khẩu phải chứa ít nhất 8 ký tự.",
         "confirm_password": "Xác nhận mật khẩu mới",
         "confirm_password_placeholder": "Nhập lại mật khẩu mới"
+      },
+      "sessions": {
+        "title": "Phiên đăng nhập đang hoạt động",
+        "columns": {
+          "session_id": "Mã phiên",
+          "user_agent": "Thiết bị / Trình duyệt",
+          "last_access": "Lần truy cập cuối"
+        },
+        "unknown_device": "Thiết bị không xác định"
       }
     }
   }

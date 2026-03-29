@@ -126,22 +126,23 @@ function openTab(tab: SettingsTab) {
     return;
   }
 
+  if (normalizedPath.value === `/settings/${tab}`) {
+    activeTab.value = tab;
+    return;
+  }
+
   activeTab.value = tab;
   router.push(localePath(`/settings/${tab}`));
 }
 
 /**
  * Return from a tab content screen to the mobile settings menu list.
- * If the user is already on /settings, only state is updated.
+ * This updates UI state only and intentionally keeps the current tab route.
  */
 function goBackToMenu() {
-  if (normalizedPath.value === '/settings') {
-    activeTab.value = null;
-    return;
-  }
-
+  // On mobile, the menu is a UI state, not a dedicated route.
+  // Keep the current tab path so switching back to desktop still renders content.
   activeTab.value = null;
-  router.push(localePath('/settings'));
 }
 
 /**

@@ -24,6 +24,7 @@ services:
     image: mail-service:latest
     container_name: ticket4u-service-mail
     env_file:
+      - .env.mail-service
       - .env.services
     restart: unless-stopped
     networks:

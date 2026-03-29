@@ -331,8 +331,9 @@ const maxStandingAllowed = computed(() => {
   const max = !t.maxPerAccount ? cap : Math.min(cap, t.maxPerAccount)
   return Math.max(0, max - inCart)
 })
-watch(selectedStandingZone, () => {
-  standingQuantity.value = 1
+watch(maxStandingAllowed, (newMax) => {
+  if (newMax === 0) standingQuantity.value = 0
+  else if (standingQuantity.value > newMax) standingQuantity.value = newMax
 })
 
 // add standing tickets to cart
@@ -585,7 +586,7 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
             <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
           </div>
           <div class="col-12">
-            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0" @click="addStandingToCart">
+            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || maxStandingAllowed === 0" @click="addStandingToCart">
               <i class="bi bi-cart-plus me-2"/>{{ $t('select_ticket.selection.add_to_cart') }}
             </button>
           </div>

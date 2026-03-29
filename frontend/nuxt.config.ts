@@ -68,4 +68,11 @@ export default defineNuxtConfig({
       ],
     },
   },
+
+  image: {
+    domains: ['lh3.googleusercontent.com'],
+    ipx: {
+      maxAge: 60 * 60 * 24 * 7,
+    },
+  },
 });

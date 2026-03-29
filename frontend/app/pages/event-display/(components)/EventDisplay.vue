@@ -186,11 +186,7 @@ const removeFilter = (key: string, value: string) => {
     selectedLocation.value = '';
   }
 
-  // Update URL to reflect removed filter
-  updateURLWithFilters();
-
-  // Fetch events with updated filters
-  fetchWithFilters();
+  applyFiltersAndRefresh();
 };
 
 // Fetch events with current filters
@@ -208,6 +204,11 @@ const fetchWithFilters = () => {
     isFreeOnly: isFreeEvent.value,
     page: 0, // Reset to first page when filters change
   });
+};
+
+const applyFiltersAndRefresh = () => {
+  updateURLWithFilters();
+  fetchWithFilters();
 };
 
 // Toggle handlers
@@ -231,8 +232,7 @@ const resetDateFilter = () => {
 
 const applyDateFilter = () => {
   showDateFilter.value = false;
-  updateURLWithFilters();
-  fetchWithFilters();
+  applyFiltersAndRefresh();
 };
 
 const resetMainFilter = () => {
@@ -241,8 +241,7 @@ const resetMainFilter = () => {
 
 const applyMainFilter = () => {
   showMainFilter.value = false;
-  updateURLWithFilters();
-  fetchWithFilters();
+  applyFiltersAndRefresh();
 };
 
 // Event click handler

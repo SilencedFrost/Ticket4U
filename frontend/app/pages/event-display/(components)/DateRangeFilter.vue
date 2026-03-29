@@ -98,11 +98,6 @@ function todayStr(): string {
   return toDateStr(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-function formatMonthYear(m: { year: number; month: number }): string {
-  const date = new Date(m.year, m.month, 1);
-  return date.toLocaleDateString(dateLocale.value, { month: 'long', year: 'numeric' });
-}
-
 function formatMonthOnly(m: { year: number; month: number }): string {
   const date = new Date(m.year, m.month, 1);
   const str = date.toLocaleDateString(dateLocale.value, { month: 'long' });

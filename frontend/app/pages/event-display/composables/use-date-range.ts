@@ -1,6 +1,5 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { Event } from '../types/event-display';
 
 export function useDateRange() {
   const { t } = useI18n();
@@ -14,19 +13,6 @@ export function useDateRange() {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
-
-  // Helper function to parse Vietnamese date format
-  const parseEventDate = (dateStr: string): Date | null => {
-    // Format: "26 tháng 11,2025" or "25 Tháng 11,2025"
-    const match = dateStr.match(/(\d+)\s+[tT]háng\s+(\d+)[,\s]+(\d+)/);
-    if (match) {
-      const day = parseInt(match[1]!);
-      const month = parseInt(match[2]!) - 1; // JavaScript months are 0-indexed
-      const year = parseInt(match[3]!);
-      return new Date(year, month, day);
-    }
-    return null;
   };
 
   const selectPreset = (preset: string) => {
@@ -84,23 +70,6 @@ export function useDateRange() {
     return `${formatDate(startDate.value)} - ${formatDate(endDate.value)}`;
   };
 
-  const filterEventsByDate = (events: Event[]) => {
-    if (!startDate.value || !endDate.value) {
-      return events;
-    }
-
-    const start = new Date(startDate.value);
-    const end = new Date(endDate.value);
-
-    return events.filter((event) => {
-      if (!event.date) return false;
-      const eventDate = parseEventDate(event.date);
-      if (!eventDate) return false;
-
-      return eventDate >= start && eventDate <= end;
-    });
-  };
-
   const reset = () => {
     startDate.value = '';
     endDate.value = '';
@@ -113,7 +82,6 @@ export function useDateRange() {
     selectedPreset,
     selectPreset,
     formatDateRange,
-    filterEventsByDate,
     reset,
   };
 }

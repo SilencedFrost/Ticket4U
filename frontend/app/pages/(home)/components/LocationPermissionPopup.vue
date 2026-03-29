@@ -1,45 +1,20 @@
-<script setup lang="ts">
-const isVisible = ref(false);
+﻿<script setup lang="ts">
+const { requestLocation, permissionStatus, initializeLocation, setPermissionDenied } =
+  useLocation();
 
-const { requestLocation, longitude, latitude } = useLocation();
+const isVisible = computed(() => permissionStatus.value === null);
 
-const requestLocationPermission = () => {
-  requestLocation();
+const requestLocationPermission = async () => {
+  await requestLocation();
 };
 
 const denyAccess = () => {
-  isVisible.value = false;
+  setPermissionDenied();
 };
 
-watch([latitude, longitude], ([newLat, newLng]) => {
-  if (newLat !== null && newLng !== null) {
-    isVisible.value = false;
-  }
-});
-
 onMounted(async () => {
-  if (!import.meta.client) return;
-
-  try {
-    const permission = await navigator.permissions.query({ name: 'geolocation' });
-
-    if (permission.state === 'prompt' || permission.state === 'denied') {
-      isVisible.value = true;
-    } else if (permission.state === 'granted') {
-      requestLocation();
-    }
-
-    permission.onchange = () => {
-      if (permission.state === 'granted') {
-        requestLocation();
-        isVisible.value = false;
-      } else {
-        isVisible.value = true;
-      }
-    };
-  } catch (err) {
-    console.warn('Could not query geolocation permission:', err);
-    isVisible.value = true;
+  if (import.meta.client) {
+    await initializeLocation();
   }
 });
 </script>

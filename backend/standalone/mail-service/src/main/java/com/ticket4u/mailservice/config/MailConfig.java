@@ -1,17 +1,17 @@
 package com.ticket4u.mailservice.config;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Data
+@Getter
+@Setter
 @Configuration
 @ConfigurationProperties(prefix = "mail")
-public class BrevoConfig {
+public class MailConfig {
 
     private String from;
     private String fromName;
-    private int retryMaxAttempts = 3;
-    private long retryInitialBackoffMs = 1000L;
-    private double retryBackoffMultiplier = 2.0D;
 }

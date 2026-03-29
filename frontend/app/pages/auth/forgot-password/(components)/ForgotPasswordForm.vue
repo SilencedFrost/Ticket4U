@@ -49,7 +49,7 @@ async function submit() {
 
   loading.value = true;
   try {
-    await $fetch(`${config.public.authUrl}/forgot-password`, {
+    await $fetch(`${config.public.userServiceUrl}/auth/forgot-password`, {
       method: 'POST',
       body: { email: email.value.trim() },
     });

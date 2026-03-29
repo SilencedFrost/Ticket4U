@@ -1,5 +1,17 @@
 const GEOLOCATION_PERMISSION_COOKIE_KEY = 'user-geolocation-permission';
 type LocationPermissionStatus = 'allowed' | 'denied' | null;
+type LocationRequestResult = 'allowed' | 'blocked' | 'error';
+
+const LOCATION_OPTIONS: PositionOptions = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+const PERMISSION_MAX_AGE: Record<Exclude<LocationPermissionStatus, null>, number> = {
+  allowed: 60 * 60 * 24 * 365,
+  denied: 60 * 60 * 24 * 7,
+};
 
 export function useLocation() {
   const permissionCookie = useCookie<LocationPermissionStatus>(GEOLOCATION_PERMISSION_COOKIE_KEY, {
@@ -20,21 +32,18 @@ export function useLocation() {
 
     permissionStatus.value = status;
 
-    const maxAge =
-      status === 'allowed' ? 60 * 60 * 24 * 365 : status === 'denied' ? 60 * 60 * 24 * 7 : -1;
-
-    const cookieInstance = useCookie(GEOLOCATION_PERMISSION_COOKIE_KEY, {
-      maxAge,
+    const cookieWithAge = useCookie<LocationPermissionStatus>(GEOLOCATION_PERMISSION_COOKIE_KEY, {
+      maxAge: status === null ? -1 : PERMISSION_MAX_AGE[status],
       path: '/',
       sameSite: 'lax',
     });
-    cookieInstance.value = status;
+    cookieWithAge.value = status;
   };
 
-  async function requestLocation() {
+  async function requestLocation(): Promise<LocationRequestResult> {
     if (!import.meta.client || !('geolocation' in navigator)) return 'error';
 
-    return new Promise<'allowed' | 'blocked' | 'error'>((resolve) => {
+    return new Promise<LocationRequestResult>((resolve) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           latitude.value = position.coords.latitude;
@@ -52,7 +61,7 @@ export function useLocation() {
             resolve('error');
           }
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 },
+        LOCATION_OPTIONS,
       );
     });
   }
@@ -79,7 +88,7 @@ export function useLocation() {
         updatePermission('allowed');
         await requestLocation();
       } else if (permission.state === 'denied') {
-        permissionStatus.value = 'denied';
+        updatePermission('denied');
       } else {
         permissionStatus.value = null;
       }

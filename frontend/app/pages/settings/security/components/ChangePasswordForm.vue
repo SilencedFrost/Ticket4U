@@ -21,7 +21,7 @@ function submitChangePassword() {
 
 <template>
   <div class="change-password-form">
-    <div class="card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary">
+    <div class="card p-4 rounded-3 shadow-none border">
       <h2 class="h6 fw-bold mb-4 d-flex align-items-center gap-2 text-primary">
         <i class="bi bi-shield-lock-fill"></i>
         {{ $t('settings.security.change_password.title') }}
@@ -30,7 +30,7 @@ function submitChangePassword() {
       <form @submit.prevent="submitChangePassword">
         <div class="row g-3">
           <div class="col-12">
-            <label for="current-password" class="form-label settings-label">
+            <label for="current-password" class="form-label settings-label text-reactive-secondary">
               {{ $t('settings.security.change_password.current_password') }}
             </label>
             <div class="input-group">
@@ -52,7 +52,7 @@ function submitChangePassword() {
           </div>
 
           <div class="col-12">
-            <label for="new-password" class="form-label settings-label">
+            <label for="new-password" class="form-label settings-label text-reactive-secondary">
               {{ $t('settings.security.change_password.new_password') }}
             </label>
             <div class="input-group">
@@ -77,7 +77,7 @@ function submitChangePassword() {
           </div>
         </div>
 
-        <div class="settings-form-actions d-flex justify-content-end mt-4">
+        <div class="settings-form-actions d-flex justify-content-end mt-3">
           <SettingsSaveButton />
         </div>
       </form>

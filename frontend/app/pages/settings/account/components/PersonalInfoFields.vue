@@ -6,7 +6,7 @@
   <div class="row g-3">
     <!-- Họ & Tên -->
     <div class="col-md-6">
-      <label for="last-name" class="form-label settings-label">{{
+      <label for="last-name" class="form-label settings-label text-reactive-secondary">{{
         $t('common.last_name')
       }}</label>
       <input
@@ -18,7 +18,7 @@
       />
     </div>
     <div class="col-md-6">
-      <label for="first-name" class="form-label settings-label">{{
+      <label for="first-name" class="form-label settings-label text-reactive-secondary">{{
         $t('common.first_name')
       }}</label>
       <input
@@ -32,7 +32,7 @@
 
     <!-- Email -->
     <div class="col-12">
-      <label for="email" class="form-label settings-label">{{ $t('common.email') }}</label>
+      <label for="email" class="form-label settings-label text-reactive-secondary">{{ $t('common.email') }}</label>
       <input
         id="email"
         type="email"
@@ -44,7 +44,7 @@
 
     <!-- Ngày sinh -->
     <div class="col-md-6">
-      <label for="birthday" class="form-label settings-label">{{
+      <label for="birthday" class="form-label settings-label text-reactive-secondary">{{
         $t('settings.personal_information.basic_info.birthday')
       }}</label>
       <input
@@ -57,7 +57,7 @@
 
     <!-- Số điện thoại -->
     <div class="col-md-6">
-      <label for="phone" class="form-label settings-label">{{
+      <label for="phone" class="form-label settings-label text-reactive-secondary">{{
         $t('settings.personal_information.basic_info.phone')
       }}</label>
       <input

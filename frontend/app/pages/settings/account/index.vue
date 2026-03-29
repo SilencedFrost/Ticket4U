@@ -10,7 +10,7 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
   <SettingsLayout>
     <Title>{{ $t('settings.personal_information.title') }}</Title>
     <!-- Page header: title + subtitle, full width -->
-    <div class="page-header">
+    <div class="page-header card rounded-3 border p-4 mb-3">
       <h1 class="h3 fw-bold text-reactive-primary mb-1">
         {{ $t('settings.personal_information.title') }}
       </h1>
@@ -23,9 +23,7 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
     <div class="row g-3 align-items-stretch personal-info-content">
       <!-- LEFT column: fixed ~180px -->
       <div class="col-12 col-lg-auto d-flex flex-column align-self-stretch">
-        <div
-          class="personal-info-avatar-col card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary d-flex flex-column h-100"
-        >
+        <div class="personal-info-avatar-col card p-4 rounded-3 shadow-none border d-flex flex-column h-100">
           <AvatarUpload />
         </div>
       </div>

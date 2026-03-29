@@ -162,11 +162,11 @@ function goBackToPreviousPage() {
   <div>
     <div class="settings-desktop-shell d-none d-md-block">
       <div class="settings-desktop-layout">
-        <aside class="d-flex flex-column h-100 settings-sidebar bg-reactive-primary shadow-sm">
+        <aside class="d-flex flex-column h-100 settings-sidebar card rounded-3 border shadow-sm">
           <SettingsNavMenu />
         </aside>
 
-        <main class="settings-content settings-main-content settings-desktop-content pb-4">
+        <main class="settings-content pb-3">
           <slot />
         </main>
       </div>
@@ -174,17 +174,17 @@ function goBackToPreviousPage() {
 
     <div class="settings-mobile-shell d-md-none">
       <div class="settings-mobile-track" :class="mobileTrackClass">
-        <section class="settings-mobile-panel settings-mobile-menu-screen">
+        <section class="settings-mobile-panel settings-mobile-menu-screen text-reactive-primary">
           <header class="settings-mobile-header">
             <button
               type="button"
-              class="settings-mobile-back"
+              class="settings-mobile-back text-reactive-primary"
               aria-label="Back"
               @click="goBackToPreviousPage"
             >
               <i class="bi bi-arrow-left"></i>
             </button>
-            <h1 class="settings-mobile-title">{{ $t('settings.title') }}</h1>
+            <h1 class="settings-mobile-title text-reactive-primary">{{ $t('settings.title') }}</h1>
           </header>
 
           <nav class="settings-mobile-menu-list" :aria-label="$t('settings.title')">
@@ -192,29 +192,29 @@ function goBackToPreviousPage() {
               v-for="tab in tabs"
               :key="tab.key"
               type="button"
-              class="settings-mobile-menu-item"
+              class="settings-mobile-menu-item text-reactive-primary"
               @click="openTab(tab.key)"
             >
               <span class="settings-mobile-menu-item-left">
-                <i :class="tab.icon"></i>
+                <i :class="[tab.icon, 'text-reactive-secondary']"></i>
                 <span>{{ $t(tab.labelKey) }}</span>
               </span>
-              <i class="bi bi-chevron-right"></i>
+              <i class="bi bi-chevron-right text-reactive-secondary"></i>
             </button>
           </nav>
         </section>
 
-        <section class="settings-mobile-panel">
+        <section class="settings-mobile-panel text-reactive-primary">
           <header class="settings-mobile-header">
             <button
               type="button"
-              class="settings-mobile-back"
+              class="settings-mobile-back text-reactive-primary"
               aria-label="Back"
               @click="goBackToMenu"
             >
               <i class="bi bi-arrow-left"></i>
             </button>
-            <h2 class="settings-mobile-title">{{ $t(activeTabTitle) }}</h2>
+            <h2 class="settings-mobile-title text-reactive-primary">{{ $t(activeTabTitle) }}</h2>
           </header>
 
           <div class="settings-mobile-content">

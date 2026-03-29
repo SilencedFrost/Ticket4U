@@ -14,7 +14,7 @@ const navItems = [
 </script>
 
 <template>
-  <div class="settings-nav-desktop d-flex flex-column h-100 pt-3">
+  <div class="settings-nav-desktop d-flex flex-column h-100">
     <div class="settings-nav-desktop__header">
       <h2 class="h5 fw-bold text-reactive-primary mb-1">{{ $t('settings.title') }}</h2>
       <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
@@ -88,6 +88,6 @@ const navItems = [
 .settings-nav__item.active .settings-nav__item-left,
 .settings-nav__item.active .settings-nav__item-left > i,
 .settings-nav__item.active .settings-nav__chevron {
-  color: var(--settings-accent);
+  color: var(--bs-primary);
 }
 </style>

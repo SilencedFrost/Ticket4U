@@ -8,7 +8,7 @@ import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
 <template>
   <div class="personal-info-form">
     <!-- Single Section — always present -->
-    <div class="card p-3 rounded-4 shadow-sm border-0 bg-reactive-secondary">
+    <div class="card p-4 rounded-3 shadow-none border">
       <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2 text-primary">
         <i class="bi bi-person-vcard"></i>
         {{ $t('settings.personal_information.basic_info.section_title') }}

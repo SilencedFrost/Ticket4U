@@ -38,7 +38,7 @@ export function useFormatter() {
     }).format(safePrice);
   }
 
-  function formatLongDate(isoString: string | null | undefined) {
+  function formatLongDate(isoString: string | null | undefined): string {
     try {
       const d = toUserZonedDate(isoString);
 
@@ -56,34 +56,43 @@ export function useFormatter() {
     }
   }
 
-  function formatDateTime(isoString: string | null | undefined) {
-    if (!isoString || typeof isoString !== 'string' || isoString.trim() === '') {
-      return { date: '', time: '', dateTime: '', dateTimeWithWeekday: '' };
-    }
+  function formatDateTime(isoString: string | null | undefined): {
+    date: string;
+    time: string;
+    datetime: string;
+    datetimeWithWeekday: string;
+  } {
+    const outputDate = {
+      date: '',
+      time: '',
+      datetime: '',
+      datetimeWithWeekday: '',
+    };
+
+    if (!isoString || typeof isoString !== 'string' || isoString.trim() === '') return outputDate;
+
     try {
       const isVietnamese = locale?.value?.startsWith('vi');
       const d = toUserZonedDate(isoString);
 
       if (!d) {
         console.warn('Invalid date:', isoString);
-        return { date: '', time: '', dateTime: '', dateTimeWithWeekday: '' };
+        return outputDate;
       }
 
       const dateFormat = isVietnamese ? 'DD/MM/YYYY' : 'MM/DD/YYYY';
 
       const dateText = isVietnamese ? d.format('D MMMM YYYY') : d.format('MMMM D, YYYY');
-
       const weekday = d.format('dddd');
-      const time = d.format('HH:mm');
-      const date = d.format(dateFormat);
-      const dateTime = `${time}, ${dateText}`;
-      const dateTimeWithWeekday = `${time}, ${weekday}, ${dateText}`;
 
-      return { date, time, dateTime, dateTimeWithWeekday };
+      outputDate.time = d.format('HH:mm');
+      outputDate.date = d.format(dateFormat);
+      outputDate.datetime = `${outputDate.time}, ${dateText}`;
+      outputDate.datetimeWithWeekday = `${outputDate.time}, ${weekday}, ${dateText}`;
     } catch (error) {
       console.error('Error formatting date time:', error, 'Input:', isoString);
-      return { date: '', time: '', dateTime: '', dateTimeWithWeekday: '' };
     }
+    return outputDate;
   }
 
   return {

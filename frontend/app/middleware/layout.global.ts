@@ -1,9 +1,6 @@
 export default defineNuxtRouteMiddleware((to) => {
-  const pathWithoutLocale = to.fullPath.replace(/^\/(en|vi)/, '');
+  const routeName = String(to.name ?? '').replace(/___\w+$/, '');
 
-  if (pathWithoutLocale.startsWith('/auth')) {
-    setPageLayout('auth');
-  } else {
-    setPageLayout('default');
-  }
+  if (routeName.startsWith('auth')) setPageLayout('auth');
+  if (routeName.startsWith('settings')) to.meta.hideFooter = true;
 });

@@ -73,7 +73,7 @@ const {
         </div>
       </section>
 
-      <section class="mb-5">
+      <section v-if="loading.trending || trendingEvents.length > 0" class="mb-5">
         <h2 class="text-reactive-primary fs-4 fw-bold mb-4">
           {{ $t('home_page.section.trending') }}
         </h2>
@@ -93,7 +93,6 @@ const {
             <TrendingCard :event="item" />
           </template>
         </EventCarousel>
-        <div v-else-if="errors.trending" class="alert alert-danger">{{ $t(errors.trending) }}</div>
       </section>
 
       <EventSection

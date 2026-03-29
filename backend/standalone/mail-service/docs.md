@@ -177,5 +177,4 @@ Template nhận **bất kỳ biến nào** từ `templateData`:
 
 - **Port:** 8082
 - **Swagger:** http://localhost:8082/swagger-ui.html
-- **Health:** http://localhost:8082/api/v1/mail/health
 - **Rate Limit:** 60 req/min, 500 req/hour per API key

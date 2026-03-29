@@ -1,16 +1,30 @@
-spring:
-    application:
-        name: mail-service
-    profiles:
-        active: ${SPRING_PROFILES_ACTIVE:dev}
+mail:
+  resend:
+    api-key: ${RESEND_API_KEY}
+  from: ${MAIL_FROM:noreply@ticket4u.uk}
+  from-name: ${MAIL_FROM_NAME:Ticket4U}
+
+security:
+  api-keys:
+    - ${USER_MAIL_API_KEY}
+    - ${EVENT_MAIL_API_KEY}
+    - ${TICKET_MAIL_API_KEY}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL:WARN}
 
 server:
-    port: ${SERVER_PORT:8082}
+  port: ${SERVER_PORT:8082}
+
+rate-limit:
+  requests-per-minute: 100
+  requests-per-hour: 1000
 
 # Swagger UI config
 springdoc:
-    api-docs:
-        enabled: true
-    swagger-ui:
-        enabled: true
-        path: /swagger-ui.html
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

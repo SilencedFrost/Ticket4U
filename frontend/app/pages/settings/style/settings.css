@@ -183,21 +183,6 @@
   display: none;
 }
 
-/* kept: mobile row gap override aligns vertical rhythm. */
-.settings-mobile-content .personal-info-content {
-  gap: 0.75rem !important;
-}
-
-/* kept: mobile mode intentionally strips card chrome. */
-.settings-mobile-content .card,
-.settings-mobile-content .personal-info-avatar-col {
-  border-radius: 0 !important;
-  border: 0 !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 4px 0 20px !important;
-}
-
 /* kept: mobile actions stack for better tap ergonomics. */
 .settings-mobile-content .settings-form-actions {
   flex-direction: column;

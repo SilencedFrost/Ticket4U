@@ -20,8 +20,8 @@ server:
   port: 8081
   ssl:
     enabled: true
-    certificate: "classpath:keys/localhost+2.pem"
-    certificate-private-key: "classpath:keys/localhost+2-key.pem"
+    certificate: classpath:keys/localhost+2.pem
+    certificate-private-key: classpath:keys/localhost+2-key.pem
 
 application:
   security:

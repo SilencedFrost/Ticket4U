@@ -7,8 +7,6 @@ const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const router = useRouter();
 const userStore = useUserStore();
-const loading = ref<boolean>(false);
-const isViewingPassword = ref<boolean>(false);
 const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 
 const {
@@ -43,7 +41,7 @@ const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
  * Interfaces
  ============*/
 
-interface registerError {
+interface RegisterError {
   fullName: string;
   email: string;
   phoneNumber: string;
@@ -51,14 +49,14 @@ interface registerError {
   generic: string;
 }
 
-interface registerForm {
+interface RegisterForm {
   fullName: string;
   email: string;
   phoneNumber: string;
   password: string;
 }
 
-interface registerTouched {
+interface RegisterTouched {
   fullName: boolean;
   email: boolean;
   phoneNumber: boolean;
@@ -69,7 +67,7 @@ interface registerTouched {
  * State constants
  =======================*/
 
-const emptyError: registerError = {
+const emptyError: RegisterError = {
   fullName: '',
   email: '',
   phoneNumber: '',
@@ -77,14 +75,14 @@ const emptyError: registerError = {
   generic: '',
 };
 
-const emptyForm: registerForm = {
+const emptyForm: RegisterForm = {
   fullName: '',
   email: '',
   phoneNumber: '',
   password: '',
 };
 
-const defaultTouched: registerTouched = {
+const defaultTouched: RegisterTouched = {
   fullName: false,
   email: false,
   phoneNumber: false,
@@ -95,19 +93,22 @@ const defaultTouched: registerTouched = {
  * Form reactive objects
  =======================*/
 
-const error = reactive<registerError>(emptyError);
-const formData = reactive<registerForm>(emptyForm);
-const touched = reactive<registerTouched>(defaultTouched);
+const loading = ref<boolean>(false);
+const isViewingPassword = ref<boolean>(false);
+
+const error = reactive<RegisterError>(emptyError);
+const formData = reactive<RegisterForm>(emptyForm);
+const touched = reactive<RegisterTouched>(defaultTouched);
 
 /**==========
  * Functions
  ===========*/
 
 // Onblur function to do validation
-function onBlur(field: keyof registerForm) {
+function onBlur(field: keyof RegisterForm) {
   if (touched[field] === false) {
     touched[field] = true;
-    const validators: Record<keyof registerForm, () => boolean> = {
+    const validators: Record<keyof RegisterForm, () => boolean> = {
       fullName: validateFullName,
       email: validateEmail,
       phoneNumber: validatePhone,
@@ -310,12 +311,7 @@ watch(
           :aria-invalid="!!error.fullName"
           :aria-describedby="error.fullName ? 'reg-fullname-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.fullName },
-          ]"
+          :class="['form-control', { 'is-invalid': error.fullName }]"
           @blur="onBlur('fullName')"
         />
         <div
@@ -340,12 +336,7 @@ watch(
           :aria-invalid="!!error.email"
           :aria-describedby="error.email ? 'reg-email-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.email },
-          ]"
+          :class="['form-control', { 'is-invalid': error.email }]"
           @blur="onBlur('email')"
         />
         <div v-if="error.email" id="reg-email-error" class="invalid-feedback" aria-live="assertive">
@@ -365,12 +356,7 @@ watch(
           :aria-invalid="!!error.phoneNumber"
           :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.phoneNumber },
-          ]"
+          :class="['form-control', { 'is-invalid': error.phoneNumber }]"
           @blur="onBlur('phoneNumber')"
         />
         <div
@@ -391,7 +377,6 @@ watch(
             id="reg-password"
             v-model="formData.password"
             :type="isViewingPassword ? 'text' : 'password'"
-            autocomplete="new-password"
             aria-required="true"
             :aria-invalid="error.password.length > 0"
             :aria-describedby="
@@ -400,12 +385,7 @@ watch(
                 .join(' ') || undefined
             "
             :disabled="loading"
-            :class="[
-              'form-control',
-              'bg-reactive-primary',
-              'text-reactive-primary',
-              { 'is-invalid': error.password.length > 0 },
-            ]"
+            :class="['form-control', { 'is-invalid': error.password.length > 0 }]"
             @blur="onBlur('password')"
           />
           <button
@@ -447,7 +427,7 @@ watch(
           type="submit"
           :disabled="loading || !isFormValid"
         >
-          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
+          <output v-if="loading" class="spinner-border spinner-border-sm me-2" />
           {{ $t('auth.register.action') }}
         </button>
         <div ref="hiddenGoogleBtn" class="d-none" />

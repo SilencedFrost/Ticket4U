@@ -10,7 +10,7 @@
       >
         <!-- TODO: vì sau định fill avatar từ database còn ảnh này chỉ là ảnh mẫu -->
         <nuxt-img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzWVY-moE0L4lXQv8B0vU0SZMKWpHaS6H-1BieYaLKH8AVFHNe8neO4aspGKVjCu2_PJRpo7B90rxZKf3kxzv51lkCKJ5qYcra71eLTVvlFTaK7g82KXRJ6d42mGEJw7ZLCruei9V6k_YWyTMbv9EggdWvncukchj5sTuvhB8v6GER1Gv2TEj8zDqYIJlxqNVX7DcW6MoXp_eY-ohGlsid8CEIPo2U9momjPfKwhtpxzqyZQfa_csYyhgXAxPazypcaZ4jXPvAw7k"
+          src="https://cdn.ticket4u.uk/image/upload/default-profile_s2bneu.jpg"
           alt="Profile avatar"
           placeholder
           class="rounded-circle w-100 h-100"

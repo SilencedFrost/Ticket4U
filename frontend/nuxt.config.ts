@@ -70,7 +70,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    domains: ['lh3.googleusercontent.com'],
+    domains: ['https://cdn.ticket4u.uk'],
     ipx: {
       maxAge: 60 * 60 * 24 * 7,
     },

@@ -5,7 +5,6 @@ import SpecialEventCard from './SpecialEventCard.vue';
 import TrendingCard from './TrendingCard.vue';
 import EventSection from './EventSection.vue';
 import PlaceCard from './PlaceCard.vue';
-
 import {
   featuredEvents,
   specialEvents,
@@ -14,6 +13,14 @@ import {
   musicEvents,
   places,
 } from '../data/events';
+import { useLocation } from '~/composables/useLocation';
+import LocationPermissionPopup from '~/components/LocationPermissionPopup.vue';
+
+onMounted(async () => {
+  if (import.meta.client) {
+    await useLocation().initializeLocation();
+  }
+});
 </script>
 
 <template>
@@ -66,6 +73,7 @@ import {
         </div>
       </section>
     </div>
+    <location-permission-popup />
   </div>
 </template>
 

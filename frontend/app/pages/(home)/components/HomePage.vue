@@ -13,7 +13,6 @@ import {
   musicEvents,
   places,
 } from '../data/events';
-import { useLocation } from '~/composables/useLocation';
 import LocationPermissionPopup from '~/components/LocationPermissionPopup.vue';
 
 onMounted(async () => {

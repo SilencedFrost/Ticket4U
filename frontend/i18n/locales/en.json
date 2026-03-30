@@ -95,6 +95,8 @@
       "less": "See less"
     },
     "action": {
+      "allow": "Allow",
+      "deny": "Deny",
       "buy": "Buy tickets now",
       "view": "View"
     },
@@ -102,6 +104,12 @@
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number"
+  },
+  "permissions": {
+    "location": {
+      "title": "Allow location access",
+      "message": "Find events near you. Allow location access to see concerts and shows happening in your area."
+    }
   },
   "brand": {
     "name": "Ticket4U",

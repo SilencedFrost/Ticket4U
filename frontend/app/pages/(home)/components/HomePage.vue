@@ -1,7 +1,5 @@
 <template>
   <div class="home-page bg-reactive-primary">
-    <LocationPermissionPopup />
-
     <div class="container-xxl py-5">
       <FeaturedCarousel :events="featuredEvents" />
 
@@ -60,7 +58,6 @@ import SpecialEventCard from './SpecialEventCard.vue';
 import TrendingCard from './TrendingCard.vue';
 import EventSection from './EventSection.vue';
 import PlaceCard from './PlaceCard.vue';
-import LocationPermissionPopup from './LocationPermissionPopup.vue';
 
 import {
   featuredEvents,

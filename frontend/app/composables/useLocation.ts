@@ -88,7 +88,7 @@ export function useLocation() {
         updatePermission('allowed');
         await requestLocation();
       } else if (permission.state === 'denied') {
-        updatePermission('denied');
+        permissionStatus.value = 'denied';
       } else {
         permissionStatus.value = null;
       }

@@ -1,22 +1,15 @@
 ﻿<script setup lang="ts">
-const { requestLocation, permissionStatus, initializeLocation, setPermissionDenied } =
-  useLocation();
+const { requestLocation, permissionStatus, setPermissionDenied } = useLocation();
 
 const isVisible = computed(() => permissionStatus.value === null);
 
-const requestLocationPermission = async () => {
+const handleAllow = async () => {
   await requestLocation();
 };
 
-const denyAccess = () => {
+const handleDeny = () => {
   setPermissionDenied();
 };
-
-onMounted(async () => {
-  if (import.meta.client) {
-    await initializeLocation();
-  }
-});
 </script>
 
 <template>
@@ -26,7 +19,7 @@ onMounted(async () => {
       tabindex="-1"
       role="dialog"
       aria-modal="true"
-      @click.self="denyAccess"
+      @click.self="handleDeny"
     >
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0 rounded-4 overflow-hidden w-75 mx-auto">
@@ -53,13 +46,13 @@ onMounted(async () => {
 
               <button
                 class="btn btn-primary w-100 fw-semibold py-2 mb-2 text-reactive-primary"
-                @click="requestLocationPermission"
+                @click="handleAllow"
               >
                 {{ $t('common.action.allow') }}
               </button>
               <button
                 class="btn bg-reactive-secondary text-reactive-secondary w-100 fw-semibold py-2"
-                @click="denyAccess"
+                @click="handleDeny"
               >
                 {{ $t('common.action.deny') }}
               </button>
@@ -68,6 +61,6 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="modal-backdrop fade show" @click="denyAccess"></div>
+    <div class="modal-backdrop fade show" @click="handleDeny"></div>
   </div>
 </template>

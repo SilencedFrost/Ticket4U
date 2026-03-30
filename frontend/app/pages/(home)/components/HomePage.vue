@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import FeaturedCarousel from './FeaturedCarousel.vue';
+import EventCarousel from './EventCarousel.vue';
+import SpecialEventCard from './SpecialEventCard.vue';
+import TrendingCard from './TrendingCard.vue';
+import EventSection from './EventSection.vue';
+import PlaceCard from './PlaceCard.vue';
+
+import {
+  featuredEvents,
+  specialEvents,
+  trendingEvents,
+  suggestedEvents,
+  musicEvents,
+  places,
+} from '../data/events';
+</script>
+
 <template>
   <div class="home-page bg-reactive-primary">
     <div class="container-xxl py-5">
@@ -50,24 +68,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import FeaturedCarousel from './FeaturedCarousel.vue';
-import EventCarousel from './EventCarousel.vue';
-import SpecialEventCard from './SpecialEventCard.vue';
-import TrendingCard from './TrendingCard.vue';
-import EventSection from './EventSection.vue';
-import PlaceCard from './PlaceCard.vue';
-
-import {
-  featuredEvents,
-  specialEvents,
-  trendingEvents,
-  suggestedEvents,
-  musicEvents,
-  places,
-} from '../data/events';
-</script>
 
 <style scoped>
 .home-page {

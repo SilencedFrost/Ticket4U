@@ -9,13 +9,9 @@
         class="avatar-container rounded-circle p-1 border border-primary border-opacity-25 border-4"
       >
         <!-- TODO: vì sau định fill avatar từ database còn ảnh này chỉ là ảnh mẫu -->
-        <nuxt-img
-          src="https://cdn.ticket4u.uk/image/upload/default-profile_s2bneu.jpg"
-          alt="Profile avatar"
-          placeholder
-          class="rounded-circle w-100 h-100"
-          style="object-fit: cover"
-        />
+        <div class="h-100 w-100 rounded-circle overflow-hidden">
+          <shimmer-img :src="'https://cdn.ticket4u.uk/image/upload/default-profile_s2bneu.jpg'" />
+        </div>
       </div>
       <button
         class="btn btn-primary rounded-circle position-absolute bottom-0 end-0 p-2 shadow edit-btn d-flex align-items-center justify-content-center"
@@ -36,8 +32,8 @@
 
 <style scoped>
 .avatar-container {
-  width: 160px;
   height: 160px;
+  aspect-ratio: 1;
 }
 
 .edit-btn {

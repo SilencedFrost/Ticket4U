@@ -36,7 +36,7 @@
           },
           "lowercase": "Password must contain at least one lowercase letter",
           "uppercase": "Password must contain at least one uppercase letter",
-          "special_char": "Password must contain at least one special character (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "special_char": "Password must contain at least one special character (!$^*()_=+[]{'@'}{'{'}{'}'}{'|'};:\",./?~`-)\\",
           "digit": "Password must contain at least one digit"
         }
       },
@@ -85,6 +85,7 @@
     }
   },
   "common": {
+    "birthday": "Date of birth",
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
@@ -138,22 +139,8 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
-      "rank": {
-        "bronze": "Bronze",
-        "silver": "Silver",
-        "gold": "Gold",
-        "platinum": "Platinum",
-        "diamond": "Diamond"
-      },
       "basic_info": {
-        "section_title": "Basic Information",
-        "username": "Username",
-        "birthday": "Date of Birth",
-        "phone": "Phone Number",
-        "phone_hint": "Format: +84xxxxxxxxx"
-      },
-      "actions": {
-        "save": "Save changes"
+        "section_title": "Basic Information"
       }
     },
     "security": {
@@ -162,18 +149,11 @@
       "change_password": {
         "title": "Change Password",
         "current_password": "Current Password",
-        "current_password_placeholder": "Enter current password",
-        "new_password": "New Password",
-        "new_password_placeholder": "Enter new password",
-        "new_password_hint": "Password must contain at least 8 characters.",
-        "confirm_password": "Confirm New Password",
-        "confirm_password_placeholder": "Re-enter new password"
+        "new_password": "New Password"
       },
       "sessions": {
         "title": "Active Sessions",
         "columns": {
-          "session_id": "Session ID",
-          "user_agent": "Device / Client",
           "last_access": "Last Access"
         },
         "unknown_device": "Unknown device"

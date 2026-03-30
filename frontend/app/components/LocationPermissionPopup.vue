@@ -19,13 +19,14 @@ const handleDeny = () => {
       tabindex="-1"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="location-modal-title"
       @click.self="handleDeny"
     >
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 overflow-hidden w-75 mx-auto">
           <div class="ratio ratio-16x9">
             <img
-              src="https://i.pinimg.com/736x/e9/86/32/e9863256e032559c9aea6d0fe1e74d79.jpg"
+              src="https://cdn.ticket4u.uk/image/upload/city-map_cqjpt1.jpg"
               alt="Location access"
               class="w-100 h-100 object-fit-cover"
             />
@@ -37,7 +38,7 @@ const handleDeny = () => {
             ></div>
 
             <div class="position-relative z-1">
-              <h3 class="fw-bold text-reactive-primary fs-3 mb-3">
+              <h3 id="location-modal-title" class="fw-bold text-reactive-primary fs-3 mb-3">
                 {{ $t('permissions.location.title') }}
               </h3>
               <p class="text-reactive-secondary mb-4">

@@ -2,6 +2,8 @@
 import SettingsNavMenu from './SettingsNavMenu.vue';
 import '../style/settings.css';
 
+const { currentTheme } = useTheme();
+
 type SettingsTab = 'account' | 'security';
 
 const route = useRoute();
@@ -82,7 +84,7 @@ const settingsLocalePrefixes = computed(() =>
  */
 function getPathname(urlOrPath: string) {
   try {
-    return new URL(urlOrPath, window.location.origin).pathname;
+    return new URL(urlOrPath, globalThis.window.location.origin).pathname;
   } catch {
     return urlOrPath;
   }
@@ -161,22 +163,30 @@ function goBackToPreviousPage() {
 
 <template>
   <div>
-    <div class="settings-desktop-shell d-none d-md-block">
-      <div class="settings-desktop-layout">
-        <aside class="d-flex flex-column h-100 settings-sidebar card rounded-3 border shadow-sm">
-          <SettingsNavMenu />
+    <!-- Desktop layout -->
+    <div class="d-none d-md-block p-3 overflow-visible">
+      <div class="d-flex">
+        <aside class="d-flex flex-column h-100 settings-sidebar card shadow-sm me-2">
+          <settings-nav-menu />
         </aside>
-
-        <main class="settings-content pb-3">
+        <main class="w-100">
           <slot />
         </main>
       </div>
     </div>
 
+    <!-- Mobile layout -->
     <div class="settings-mobile-shell d-md-none">
       <div class="settings-mobile-track" :class="mobileTrackClass">
         <section class="settings-mobile-panel settings-mobile-menu-screen text-reactive-primary">
-          <header class="settings-mobile-header">
+          <header
+            class="settings-mobile-header"
+            :class="[
+              'bg-reactive-primary',
+              'shadow-sm',
+              { 'border-bottom': currentTheme == 'dark' },
+            ]"
+          >
             <button
               type="button"
               class="settings-mobile-back text-reactive-primary"
@@ -188,12 +198,19 @@ function goBackToPreviousPage() {
             <h1 class="settings-mobile-title text-reactive-primary">{{ $t('settings.title') }}</h1>
           </header>
 
-          <nav class="settings-mobile-menu-list" :aria-label="$t('settings.title')">
+          <nav :aria-label="$t('settings.title')">
             <button
               v-for="tab in tabs"
               :key="tab.key"
               type="button"
-              class="settings-mobile-menu-item text-reactive-primary"
+              class=""
+              :class="[
+                'settings-mobile-menu-item',
+                'text-reactive-primary',
+                'bg-reactive-primary',
+                'shadow-sm',
+                { 'border-bottom': currentTheme == 'dark' },
+              ]"
               @click="openTab(tab.key)"
             >
               <span class="settings-mobile-menu-item-left">
@@ -206,7 +223,13 @@ function goBackToPreviousPage() {
         </section>
 
         <section class="settings-mobile-panel text-reactive-primary">
-          <header class="settings-mobile-header">
+          <header
+            :class="[
+              'settings-mobile-header',
+              'shadow-sm',
+              { 'border-bottom': currentTheme == 'dark' },
+            ]"
+          >
             <button
               type="button"
               class="settings-mobile-back text-reactive-primary"
@@ -230,18 +253,6 @@ function goBackToPreviousPage() {
 <style scoped>
 .settings-sidebar {
   width: 280px;
-  min-width: 240px;
-  flex-shrink: 0;
-}
-
-.settings-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.settings-desktop-layout {
-  display: flex;
-  gap: 1rem;
-  min-height: calc(100vh - 6rem);
+  min-width: 280px;
 }
 </style>

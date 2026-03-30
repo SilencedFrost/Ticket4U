@@ -65,78 +65,43 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card p-3 rounded-3 shadow-none border">
+  <div class="card p-3 shadow-sm">
     <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2 text-primary">
       {{ $t('settings.security.sessions.title') }}
     </h2>
 
-    <div class="d-none d-md-block">
-      <div class="table-responsive">
-        <table class="table table-borderless table-hover mb-0 align-middle session-table">
-          <thead class="bg-reactive-secondary">
-            <tr>
-              <th scope="col" class="text-reactive-secondary fw-semibold">
-                {{ $t('settings.security.sessions.columns.session_id') }}
-              </th>
-              <th scope="col" class="text-reactive-secondary fw-semibold">
-                {{ $t('settings.security.sessions.columns.user_agent') }}
-              </th>
-              <th scope="col" class="text-reactive-secondary fw-semibold">
-                {{ $t('settings.security.sessions.columns.last_access') }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="session in sessions" :key="session.id">
-              <td>
-                <code class="text-primary fw-bold">
-                  {{ sessionIds.get(session.id) || '#------' }}
-                </code>
-              </td>
-              <td>
-                <span v-if="resolveUserAgent(session.user_agent)">
-                  {{ resolveUserAgent(session.user_agent) }}
-                </span>
-                <span v-else class="text-reactive-secondary fst-italic">
-                  {{ $t('settings.security.sessions.unknown_device') }}
-                </span>
-              </td>
-              <td>{{ formatDate(session.updated_at) }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div class="d-flex flex-column gap-0">
+      <div
+        v-for="(session, index) in sessions"
+        :key="session.id"
+        class="d-flex align-items-start gap-3 py-3"
+        :class="{
+          'border-bottom border-secondary-subtle border-opacity-25': index < sessions.length - 1,
+        }"
+      >
+        <div class="flex-shrink-0">
+          <code class="text-primary fw-bold">
+            {{ sessionIds.get(session.id) || '#------' }}
+          </code>
+        </div>
 
-    <div class="d-md-none">
-      <div class="d-flex flex-column gap-0">
-        <div
-          v-for="(session, index) in sessions"
-          :key="session.id"
-          class="d-flex align-items-start gap-3 py-3"
-          :class="{ 'border-bottom border-secondary-subtle border-opacity-25': index < sessions.length - 1 }"
-        >
-          <div class="flex-shrink-0">
-            <code class="text-primary fw-bold">
-              {{ sessionIds.get(session.id) || '#------' }}
-            </code>
+        <div class="flex-fill">
+          <div class="fw-medium text-reactive-primary">
+            <span v-if="resolveUserAgent(session.user_agent)">
+              {{ resolveUserAgent(session.user_agent) }}
+            </span>
+            <span v-else class="text-reactive-secondary fst-italic">
+              {{ $t('settings.security.sessions.unknown_device') }}
+            </span>
           </div>
 
-          <div class="session-mobile-right flex-grow-1">
-            <div class="fw-medium text-reactive-primary">
-              <span v-if="resolveUserAgent(session.user_agent)">
-                {{ resolveUserAgent(session.user_agent) }}
-              </span>
-              <span v-else class="text-reactive-secondary fst-italic">
-                {{ $t('settings.security.sessions.unknown_device') }}
-              </span>
-            </div>
-
-            <div class="small text-reactive-secondary mt-1">
-              {{ $t('settings.security.sessions.columns.last_access') }}:
-              {{ formatDate(session.updated_at) }}
-            </div>
+          <div class="small text-reactive-secondary mt-1">
+            {{ $t('settings.security.sessions.columns.last_access') }}:
+            {{ formatDate(session.updated_at) }}
           </div>
+        </div>
+        <div>
+          <span class="text-decoration-underline small text-clickable">Remove</span>
         </div>
       </div>
     </div>
@@ -151,10 +116,5 @@ onMounted(() => {
   --bs-table-bg: transparent;
   --bs-table-hover-bg: rgba(var(--bs-secondary-rgb), 0.16);
   --bs-table-border-color: rgba(var(--bs-secondary-rgb), 0.24);
-}
-
-/* min-width utility is unavailable for flex child shrink handling. */
-.session-mobile-right {
-  min-width: 0;
 }
 </style>

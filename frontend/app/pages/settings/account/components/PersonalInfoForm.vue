@@ -10,12 +10,12 @@ function saveInfo() {
 <template>
   <div class="personal-info-form">
     <!-- Single Section — always present -->
-    <div class="card p-4 rounded-3 shadow-none border">
+    <div class="card p-3 shadow-sm">
       <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2 text-primary">
         <i class="bi bi-person-vcard"></i>
         {{ $t('settings.personal_information.basic_info.section_title') }}
       </h2>
-      <PersonalInfoFields />
+      <personal-info-fields />
 
       <!-- Save button inside the card, bottom right -->
       <button class="btn btn-primary ms-auto mt-3">

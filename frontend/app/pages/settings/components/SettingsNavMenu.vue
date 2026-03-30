@@ -2,12 +2,12 @@
 const navItems = [
   {
     to: '/settings/account',
-    icon: 'bi bi-person',
+    icon: 'bi bi-person-fill',
     labelKey: 'settings.nav.personal_information',
   },
   {
     to: '/settings/security',
-    icon: 'bi bi-shield-lock',
+    icon: 'bi bi-shield-fill',
     labelKey: 'settings.nav.security',
   },
 ];
@@ -20,20 +20,18 @@ const navItems = [
       <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
     </div>
 
-    <nav class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
+    <nav
+      class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100"
+    >
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <li v-for="item in navItems" :key="item.to">
-          <NuxtLinkLocale
-            :to="item.to"
-            class="settings-nav__item"
-            exact-active-class="active"
-          >
-            <span class="settings-nav__item-left">
-              <i :class="item.icon"></i>
+          <nuxt-link-locale :to="item.to" class="settings-nav__item" exact-active-class="active">
+            <span class="settings-nav__item-left d-inline-flex align-items-center">
+              <i :class="[item.icon, 'text-reactive-secondary']"></i>
               <span>{{ $t(item.labelKey) }}</span>
             </span>
-            <i class="bi bi-chevron-right settings-nav__chevron"></i>
-          </NuxtLinkLocale>
+            <i class="bi bi-chevron-right text-reactive-secondary"></i>
+          </nuxt-link-locale>
         </li>
       </ul>
     </nav>
@@ -48,7 +46,7 @@ const navItems = [
 }
 
 .settings-nav-desktop__nav {
-  padding: 8px ;
+  padding: 8px;
 }
 
 .settings-nav__item {
@@ -60,21 +58,15 @@ const navItems = [
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .settings-nav__item-left {
-  display: inline-flex;
-  align-items: center;
   gap: 10px;
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.settings-nav__item-left > i,
-.settings-nav__chevron {
-  color: #8e8e8e;
-  font-size: 1.1rem;
 }
 
 .settings-nav__item:hover {

@@ -7,10 +7,10 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
 </script>
 
 <template>
-  <SettingsLayout>
+  <settings-layout>
     <Title>{{ $t('settings.personal_information.title') }}</Title>
     <!-- Page header: title + subtitle, full width -->
-    <div class="page-header card rounded-3 border p-4 mb-3">
+    <div class="page-header card shadow-sm p-3 mb-2">
       <h1 class="h3 fw-bold text-reactive-primary mb-1">
         {{ $t('settings.personal_information.title') }}
       </h1>
@@ -20,27 +20,26 @@ import PersonalInfoForm from './components/PersonalInfoForm.vue';
     </div>
 
     <!-- Main content: avatar LEFT + form RIGHT, side by side -->
-    <div class="row g-3 align-items-stretch personal-info-content">
+    <div class="row g-2 overflow-visible">
       <!-- LEFT column: fixed ~180px -->
-      <div class="col-12 col-lg-auto d-flex flex-column align-self-stretch">
-        <div class="personal-info-avatar-col card p-4 rounded-3 shadow-none border d-flex flex-column h-100">
-          <AvatarUpload />
+      <div class="col-12 col-lg-auto">
+        <div class="personal-info-avatar-col card p-3 shadow-sm d-flex flex-column h-100">
+          <avatar-upload />
         </div>
       </div>
 
       <!-- RIGHT column: flex-1, takes remaining width -->
-      <div class="col-12 col-lg personal-info-form-col">
+      <div class="col-12 personal-info-form-col">
         <!-- PersonalInfoForm renders form content + save button -->
-        <PersonalInfoForm />
+        <personal-info-form />
       </div>
     </div>
-  </SettingsLayout>
+  </settings-layout>
 </template>
 
 <style scoped>
 .personal-info-avatar-col {
   width: 100%;
-  flex-shrink: 0;
 }
 
 @media (min-width: 992px) {

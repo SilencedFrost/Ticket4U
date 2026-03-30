@@ -93,3 +93,8 @@
 [data-bs-theme='dark'] .card-info {
   background-color: rgba(var(--bs-primary-rgb), 0.3);
 }
+
+.form-control {
+  background-color: var(--bg-reactive-primary);
+  color: var(--text-reactive-primary);
+}

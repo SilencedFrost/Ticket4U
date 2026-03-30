@@ -38,17 +38,10 @@
 .avatar-container {
   width: 160px;
   height: 160px;
-  transition: border-color 0.3s ease;
 }
 
 .edit-btn {
   width: 36px;
   height: 36px;
-  transform: translate(10%, -10%);
-  transition: transform 0.2s ease;
-}
-
-.edit-btn:hover {
-  transform: translate(10%, -10%) scale(1.1);
 }
 </style>

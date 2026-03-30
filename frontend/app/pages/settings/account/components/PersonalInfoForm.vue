@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import PersonalInfoFields from './PersonalInfoFields.vue';
-import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
 
+function saveInfo() {
+  // placeholder function
+}
 // <!-- TODO: wire up script -->
 </script>
 
@@ -16,10 +18,9 @@ import SettingsSaveButton from '../../components/SettingsSaveButton.vue';
       <PersonalInfoFields />
 
       <!-- Save button inside the card, bottom right -->
-      <div class="form-actions d-flex justify-content-end mt-3">
-        <!-- TODO: wire up save handler -->
-        <SettingsSaveButton />
-      </div>
+      <button class="btn btn-primary ms-auto mt-3">
+        <i class="bi bi-floppy-fill text-white" @click="saveInfo()"></i>
+      </button>
     </div>
   </div>
 </template>

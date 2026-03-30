@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
-const { requestLocation, permissionStatus, setPermissionDenied } = useLocation();
+const { requestLocation, permissionStatus, isInitialized, setPermissionDenied } = useLocation();
 
-const isVisible = computed(() => permissionStatus.value === null);
+const isVisible = computed(() => isInitialized.value && permissionStatus.value === null);
 
 const handleAllow = async () => {
   await requestLocation();

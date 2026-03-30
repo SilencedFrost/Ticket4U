@@ -14,6 +14,8 @@ const PERMISSION_MAX_AGE: Record<Exclude<LocationPermissionStatus, null>, number
 };
 
 export function useLocation() {
+  const isInitialized = useState<boolean>('location-initialized', () => false);
+
   const permissionCookie = useCookie<LocationPermissionStatus>(GEOLOCATION_PERMISSION_COOKIE_KEY, {
     path: '/',
     sameSite: 'lax',
@@ -67,20 +69,23 @@ export function useLocation() {
   }
 
   async function initializeLocation() {
-    if (!import.meta.client) return;
-
-    if (permissionCookie.value === 'denied') {
-      permissionStatus.value = 'denied';
-      return;
-    }
-
-    if (permissionCookie.value === 'allowed') {
-      await requestLocation();
-      return;
-    }
+    if (!import.meta.client || isInitialized.value) return;
 
     try {
-      if (!('permissions' in navigator)) return;
+      if (permissionCookie.value === 'denied') {
+        permissionStatus.value = 'denied';
+        return;
+      }
+
+      if (permissionCookie.value === 'allowed') {
+        await requestLocation();
+        return;
+      }
+
+      if (!('permissions' in navigator)) {
+        permissionStatus.value = null;
+        return;
+      }
 
       const permission = await navigator.permissions.query({ name: 'geolocation' });
 
@@ -97,6 +102,8 @@ export function useLocation() {
       if (permissionCookie.value === null) {
         permissionStatus.value = null;
       }
+    } finally {
+      isInitialized.value = true;
     }
   }
 
@@ -104,6 +111,7 @@ export function useLocation() {
     latitude,
     longitude,
     permissionStatus,
+    isInitialized,
     requestLocation,
     initializeLocation,
     setPermissionDenied: () => updatePermission('denied'),

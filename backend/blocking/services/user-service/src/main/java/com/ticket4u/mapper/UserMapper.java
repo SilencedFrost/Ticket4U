@@ -3,9 +3,7 @@ package com.ticket4u.mapper;
 import com.ticket4u.dto.auth.GoogleUserInfo;
 import com.ticket4u.dto.auth.RegisterRequest;
 import com.ticket4u.dto.auth.RegisterResponse;
-import com.ticket4u.dto.user.UserCreateRequest;
-import com.ticket4u.dto.user.UserResponse;
-import com.ticket4u.dto.user.UserUpdateRequest;
+import com.ticket4u.dto.user.*;
 import com.ticket4u.entity.User;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +56,9 @@ public abstract class UserMapper {
     public RegisterResponse toRegisterResponse(User user, String message) {
         return new RegisterResponse(user.getId(), user.getEmail(), message);
     }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "normalizePhone")
+    public abstract void updateFromChangeInfo(ChangeInfoRequest request, @MappingTarget User entity);
+
+    public abstract UserSummaryResponse toSummaryResponse(User user);
 }

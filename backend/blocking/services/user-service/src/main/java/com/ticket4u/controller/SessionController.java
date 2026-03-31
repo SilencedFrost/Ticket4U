@@ -23,21 +23,22 @@ public class SessionController {
     public ResponseEntity<List<SessionResponse>> getCurrentUserSessions() {
         // TODO: Gọi Service lấy danh sách session của user đang đăng nhập
         // Map user_agent -> deviceClient, updated_at -> lastAccess
-        // Cắt 6 ký tự đầu của session_hash -> sessionId
+        // get session_id --> hash SHA256 --> trim and display 6 first letter
         return null;
     }
 
     /**
-     * DELETE /api/v1/sessions/{trimmedSessionHash}
+     * DELETE /api/v1/sessions/{display-id}
      * To delete a specific session using the first 6 characters of the hashed session id
-     * @param trimmedSessionHash 6-character string (case preserved)
-     * @return Void
+     * @param displayId 6-character string (case preserved)
+     * @return ResponseEntity<?> HTTP 200 OK with empty body on success
      */
-    @DeleteMapping("/{trimmedSessionHash}")
-    public ResponseEntity<Void> deleteSession(@PathVariable String trimmedSessionHash) {
+    @DeleteMapping("/{display-id}")
+    public ResponseEntity<?> deleteSession(@PathVariable String displayId) {
         // Ghi log để debug xem Frontend gửi lên đúng định dạng/case hay không
-        log.info("Request to delete session with hash prefix: {}", trimmedSessionHash);
+        log.info("Request to delete session with hash prefix: {}", displayId);
 
         return null;
+        //TODO: return ResponseEntity.ok().build();
     }
 }

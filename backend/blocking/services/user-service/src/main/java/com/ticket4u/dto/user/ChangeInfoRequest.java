@@ -14,7 +14,7 @@ public record ChangeInfoRequest(
         String firstName,
 
         @Past
-        LocalDate dateOfBirth,
+        LocalDate birthday,
 
         @Pattern(regexp = "^[0-9]{10,15}$")
         String phoneNumber

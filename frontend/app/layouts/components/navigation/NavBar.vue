@@ -42,7 +42,7 @@ const localePath = useLocalePath();
         <!-- Logo -->
         <div class="nav-container">
           <nuxt-link-locale :to="localePath('/')">
-            <img src="/logo-primary.png" class="h-100" />
+            <img src="/logo-primary-128.png" class="h-100" alt="brand-logo" />
           </nuxt-link-locale>
         </div>
         <!-- Hover buttons -->

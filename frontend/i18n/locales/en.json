@@ -175,5 +175,37 @@
     "checkout": {
       "button": "Proceed to Checkout"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage account",
+    "nav": {
+      "personal_information": "Personal Information",
+      "security": "Password and Security"
+    },
+    "personal_information": {
+      "title": "Personal Information",
+      "subtitle": "Update your profile for a smoother booking experience.",
+      "member_since": "Member since",
+      "basic_info": {
+        "section_title": "Basic Information"
+      }
+    },
+    "security": {
+      "title": "Password and Security",
+      "subtitle": "Manage your password and security settings for your account.",
+      "change_password": {
+        "title": "Change Password",
+        "current_password": "Current Password",
+        "new_password": "New Password"
+      },
+      "sessions": {
+        "title": "Active Sessions",
+        "columns": {
+          "last_access": "Last Access"
+        },
+        "unknown_device": "Unknown device"
+      }
+    }
   }
 }

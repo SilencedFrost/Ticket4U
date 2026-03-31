@@ -12,8 +12,8 @@ import java.util.List;
 @RequestMapping("/api/v1/sessions")
 @RequiredArgsConstructor
 @Slf4j
-
 public class SessionController {
+
     /**
      * GET /api/v1/sessions
      * To get current logged in account's active sessions
@@ -23,7 +23,7 @@ public class SessionController {
     public ResponseEntity<List<SessionResponse>> getCurrentUserSessions() {
         // TODO: Gọi Service lấy danh sách session của user đang đăng nhập
         // Map user_agent -> deviceClient, updated_at -> lastAccess
-        // get session_id --> hash SHA256 --> trim and display 6 first letter
+        // get session_id --> hash SHA256 --> trim and display 6 first letters
         return null;
     }
 

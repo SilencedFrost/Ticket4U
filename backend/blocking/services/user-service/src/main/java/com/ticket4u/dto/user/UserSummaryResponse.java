@@ -17,6 +17,6 @@ public record UserSummaryResponse(
 
         /** TODO:
          * String avatarUrl
-         * String memberTier (Optional, we can delete if unnecessary)
+         * String memberTier (Optional, we can add if necessary)
          */
 ) {}

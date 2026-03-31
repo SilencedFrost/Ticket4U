@@ -1,5 +1,7 @@
 package com.ticket4u.dto.user;
 
+import com.ticket4u.validation.ValidPhoneNumber;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,6 +18,6 @@ public record ChangeInfoRequest(
         @Past
         LocalDate birthday,
 
-        @Pattern(regexp = "^[0-9]{10,15}$")
+        @ValidPhoneNumber(message = "auth.error.format.phone")
         String phoneNumber
 ) {}

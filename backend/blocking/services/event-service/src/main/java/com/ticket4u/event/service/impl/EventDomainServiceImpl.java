@@ -12,11 +12,9 @@ import com.ticket4u.event.service.EventDomainService;
 import com.ticket4u.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -227,5 +225,36 @@ public class EventDomainServiceImpl implements EventDomainService {
                 .limit(Math.min(limit, samplingSpace.size()))
                 .map(eventMapper::toSummaryDTO)
                 .toList();
+    }
+
+    /**
+     * Search events by semantic query.
+     * Finds relevant events and filters those that are purchasable.
+     * @param query search keyword
+     * @param pageable pagination parameters
+     * @return a page of matching events
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
+        List<UUID> eventIds = eventSemanticService.search(query, pageable);
+
+        if (eventIds.isEmpty()) {
+            log.info("No semantic results found for query: '{}'", query);
+            return Page.empty(pageable);
+        }
+
+        List<Event> candidateEvents = filterPurchasable(eventRepository.findAllById(eventIds));
+
+        Map<UUID, Event> eventMap = candidateEvents.stream()
+                .collect(Collectors.toMap(Event::getId, e -> e));
+
+        List<EventSummaryResponse> sortedResults = eventIds.stream()
+                .map(eventMap::get)
+                .filter(Objects::nonNull)
+                .map(eventMapper::toSummaryDTO)
+                .toList();
+
+        return new PageImpl<>(sortedResults, pageable, sortedResults.size());
     }
 }

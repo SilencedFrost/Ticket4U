@@ -33,15 +33,15 @@ public class SessionController {
      * DELETE /api/v1/sessions/{display-id}
      * To delete a specific session using the first 6 characters of the hashed session id
      * @param displayId 6-character string (case preserved)
-     * @return ResponseEntity<?> HTTP 200 OK with empty body on success
+     * @return ResponseEntity<?> HTTP 204 No Content with empty body on success
      */
     @DeleteMapping("/{display-id}")
     public ResponseEntity<?> deleteSession(
             @AuthenticationPrincipal UUID currentUserId,
-            @PathVariable String displayId
+            @PathVariable("display-id") String displayId
     ) {
         log.info("Request to delete session with hash prefix: {}", displayId);
         sessionService.deleteSessionByDisplayId(currentUserId, displayId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

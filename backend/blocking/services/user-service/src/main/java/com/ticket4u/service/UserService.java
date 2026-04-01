@@ -43,6 +43,8 @@ public class UserService {
         );
     }
 
+
+    @Transactional(readOnly = true)
     public UserSummaryResponse getSummaryByIdOrThrow(UUID id) {
         User user = this.findEntityByIdOrThrow(id);
         return userMapper.toSummaryResponse(user);

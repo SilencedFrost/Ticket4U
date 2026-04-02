@@ -19,10 +19,13 @@ import java.util.UUID;
 @Slf4j
 public class SessionController {
     private final SessionService sessionService;
+
     /**
      * GET /api/v1/sessions
      * To get current logged in account's active sessions
-     * @return List of SessionResponse
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
+     * @return list of active sessions belonging to the current user
      */
     @GetMapping
     public ResponseEntity<List<SessionResponse>> getCurrentUserSessions(
@@ -35,7 +38,10 @@ public class SessionController {
     /**
      * DELETE /api/v1/sessions/{display-id}
      * To delete a specific session using the first 6 characters of the hashed session id
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
      * @param displayId 6-character string (case preserved)
+     *                  
      * @return ResponseEntity<?> HTTP 204 No Content with empty body on success
      */
     @DeleteMapping("/{display-id}")

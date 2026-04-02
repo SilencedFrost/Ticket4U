@@ -26,7 +26,9 @@ public class UserController {
     /**
      * GET /api/v1/users
      * To get current logged in account info summary
-     * @return
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
+     * @return summary info of the current logged in user
      */
     @GetMapping
     public ResponseEntity<UserSummaryResponse> getCurrentUser(
@@ -37,10 +39,12 @@ public class UserController {
     }
 
     /**
-     * PATCH api/v1/users
-     * To modify account detail, not include password
-     * @param request
-     * @return
+     * PATCH /api/v1/users
+     * To modify account detail, not including password
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
+     * @param request   fields to update
+     * @return updated summary info of the current logged in user
      */
     @PatchMapping
     public ResponseEntity<UserSummaryResponse> updateCurrentUser(
@@ -54,8 +58,9 @@ public class UserController {
     /**
      * PATCH /api/v1/users/password
      * To modify account password
-     * @param request
-     * @return
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
+     * @param request   contains current password for verification and the new password
      */
     @PatchMapping("/password")
     public ResponseEntity<Void> changePassword(

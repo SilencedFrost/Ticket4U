@@ -48,7 +48,7 @@ public class UserController {
             @RequestBody @Valid ChangeInfoRequest request
     ) {
         UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
-        return ResponseEntity.ok(userService.updateInfo(currentUserId, request));
+        return ResponseEntity.ok(userService.updateEntity(currentUserId, request));
     }
 
     /**

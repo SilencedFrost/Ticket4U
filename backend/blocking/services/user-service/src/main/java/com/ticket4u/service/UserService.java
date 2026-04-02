@@ -53,7 +53,7 @@ public class UserService {
     //Write
 
     @Transactional
-    public UserSummaryResponse updateInfo(UUID userId, ChangeInfoRequest request) {
+    public UserSummaryResponse updateEntity(UUID userId, ChangeInfoRequest request) {
         User user = findEntityByIdOrThrow(userId);
         userMapper.updateFromChangeInfo(request, user);
         return userMapper.toSummaryResponse(user);

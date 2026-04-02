@@ -1,7 +1,9 @@
 package com.ticket4u.controller;
 
 import com.ticket4u.dto.session.SessionResponse;
+import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.service.SessionService;
+import com.ticket4u.util.AuthPrincipalUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,9 @@ public class SessionController {
      */
     @GetMapping
     public ResponseEntity<List<SessionResponse>> getCurrentUserSessions(
-            @AuthenticationPrincipal UUID currentUserId
+            @AuthenticationPrincipal CustomUserDetails principal
     ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId));
     }
 
@@ -37,9 +40,10 @@ public class SessionController {
      */
     @DeleteMapping("/{display-id}")
     public ResponseEntity<?> deleteSession(
-            @AuthenticationPrincipal UUID currentUserId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable("display-id") String displayId
     ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         log.info("Request to delete session with hash prefix: {}", displayId);
         sessionService.deleteSessionByDisplayId(currentUserId, displayId);
         return ResponseEntity.noContent().build();

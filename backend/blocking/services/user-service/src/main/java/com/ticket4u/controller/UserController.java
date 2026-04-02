@@ -3,13 +3,14 @@ package com.ticket4u.controller;
 import com.ticket4u.dto.user.ChangeInfoRequest;
 import com.ticket4u.dto.user.ChangePasswordRequest;
 import com.ticket4u.dto.user.UserSummaryResponse;
+import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.service.UserService;
+import com.ticket4u.util.AuthPrincipalUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,8 +30,9 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<UserSummaryResponse> getCurrentUser(
-            @AuthenticationPrincipal UUID currentUserId
+            @AuthenticationPrincipal CustomUserDetails principal
     ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         return ResponseEntity.ok(userService.getSummaryByIdOrThrow(currentUserId));
     }
 
@@ -42,9 +44,10 @@ public class UserController {
      */
     @PatchMapping
     public ResponseEntity<UserSummaryResponse> updateCurrentUser(
-            @AuthenticationPrincipal UUID currentUserId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @RequestBody @Valid ChangeInfoRequest request
     ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         return ResponseEntity.ok(userService.updateInfo(currentUserId, request));
     }
 
@@ -56,9 +59,10 @@ public class UserController {
      */
     @PatchMapping("/password")
     public ResponseEntity<Void> changePassword(
-            @AuthenticationPrincipal UUID currentUserId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @RequestBody @Valid ChangePasswordRequest request
     ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         userService.changePassword(currentUserId, request);
         return ResponseEntity.ok().build();
     }

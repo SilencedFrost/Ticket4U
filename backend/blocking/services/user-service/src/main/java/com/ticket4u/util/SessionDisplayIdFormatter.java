@@ -12,8 +12,8 @@ import java.util.UUID;
  * displayId = SHA256(sessionId.toString()).substring(0, LENGTH), case-sensitive.
  */
 @Component
-@Named("SessionDisplayId")
-public class SessionDisplayId {
+@Named("SessionDisplayIdFormatter")
+public class SessionDisplayIdFormatter {
 
     public static final int LENGTH = 6;
 

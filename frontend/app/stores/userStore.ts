@@ -15,16 +15,16 @@ export const useUserStore = defineStore('user', () => {
   const user = computed(() => _user.value);
   const isLoggedIn = computed(() => _user.value.roleId >= 0);
 
-  async function login(email: string, password: string, rememberMe: boolean) {
-    _user.value = await $fetch(`${config.public.authUrl}/login`, {
+  async function login(identifier: string, password: string, rememberMe: boolean) {
+    _user.value = await $fetch(`${config.public.userServiceUrl}/auth/login`, {
       credentials: 'include',
       method: 'POST',
-      body: { email, password, rememberMe },
+      body: { identifier, password, rememberMe },
     });
   }
 
   async function loginWithGoogle(idToken: string) {
-    _user.value = await $fetch(`${config.public.authUrl}/google`, {
+    _user.value = await $fetch(`${config.public.userServiceUrl}/auth/google`, {
       credentials: 'include',
       method: 'POST',
       body: { idToken },
@@ -33,7 +33,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function refresh() {
     try {
-      _user.value = await $fetch(`${config.public.authUrl}/refresh`, {
+      _user.value = await $fetch(`${config.public.userServiceUrl}/auth/refresh`, {
         credentials: 'include',
         method: 'POST',
       });
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function logout() {
     try {
-      await $fetch(`${config.public.authUrl}/logout`, {
+      await $fetch(`${config.public.userServiceUrl}/auth/logout`, {
         credentials: 'include',
         method: 'POST',
       });

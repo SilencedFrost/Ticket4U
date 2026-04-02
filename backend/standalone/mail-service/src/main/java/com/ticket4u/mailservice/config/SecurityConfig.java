@@ -1,6 +1,5 @@
 package com.ticket4u.mailservice.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticket4u.mailservice.service.AuditService;
 import com.ticket4u.mailservice.util.SecurityUtils;
 import jakarta.servlet.FilterChain;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -54,7 +54,6 @@ public class SecurityConfig {
             String path = request.getRequestURI();
             return path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs")
-                || path.equals("/actuator/health")
                 || path.equals("/");
         }
 

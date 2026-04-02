@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
 
+const { isEmailFormatValid } = useEmailValidation();
+const { validatePasswordValue } = usePasswordValidation();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
 const router = useRouter();
 const userStore = useUserStore();
-const loading = ref<boolean>(false);
-const isViewingPassword = ref<boolean>(false);
-const registerSuccess = ref<boolean>(false);
 const hiddenGoogleBtn = ref<HTMLElement | null>(null);
 
 const {
@@ -37,17 +36,12 @@ async function handleGoogleCredential(idToken: string) {
  =======================*/
 
 const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
-const EMAIL_FORMAT_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const PASSWORD_SPECIAL_CHAR_REGEX = /[!@$^*()_=+[\]{}\\|;:",./?~`-]+/;
-const PASSWORD_LOWERCASE_REGEX = /[a-z]+/;
-const PASSWORD_UPPERCASE_REGEX = /[A-Z]+/;
-const PASSWORD_DIGIT_REGEX = /\d+/;
 
 /**===========
  * Interfaces
  ============*/
 
-interface registerError {
+interface RegisterError {
   fullName: string;
   email: string;
   phoneNumber: string;
@@ -55,14 +49,14 @@ interface registerError {
   generic: string;
 }
 
-interface registerForm {
+interface RegisterForm {
   fullName: string;
   email: string;
   phoneNumber: string;
   password: string;
 }
 
-interface registerTouched {
+interface RegisterTouched {
   fullName: boolean;
   email: boolean;
   phoneNumber: boolean;
@@ -73,7 +67,7 @@ interface registerTouched {
  * State constants
  =======================*/
 
-const emptyError: registerError = {
+const emptyError: RegisterError = {
   fullName: '',
   email: '',
   phoneNumber: '',
@@ -81,14 +75,14 @@ const emptyError: registerError = {
   generic: '',
 };
 
-const emptyForm: registerForm = {
+const emptyForm: RegisterForm = {
   fullName: '',
   email: '',
   phoneNumber: '',
   password: '',
 };
 
-const defaultTouched: registerTouched = {
+const defaultTouched: RegisterTouched = {
   fullName: false,
   email: false,
   phoneNumber: false,
@@ -99,19 +93,22 @@ const defaultTouched: registerTouched = {
  * Form reactive objects
  =======================*/
 
-const error = reactive<registerError>(emptyError);
-const formData = reactive<registerForm>(emptyForm);
-const touched = reactive<registerTouched>(defaultTouched);
+const loading = ref<boolean>(false);
+const isViewingPassword = ref<boolean>(false);
+
+const error = reactive<RegisterError>(emptyError);
+const formData = reactive<RegisterForm>(emptyForm);
+const touched = reactive<RegisterTouched>(defaultTouched);
 
 /**==========
  * Functions
  ===========*/
 
 // Onblur function to do validation
-function onBlur(field: keyof registerForm) {
+function onBlur(field: keyof RegisterForm) {
   if (touched[field] === false) {
     touched[field] = true;
-    const validators: Record<keyof registerForm, () => boolean> = {
+    const validators: Record<keyof RegisterForm, () => boolean> = {
       fullName: validateFullName,
       email: validateEmail,
       phoneNumber: validatePhone,
@@ -141,7 +138,7 @@ function validateEmail(): boolean {
     return false;
   }
 
-  if (!EMAIL_FORMAT_REGEX.test(val)) {
+  if (!isEmailFormatValid(val)) {
     error.email = 'auth.error.format.email';
     return false;
   }
@@ -171,16 +168,8 @@ function validatePassword(): boolean {
     error.password = ['auth.error.blank.password'];
     return false;
   }
-  const errors: string[] = [];
-  if (val.length < 8) errors.push('auth.error.format.password.length.short');
-  if (val.length > 32) errors.push('auth.error.format.password.length.long');
-  if (!PASSWORD_LOWERCASE_REGEX.test(val)) errors.push('auth.error.format.password.lowercase');
-  if (!PASSWORD_UPPERCASE_REGEX.test(val)) errors.push('auth.error.format.password.uppercase');
-  if (!PASSWORD_SPECIAL_CHAR_REGEX.test(val))
-    errors.push('auth.error.format.password.special_char');
-  if (!PASSWORD_DIGIT_REGEX.test(val)) errors.push('auth.error.format.password.digit');
-  error.password = errors;
-  return errors.length === 0;
+  error.password = validatePasswordValue(val);
+  return error.password.length === 0;
 }
 
 // Validate the form, return status
@@ -195,8 +184,8 @@ async function register() {
   loading.value = true;
 
   try {
-    const response = await $fetch<{ userId: string | null; message: string }>(
-      `${config.public.authUrl}/register`,
+    await $fetch<{ userId: string | null; message: string }>(
+      `${config.public.userServiceUrl}/auth/register`,
       {
         method: 'POST',
         body: {
@@ -208,19 +197,7 @@ async function register() {
       },
     );
 
-    if (response.userId) {
-      registerSuccess.value = true;
-      Object.assign(formData, {
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phoneNumber: '',
-        fullName: '',
-      });
-      setTimeout(() => goToLogin(), 2000);
-    } else {
-      error.generic = response.message;
-    }
+    await navigateTo({ path: localePath('/auth/login'), query: { registered: 'true' } });
   } catch (err) {
     handleError(err as FetchError);
   } finally {
@@ -265,11 +242,6 @@ function handleError(fetchError: FetchError) {
 // Helper function to view password
 function viewPassword() {
   isViewingPassword.value = !isViewingPassword.value;
-}
-
-// Helper function to go to login
-function goToLogin() {
-  navigateTo(localePath('/auth/login'));
 }
 
 /**===================
@@ -326,12 +298,7 @@ watch(
     <h3 class="text-center text-reactive-primary">{{ $t('auth.register.title') }}</h3>
     <hr class="my-2" />
 
-    <div v-if="registerSuccess" class="alert alert-success text-center">
-      <i class="bi bi-check-circle me-2" />
-      {{ $t('auth.register.success') }}
-    </div>
-
-    <form v-else novalidate @submit.prevent="register">
+    <form novalidate @submit.prevent="register">
       <div class="mb-2">
         <label for="reg-fullname" class="form-label text-reactive-primary user-select-none">
           {{ $t('common.full_name') }}<span class="text-danger" aria-hidden="true"> *</span>
@@ -344,12 +311,7 @@ watch(
           :aria-invalid="!!error.fullName"
           :aria-describedby="error.fullName ? 'reg-fullname-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.fullName },
-          ]"
+          :class="['form-control', { 'is-invalid': error.fullName }]"
           @blur="onBlur('fullName')"
         />
         <div
@@ -374,12 +336,7 @@ watch(
           :aria-invalid="!!error.email"
           :aria-describedby="error.email ? 'reg-email-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.email },
-          ]"
+          :class="['form-control', { 'is-invalid': error.email }]"
           @blur="onBlur('email')"
         />
         <div v-if="error.email" id="reg-email-error" class="invalid-feedback" aria-live="assertive">
@@ -399,12 +356,7 @@ watch(
           :aria-invalid="!!error.phoneNumber"
           :aria-describedby="error.phoneNumber ? 'reg-phone-error' : undefined"
           :disabled="loading"
-          :class="[
-            'form-control',
-            'bg-reactive-primary',
-            'text-reactive-primary',
-            { 'is-invalid': error.phoneNumber },
-          ]"
+          :class="['form-control', { 'is-invalid': error.phoneNumber }]"
           @blur="onBlur('phoneNumber')"
         />
         <div
@@ -425,7 +377,6 @@ watch(
             id="reg-password"
             v-model="formData.password"
             :type="isViewingPassword ? 'text' : 'password'"
-            autocomplete="new-password"
             aria-required="true"
             :aria-invalid="error.password.length > 0"
             :aria-describedby="
@@ -434,12 +385,7 @@ watch(
                 .join(' ') || undefined
             "
             :disabled="loading"
-            :class="[
-              'form-control',
-              'bg-reactive-primary',
-              'text-reactive-primary',
-              { 'is-invalid': error.password.length > 0 },
-            ]"
+            :class="['form-control', { 'is-invalid': error.password.length > 0 }]"
             @blur="onBlur('password')"
           />
           <button
@@ -481,7 +427,7 @@ watch(
           type="submit"
           :disabled="loading || !isFormValid"
         >
-          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" />
+          <output v-if="loading" class="spinner-border spinner-border-sm me-2" />
           {{ $t('auth.register.action') }}
         </button>
         <div ref="hiddenGoogleBtn" class="d-none" />
@@ -501,9 +447,12 @@ watch(
     </form>
     <hr class="my-2" />
     <div class="text-center form-text">
-      <a href="#" class="text-decoration-none text-reactive-secondary" @click.prevent="goToLogin">
+      <NuxtLink
+        :to="localePath('/auth/login')"
+        class="text-decoration-none text-reactive-secondary"
+      >
         {{ $t('auth.register.has_account') }}
-      </a>
+      </NuxtLink>
     </div>
   </div>
 </template>

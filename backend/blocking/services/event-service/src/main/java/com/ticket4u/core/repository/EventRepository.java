@@ -1,6 +1,7 @@
 package com.ticket4u.core.repository;
 
 import com.ticket4u.core.entity.Event;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -28,7 +29,11 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @EntityGraph(value = "Event.withAllEntities")
     @Query("SELECT e FROM Event e WHERE e.status IN ('PREMIERE', 'SCHEDULED')")
-    List<Event> findAllPurchasable(Pageable pageable);
+    Page<Event> findAllPurchasable(Pageable pageable);
+
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("SELECT DISTINCT e FROM Event e JOIN e.categories c WHERE e.status IN ('PREMIERE', 'SCHEDULED') AND c.id IN :categoryIds GROUP BY e ORDER BY COUNT(c) DESC")
+    List<Event> findAllPurchasableInCategory(@Param("categoryIds") List<Integer> categoryIds, Limit limit);
 
     /**
      * @return list of events, sorted by earliest session start date
@@ -55,7 +60,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Query("""
     SELECT e FROM Event e
-    WHERE e.category.id = :categoryId
+    JOIN e.categories c
+    WHERE c.id = :categoryId
     AND EXISTS (
         SELECT s FROM EventSession s
         WHERE s.event = e

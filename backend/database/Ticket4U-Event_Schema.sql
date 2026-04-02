@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS public.seats;
 DROP TABLE IF EXISTS public.zones;
 DROP TABLE IF EXISTS public.event_sessions;
+DROP TABLE IF EXISTS public.event_categories;
 DROP TABLE IF EXISTS public.events;
 DROP TABLE IF EXISTS public.venues;
 DROP TABLE IF EXISTS public.categories;
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 	id 						UUID PRIMARY KEY,
 	name 					VARCHAR(255) NOT NULL UNIQUE,
 	organizer_id 			UUID NOT NULL,
-	category_id 			INTEGER, 
+
 	address_line 			VARCHAR(255) NOT NULL,
 	status 					VARCHAR(50) NOT NULL,
 	banner_url 				TEXT NOT NULL,
@@ -52,8 +53,6 @@ CREATE TABLE IF NOT EXISTS public.events (
 	longitude 	DECIMAL(10, 7),
 	latitude 	DECIMAL(10, 7),
 
-	CONSTRAINT event_fk_category FOREIGN KEY (category_id)
-		REFERENCES public.categories (id),
 	ConSTRAINT event_fk_venue FOREIGN KEY (venue_id)
 		REFERENCES public.venues (id)
 );
@@ -74,6 +73,18 @@ CREATE TABLE IF NOT EXISTS public.event_sessions (
 		REFERENCES public.events (id)
 );
 
+--Table: event_categories
+--Junction table for N-N relationship between events and categories
+CREATE TABLE IF NOT EXISTS public.event_categories (
+	event_id UUID NOT NULL,
+	category_id INTEGER NOT NULL,
+
+	PRIMARY KEY (event_id, category_id),
+
+	CONSTRAINT fk_event FOREIGN KEY (event_id) REFERENCES public.events (id) ON DELETE CASCADE,
+	CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES public.categories (id) ON DELETE CASCADE
+);
+
 -- Table: zones
 -- purchase_limit: null means no limit
 -- perks: Save the perks of each zone in JSON format, for example: ["Free drink", "Lightstick", "Fansign"]
@@ -83,8 +94,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
 	name 				VARCHAR(255) NOT NULL,
 	is_standing 		BOOLEAN NOT NULL,
 	capacity 			INTEGER,
-	quantity_sold 		INTEGER,
-	purchase_limit 		INTEGER,
+	purchase_limit      INTEGER,
+	
 	price 				DECIMAL(10, 2) NOT NULL,
 
 	description_vi 		TEXT,
@@ -107,7 +118,6 @@ CREATE TABLE IF NOT EXISTS public.seats (
 	row_name 		VARCHAR(5),
 	col_name 		VARCHAR(5),
 	seat_code 		VARCHAR(20),
-	status 			VARCHAR(50) NOT NULL,
 	price_override 	DECIMAL(10, 2),
 
 	CONSTRAINT seat_fk_zone FOREIGN KEY (zone_id)

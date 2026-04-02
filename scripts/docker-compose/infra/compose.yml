@@ -1,16 +1,17 @@
-name: ticket4u
+name: ticket4u-infra
 
 services:
+
   qdrant:
     image: qdrant/qdrant:latest
     container_name: ticket4u-qdrant
     ports:
+    # 6333 for webui, 6334 for access during dev
       - "6333:6333"
-      # only expose http port to access webUI, gRPC routes internally
-      # - "6334:6334"
+      - "6334:6334"
     volumes:
       - ticket4u_qdrant_storage:/qdrant/storage
-    restart: always
+    restart: unless-stopped
     networks:
       - ticket4u-network
     healthcheck:
@@ -24,10 +25,10 @@ services:
     image: postgres:18
     container_name: ticket4u-db-user
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - ticket4u_db_user:/var/lib/postgresql/18/docker
-    restart: always
+    restart: unless-stopped
     networks:
       - ticket4u-network
     environment:

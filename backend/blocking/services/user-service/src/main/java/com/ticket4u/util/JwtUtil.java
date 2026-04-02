@@ -19,6 +19,7 @@ import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.entity.CustomUserDetails;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +38,10 @@ public class JwtUtil {
     private String ISSUER;
 
     @Value("${application.security.jwt.private-key-path}")
-    private String privateKeyPath;
+    private Resource privateKeyResource;
 
     @Value("${application.security.jwt.public-key-path}")
-    private String publicKeyPath;
+    private Resource publicKeyResource;
 
     @Value("${application.security.jwt.key-id}")
     private String keyId;
@@ -83,7 +84,7 @@ public class JwtUtil {
 
     private ECKey loadPrivateKey() throws Exception {
         String privateKeyPEM = IOUtils.readInputStreamToString(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(privateKeyPath))
+                privateKeyResource.getInputStream()
         );
         ECKey parsedKey = ECKey.parseFromPEMEncodedObjects(privateKeyPEM).toECKey();
 
@@ -94,7 +95,7 @@ public class JwtUtil {
 
     private ECKey loadPublicKey() throws Exception {
         String publicKeyPEM = IOUtils.readInputStreamToString(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(publicKeyPath))
+                publicKeyResource.getInputStream()
         );
         ECKey parsedKey = ECKey.parseFromPEMEncodedObjects(publicKeyPEM).toECKey();
 

@@ -15,7 +15,7 @@
       "google": "Đăng ký với Google",
       "password_hint": "8-32 ký tự, chữ hoa, chữ thường, số, và ký tự đặc biệt",
       "has_account": "Đã có tài khoản? Đăng nhập",
-      "success": "Đăng ký thành công! Đang chuyển hướng..."
+      "success": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản."
     },
     "password": "Mật khẩu",
     "create_account": "Tạo tài khoản",
@@ -35,30 +35,56 @@
           },
           "lowercase": "Mật khẩu phải có ít nhất một chữ thường",
           "uppercase": "Mật khẩu phải có ít nhất một chữ hoa",
-          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}{'|'};:\",./?~`-)\\",
           "digit": "Mật khẩu phải có ít nhất một số"
         }
       },
       "blank": {
         "password": "Mật khẩu không được để trống",
         "email": "Email không được để trống",
+        "identifier": "Email hoặc số điện thoại không được để trống",
         "phone": "Số điện thoại không được để trống",
         "full_name": "Họ và tên không được để trống"
       },
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ",
-      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế."
+      "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế.",
+      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực."
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
-    }
-  },
-  "user": {
-    "registration": {
-      "check_email": "Vui lòng kiểm tra email để xác thực tài khoản"
+    },
+    "verification": {
+      "verifying": "Đang xác thực email...",
+      "success": "Email đã được xác thực thành công. Bạn có thể đăng nhập ngay.",
+      "send_failed": "Không thể gửi email xác thực lúc này. Vui lòng thử lại sau ít phút.",
+      "token_expired": "Link xác thực đã hết hạn. Vui lòng đăng ký lại.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link xác thực không hợp lệ.",
+      "error_title": "Xác thực thất bại",
+      "already_active": "Tài khoản đã được xác thực trước đó.",
+      "already_active_title": "Đã xác thực",
+      "resend_prompt": "Nhập email để nhận link xác thực mới.",
+      "resend_action": "Gửi lại",
+      "resend_success": "Nếu email đã đăng ký, link xác thực mới đã được gửi."
+    },
+    "password_reset": {
+      "title": "Đặt lại mật khẩu",
+      "instruction": "Nhập email của bạn, chúng tôi sẽ gửi link đặt lại mật khẩu.",
+      "send_action": "Gửi link đặt lại",
+      "check_email": "Nếu email đã đăng ký, link đặt lại mật khẩu đã được gửi.",
+      "new_password_hint": "Nhập mật khẩu mới của bạn.",
+      "action": "Đặt lại mật khẩu",
+      "success": "Mật khẩu đã được đặt lại. Bạn có thể đăng nhập với mật khẩu mới.",
+      "token_expired": "Link đặt lại mật khẩu đã hết hạn.",
+      "expired_title": "Link đã hết hạn",
+      "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",
+      "error_title": "Đặt lại thất bại",
+      "request_again": "Yêu cầu link mới"
     }
   },
   "common": {
+    "birthday": "Ngày sinh",
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
@@ -68,28 +94,21 @@
       "less": "Ẩn bớt"
     },
     "action": {
+      "allow": "Cho phép",
+      "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại",
-    "cancel": "Huỷ",
-    "save": "Lưu",
-    "delete": "Xoá",
-    "confirm": "Xác nhận",
-    "close": "Đóng",
-    "back": "Quay lại",
-    "next": "Tiếp theo",
-    "finish": "Hoàn tất",
-    "edit": "Chỉnh sửa",
-    "add": "Thêm",
-    "remove": "Xoá",
-    "reset": "Đặt lại",
-    "clear": "Xoá hết",
-    "search": "Tìm kiếm",
-    "loading": "Đang tải...",
-    "yes": "Có",
-    "no": "Không"
+    "first_name": "Tên",
+    "last_name": "Họ",
+    "phone": "Số điện thoại"
+  },
+  "permissions": {
+    "location": {
+      "title": "Cho phép truy cập vị trí",
+      "message": "Tìm các sự kiện gần bạn. Cho phép truy cập vị trí để xem các buổi hòa nhạc và chương trình biểu diễn đang diễn ra trong khu vực của bạn."
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -114,6 +133,38 @@
       "about": "Về sự kiện",
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Quản lý tài khoản",
+    "nav": {
+      "personal_information": "Thông tin cá nhân",
+      "security": "Mật khẩu và bảo mật"
+    },
+    "personal_information": {
+      "title": "Thông tin cá nhân",
+      "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
+      "member_since": "Thành viên từ",
+      "basic_info": {
+        "section_title": "Thông tin cơ bản"
+      }
+    },
+    "security": {
+      "title": "Mật khẩu và bảo mật",
+      "subtitle": "Quản lý mật khẩu và các thiết lập bảo mật cho tài khoản của bạn.",
+      "change_password": {
+        "title": "Đổi mật khẩu",
+        "current_password": "Mật khẩu hiện tại",
+        "new_password": "Mật khẩu mới"
+      },
+      "sessions": {
+        "title": "Phiên đăng nhập đang hoạt động",
+        "columns": {
+          "last_access": "Lần truy cập cuối"
+        },
+        "unknown_device": "Thiết bị không xác định"
+      }
     }
   },
   "organizer": {

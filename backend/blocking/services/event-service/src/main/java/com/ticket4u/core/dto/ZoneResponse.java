@@ -7,11 +7,14 @@ import java.util.UUID;
 public record ZoneResponse(
         UUID id,
         String name,
+        Boolean isStanding,
+        Integer capacity,
+        Integer purchaseLimit,
         BigDecimal price,
-        Integer available,
         String descriptionVi,
         String descriptionEn,
         String giftImageUrl,
-        List<String> perks
+        List<String> perks,
+        List<SeatResponse> seats
 ) {
 }

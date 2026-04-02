@@ -23,40 +23,9 @@ import java.util.UUID;
         @NamedEntityGraph(
                 name = "Event.withAllEntities",
                 attributeNodes = {
-                        @NamedAttributeNode(value = "sessions", subgraph = "sessions-subgraph"),
-                        @NamedAttributeNode("category"),
+                        @NamedAttributeNode("sessions"),
+                        @NamedAttributeNode("categories"),
                         @NamedAttributeNode("venue")
-                },
-                subgraphs = {
-                        @NamedSubgraph(
-                                name = "sessions-subgraph",
-                                attributeNodes = {
-                                        @NamedAttributeNode("zones")
-                                }
-                        )
-                }
-        ),
-        @NamedEntityGraph(
-                name = "Event.withSessionsAndZones",
-                attributeNodes = {
-                        @NamedAttributeNode(
-                                value = "sessions",
-                                subgraph = "sessions-subgraph"
-                        )
-                },
-                subgraphs = {
-                        @NamedSubgraph(
-                                name = "sessions-subgraph",
-                                attributeNodes = {
-                                        @NamedAttributeNode("zones")
-                                }
-                        )
-                }
-        ),
-        @NamedEntityGraph(
-                name = "Event.withSessions",
-                attributeNodes = {
-                        @NamedAttributeNode("sessions")
                 }
         )
 })
@@ -73,11 +42,13 @@ public class Event {
     @Column(nullable = false)
     private UUID organizerId;
 
-    // TODO: implement n-n relationship between category and event
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-    // TODO: implement vector embedding of category
+    @ManyToMany
+    @JoinTable(
+            name = "event_categories",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new LinkedHashSet<>();
 
     @Column(nullable = false)
     private String addressLine;

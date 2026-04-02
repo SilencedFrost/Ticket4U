@@ -2,7 +2,7 @@ package com.ticket4u.mapper;
 
 import com.ticket4u.dto.session.SessionResponse;
 import com.ticket4u.entity.Session;
-import com.ticket4u.util.SessionDisplayIdFormatter;
+import com.ticket4u.util.SessionIdHashUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper(
         componentModel = "spring",
-    uses = SessionDisplayIdFormatter.class,
+        uses = SessionIdHashUtil.class,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE
 )

@@ -12,13 +12,13 @@ import java.util.UUID;
  * displayId = SHA256(sessionId.toString()).substring(0, LENGTH), case-sensitive.
  */
 @Component
-@Named("SessionDisplayIdFormatter")
-public class SessionDisplayIdFormatter {
+@Named("SessionIdHashUtil")
+public class SessionIdHashUtil {
 
     public static final int LENGTH = 6;
 
     @Named("toDisplayId")
-    public String toDisplayId(UUID sessionId) {
+    public static String toDisplayId(UUID sessionId) {
         if (sessionId == null) {
             return null;
         }

@@ -6,8 +6,8 @@ import Step1BasicInfo from './(components)/Step1BasicInfo.vue'
 import Step2Content   from './(components)/Step2Content.vue'
 import Step3Zones     from './(components)/Step3Zones.vue'
 import Step4Layout    from './(components)/Step4Layout.vue'
-import type { Zone }    from '../(types)/zone'
-import type { Session } from '../(types)/session'
+import type { Zone }    from '../(types)/zone.type'
+import type { Session } from '../(types)/session.type'
 
 const { t: $t } = useI18n()
 const localePath  = useLocalePath()

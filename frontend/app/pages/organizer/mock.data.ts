@@ -5,13 +5,13 @@
 //    → event_categories (N-N) → event_sessions → zones
 // ─────────────────────────────────────────────────────────────
 
-import type { Category }          from './(types)/category'
-import type { Venue, VenueLayout } from './(types)/venue'
-import type { Zone }               from './(types)/zone'
-import type { Session }            from './(types)/session'
-import type { Event, EventStatus, EventFormState, EventContentState } from './(types)/event'
-import type { Profile }            from './(types)/profile'
-import type { Seat }               from './(types)/seat'
+import type { Category }          from './(types)/category.type'
+import type { Venue, VenueLayout } from './(types)/venue.type'
+import type { Zone }               from './(types)/zone.type'
+import type { Session }            from './(types)/session.type'
+import type { Event, EventStatus, EventFormState, EventContentState } from './(types)/event.type'
+import type { Profile }            from './(types)/profile.type'
+import type { Seat }               from './(types)/seat.type'
 
 // Re-export types so existing imports still work
 export type {

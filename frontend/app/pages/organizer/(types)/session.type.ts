@@ -1,4 +1,4 @@
-import type { Zone } from './zone'
+import type { Zone } from './zone.type'
 
 export interface Session {
   id:        string

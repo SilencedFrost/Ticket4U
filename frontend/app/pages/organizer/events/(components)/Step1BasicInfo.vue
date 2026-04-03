@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { EventFormState } from '../../(types)/event'
+import type { EventFormState } from '../../(types)/event.type'
 import { mockCategories } from '../../mock.data'
 
 const props = defineProps<{

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { mockVenues, getVenueZoneNames } from '../../mock.data'
-import type { Zone } from '../../(types)/zone'
-import type { EventFormState } from '../../(types)/event'
+import type { Zone } from '../../(types)/zone.type'
+import type { EventFormState } from '../../(types)/event.type'
 
 const props = defineProps<{
   form: EventFormState

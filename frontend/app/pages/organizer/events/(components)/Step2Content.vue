@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { EventContentState } from '../../(types)/event'
+import type { EventContentState } from '../../(types)/event.type'
 
 const props = defineProps<{
   content: EventContentState

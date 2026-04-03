@@ -1,6 +1,6 @@
 import { ref, computed, type Ref } from 'vue'
 import { mockVenues } from '../mock.data'
-import type { Zone } from '../(types)/zone'
+import type { Zone } from '../(types)/zone.type'
 
 export function useEventLayout(venueIdRef: Readonly<Ref<string>>, zonesRef: Readonly<Ref<Zone[]>>) {
   const layoutMode = ref<'venue' | 'custom'>('venue')

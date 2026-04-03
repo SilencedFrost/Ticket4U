@@ -234,16 +234,22 @@ public class EventDomainServiceImpl implements EventDomainService {
      * @return a page of matching events
      */
     @Override
-    @Transactional(readOnly = true)
     public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
+        // Get sorted IDs from AI service
         List<UUID> eventIds = eventSemanticService.search(query, pageable);
+        if (eventIds.isEmpty()) return List.of();
 
-        if (eventIds.isEmpty()) return Collections.emptyList();
-
+        // Fetch event data from the database
         List<Event> events = eventRepository.findAllById(eventIds);
 
-        return events.stream()
-                .sorted(Comparator.comparingInt(event -> eventIds.indexOf(event.getId())))
+        // Put events into a Map for fast lookup by ID
+        var lookupMap = events.stream()
+                .collect(Collectors.toMap(Event::getId, e -> e));
+
+        // Map sorted IDs back to DTOs using the lookup map
+        return eventIds.stream()
+                .map(lookupMap::get)
+                .filter(Objects::nonNull)
                 .map(eventMapper::toSummaryDTO)
                 .toList();
     }

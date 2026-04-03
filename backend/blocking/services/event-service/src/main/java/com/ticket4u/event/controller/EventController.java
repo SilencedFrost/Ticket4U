@@ -84,13 +84,13 @@ public class EventController {
     }
 
     /**
-     * GET /api/v1/public/events/search?q={query}
+     * GET /api/v1/public/events/search?q={query}&page={page}&size={size}
      * @param query the search keyword for semantic analysis
      * @param pageable pagination parameters (page, size, sort)
      * @return a page of events matching the semantic search query
      */
     @GetMapping("/search")
-    public ResponseEntity<Page<EventSummaryResponse>> searchEvents(
+    public ResponseEntity<List<EventSummaryResponse>> searchEvents(
             @RequestParam("q") String query,
             Pageable pageable
     ) {

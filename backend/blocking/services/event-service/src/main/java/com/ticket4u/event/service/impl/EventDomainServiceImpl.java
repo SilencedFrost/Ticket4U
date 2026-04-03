@@ -229,32 +229,22 @@ public class EventDomainServiceImpl implements EventDomainService {
 
     /**
      * Search events by semantic query.
-     * Finds relevant events and filters those that are purchasable.
      * @param query search keyword
      * @param pageable pagination parameters
      * @return a page of matching events
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
+    public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
         List<UUID> eventIds = eventSemanticService.search(query, pageable);
 
-        if (eventIds.isEmpty()) {
-            log.info("No semantic results found for query: '{}'", query);
-            return Page.empty(pageable);
-        }
+        if (eventIds.isEmpty()) return Collections.emptyList();
 
-        List<Event> candidateEvents = filterPurchasable(eventRepository.findAllById(eventIds));
+        List<Event> events = eventRepository.findAllById(eventIds);
 
-        Map<UUID, Event> eventMap = candidateEvents.stream()
-                .collect(Collectors.toMap(Event::getId, e -> e));
-
-        List<EventSummaryResponse> sortedResults = eventIds.stream()
-                .map(eventMap::get)
-                .filter(Objects::nonNull)
+        return events.stream()
+                .sorted(Comparator.comparingInt(event -> eventIds.indexOf(event.getId())))
                 .map(eventMapper::toSummaryDTO)
                 .toList();
-
-        return new PageImpl<>(sortedResults, pageable, sortedResults.size());
     }
 }

@@ -14,5 +14,5 @@ public interface EventDomainService {
     List<EventSummaryResponse> findRelatedEvents(UUID id);
     List<EventSummaryResponse> findUpcomingPurchasableEventsLimit(Integer limit);
     List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier);
-    Page<EventSummaryResponse> searchEvents(String query, Pageable pageable);
+    List<EventSummaryResponse> searchEvents(String query, Pageable pageable);
 }

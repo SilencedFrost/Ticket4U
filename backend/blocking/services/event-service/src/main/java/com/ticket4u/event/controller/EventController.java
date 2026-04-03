@@ -6,7 +6,6 @@ import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -53,7 +53,7 @@ public abstract class UserMapper {
     }
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "phoneNumber", source = "phoneNumber", qualifiedByName = "normalizePhone")
-    public abstract void updateFromChangeInfo(ChangeInfoRequest request, @MappingTarget User entity);
+    public abstract void updateUser(ChangeInfoRequest request, @MappingTarget User entity);
 
     public abstract UserSummaryResponse toSummaryResponse(User user);
 }

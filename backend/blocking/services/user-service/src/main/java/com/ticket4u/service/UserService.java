@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public UserSummaryResponse updateEntity(UUID userId, ChangeInfoRequest request) {
         User user = findEntityByIdOrThrow(userId);
-        userMapper.updateFromChangeInfo(request, user);
+        userMapper.updateUser(request, user);
         return userMapper.toSummaryResponse(user);
     }
 

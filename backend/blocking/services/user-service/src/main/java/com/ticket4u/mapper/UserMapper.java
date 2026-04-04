@@ -23,13 +23,6 @@ public abstract class UserMapper {
     @Mapping(target = "role", source = "role.roleName")
     public abstract UserResponse toDTO(User user);
 
-    @Mapping(target = "passwordHash", source = "password", qualifiedByName = "hashPassword")
-    public abstract User toEntity(UserCreateRequest userCreateRequest);
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "passwordHash", source = "password", qualifiedByName = "hashPassword")
-    public abstract void updateUserFromDTO(UserUpdateRequest dto, @MappingTarget User entity);
-
     // Register methods
     @Mapping(target = "username", source = "email", qualifiedByName = "extractUsername")
     @Mapping(target = "passwordHash", source = "password", qualifiedByName = "hashPassword")
@@ -40,6 +33,7 @@ public abstract class UserMapper {
     @Mapping(target = "isDeleted", constant = "false")
     public abstract User toEntityFromRegister(RegisterRequest request);
 
+    // Base method, does not get used elsewhere
     @Mapping(target = "username", source = "email", qualifiedByName = "extractUsername")
     @Mapping(target = "firstName", source = "name", qualifiedByName = "extractFirstName")
     @Mapping(target = "lastName", source = "name", qualifiedByName = "extractLastName")
@@ -47,6 +41,7 @@ public abstract class UserMapper {
     @Mapping(target = "isDeleted", constant = "false")
     protected abstract User toEntityFromGoogleBase(GoogleUserInfo userInfo);
 
+    // Actual method, generates random password
     public User toEntityFromGoogle(GoogleUserInfo userInfo) {
         User user = toEntityFromGoogleBase(userInfo);
         user.setPasswordHash(passwordEncoderMapper.generateRandomHashedPassword());

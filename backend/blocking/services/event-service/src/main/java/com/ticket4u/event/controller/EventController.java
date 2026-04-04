@@ -6,6 +6,7 @@ import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.event.service.EventDomainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,5 +80,19 @@ public class EventController {
     // TODO implement event suggestion using ML and user behavior analysis
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
         return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+    }
+
+    /**
+     * GET /api/v1/public/events/search?q={query}&page={page}&size={size}
+     * @param query the search keyword for semantic analysis
+     * @param pageable pagination parameters (page, size, sort)
+     * @return a page of events matching the semantic search query
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<EventSummaryResponse>> searchEvents(
+            @RequestParam("q") String query,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(eventDomainService.searchEvents(query, pageable));
     }
 }

@@ -12,10 +12,7 @@ import com.ticket4u.event.service.EventDomainService;
 import com.ticket4u.exception.EventNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -225,6 +222,33 @@ public class EventDomainServiceImpl implements EventDomainService {
 
         return samplingSpace.stream()
                 .limit(Math.min(limit, samplingSpace.size()))
+                .map(eventMapper::toSummaryDTO)
+                .toList();
+    }
+
+    /**
+     * Search events by semantic query.
+     * @param query search keyword
+     * @param pageable pagination parameters
+     * @return a page of matching events
+     */
+    @Override
+    public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
+        // Get sorted IDs from AI service
+        List<UUID> eventIds = eventSemanticService.search(query, pageable);
+        if (eventIds.isEmpty()) return List.of();
+
+        // Fetch event data from the database
+        List<Event> events = eventRepository.findAllById(eventIds);
+
+        // Put events into a Map for fast lookup by ID
+        Map<UUID, Event> lookupMap = events.stream()
+                .collect(Collectors.toMap(Event::getId, e -> e));
+
+        // Map sorted IDs back to DTOs using the lookup map
+        return eventIds.stream()
+                .map(lookupMap::get)
+                .filter(Objects::nonNull)
                 .map(eventMapper::toSummaryDTO)
                 .toList();
     }

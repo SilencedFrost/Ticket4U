@@ -1545,7 +1545,7 @@ SET layout = jsonb_build_object(
                 jsonb_build_object(
                         'floor_name',       'Main Floor',
                         'floor_order',      1,
-                        'global_seat_size', 14,
+                        'global_seat_size', 14,x
                         'stage',            jsonb_build_object('x1', -0.267, 'x2', 0.267, 'y1', -0.923, 'y2', -0.754),
                         'stage_shapes',     jsonb_build_array(),
                         'zones',            jsonb_build_array(

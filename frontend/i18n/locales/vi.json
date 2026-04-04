@@ -36,7 +36,7 @@
           },
           "lowercase": "Mật khẩu phải có ít nhất một chữ thường",
           "uppercase": "Mật khẩu phải có ít nhất một chữ hoa",
-          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}{'|'};:\",./?~`-)\\",
           "digit": "Mật khẩu phải có ít nhất một số"
         }
       },
@@ -85,6 +85,7 @@
     }
   },
   "common": {
+    "birthday": "Ngày sinh",
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
@@ -94,11 +95,21 @@
       "less": "Ẩn bớt"
     },
     "action": {
+      "allow": "Cho phép",
+      "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem"
     },
     "full_name": "Họ và tên",
+    "first_name": "Tên",
+    "last_name": "Họ",
     "phone": "Số điện thoại"
+  },
+  "permissions": {
+    "location": {
+      "title": "Cho phép truy cập vị trí",
+      "message": "Tìm các sự kiện gần bạn. Cho phép truy cập vị trí để xem các buổi hòa nhạc và chương trình biểu diễn đang diễn ra trong khu vực của bạn."
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -174,6 +185,38 @@
     },
     "checkout": {
       "button": "Tiến hành thanh toán"
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Quản lý tài khoản",
+    "nav": {
+      "personal_information": "Thông tin cá nhân",
+      "security": "Mật khẩu và bảo mật"
+    },
+    "personal_information": {
+      "title": "Thông tin cá nhân",
+      "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
+      "member_since": "Thành viên từ",
+      "basic_info": {
+        "section_title": "Thông tin cơ bản"
+      }
+    },
+    "security": {
+      "title": "Mật khẩu và bảo mật",
+      "subtitle": "Quản lý mật khẩu và các thiết lập bảo mật cho tài khoản của bạn.",
+      "change_password": {
+        "title": "Đổi mật khẩu",
+        "current_password": "Mật khẩu hiện tại",
+        "new_password": "Mật khẩu mới"
+      },
+      "sessions": {
+        "title": "Phiên đăng nhập đang hoạt động",
+        "columns": {
+          "last_access": "Lần truy cập cuối"
+        },
+        "unknown_device": "Thiết bị không xác định"
+      }
     }
   }
 }

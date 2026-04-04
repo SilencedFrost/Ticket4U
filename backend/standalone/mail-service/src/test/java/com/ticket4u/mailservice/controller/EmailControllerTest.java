@@ -2,12 +2,10 @@
 
 package com.ticket4u.mailservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticket4u.mailservice.dto.request.EmailRequest;
 import com.ticket4u.mailservice.dto.response.EmailResponse;
 import com.ticket4u.mailservice.enums.EmailStatus;
 import com.ticket4u.mailservice.exception.GlobalExceptionHandler;
-import com.ticket4u.mailservice.health.SmtpHealthIndicator;
 import com.ticket4u.mailservice.service.AuditService;
 import com.ticket4u.mailservice.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -44,9 +43,6 @@ class EmailControllerTest {
 
 	@Mock
 	private AuditService auditService;
-
-	@Mock
-	private SmtpHealthIndicator smtpHealthIndicator;
 
 	@InjectMocks
 	private EmailController emailController;

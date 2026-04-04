@@ -10,7 +10,7 @@ services:
     volumes:
       - ./keys/user-service/ec-private.pem:/keys/ec-private.pem:ro
       - ./keys/user-service/ec-public.pem:/keys/ec-public.pem:ro
-    restart: always
+    restart: unless-stopped
     networks:
       - ticket4u-network
     healthcheck:
@@ -19,6 +19,16 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+
+  mail-service:
+    image: mail-service:latest
+    container_name: ticket4u-service-mail
+    env_file:
+      - .env.mail-service
+      - .env.services
+    restart: unless-stopped
+    networks:
+      - ticket4u-network
 
 networks:
   ticket4u-network:

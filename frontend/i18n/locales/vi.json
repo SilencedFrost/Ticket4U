@@ -147,6 +147,9 @@
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
       "member_since": "Thành viên từ",
+      "messages": {
+        "update_success": "Cập nhật thông tin cá nhân thành công."
+      },
       "basic_info": {
         "section_title": "Thông tin cơ bản"
       }
@@ -157,10 +160,20 @@
       "change_password": {
         "title": "Đổi mật khẩu",
         "current_password": "Mật khẩu hiện tại",
-        "new_password": "Mật khẩu mới"
+        "new_password": "Mật khẩu mới",
+        "messages": {
+          "success": "Đổi mật khẩu thành công."
+        },
+        "errors": {
+          "current_password_incorrect": "Mật khẩu hiện tại không chính xác."
+        }
       },
       "sessions": {
         "title": "Phiên đăng nhập đang hoạt động",
+        "empty": "Không có phiên đăng nhập đang hoạt động.",
+        "actions": {
+          "remove": "Gỡ"
+        },
         "columns": {
           "last_access": "Lần truy cập cuối"
         },

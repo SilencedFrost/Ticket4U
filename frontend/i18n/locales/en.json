@@ -147,6 +147,9 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
+      "messages": {
+        "update_success": "Profile updated successfully."
+      },
       "basic_info": {
         "section_title": "Basic Information"
       }
@@ -157,10 +160,20 @@
       "change_password": {
         "title": "Change Password",
         "current_password": "Current Password",
-        "new_password": "New Password"
+        "new_password": "New Password",
+        "messages": {
+          "success": "Password updated successfully."
+        },
+        "errors": {
+          "current_password_incorrect": "Current password is incorrect."
+        }
       },
       "sessions": {
         "title": "Active Sessions",
+        "empty": "No active sessions.",
+        "actions": {
+          "remove": "Remove"
+        },
         "columns": {
           "last_access": "Last Access"
         },

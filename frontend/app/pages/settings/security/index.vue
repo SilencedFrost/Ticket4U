@@ -2,8 +2,6 @@
 import SettingsLayout from '../components/SettingsLayout.vue';
 import ChangePasswordForm from './components/ChangePasswordForm.vue';
 import SessionList from './components/SessionList.vue';
-
-// <!-- TODO: wire up script -->
 </script>
 
 <template>

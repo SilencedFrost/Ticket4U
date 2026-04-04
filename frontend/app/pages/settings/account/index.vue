@@ -2,8 +2,6 @@
 import SettingsLayout from '../components/SettingsLayout.vue';
 import AvatarUpload from './components/AvatarUpload.vue';
 import PersonalInfoForm from './components/PersonalInfoForm.vue';
-
-// <!-- TODO: wire up script -->
 </script>
 
 <template>

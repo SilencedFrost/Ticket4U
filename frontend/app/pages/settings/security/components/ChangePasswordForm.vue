@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import type { FetchError } from 'ofetch';
+import { useSettingsApi } from '../../composables/useSettingsApi';
+
 const { validatePasswordValue } = usePasswordValidation();
+const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();
 
 /**===========
  * Interfaces
@@ -46,6 +50,8 @@ const defaultTouched: ChangepassTouched = {
 const loading = ref<boolean>(false);
 const isViewingCurrentPassword = ref(false);
 const isViewingNewPassword = ref(false);
+const genericError = ref('');
+const successMessage = ref('');
 
 const error = reactive<ChangepassError>(emptyError);
 const formData = reactive<ChangepassForm>(emptyForm);
@@ -118,7 +124,10 @@ const isFormValid = computed(() => {
 
 watch(
   () => (formData.oldPass.trim().length > 0 ? formData.oldPass : null),
-  () => {
+  (value) => {
+    if (value === null) {
+      return;
+    }
     touched.oldPass = true;
     validateOldPass();
   },
@@ -126,25 +135,103 @@ watch(
 
 watch(
   () => (formData.newPass.trim().length > 0 ? formData.newPass : null),
-  () => {
+  (value) => {
+    if (value === null) {
+      return;
+    }
     touched.newPass = true;
     validateNewPass();
   },
 );
 
 function submitChangePassword() {
-  if (!validateForm()) return;
-  // TODO: wire up API submit.
+  void submitChangePasswordAsync();
+}
+
+function toI18nKeyOrFallback(message?: string, fallback = 'auth.error.validation'): string {
+  if (!message) {
+    return fallback;
+  }
+  return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
+}
+
+function resetFormState() {
+  formData.oldPass = '';
+  formData.newPass = '';
+  touched.oldPass = false;
+  touched.newPass = false;
+  error.oldPass = '';
+  error.newPass = [];
+}
+
+async function submitChangePasswordAsync() {
+  if (!validateForm() || loading.value) {
+    return;
+  }
+
+  loading.value = true;
+  genericError.value = '';
+  successMessage.value = '';
+
+  try {
+    await changePassword({
+      currentPassword: formData.oldPass.trim(),
+      newPassword: formData.newPass.trim(),
+    });
+
+    resetFormState();
+    successMessage.value = 'settings.security.change_password.messages.success';
+  } catch (err) {
+    const fetchError = err as FetchError;
+
+    if (!fetchError.statusCode) {
+      genericError.value = 'auth.error.network';
+      return;
+    }
+
+    const fieldErrors = extractFieldErrors(fetchError);
+    let hasFieldErrors = false;
+
+    if (fieldErrors.currentPassword) {
+      error.oldPass = toI18nKeyOrFallback(fieldErrors.currentPassword);
+      hasFieldErrors = true;
+    }
+
+    if (fieldErrors.newPassword) {
+      error.newPass = [toI18nKeyOrFallback(fieldErrors.newPassword)];
+      hasFieldErrors = true;
+    }
+
+    if (!hasFieldErrors) {
+      const message = extractMessage(fetchError);
+
+      if (message && message.toLowerCase().includes('current password')) {
+        error.oldPass = 'settings.security.change_password.errors.current_password_incorrect';
+      } else {
+        genericError.value = toI18nKeyOrFallback(message ?? undefined, 'auth.error.unknown');
+      }
+    }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
 <template>
   <div class="change-password-form">
-    <div class="card p-3 shadow-sm">
+    <form class="card p-3 shadow-sm" novalidate @submit.prevent="submitChangePassword">
       <h2 class="h6 fw-bold mb-3 text-primary">
         <i class="bi bi-key-fill"></i>
         {{ $t('settings.security.change_password.title') }}
       </h2>
+
+      <div v-if="genericError" class="alert alert-danger py-2" role="alert">
+        {{ $t(genericError) }}
+      </div>
+
+      <div v-if="successMessage" class="alert alert-success py-2" role="status">
+        {{ $t(successMessage) }}
+      </div>
 
       <div class="row g-2">
         <div class="col-12 col-lg-6">
@@ -212,9 +299,9 @@ function submitChangePassword() {
         </div>
       </div>
 
-      <button class="btn btn-primary ms-auto mt-3" :disabled="loading || !isFormValid">
-        <i class="bi bi-floppy-fill text-white" @click="submitChangePassword()"></i>
+      <button type="submit" class="btn btn-primary ms-auto mt-3" :disabled="loading || !isFormValid">
+        <i class="bi bi-floppy-fill text-white"></i>
       </button>
-    </div>
+    </form>
   </div>
 </template>

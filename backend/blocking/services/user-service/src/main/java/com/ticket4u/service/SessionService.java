@@ -101,8 +101,7 @@ public class SessionService {
      */
     @Transactional(readOnly = true)
     public List<SessionResponse> getSessionsByUserId(UUID userId) {
-        List<Session> sessions = sessionRepository.findAllByUserId(userId);
-        return sessionMapper.toResponseList(sessions);
+        return sessionRepository.findAllByUserId(userId).stream().map(sessionMapper::toDTO).toList();
     }
 
     /**

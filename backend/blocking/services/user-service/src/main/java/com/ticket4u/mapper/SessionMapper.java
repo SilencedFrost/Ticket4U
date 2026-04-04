@@ -18,7 +18,6 @@ import java.util.List;
 public interface SessionMapper {
 
     @Mapping(target = "displayId", source = "id", qualifiedByName = "toHashId")
-    SessionResponse toResponse(Session session);
+    SessionResponse toDTO(Session session);
 
-    List<SessionResponse> toResponseList(List<Session> sessions);
 }

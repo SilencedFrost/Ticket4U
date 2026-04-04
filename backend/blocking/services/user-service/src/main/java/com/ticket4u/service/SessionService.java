@@ -11,7 +11,7 @@ import com.ticket4u.exception.SessionNotFoundException;
 import com.ticket4u.mapper.SessionMapper;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.SessionRepository;
-import com.ticket4u.util.SessionIdHashUtil;
+import com.ticket4u.util.HashUtil;
 import com.ticket4u.util.TokenUtil;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 
     private final SessionMapper sessionMapper;
-    private final SessionIdHashUtil sessionIdHashUtil;
+    private final HashUtil hashUtil;
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Boolean persistent) {
@@ -112,14 +112,14 @@ public class SessionService {
      */
     @Transactional
     public void deleteSessionByDisplayId(UUID userId, String displayId) {
-        if (displayId == null || displayId.length() != SessionIdHashUtil.LENGTH) {
+        if (displayId == null || displayId.length() != HashUtil.LENGTH) {
             throw new SessionNotFoundException("Session not found");
         }
 
         List<Session> userSessions = sessionRepository.findAllByUserId(userId);
 
         Session targetSession = userSessions.stream()
-                .filter(session -> SessionIdHashUtil.toDisplayId(session.getId()).equals(displayId))
+                .filter(session -> HashUtil.toHashId(session.getId()).equals(displayId))
                 .findFirst()
                 .orElseThrow(() -> new SessionNotFoundException("Session not found"));
 

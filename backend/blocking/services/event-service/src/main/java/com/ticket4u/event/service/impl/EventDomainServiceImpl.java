@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -243,7 +242,7 @@ public class EventDomainServiceImpl implements EventDomainService {
         List<Event> events = eventRepository.findAllById(eventIds);
 
         // Put events into a Map for fast lookup by ID
-        var lookupMap = events.stream()
+        Map<UUID, Event> lookupMap = events.stream()
                 .collect(Collectors.toMap(Event::getId, e -> e));
 
         // Map sorted IDs back to DTOs using the lookup map

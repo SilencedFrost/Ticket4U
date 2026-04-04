@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,7 +17,11 @@ public interface SessionRepository extends JpaRepository <Session, UUID> {
     Optional<Session> findBySessionHash(String sessionTokenHash);
     void deleteBySessionHash(String sessionTokenHash);
 
-    void deleteAllByUserId(UUID userId);
+    @Modifying
+    @Query("DELETE FROM Session s WHERE s.user.id = :userId")
+    void deleteAllByUserId(@Param("userId") UUID userId);
+
+    List<Session> findAllByUserId(UUID userId);
 
     @Modifying
     @Query("DELETE FROM Session s WHERE s.expiresAt < :expirationTime")

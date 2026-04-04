@@ -2,13 +2,16 @@ package com.ticket4u.service;
 
 import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.auth.internal.RefreshCreationResult;
+import com.ticket4u.dto.session.SessionResponse;
 import com.ticket4u.entity.Session;
 import com.ticket4u.entity.User;
 import com.ticket4u.exception.ConcurrentRequestException;
 import com.ticket4u.exception.SessionExpiredException;
 import com.ticket4u.exception.SessionNotFoundException;
+import com.ticket4u.mapper.SessionMapper;
 import com.ticket4u.mapper.UserMapper;
 import com.ticket4u.repository.SessionRepository;
+import com.ticket4u.util.HashUtil;
 import com.ticket4u.util.TokenUtil;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -30,6 +34,8 @@ public class SessionService {
     private final UserMapper userMapper;
     private final SessionRepository sessionRepository;
 
+    private final SessionMapper sessionMapper;
+    private final HashUtil hashUtil;
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Boolean persistent) {
@@ -90,6 +96,36 @@ public class SessionService {
         return deleted;
     }
 
+    /**
+     * Lấy tất cả session đang hoạt động của user.
+     */
+    @Transactional(readOnly = true)
+    public List<SessionResponse> getSessionsByUserId(UUID userId) {
+        return sessionRepository.findAllByUserId(userId).stream().map(sessionMapper::toDTO).toList();
+    }
+
+    /**
+     * Xóa một session theo displayId, chỉ trong phạm vi session của userId.
+     * Ownership check: user chỉ được xóa session của chính mình.
+     * displayId = SHA256(sessionId.toString()).substring(0, 6), case-sensitive.
+     */
+    @Transactional
+    public void deleteSessionByDisplayId(UUID userId, String displayId) {
+        if (displayId == null || displayId.length() != HashUtil.LENGTH) {
+            throw new SessionNotFoundException("Session not found");
+        }
+
+        List<Session> userSessions = sessionRepository.findAllByUserId(userId);
+
+        Session targetSession = userSessions.stream()
+                .filter(session -> HashUtil.toHashId(session.getId()).equals(displayId))
+                .findFirst()
+                .orElseThrow(() -> new SessionNotFoundException("Session not found"));
+
+
+        sessionRepository.delete(targetSession);
+    }
+
     private String normalizeUserAgent(String userAgent) {
         return userAgent == null ? "Unknown" : userAgent;
     }
@@ -114,3 +150,4 @@ public class SessionService {
         }
     }
 }
+

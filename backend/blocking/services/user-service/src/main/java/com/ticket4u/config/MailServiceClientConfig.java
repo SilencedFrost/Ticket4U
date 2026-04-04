@@ -18,9 +18,7 @@ public class MailServiceClientConfig {
     public RestClient mailServiceRestClient() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(Duration.ofSeconds(5));
-        // Increased timeout to 30s for spotty connections
-        // TODO: fix mail service, makes it return asap
-        factory.setReadTimeout(Duration.ofSeconds(30));
+        factory.setReadTimeout(Duration.ofSeconds(15));
 
         return RestClient.builder()
                 .requestFactory(factory)

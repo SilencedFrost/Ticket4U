@@ -19,7 +19,7 @@ public class HashUtil {
         return DigestUtils.sha256Hex(id.toString()).substring(0, length);
     }
 
-    @Named("toDisplayId")
+    @Named("toHashId")
     public static String toHashId(UUID id) {
         return toHashId(id, LENGTH);
     }

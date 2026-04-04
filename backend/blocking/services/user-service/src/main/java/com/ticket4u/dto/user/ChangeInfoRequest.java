@@ -8,11 +8,9 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record ChangeInfoRequest(
-        @Pattern(message = "auth.error.blank.lastName", regexp = ".*\\S.*")
         @Size(max = 32)
         String lastName,
 
-        @Pattern(message = "auth.error.blank.firstName", regexp = ".*\\S.*")
         @Size(max = 32)
         String firstName,
 

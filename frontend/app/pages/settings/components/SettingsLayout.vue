@@ -11,6 +11,8 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
+const isDesktopViewport = ref<boolean>(true);
+let desktopMediaQuery: MediaQueryList | null = null;
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
@@ -106,16 +108,30 @@ function isSettingsPath(urlOrPath: string) {
 
 // Mobile-only handlers
 
+function handleViewportChange(event: MediaQueryListEvent) {
+  isDesktopViewport.value = event.matches;
+}
+
 /**
  * Save the pre-settings route once when the layout mounts.
  * This allows the mobile back button on /settings to return to the entry page
  * instead of stepping back to an internal settings route.
  */
 onMounted(() => {
+  desktopMediaQuery = globalThis.window.matchMedia('(min-width: 768px)');
+  isDesktopViewport.value = desktopMediaQuery.matches;
+  desktopMediaQuery.addEventListener('change', handleViewportChange);
+
   const back = router.options.history.state?.back as string | undefined;
 
   if (back && !isSettingsPath(back)) {
     previousPageUrl.value = back;
+  }
+});
+
+onBeforeUnmount(() => {
+  if (desktopMediaQuery) {
+    desktopMediaQuery.removeEventListener('change', handleViewportChange);
   }
 });
 
@@ -164,7 +180,7 @@ function goBackToPreviousPage() {
 <template>
   <div>
     <!-- Desktop layout -->
-    <div class="d-none d-md-block p-3 overflow-visible">
+    <div v-if="isDesktopViewport === true" class="p-3 overflow-visible">
       <div class="d-flex">
         <aside class="d-flex flex-column h-100 settings-sidebar card shadow-sm me-2">
           <settings-nav-menu />
@@ -176,7 +192,7 @@ function goBackToPreviousPage() {
     </div>
 
     <!-- Mobile layout -->
-    <div class="settings-mobile-shell d-md-none">
+    <div v-else-if="isDesktopViewport === false" class="settings-mobile-shell">
       <div class="settings-mobile-track" :class="mobileTrackClass">
         <section class="settings-mobile-panel settings-mobile-menu-screen text-reactive-primary">
           <header

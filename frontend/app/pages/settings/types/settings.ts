@@ -34,3 +34,10 @@ export interface ProfileForm {
   birthday: string;
   phoneNumber: string;
 }
+
+export interface FieldErrors {
+  firstName?: string;
+  lastName?: string;
+  birthday?: string;
+  phoneNumber?: string;
+}

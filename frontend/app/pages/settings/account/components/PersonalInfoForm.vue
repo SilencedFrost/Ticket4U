@@ -1,13 +1,6 @@
 <script setup lang="ts">
-import type { ProfileForm } from '../../types/settings';
+import type { FieldErrors, ProfileForm } from '../../types/settings';
 import PersonalInfoFields from './PersonalInfoFields.vue';
-
-interface FieldErrors {
-  firstName?: string;
-  lastName?: string;
-  birthday?: string;
-  phoneNumber?: string;
-}
 
 const props = withDefaults(
   defineProps<{

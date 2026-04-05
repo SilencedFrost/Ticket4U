@@ -11,7 +11,7 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
-const isDesktopViewport = ref<boolean>(true);
+const isDesktopViewport = ref(true);
 let desktopMediaQuery: MediaQueryList | null = null;
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
@@ -180,7 +180,7 @@ function goBackToPreviousPage() {
 <template>
   <div>
     <!-- Desktop layout -->
-    <div v-if="isDesktopViewport === true" class="p-3 overflow-visible">
+    <div v-if="isDesktopViewport" class="p-3 overflow-visible">
       <div class="d-flex">
         <aside class="d-flex flex-column h-100 settings-sidebar card shadow-sm me-2">
           <settings-nav-menu />
@@ -192,7 +192,7 @@ function goBackToPreviousPage() {
     </div>
 
     <!-- Mobile layout -->
-    <div v-else-if="isDesktopViewport === false" class="settings-mobile-shell">
+    <div v-else class="settings-mobile-shell">
       <div class="settings-mobile-track" :class="mobileTrackClass">
         <section class="settings-mobile-panel settings-mobile-menu-screen text-reactive-primary">
           <header

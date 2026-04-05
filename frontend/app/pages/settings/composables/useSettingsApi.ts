@@ -1,6 +1,16 @@
 import type { FetchError } from 'ofetch';
 import type { ChangeInfo, ChangePassword, Session, UserSummary } from '../types/settings';
 
+type UseSettingsApiReturn = {
+  fetchCurrentUser: () => Promise<UserSummary>;
+  updateCurrentUser: (payload: ChangeInfo) => Promise<UserSummary>;
+  changePassword: (payload: ChangePassword) => Promise<void>;
+  fetchSessions: () => Promise<Session[]>;
+  deleteSession: (displayId: string) => Promise<void>;
+  extractFieldErrors: (error: FetchError) => Record<string, string>;
+  extractMessage: (error: FetchError) => string | null;
+};
+
 function asObject(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return null;
@@ -8,8 +18,7 @@ function asObject(value: unknown): Record<string, unknown> | null {
   return value as Record<string, unknown>;
 }
 
-
-export function useSettingsApi() {
+export function useSettingsApi(): UseSettingsApiReturn {
   const config = useRuntimeConfig();
 
   async function fetchCurrentUser(): Promise<UserSummary> {

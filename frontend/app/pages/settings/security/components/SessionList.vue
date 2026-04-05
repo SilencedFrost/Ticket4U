@@ -2,21 +2,15 @@
 import type { FetchError } from 'ofetch';
 import type { Session } from '../../types/settings';
 import { useSettingsApi } from '../../composables/useSettingsApi';
+import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 
 const { fetchSessions, deleteSession, extractMessage } = useSettingsApi();
+const { toGenericErrorI18nKey } = useI18nErrorKey();
 const loading = ref(false);
 const genericError = ref('');
 
 const sessions = ref<Session[]>([]);
 const deletingIds = ref<Set<string>>(new Set());
-
-function toGenericErrorI18nKey(message?: string): string {
-  const fallback = 'auth.error.unknown';
-  if (!message) {
-    return fallback;
-  }
-  return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
-}
 
 async function loadSessions() {
   loading.value = true;

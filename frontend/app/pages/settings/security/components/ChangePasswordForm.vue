@@ -1,46 +1,48 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
+import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 import { useSettingsApi } from '../../composables/useSettingsApi';
 
 const { validatePasswordValue } = usePasswordValidation();
 const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();
+const { toValidationErrorI18nKey, toGenericErrorI18nKey } = useI18nErrorKey();
 
 /**===========
  * Interfaces
  ============*/
 
-interface ChangepassError {
-  oldPass: string;
-  newPass: string[];
+interface ChangePasswordError {
+  currentPassword: string;
+  newPassword: string[];
 }
 
-interface ChangepassForm {
-  oldPass: string;
-  newPass: string;
+interface ChangePasswordForm {
+  currentPassword: string;
+  newPassword: string;
 }
 
-interface ChangepassTouched {
-  oldPass: boolean;
-  newPass: boolean;
+interface ChangePasswordTouched {
+  currentPassword: boolean;
+  newPassword: boolean;
 }
 
 /**======================
  * State constants
  =======================*/
 
-const emptyError: ChangepassError = {
-  oldPass: '',
-  newPass: [],
+const emptyError: ChangePasswordError = {
+  currentPassword: '',
+  newPassword: [],
 };
 
-const emptyForm: ChangepassForm = {
-  oldPass: '',
-  newPass: '',
+const emptyForm: ChangePasswordForm = {
+  currentPassword: '',
+  newPassword: '',
 };
 
-const defaultTouched: ChangepassTouched = {
-  oldPass: false,
-  newPass: false,
+const defaultTouched: ChangePasswordTouched = {
+  currentPassword: false,
+  newPassword: false,
 };
 
 /**======================
@@ -53,52 +55,56 @@ const isViewingNewPassword = ref(false);
 const genericError = ref('');
 const successMessage = ref('');
 
-const error = reactive<ChangepassError>(emptyError);
-const formData = reactive<ChangepassForm>(emptyForm);
-const touched = reactive<ChangepassTouched>(defaultTouched);
+const error = reactive<ChangePasswordError>(emptyError);
+const formData = reactive<ChangePasswordForm>(emptyForm);
+const touched = reactive<ChangePasswordTouched>(defaultTouched);
 
 /**==========
  * Functions
  ===========*/
 
 // Onblur function to do validation
-function onBlur(field: keyof ChangepassForm) {
-  if (touched[field] === false) {
-    touched[field] = true;
-    const validators: Record<keyof ChangepassForm, () => boolean> = {
-      oldPass: validateOldPass,
-      newPass: validateNewPass,
-    };
-
-    validators[field]?.();
+function onBlur(field: keyof ChangePasswordForm) {
+  if (touched[field]) {
+    return;
   }
+
+  touched[field] = true;
+
+  if (field === 'currentPassword') {
+    validateCurrentPassword();
+    return;
+  }
+
+  validateNewPassword();
 }
 
 // Validation functions
-function validateOldPass(): boolean {
-  const val = formData.oldPass.trim();
+function validateCurrentPassword(): boolean {
+  const val = formData.currentPassword.trim();
   if (!val) {
-    error.oldPass = 'auth.error.blank.password';
+    error.currentPassword = 'auth.error.blank.password';
     return false;
   }
 
-  error.oldPass = '';
+  error.currentPassword = '';
   return true;
 }
 
-function validateNewPass(): boolean {
-  const val = formData.newPass.trim();
+function validateNewPassword(): boolean {
+  const val = formData.newPassword.trim();
   if (!val) {
-    error.newPass = ['auth.error.blank.password'];
+    error.newPassword = ['auth.error.blank.password'];
     return false;
   }
-  error.newPass = validatePasswordValue(val);
-  return error.newPass.length === 0;
+
+  error.newPassword = validatePasswordValue(val);
+  return error.newPassword.length === 0;
 }
 
 // Validate the form, return status
 function validateForm(): boolean {
-  return validateNewPass() && validateOldPass();
+  return validateCurrentPassword() && validateNewPassword();
 }
 
 // Helper function to view password
@@ -115,32 +121,34 @@ function toggleNewPasswordVisibility() {
  ====================*/
 
 const isFormValid = computed(() => {
-  const allTouched = touched.newPass && touched.oldPass;
+  const allTouched = touched.newPassword && touched.currentPassword;
 
-  const noErrors = error.oldPass === '' && error.newPass.length === 0;
+  const noErrors = error.currentPassword === '' && error.newPassword.length === 0;
 
   return allTouched && noErrors;
 });
 
 watch(
-  () => (formData.oldPass.trim().length > 0 ? formData.oldPass : null),
+  () => (formData.currentPassword.trim().length > 0 ? formData.currentPassword : null),
   (value) => {
     if (value === null) {
       return;
     }
-    touched.oldPass = true;
-    validateOldPass();
+
+    touched.currentPassword = true;
+    validateCurrentPassword();
   },
 );
 
 watch(
-  () => (formData.newPass.trim().length > 0 ? formData.newPass : null),
+  () => (formData.newPassword.trim().length > 0 ? formData.newPassword : null),
   (value) => {
     if (value === null) {
       return;
     }
-    touched.newPass = true;
-    validateNewPass();
+
+    touched.newPassword = true;
+    validateNewPassword();
   },
 );
 
@@ -148,28 +156,68 @@ function submitChangePassword() {
   void submitChangePasswordAsync();
 }
 
-function toSafeI18nKey(message: string | undefined, fallback: string): string {
-  if (!message) {
-    return fallback;
-  }
-  return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
-}
-
-function toValidationErrorI18nKey(message?: string): string {
-  return toSafeI18nKey(message, 'auth.error.validation');
-}
-
-function toGenericErrorI18nKey(message?: string): string {
-  return toSafeI18nKey(message, 'auth.error.unknown');
-}
-
 function resetFormState() {
-  formData.oldPass = '';
-  formData.newPass = '';
-  touched.oldPass = false;
-  touched.newPass = false;
-  error.oldPass = '';
-  error.newPass = [];
+  formData.currentPassword = '';
+  formData.newPassword = '';
+  touched.currentPassword = false;
+  touched.newPassword = false;
+  error.currentPassword = '';
+  error.newPassword = [];
+}
+
+function beginSubmit() {
+  loading.value = true;
+  genericError.value = '';
+  successMessage.value = '';
+}
+
+function applyPasswordChangeSuccess() {
+  resetFormState();
+  successMessage.value = 'settings.security.change_password.messages.success';
+}
+
+function applyPasswordFieldErrors(fieldErrors: Record<string, string>): boolean {
+  let hasFieldErrors = false;
+
+  if (fieldErrors.currentPassword) {
+    error.currentPassword = toValidationErrorI18nKey(fieldErrors.currentPassword);
+    hasFieldErrors = true;
+  }
+
+  if (fieldErrors.newPassword) {
+    error.newPassword = [toValidationErrorI18nKey(fieldErrors.newPassword)];
+    hasFieldErrors = true;
+  }
+
+  return hasFieldErrors;
+}
+
+function hasCurrentPasswordHint(message: string): boolean {
+  // Fallback for legacy backend responses that do not include stable error codes.
+  return message.toLowerCase().includes('current password');
+}
+
+function handlePasswordChangeError(fetchError: FetchError) {
+  if (!fetchError.statusCode) {
+    genericError.value = 'auth.error.network';
+    return;
+  }
+
+  const fieldErrors = extractFieldErrors(fetchError);
+  const hasFieldErrors = applyPasswordFieldErrors(fieldErrors);
+
+  if (hasFieldErrors) {
+    return;
+  }
+
+  const message = extractMessage(fetchError);
+
+  if (message && hasCurrentPasswordHint(message)) {
+    error.currentPassword = 'settings.security.change_password.errors.current_password_incorrect';
+    return;
+  }
+
+  genericError.value = toGenericErrorI18nKey(message ?? undefined);
 }
 
 async function submitChangePasswordAsync() {
@@ -177,48 +225,17 @@ async function submitChangePasswordAsync() {
     return;
   }
 
-  loading.value = true;
-  genericError.value = '';
-  successMessage.value = '';
+  beginSubmit();
 
   try {
     await changePassword({
-      currentPassword: formData.oldPass.trim(),
-      newPassword: formData.newPass.trim(),
+      currentPassword: formData.currentPassword.trim(),
+      newPassword: formData.newPassword.trim(),
     });
 
-    resetFormState();
-    successMessage.value = 'settings.security.change_password.messages.success';
+    applyPasswordChangeSuccess();
   } catch (err) {
-    const fetchError = err as FetchError;
-
-    if (!fetchError.statusCode) {
-      genericError.value = 'auth.error.network';
-      return;
-    }
-
-    const fieldErrors = extractFieldErrors(fetchError);
-    let hasFieldErrors = false;
-
-    if (fieldErrors.currentPassword) {
-      error.oldPass = toValidationErrorI18nKey(fieldErrors.currentPassword);
-      hasFieldErrors = true;
-    }
-
-    if (fieldErrors.newPassword) {
-      error.newPass = [toValidationErrorI18nKey(fieldErrors.newPassword)];
-      hasFieldErrors = true;
-    }
-
-    if (!hasFieldErrors) {
-      const message = extractMessage(fetchError);
-
-      if (message && message.toLowerCase().includes('current password')) {
-        error.oldPass = 'settings.security.change_password.errors.current_password_incorrect';
-      } else {
-        genericError.value = toGenericErrorI18nKey(message ?? undefined);
-      }
-    }
+    handlePasswordChangeError(err as FetchError);
   } finally {
     loading.value = false;
   }
@@ -249,10 +266,10 @@ async function submitChangePasswordAsync() {
           <div class="input-group">
             <input
               id="current-password"
-              v-model="formData.oldPass"
+              v-model="formData.currentPassword"
               :type="isViewingCurrentPassword ? 'text' : 'password'"
-              :class="['form-control', { 'is-invalid': error.oldPass }]"
-              @blur="onBlur('oldPass')"
+              :class="['form-control', { 'is-invalid': error.currentPassword }]"
+              @blur="onBlur('currentPassword')"
             />
             <button
               class="btn btn-outline-secondary bg-reactive-primary"
@@ -262,8 +279,8 @@ async function submitChangePasswordAsync() {
               <i :class="isViewingCurrentPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
             </button>
           </div>
-          <div v-if="error.oldPass" id="old-password-error" class="text-danger small">
-            {{ $t(error.oldPass) }}
+          <div v-if="error.currentPassword" id="current-password-error" class="text-danger small">
+            {{ $t(error.currentPassword) }}
           </div>
         </div>
 
@@ -274,10 +291,10 @@ async function submitChangePasswordAsync() {
           <div class="input-group">
             <input
               id="new-password"
-              v-model="formData.newPass"
+              v-model="formData.newPassword"
               :type="isViewingNewPassword ? 'text' : 'password'"
-              :class="['form-control', { 'is-invalid': error.newPass.length > 0 }]"
-              @blur="onBlur('newPass')"
+              :class="['form-control', { 'is-invalid': error.newPassword.length > 0 }]"
+              @blur="onBlur('newPassword')"
             />
             <button
               class="btn btn-outline-secondary bg-reactive-primary"
@@ -288,19 +305,19 @@ async function submitChangePasswordAsync() {
             </button>
           </div>
           <ul
-            v-if="error.newPass.length > 0"
+            v-if="error.newPassword.length > 0"
             id="reg-password-error"
             :class="[
               'text-danger',
               'small',
               'mt-1',
               'mb-0',
-              { 'ps-3': error.newPass.length !== 1 },
-              { 'list-unstyled': error.newPass.length === 1 },
+              { 'ps-3': error.newPassword.length !== 1 },
+              { 'list-unstyled': error.newPassword.length === 1 },
             ]"
             aria-live="assertive"
           >
-            <li v-for="(err, index) in error.newPass" :key="index">
+            <li v-for="(err, index) in error.newPassword" :key="index">
               {{ $t(err) }}
             </li>
           </ul>

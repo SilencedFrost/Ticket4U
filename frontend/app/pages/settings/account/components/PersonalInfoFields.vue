@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import type { ProfileForm } from '../../types/settings';
+import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
+import type { FieldErrors, ProfileForm } from '../../types/settings';
 
-interface FieldErrors {
-  firstName?: string;
-  lastName?: string;
-  birthday?: string;
-  phoneNumber?: string;
-}
+const { toValidationErrorI18nKey } = useI18nErrorKey();
 
 const props = withDefaults(
   defineProps<{
@@ -29,13 +25,6 @@ function updateField(field: keyof ProfileForm, value: string) {
     ...props.modelValue,
     [field]: value,
   });
-}
-
-function toValidationErrorI18nKey(message?: string): string {
-  if (!message) {
-    return '';
-  }
-  return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : 'auth.error.validation';
 }
 </script>
 

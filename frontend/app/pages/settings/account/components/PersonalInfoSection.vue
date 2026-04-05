@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import type { ChangeInfo, ProfileForm, UserSummary } from '../../types/settings';
+import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
+import type { ChangeInfo, FieldErrors, ProfileForm, UserSummary } from '../../types/settings';
 import { useSettingsApi } from '../../composables/useSettingsApi';
 import AvatarUpload from './AvatarUpload.vue';
 import PersonalInfoForm from './PersonalInfoForm.vue';
 
-const {fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } =
-  useSettingsApi();
+const { fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } = useSettingsApi();
+const { toValidationErrorI18nKey, toGenericErrorI18nKey } = useI18nErrorKey();
+
+const FIELD_ERROR_KEYS: Array<keyof FieldErrors> = [
+  'firstName',
+  'lastName',
+  'birthday',
+  'phoneNumber',
+];
 
 const loading = ref(false);
 const loadingUser = ref(false);
 const genericError = ref('');
 const successMessage = ref('');
 const cachedUser = ref<UserSummary | null>(null);
-const fieldErrors = reactive<{
-  firstName?: string;
-  lastName?: string;
-  birthday?: string;
-  phoneNumber?: string;
-}>({});
+const fieldErrors = reactive<FieldErrors>({});
 
 const formData = ref<ProfileForm>({
   firstName: '',
@@ -30,45 +33,104 @@ const formData = ref<ProfileForm>({
 
 const initialSnapshot = ref<ProfileForm | null>(null);
 
-function normalizeToNullable(value: string): string | null {
+function emptyStringToNull(value: string): string | null {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
 }
 
-function toSafeI18nKey(message: string | undefined, fallback: string): string {
-  if (!message) {
-    return fallback;
-  }
-  return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
-}
-
-function toValidationErrorI18nKey(message?: string): string {
-  return toSafeI18nKey(message, 'auth.error.validation');
-}
-
-function toGenericErrorI18nKey(message?: string): string {
-  return toSafeI18nKey(message, 'auth.error.unknown');
-}
-
-function resetFieldErrors() {
-  fieldErrors.firstName = undefined;
-  fieldErrors.lastName = undefined;
-  fieldErrors.birthday = undefined;
-  fieldErrors.phoneNumber = undefined;
-}
-
-function applyUserToForm(user: UserSummary) {
-  cachedUser.value = user;
-  const nextValue: ProfileForm = {
+function createProfileFormFromUser(user: UserSummary): ProfileForm {
+  return {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     email: user.email,
     birthday: user.birthday ?? '',
     phoneNumber: user.phoneNumber ?? '',
   };
+}
 
+function setCachedUser(user: UserSummary) {
+  cachedUser.value = user;
+}
+
+function syncFormDataFromUser(user: UserSummary) {
+  const nextValue = createProfileFormFromUser(user);
   formData.value = nextValue;
   initialSnapshot.value = { ...nextValue };
+}
+
+function applyUserToForm(user: UserSummary) {
+  setCachedUser(user);
+  syncFormDataFromUser(user);
+}
+
+function resetFieldErrors() {
+  for (const key of FIELD_ERROR_KEYS) {
+    fieldErrors[key] = undefined;
+  }
+}
+
+function formatFullName(user: UserSummary): string {
+  const parts = [user.lastName, user.firstName]
+    .map((part) => part?.trim() ?? '')
+    .filter((part) => part.length > 0);
+
+  if (parts.length > 0) {
+    return parts.join(' ');
+  }
+
+  return user.username || user.email;
+}
+
+function beginSaveInfo() {
+  loading.value = true;
+  successMessage.value = '';
+  genericError.value = '';
+  resetFieldErrors();
+}
+
+function buildChangeInfoPayload(): ChangeInfo {
+  return {
+    firstName: emptyStringToNull(formData.value.firstName),
+    lastName: emptyStringToNull(formData.value.lastName),
+    birthday: emptyStringToNull(formData.value.birthday),
+    phoneNumber: emptyStringToNull(formData.value.phoneNumber),
+  };
+}
+
+function applyApiFieldErrors(apiFieldErrors: Record<string, string>): boolean {
+  fieldErrors.firstName = apiFieldErrors.firstName
+    ? toValidationErrorI18nKey(apiFieldErrors.firstName)
+    : undefined;
+  fieldErrors.lastName = apiFieldErrors.lastName
+    ? toValidationErrorI18nKey(apiFieldErrors.lastName)
+    : undefined;
+  fieldErrors.birthday = apiFieldErrors.birthday
+    ? toValidationErrorI18nKey(apiFieldErrors.birthday)
+    : undefined;
+  fieldErrors.phoneNumber = apiFieldErrors.phoneNumber
+    ? toValidationErrorI18nKey(apiFieldErrors.phoneNumber)
+    : undefined;
+
+  return FIELD_ERROR_KEYS.some((key) => Boolean(fieldErrors[key]));
+}
+
+function handleSaveInfoSuccess(updatedUser: UserSummary) {
+  applyUserToForm(updatedUser);
+  successMessage.value = 'settings.personal_information.messages.update_success';
+}
+
+function handleSaveInfoError(fetchError: FetchError) {
+  if (!fetchError.statusCode) {
+    genericError.value = 'auth.error.network';
+    return;
+  }
+
+  const apiFieldErrors = extractFieldErrors(fetchError);
+  const hasFieldError = applyApiFieldErrors(apiFieldErrors);
+
+  if (!hasFieldError) {
+    genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+  }
 }
 
 const hasChanges = computed(() => {
@@ -93,15 +155,7 @@ const fullName = computed(() => {
     return '';
   }
 
-  const parts = [user.lastName, user.firstName]
-    .map((part) => part?.trim() ?? '')
-    .filter((part) => part.length > 0);
-
-  if (parts.length > 0) {
-    return parts.join(' ');
-  }
-
-  return user.username || user.email;
+  return formatFullName(user);
 });
 
 const username = computed(() => {
@@ -136,50 +190,14 @@ async function saveInfo() {
     return;
   }
 
-  loading.value = true;
-  successMessage.value = '';
-  genericError.value = '';
-  resetFieldErrors();
-
-  const payload: ChangeInfo = {
-    firstName: normalizeToNullable(formData.value.firstName),
-    lastName: normalizeToNullable(formData.value.lastName),
-    birthday: normalizeToNullable(formData.value.birthday),
-    phoneNumber: normalizeToNullable(formData.value.phoneNumber),
-  };
+  beginSaveInfo();
+  const payload = buildChangeInfoPayload();
 
   try {
     const updatedUser = await updateCurrentUser(payload);
-    applyUserToForm(updatedUser);
-    successMessage.value = 'settings.personal_information.messages.update_success';
+    handleSaveInfoSuccess(updatedUser);
   } catch (err) {
-    const fetchError = err as FetchError;
-
-    if (!fetchError.statusCode) {
-      genericError.value = 'auth.error.network';
-      return;
-    }
-
-    const apiFieldErrors = extractFieldErrors(fetchError);
-
-    fieldErrors.firstName = apiFieldErrors.firstName
-      ? toValidationErrorI18nKey(apiFieldErrors.firstName)
-      : undefined;
-    fieldErrors.lastName = apiFieldErrors.lastName
-      ? toValidationErrorI18nKey(apiFieldErrors.lastName)
-      : undefined;
-    fieldErrors.birthday = apiFieldErrors.birthday
-      ? toValidationErrorI18nKey(apiFieldErrors.birthday)
-      : undefined;
-    fieldErrors.phoneNumber = apiFieldErrors.phoneNumber
-      ? toValidationErrorI18nKey(apiFieldErrors.phoneNumber)
-      : undefined;
-
-    const hasFieldError = Object.values(fieldErrors).some((message) => !!message);
-
-    if (!hasFieldError) {
-      genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
-    }
+    handleSaveInfoError(err as FetchError);
   } finally {
     loading.value = false;
   }

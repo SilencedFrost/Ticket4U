@@ -172,7 +172,7 @@
         "title": "Phiên đăng nhập đang hoạt động",
         "empty": "Không có phiên đăng nhập đang hoạt động.",
         "actions": {
-          "remove": "Gỡ"
+          "remove": "Xóa"
         },
         "columns": {
           "last_access": "Lần truy cập cuối"

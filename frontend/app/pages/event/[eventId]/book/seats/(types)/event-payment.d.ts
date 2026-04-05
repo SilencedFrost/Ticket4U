@@ -1,4 +1,4 @@
-import type { SelectedSeat } from './ticket.type'
+import type { SelectedSeat } from './ticket'
 
 export interface CartItem {
   zoneId:     string

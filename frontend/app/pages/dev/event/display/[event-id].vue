@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import type { Event } from '~/pages/(home)/types/home';
-import EventGrid from '~/pages/event-display/(components)/EventGrid.vue';
+import EventCard from '~/pages/event-display/(components)/EventCard.vue';
 
 const route = useRoute();
 const config = useRuntimeConfig();
@@ -16,8 +16,6 @@ const routeEventId = computed<string>(() => {
   if (Array.isArray(rawParam)) return rawParam[0] || '';
   return rawParam ? String(rawParam) : '';
 });
-
-const displayEvents = computed<Event[]>(() => (eventData.value ? [eventData.value] : []));
 
 onMounted(async () => {
   if (!routeEventId.value) {
@@ -54,6 +52,6 @@ onMounted(async () => {
   <div class="container py-4">
     <div v-if="loading" class="text-reactive-secondary">Loading event data...</div>
     <div v-else-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-    <EventGrid v-else :events="displayEvents" />
+    <EventCard v-else :event="eventData" />
   </div>
 </template>

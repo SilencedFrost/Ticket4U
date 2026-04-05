@@ -5,7 +5,7 @@ import { useEventPayment } from './composables/use-event-payment'
 import SeatingMap  from './(components)/SeatingMap.vue'
 import EventInfo   from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'
-import type { SelectedSeat } from './(types)/ticket.type'
+import type { SelectedSeat } from './(types)/ticket'
 
 
 const route     = useRoute()
@@ -94,7 +94,7 @@ function startResize(e: MouseEvent) {
               @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <div class="resize-handle" @mousedown="startResize"/>
-        <div class="cart-sidebar bg-reactive-secondary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">
+        <div class="cart-sidebar bg-reactive-primary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">
           <div class="flex-grow-1 overflow-auto px-4 pt-4">
             <EventInfo :event="event"/>
             <CartSummary :tickets="tickets" :cart="cart" :total-price="totalPrice" :total-tickets="totalTickets" @remove-item="removeFromCart"/>

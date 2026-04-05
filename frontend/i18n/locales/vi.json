@@ -98,7 +98,8 @@
       "allow": "Cho phép",
       "deny": "Để sau",
       "buy": "Mua vé ngay",
-      "view": "Xem"
+      "view": "Xem",
+      "remove": "Xóa"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
@@ -171,9 +172,6 @@
       "sessions": {
         "title": "Phiên đăng nhập đang hoạt động",
         "empty": "Không có phiên đăng nhập đang hoạt động.",
-        "actions": {
-          "remove": "Xóa"
-        },
         "columns": {
           "last_access": "Lần truy cập cuối"
         },

@@ -98,7 +98,8 @@
       "allow": "Allow",
       "deny": "Deny",
       "buy": "Buy tickets now",
-      "view": "View"
+      "view": "View",
+      "remove": "Remove"
     },
     "full_name": "Full name",
     "first_name": "First Name",
@@ -171,9 +172,6 @@
       "sessions": {
         "title": "Active Sessions",
         "empty": "No active sessions.",
-        "actions": {
-          "remove": "Remove"
-        },
         "columns": {
           "last_access": "Last Access"
         },

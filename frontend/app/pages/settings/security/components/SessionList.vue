@@ -120,7 +120,7 @@ onMounted(() => {
             :disabled="deletingIds.has(session.displayId)"
             @click="removeSession(session.displayId)"
           >
-            {{ $t('settings.security.sessions.actions.remove') }}
+            {{ $t('common.action.remove') }}
           </button>
         </div>
       </div>

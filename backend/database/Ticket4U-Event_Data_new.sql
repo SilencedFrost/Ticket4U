@@ -86,35 +86,170 @@ UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v177538
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383940/dream-wide_knggr2.png", "square": "https://cdn.ticket4u.uk/v1775383942/dream-sqre_zlwxep.png", "tall": "https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384284/kzart-wide_qvhiub.png", "square": "https://cdn.ticket4u.uk/v1775384345/kzart-sqre_v3harc.png", "tall": "https://cdn.ticket4u.uk/v1775384294/kzart-tall_lphcur.png"}'::jsonb WHERE name = 'KAIZEN: The Art of Precision';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384450/luvia-wide_gyizyq.png", "square": "https://cdn.ticket4u.uk/v1775384446/luvia-sqre_lqtogb.png", "tall": "https://cdn.ticket4u.uk/v1775384451/luvia-tall_dzcyjo.png"}'::jsonb WHERE name = 'LUVIA: The Echo of Highlands';
-UPDATE public.events SET banner_url = '{"wide": "", "square": "", "tall": ""}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
-UPDATE public.events SET banner_url = '{"wide": "", "square": "", "tall": ""}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390582/echov-wide_paluak.png", "square": "https://cdn.ticket4u.uk/v1775390593/echov-sqre_huj7ep.png", "tall": "https://cdn.ticket4u.uk/v1775390592/echov-tall_tyfbot.png"}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390591/reson-wide_aossid.png", "square": "https://cdn.ticket4u.uk/v1775390583/reson-sqre_igosvf.png", "tall": "https://cdn.ticket4u.uk/v1775390583/reson-tall_segvto.png"}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
 -- Descriptions
 
 UPDATE public.events SET 
+about_vi = 'V-Glow 2026 là lễ hội âm nhạc và công nghệ đột phá tại TP.HCM, kết hợp giữa nét đẹp Trung Thu truyền thống và phong cách Cyberpunk tương lai. Với sự góp mặt của các ngôi sao V-Pop hàng đầu, triển lãm nghệ thuật AR và diễu hành lồng đèn số, đây là điểm đến không thể bỏ qua cho cộng đồng fan Gen Z.', 
+about_en = 'V-Glow 2026 is a revolutionary fan-fest in Ho Chi Minh City, merging Vietnamese traditional mid-autumn heritage with futuristic Cyberpunk aesthetics. Featuring top V-Pop idols, immersive AR art, and a digital lantern parade, it''s the ultimate cultural-tech experience for the Gen Z fanbase.' 
+where name = 'V-Glow: The Cyber-Heritage Night';
+
+UPDATE public.events SET 
+about_vi = '"Tiếng Vọng An Nam" là lễ hội đêm quy mô lớn tại TP.HCM năm 2026, kết hợp giữa di sản truyền thống và công nghệ tương lai. Với sự góp mặt của các nghệ sĩ hàng đầu như Gemini Hùng Huỳnh và nghệ thuật số đa giác quan, đây là sự kiện văn hóa - công nghệ không thể bỏ lỡ.', 
+about_en = '"The Echo of An Nam" is a premier 2026 night festival in Ho Chi Minh City blending traditional Vietnamese heritage with futuristic tech. Featuring top artists like Gemini Hung Huynh and immersive digital art, it''s the ultimate cultural-tech crossover for the modern fanbase.' 
+where name = 'The Echo of An Nam';
+
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm lễ hội âm nhạc và công nghệ đỉnh cao tại Sài Gòn Neon Beats 2026. Một sự kiện bùng nổ kết hợp giữa âm thanh EDM sôi động, trình diễn Drone Light Show và không gian tương tác ảo (AR) tại "Trung tâm mới" Global City. Đừng bỏ lỡ cơ hội gặp gỡ các nghệ sĩ hàng đầu và đắm mình trong kỷ nguyên số.', 
+about_en = 'Experience the ultimate music and technology festival at Saigon Neon Beats 2026. An explosive event blending high-energy EDM, Drone Light Shows, and AR interactive zones at the "New City Center" - Global City. Don''t miss the chance to meet top artists and immerse yourself in the digital era.' 
+where name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+
+UPDATE public.events SET 
+about_vi = 'Đắm mình trong sự giao thoa giữa di sản nghìn năm và tư duy sáng tạo hiện đại tại "Cổ Nghệ Kiêu Hùng." Diễn ra tại Văn Miếu - Quốc Tử Giám, sự kiện mang đến những trải nghiệm trình diễn nghề thủ công trực tiếp, nhạc indie-folk và sàn diễn "Cổ phục" độc bản từ các nghệ nhân và nhà thiết kế trẻ hàng đầu.', 
+about_en = 'Experience the fusion of Vietnam''s 1,000-year-old heritage and modern creative flair at "The Antique Alchemy." Join us at Hanoi''s historic Temple of Literature for a night of live traditional craftsmanship, indie-folk music, and an exclusive "Antique Runway" featuring the country''s top artisans and Gen-Z designers.' 
+where name = 'CỔ NGHỆ KIÊU HÙNG';
+
+UPDATE public.events SET 
+about_vi = 'Khám phá NEO-LUMINANCE 2026, lễ hội âm nhạc điện tử và đa dòng nhạc ngoài trời quy mô lớn nhất tại TP.HCM. Với sự góp mặt của DJ/Nhà sản xuất nổi tiếng thế giới cùng các nghệ sĩ hàng đầu Việt Nam, sự kiện là sự giao thoa độc đáo giữa phong cách tương lai Cyberpunk và họa tiết Đông Dương truyền thống. Hãy cùng 25,000 khán giả tại SECC trải nghiệm một đêm hội ánh sáng công nghệ cao và những màn trình diễn âm nhạc bùng nổ.', 
+about_en = 'Experience NEO-LUMINANCE 2026, Vietnam''s premier outdoor electronic and fusion music festival in Ho Chi Minh City. Featuring a headline performance by a world-renowned European DJ/Producer (unveiled soon) and top-tier local artists, this event blends futuristic cyberpunk aesthetics with traditional Indochine motifs. Join 25,000 fans at SECC for a night of high-tech light shows, immersive art, and the next wave of Asian-European musical synergy.' 
+where name = 'NEO-LUMINANCE: The Echo of Indochine';
+
+UPDATE public.events SET 
+about_vi = 'Sắc Lam: The Indigo Echo là triển lãm nghệ thuật đa giác quan kết hợp giữa kỹ thuật nhuộm chàm truyền thống của Việt Nam và công nghệ trình chiếu ánh sáng hiện đại. Cùng khám phá linh hồn của vùng cao qua lăng kính đương đại ngay giữa lòng Sài Gòn.', 
+about_en = 'Sắc Lam: The Indigo Echo is a premier immersive art expo blending traditional Vietnamese natural dyeing techniques with cutting-edge digital projection. Experience the soul of the highlands through a modern lens in the heart of Saigon.' 
+where name = 'Sắc Lam: The Indigo Echo';
+
+UPDATE public.events SET 
+about_vi = 'Crystal Realm: Vườn Neon Huyền Ảo là lễ hội cosplay ngoài trời cao cấp ngay tại trung tâm TP.HCM. Với sân khấu LED khổng lồ, các khu vực chụp ảnh chuyên nghiệp và dàn khách mời là những cosplayer quốc tế hàng đầu, sự kiện là sự kết hợp hoàn mỹ giữa vẻ đẹp thiên nhiên và phong cách cyberpunk tương lai.', 
+about_en = 'Crystal Realm: The Neon Garden is a premium outdoor cosplay festival in the heart of Ho Chi Minh City. Featuring a massive LED-integrated stage, professional photo zones, and a guest lineup of top-tier international cosplayers, this event blends the beauty of nature with futuristic cyberpunk aesthetics.' 
+where name = 'CRYSTAL REALM: The Neon Garden';
+
+UPDATE public.events SET 
+about_vi = 'SẮT & SON là lễ hội âm nhạc Rock lớn nhất năm 2026 tại Sài Gòn, quy tụ những biểu tượng Rock huyền thoại và các ban nhạc Indie đầy nổi loạn. Với không gian công nghiệp gai góc hòa quyện cùng nét văn hóa truyền thống, sự kiện hứa hẹn mang đến những màn trình diễn rực lửa, đánh thức bản lĩnh và đam mê tự do của thế hệ trẻ Việt Nam.', 
+about_en = 'SẮT & SON is the premier Rock festival of 2026 in Saigon, bringing together legendary rock icons and rebellious indie bands. Set in a gritty industrial atmosphere infused with traditional cultural motifs, the event promises high-octane performances that ignite the spirit of freedom and raw passion within Vietnam''s youth.' 
+where name = 'SẮT & SON';
+
+UPDATE public.events SET 
+about_vi = 'Khám phá sự giao thoa giữa huyền bí cổ xưa và đổi mới tương lai tại Techno-Sorcery. Lễ hội duy nhất trong đêm hội tụ "phép thuật đen" của AI tiên tiến và robot hiệu suất cao, đặt trong không gian kiến trúc độc đáo của Bảo tàng Hà Nội. Hãy chứng kiến những cỗ máy biết tư duy và những khối thép chuyển động đầy linh hồn.', 
+about_en = 'Experience the fusion of ancient mysticism and futuristic innovation at Techno-Sorcery. This one-night-only festival showcases the "dark magic" of advanced AI and high-performance robotics, set against the iconic architecture of the Hanoi Museum. Witness machines that think and steel that moves with a soul.' 
+where name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+
+UPDATE public.events SET 
+about_vi = 'Buổi ra mắt thân mật của "Lặng" – ban nhạc Indie-Dream Pop mới nổi. Một hành trình đa giác quan kết hợp giữa âm nhạc và nghệ thuật thị giác trừu tượng trong không gian biệt thự cổ kính giữa lòng Hà Nội.', 
+about_en = 'An intimate, low-fidelity debut showcase for "Lặng," an emerging indie-dream pop band. Experience a sensory journey where music meets abstract visual art in one of Hanoi''s most iconic colonial villas.' 
+where name = 'Vũ Trụ Cận Thị';
+
+UPDATE public.events SET 
+about_vi = 'Đắm chìm trong Đảo Quốc Mộng Mơ, lễ hội âm nhạc và nghệ thuật kỳ ảo tại The Global City, TP.HCM. Trải nghiệm không gian thần tiên mang phong cách Disneyland nhưng đậm chất tâm hồn Việt với sen neon khổng lồ, sân khấu mây bồng bềnh và những nghệ sĩ hàng đầu.', 
+about_en = 'Step into The Dreamcatcher Archipelago, an immersive whimsical festival at The Global City, HCMC. Experience a "Disneyland-style" magic reimagined with Vietnamese soul, featuring floating neon lotuses, cloud-shrouded stages, and top-tier musical acts.' 
+where name = 'THE DREAMCATCHER ARCHIPELAGO';
+
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm Omakase cao cấp độc bản, kết hợp giữa kỹ nghệ truyền thống Nhật Bản và tinh hoa nguyên liệu mùa hè Việt Nam. Sự kiện giới hạn chỉ 24 khách cho một hành trình ẩm thực đầy cảm xúc.', 
+about_en = 'An ultra-exclusive, high-end Omakase experience merging traditional Japanese craftsmanship with local Vietnamese seasonal treasures. Limited to 24 seats for an intimate journey of culinary storytelling.' 
+where name = 'KAIZEN: The Art of Precision';
+
+UPDATE public.events SET 
+about_vi = 'LUVIA: The Echo of Highlands là một trải nghiệm âm thanh đa giác quan độc bản, kết hợp giữa âm nhạc ambient, tiếng vang của đại ngàn và nghệ thuật ánh sáng tại cao nguyên Mộc Châu. Diễn ra tại cây cầu kính Bạch Long kỷ lục, sự kiện mời gọi khán giả cùng "chạm" vào thiên nhiên qua những giai điệu bản địa được tái hiện bằng công nghệ âm thanh 360 độ, mang lại cảm giác thư thái và kết nối tâm hồn tuyệt đối.', 
+about_en = 'LUVIA: The Echo of Highlands is a unique multi-sensory auditory experience blending ambient music, forest echoes, and light art in the heart of Moc Chau. Set against the backdrop of the record-breaking Bach Long Glass Bridge, this event invites guests to "touch" nature through indigenous melodies reimagined with 360-degree sound technology, offering ultimate relaxation and spiritual reconnection.' 
+where name = 'LUVIA: The Echo of Highlands';
+
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm "Hương Sắc Linh Hồn," buổi hòa nhạc 6D đa giác quan đầu tiên tại Việt Nam. Sự kết hợp giữa âm thanh vòm sống động và công nghệ kích hoạt mùi hương đồng bộ sẽ đưa người hâm mộ hành trình qua những vùng ký ức đặc trưng—từ rừng thông sương mù Đà Lạt đến hơi thở mặn mòi của Vịnh Hạ Long—trong khi thưởng thức các màn trình diễn trực tiếp từ những nghệ sĩ indie và dàn nhạc hàng đầu.', 
+about_en = 'Experience "Scent of the Soul," Vietnam''s first 6D olfactory-immersive indoor concert. Melding high-fidelity spatial audio with synchronized scent-triggering technology, this event transports fans through the aromatic landscapes of Vietnam—from the misty pine forests of Da Lat to the salty breeze of Ha Long Bay—all while enjoying live performances from top local indie and orchestral artists.' 
+where name = 'Scent of the Soul: The Echoes of Vietnam';
+
+UPDATE public.events SET 
+about_vi = 'Khám phá sức mạnh của tiếng Việt thông qua âm nhạc tại Âm Sắc Việt - THE RESONANCE. Một đêm nhạc tương tác đa giác quan, nơi ranh giới giữa nghệ sĩ và khán giả bị xóa nhòa bởi những thử thách ngôn ngữ, ứng biến giai điệu và công nghệ trình diễn ánh sáng hiện đại ngay tại trái tim Sài Gòn.', 
+about_en = 'Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows in the heart of Saigon.' 
+where name = 'Âm Sắc Việt - THE RESONANCE';
+
 --4. Table: event_categories
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ'
-UNION ALL
-SELECT id, 3 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ'
-UNION ALL
-SELECT id, 4 FROM public.events WHERE name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes'
-UNION ALL
-SELECT id, 1 FROM public.events WHERE name = 'Những Thành Phố Mơ Màng - Summer Tour'
-UNION ALL
-SELECT id, 1 FROM public.events WHERE name = 'Mây Lang Thang: Đêm Nhạc Trịnh'
-UNION ALL
-SELECT id, 3 FROM public.events WHERE name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35'
-UNION ALL
-SELECT id, 1 FROM public.events WHERE name = 'Ravolution Music Festival: Unite'
-UNION ALL
-SELECT id, 3 FROM public.events WHERE name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi'
-UNION ALL
-SELECT id, 2 FROM public.events WHERE name = 'Vietnam Tech Summit 2025'
-UNION ALL
-SELECT id, 2 FROM public.events WHERE name = 'Workshop: Marketing 0 Đồng cho Startup'
-UNION ALL
-SELECT id, 3 FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
+SELECT id, 1 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 0 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'The Echo of An Nam';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 20 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 24 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 23 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 16 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 1 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SẮT & SON';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 22 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 5 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 25 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 15 FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 19 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 12 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'KAIZEN: The Art of Precision';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 11 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 28 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 11 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 24 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
 --3. Table: Event Sessions 
 -- Session cho Hà Anh Tuấn
@@ -168,236 +303,9 @@ SELECT uuidv7(), id, NOW() - INTERVAL '10 days', NOW() + INTERVAL '20 days', 'ON
 FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
 
 --4. Table: Zones 
--- Zones cho Hà Anh Tuấn
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'VVIP', false, 50, 2500000, 
-	'Khu vực VIP cao cấp với vị trí đẹp nhất, dịch vụ đặc biệt và nhiều ưu đãi độc quyền. Ghế ngồi hạng sang gần sân khấu, phục vụ đồ uống cao cấp, quà tặng đặc biệt.', 
-	'Premium VIP area with the best location, exclusive services and special privileges. Luxury seats near the stage, premium beverage service, special gift package.',
-	'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-	'["Vòng tay check-in VIP", "Goodie bag", "Meet & Greet"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'GA Standing', true, 800, 650000, 
-	'Khu vực đứng tự do gần sân khấu, trải nghiệm âm nhạc bùng nổ cùng đám đông.', 
-	'Standing area near the stage for an explosive music experience with the crowd.',
-	NULL,
-	'["Vòng tay check-in", "Nước suối"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
+--5. Venues Layout
 
--- Zones cho Saigon Heat
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Courtside VIP', false, 50, 2500000, 
-	'Ghế ngồi sát sàn đấu, cảm nhận từng bước chạy của cầu thủ. Ghế ngồi VIP sát sân, áo đấu phiên bản giới hạn, F&B phục vụ tại chỗ.', 
-	'Courtside seats to feel every move of the players. VIP courtside seats, limited edition jersey, F&B service at seat.',
-	'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-	'["Áo đấu phiên bản giới hạn", "F&B phục vụ tại chỗ"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
-
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Standard Bleachers', false, 800, 150000, 
-	'Khu vực khán đài tiêu chuẩn với tầm nhìn tốt. Giá cả phải chăng cho người hâm mộ.', 
-	'Standard bleachers area with good view. Affordable price for fans.',
-	NULL,
-	NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
-
--- Zones cho Những Thành Phố Mơ Màng
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Cư Dân VIP', false, 200, 1500000, 
-	'Đặc quyền cư dân VIP với khu vực nghỉ ngơi riêng, quà tặng độc quyền, lối đi ưu tiên và nước uống miễn phí cả ngày.', 
-	'VIP resident privileges with private lounge, exclusive gifts, priority access and unlimited beverages.',
-	'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-	'["Bộ quà tặng Cư Dân", "Lối đi ưu tiên", "Nước uống miễn phí"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
-
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'GA Thường', true, 2000, 650000, 
-	'Khu vực tự do dành cho các cư dân yêu âm nhạc. Hòa mình vào không khí sôi động của festival.', 
-	'General admission area for music-loving residents. Immerse in the vibrant festival atmosphere.',
-	NULL,
-	'["Vòng tay vải", "Sticker"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
-
--- Zones cho Mây Lang Thang
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu VVIP (Gần ca sĩ)', false, 50, 1800000, 
-	'Vị trí đẹp nhất để tương tác cùng nghệ sĩ, thưởng thức nhạc Trịnh bất hủ. Một phần nước tự chọn cao cấp, đĩa CD nhạc Trịnh kỷ niệm, cơ hội chụp ảnh với nghệ sĩ.', 
-	'The best spot to interact with the artist, enjoying timeless Trinh melodies. Premium beverage of choice, commemorative CD, photo opportunity with artist.',
-	NULL,
-	'["Một phần nước tự chọn", "Đĩa CD nhạc Trịnh"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
-
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu Khán Đài', false, 200, 800000, 
-	'Khu vực ngồi thoải mái với tầm nhìn đẹp, thưởng thức đêm nhạc trong không gian lãng mạn của Đà Lạt.', 
-	'Comfortable seating area with beautiful view, enjoy the music night in romantic Dalat atmosphere.',
-	NULL,
-	'["Nước uống", "Chăn len"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
-
--- Zones cho Kịch Idecaf
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu A (Lầu 1)', false, 300, 350000, 
-	'Khu vực lầu 1 gần sân khấu nhất, phù hợp cho trẻ em để có trải nghiệm tốt nhất.', 
-	'Floor 1 area closest to the stage, perfect for children to have the best experience.',
-	NULL,
-	NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
-
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu B (Lầu 2)', false, 200, 250000, 
-	'Khu vực lầu 2 với tầm nhìn toàn cảnh, giá cả phải chăng.', 
-	'Floor 2 area with panoramic view, affordable price.',
-	NULL,
-	NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
-
--- Zones cho Ravolution
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'SVIP Deck', false, 100, 4500000, 
-	'Tận hưởng lễ hội trên khán đài cao cấp với không gian riêng tư. Private Bar với bartender riêng, quà tặng từ nhà tài trợ cao cấp, lối đi VIP không xếp hàng, khu vực nghỉ ngơi riêng biệt.', 
-	'Enjoy the festival from premium deck with private space. Private Bar with dedicated bartender, premium sponsor gifts, VIP access with no queuing, private lounge area.',
-	'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-	'["Private Bar", "Quà tặng từ nhà tài trợ", "Lối đi VIP"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Ravolution Music Festival: Unite';
-
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'GA Early Bird', true, 1500, 850000, 
-	'Khu vực tự do cho những người đến sớm, hòa mình vào không khí EDM bùng nổ cùng hàng nghìn fan hâm mộ.', 
-	'General admission area for early arrivals, immerse in explosive EDM atmosphere with thousands of fans.',
-	NULL,
-	'["Vòng tay vải"]'::jsonb, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Ravolution Music Festival: Unite';
-
--- Zones cho Saigon Tếu (FREE)
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu ngồi chính', false, 200, 0, 
-	NULL, NULL, NULL, NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
-
--- Zones cho Vietnam Tech Summit (FREE)
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Hội trường chính', false, 500, 0, 
-	NULL, NULL, NULL, NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Vietnam Tech Summit 2025';
-
--- Zones cho Workshop Marketing (FREE)
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, price, 
-	description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'Khu học viên', false, 100, 0, 
-	NULL, NULL, NULL, NULL, NOW(), NULL
-FROM public.event_sessions es
-JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Workshop: Marketing 0 Đồng cho Startup';
-
---5. Table: Seats 
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT 
-    uuidv7(), 
-    z.id, 
-    'Ghế ' || chr(64 + r) || c, 
-    chr(64 + r), 
-    c::text, 
-    chr(64 + r) || c
-FROM public.zones z
-JOIN public.event_sessions es ON z.session_id = es.id
-JOIN public.events e ON es.event_id = e.id
-CROSS JOIN generate_series(1, 5) r 
-CROSS JOIN generate_series(1, 10) c 
-WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
-
--- Seats cho Saigon Tếu (FREE)
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT 
-    uuidv7(), 
-    z.id, 
-    'Ghế ' || chr(64 + r) || c, 
-    chr(64 + r), 
-    c::text, 
-    chr(64 + r) || c
-FROM public.zones z
-JOIN public.event_sessions es ON z.session_id = es.id
-JOIN public.events e ON es.event_id = e.id
-CROSS JOIN generate_series(1, 20) r 
-CROSS JOIN generate_series(1, 10) c 
-WHERE z.name = 'Khu ngồi chính' AND e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
-
--- Seats cho Vietnam Tech Summit (FREE)
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT 
-    uuidv7(), 
-    z.id, 
-    'Ghế ' || chr(64 + r) || c, 
-    chr(64 + r), 
-    c::text, 
-    chr(64 + r) || c
-FROM public.zones z
-JOIN public.event_sessions es ON z.session_id = es.id
-JOIN public.events e ON es.event_id = e.id
-CROSS JOIN generate_series(1, 25) r 
-CROSS JOIN generate_series(1, 20) c 
-WHERE z.name = 'Hội trường chính' AND e.name = 'Vietnam Tech Summit 2025';
-
--- Seats cho Workshop Marketing (FREE)
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT 
-    uuidv7(), 
-    z.id, 
-    'Ghế ' || chr(64 + r) || c, 
-    chr(64 + r), 
-    c::text, 
-    chr(64 + r) || c
-FROM public.zones z
-JOIN public.event_sessions es ON z.session_id = es.id
-JOIN public.events e ON es.event_id = e.id
-CROSS JOIN generate_series(1, 10) r 
-CROSS JOIN generate_series(1, 10) c 
-WHERE z.name = 'Khu học viên' AND e.name = 'Workshop: Marketing 0 Đồng cho Startup';
-
---6. Venues Layout
 -- CIS Arena → Sports Arena layout
 UPDATE public.venues
 SET layout = '{
@@ -463,7 +371,6 @@ SET layout = '{
   "seat_size": 20
 }'::jsonb
 WHERE name = 'CIS Arena';
-
 
 -- Nhà Hát Bến Thành → Theater - VIP + Standard
 UPDATE public.venues
@@ -533,7 +440,6 @@ SET layout = '{
 }'::jsonb
 WHERE name = 'Nhà Hát Bến Thành';
 
-
 -- Mây in The Nest → Concert Classic (VIP sitting + GA standing)
 UPDATE public.venues
 SET layout = '{
@@ -576,7 +482,6 @@ SET layout = '{
   "seat_size": 22
 }'::jsonb
 WHERE name = 'Mây in The Nest';
-
 
 -- GEM Center → Theater - VIP + Standard
 UPDATE public.venues
@@ -646,7 +551,6 @@ SET layout = '{
 }'::jsonb
 WHERE name = 'GEM Center';
 
-
 -- Tinh Tế Cafe → Restaurant layout (intimate, small venue)
 UPDATE public.venues
 SET layout = '{
@@ -705,7 +609,6 @@ SET layout = '{
 }'::jsonb
 WHERE name = 'Tinh Tế Cafe';
 
-
 -- Dreamplex Điện Biên Phủ → Theater - VIP + Standard (workshop/conference style)
 UPDATE public.venues
 SET layout = '{
@@ -756,7 +659,6 @@ SET layout = '{
 }'::jsonb
 WHERE name = 'Dreamplex Điện Biên Phủ';
 
-
 -- Gigamall Thủ Đức → Standing - VIP + GA (exhibition/open space)
 UPDATE public.venues
 SET layout = '{
@@ -786,7 +688,6 @@ SET layout = '{
   "seat_size": 20
 }'::jsonb
 WHERE name = 'Gigamall Thủ Đức';
-
 
 -- Sân Lễ Hội Đền Vua Đinh - Vua Lê → Standing - 3 Zones (large outdoor festival)
 UPDATE public.venues
@@ -828,7 +729,6 @@ SET layout = '{
 }'::jsonb
 WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê';
 
-
 -- Công viên Yên Sở → Standing - VIP + GA (outdoor park concert)
 UPDATE public.venues
 SET layout = '{
@@ -858,7 +758,6 @@ SET layout = '{
   "seat_size": 20
 }'::jsonb
 WHERE name = 'Công viên Yên Sở';
-
 
 -- Khu đô thị Vạn Phúc → Standing - 5 Zones Festival (large EDM festival)
 UPDATE public.venues

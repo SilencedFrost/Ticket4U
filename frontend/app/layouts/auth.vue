@@ -14,13 +14,13 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  if (typeof window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   handleResize();
   window.addEventListener('resize', handleResize);
 });
 
 onBeforeUnmount(() => {
-  if (typeof window === 'undefined') return;
+  if (globalThis.window === undefined) return;
   window.removeEventListener('resize', handleResize);
 });
 
@@ -35,6 +35,9 @@ const verticalImageCount = computed<number>(() =>
 
 <template>
   <div class="d-flex">
+    <nuxt-link-locale :to="'/'" class="position-fixed z-2">
+      <i class="bi bi-house-fill text-clickable p-3" style="opacity: 0.8; font-size: 40px"></i>
+    </nuxt-link-locale>
     <client-only>
       <template v-if="width && height">
         <div v-for="verticalIndex in verticalImageCount" :key="`v-${verticalIndex}`">
@@ -47,6 +50,7 @@ const verticalImageCount = computed<number>(() =>
                 top: `${repeat * (verticalIndex * 2 - 2)}px`,
                 opacity: opacity,
               }"
+              alt="background-element"
               class="position-fixed p-3"
               loading="lazy"
             />
@@ -58,6 +62,7 @@ const verticalImageCount = computed<number>(() =>
                 top: `${repeat * (verticalIndex * 2 - 1)}px`,
                 opacity: opacity,
               }"
+              alt="background-element"
               class="position-fixed p-3"
               loading="lazy"
             />

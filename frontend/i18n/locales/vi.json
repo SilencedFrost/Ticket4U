@@ -105,7 +105,8 @@
     "last_name": "Họ",
     "phone": "Số điện thoại",
     "currency": {
-      "from": "Từ"
+      "from": "Từ",
+      "free": "Miễn phí"
     }
   },
   "permissions": {
@@ -170,5 +171,37 @@
         "unknown_device": "Thiết bị không xác định"
       }
     }
+  },
+  "categories": {
+    "concert": "Buổi Hòa Nhạc",
+    "festival": "Lễ Hội",
+    "theater": "Sân Khấu",
+    "comedy": "Hài Kịch",
+    "sports": "Thể Thao",
+    "conference": "Hội Nghị",
+    "workshop": "Hội Thảo",
+    "seminar": "Chuyên Đề",
+    "networking": "Kết Nối",
+    "exhibition": "Triển Lãm",
+    "nightlife": "Giải Trí Đêm",
+    "wellness": "Sức Khỏe",
+    "food": "Ẩm Thực",
+    "drinks": "Đồ Uống",
+    "dance": "Khiêu Vũ",
+    "film": "Điện Ảnh",
+    "gaming": "Trò Chơi",
+    "outdoor": "Ngoài Trời",
+    "charity": "Từ Thiện",
+    "family": "Gia Đình",
+    "cultural": "Văn Hóa",
+    "fashion": "Thời Trang",
+    "tech": "Công Nghệ",
+    "art": "Nghệ Thuật",
+    "literature": "Văn Học",
+    "science": "Khoa Học",
+    "religion": "Tôn Giáo",
+    "politics": "Chính Trị",
+    "travel": "Du Lịch",
+    "virtual": "Trực Tuyến"
   }
 }

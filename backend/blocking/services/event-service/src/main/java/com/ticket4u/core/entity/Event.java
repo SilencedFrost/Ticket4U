@@ -1,5 +1,6 @@
 package com.ticket4u.core.entity;
 
+import com.ticket4u.core.entity.converters.BannerUrlConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,15 +50,15 @@ public class Event {
     )
     private Set<Category> categories = new LinkedHashSet<>();
 
-    @Column(nullable = false)
     private String addressLine;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private EventStatus status;
 
-    @Column(nullable = false, columnDefinition = "text")
-    private String bannerUrl;
+    @Convert(converter = BannerUrlConverter.class)
+    @Column(nullable = false)
+    private BannerUrl bannerUrl;
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "timestamptz")

@@ -58,7 +58,7 @@ function syncFormDataFromUser(user: UserSummary) {
   initialSnapshot.value = { ...nextValue };
 }
 
-function applyUserToForm(user: UserSummary) {
+function cacheUserAndSyncForm(user: UserSummary) {
   setCachedUser(user);
   syncFormDataFromUser(user);
 }
@@ -98,38 +98,42 @@ function buildChangeInfoPayload(): ChangeInfo {
 }
 
 function applyApiFieldErrors(apiFieldErrors: Record<string, string>): boolean {
-  fieldErrors.firstName = apiFieldErrors.firstName
-    ? toValidationErrorI18nKey(apiFieldErrors.firstName)
-    : undefined;
-  fieldErrors.lastName = apiFieldErrors.lastName
-    ? toValidationErrorI18nKey(apiFieldErrors.lastName)
-    : undefined;
-  fieldErrors.birthday = apiFieldErrors.birthday
-    ? toValidationErrorI18nKey(apiFieldErrors.birthday)
-    : undefined;
-  fieldErrors.phoneNumber = apiFieldErrors.phoneNumber
-    ? toValidationErrorI18nKey(apiFieldErrors.phoneNumber)
-    : undefined;
-
+  for (const key of FIELD_ERROR_KEYS) {
+    fieldErrors[key] = apiFieldErrors[key]
+      ? toValidationErrorI18nKey(apiFieldErrors[key])
+      : undefined;
+  }
   return FIELD_ERROR_KEYS.some((key) => Boolean(fieldErrors[key]));
 }
 
 function handleSaveInfoSuccess(updatedUser: UserSummary) {
-  applyUserToForm(updatedUser);
+  cacheUserAndSyncForm(updatedUser);
   successMessage.value = 'settings.personal_information.messages.update_success';
 }
 
+function isNetworkError(fetchError: FetchError): boolean {
+  return !fetchError.statusCode;
+}
+
+function extractAndApplyFieldErrors(fetchError: FetchError): boolean {
+  const apiFieldErrors = extractFieldErrors(fetchError);
+  return applyApiFieldErrors(apiFieldErrors);
+}
+
+function setGenericErrorFallback(fetchError: FetchError) {
+  genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+}
+
 function handleSaveInfoError(fetchError: FetchError) {
-  if (!fetchError.statusCode) {
+  if (isNetworkError(fetchError)) {
     genericError.value = 'auth.error.network';
     return;
   }
 
-  const apiFieldErrors = extractFieldErrors(fetchError);
-  const hasFieldError = applyApiFieldErrors(apiFieldErrors);
+  const hasFieldError = extractAndApplyFieldErrors(fetchError);
 
   if (!hasFieldError) {
-    genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+    setGenericErrorFallback(fetchError);
   }
 }
 
@@ -158,7 +162,7 @@ const fullName = computed(() => {
   return formatFullName(user);
 });
 
-const username = computed(() => {
+const formattedUsername = computed(() => {
   const value = cachedUser.value?.username?.trim();
   return value ? `@${value}` : '';
 });
@@ -174,7 +178,7 @@ async function loadCurrentUser() {
 
   try {
     const user = await fetchCurrentUser();
-    applyUserToForm(user);
+    cacheUserAndSyncForm(user);
   } catch (err) {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
@@ -222,7 +226,7 @@ onMounted(() => {
     <div class="row g-2 overflow-visible">
       <div class="col-12 col-lg-auto">
         <div class="personal-info-avatar-col card p-3 shadow-sm d-flex flex-column h-100">
-          <avatar-upload :full-name="fullName" :username="username" :created-at="createdAtDate" />
+          <avatar-upload :full-name="fullName" :username="formattedUsername" :created-at="createdAtDate" />
         </div>
       </div>
 

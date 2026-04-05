@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import EventCard from './EventCard.vue';
+import EventCard from '~/pages/(home)/components/EventCard.vue';
 import type { Event } from '../types/event-display';
 
 defineProps<{ events: Event[] }>();

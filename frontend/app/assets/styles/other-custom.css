@@ -17,6 +17,10 @@ img {
   min-width: 320px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* Clickable texts/icons */
 
 .text-clickable {

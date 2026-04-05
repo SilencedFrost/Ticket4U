@@ -1,5 +1,5 @@
 <script setup lang="ts">
-withDefaults(
+const props = withDefaults(
   defineProps<{
     fullName?: string;
     username?: string;
@@ -32,12 +32,12 @@ const DEFAULT_AVATAR_URL = 'https://cdn.ticket4u.uk/image/upload/default-profile
       </button>
     </div>
     <h3 class="h6 fw-bold mb-0 text-reactive-primary text-nowrap overflow-visible">
-      {{ fullName || '-' }}
+      {{ props.fullName || '-' }}
     </h3>
-    <p class="text-reactive-secondary small mb-1 fw-bold">{{ username || '-' }}</p>
+    <p class="text-reactive-secondary small mb-1 fw-bold">{{ props.username || '-' }}</p>
     <p class="text-reactive-secondary small mb-3">
       {{ $t('settings.personal_information.member_since') }}
-      {{ createdAt ? $d(createdAt, 'short') : '-' }}
+      {{ props.createdAt ? $d(props.createdAt, 'short') : '-' }}
     </p>
   </div>
 </template>

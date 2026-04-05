@@ -53,6 +53,7 @@ INSERT INTO public.venues (id, name,           address_line,                    
 --3. Table: Events
 
 --TODO: update organizers and status
+--Basic info
 INSERT INTO public.events(id, organizer_id, status, name, banner_url, created_at) VALUES
 (uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'           , '', now()),
 (uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                         , '', now()),
@@ -70,6 +71,27 @@ INSERT INTO public.events(id, organizer_id, status, name, banner_url, created_at
 (uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'   , '', now()),
 (uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                , '', now());
 
+--Urls
+
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381970/vglow-wide_t6cooz.png", "square": "https://cdn.ticket4u.uk/v1775381967/vglow-sqre_nmypgq.png", "tall": "https://cdn.ticket4u.uk/v1775381974/vglow-tall_wgekmk.png"}'::jsonb WHERE name = 'V-Glow: The Cyber-Heritage Night';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381964/aecho-wide_cdgl6u.png", "square": "https://cdn.ticket4u.uk/v1775381950/aecho-sqre_efweqg.png", "tall": "https://cdn.ticket4u.uk/v1775381948/aecho-tall_xkm5ic.png"}'::jsonb WHERE name = 'The Echo of An Nam';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382276/beats-wide_kq6cve.png", "square": "https://cdn.ticket4u.uk/v1775382269/beats-sqre_kf8szt.png", "tall": "https://cdn.ticket4u.uk/v1775382271/beats-tall_nzkxux.png"}'::jsonb WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382586/tloom-wide_nnsqej.png", "square": "https://cdn.ticket4u.uk/v1775382590/tloom-sqre_zqnaam.png", "tall": "https://cdn.ticket4u.uk/v1775382588/tloom-tall_wlhtt2.png"}'::jsonb WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382880/neolu-wide_wiwf4z.png", "square": "https://cdn.ticket4u.uk/v1775382884/neolu-sqre_y2ofzz.png", "tall": "https://cdn.ticket4u.uk/v1775382886/neolu-tall_spbtwy.png"}'::jsonb WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "square": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "tall": "https://cdn.ticket4u.uk/v1775383057/sclam-tall_froaue.png"}'::jsonb WHERE name = 'Sắc Lam: The Indigo Echo';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383196/cryst-wide_ccxmzc.png", "square": "https://cdn.ticket4u.uk/v1775383192/cryst-sqre_e76ssg.png", "tall": "https://cdn.ticket4u.uk/v1775383192/cryst-tall_h04ljf.png"}'::jsonb WHERE name = 'CRYSTAL REALM: The Neon Garden';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383391/satso-wide_vlujh3.png", "square": "https://cdn.ticket4u.uk/v1775383341/satso-sqre_vu6tau.png", "tall": "https://cdn.ticket4u.uk/v1775383338/satso-tall_dgbelz.png"}'::jsonb WHERE name = 'SẮT & SON';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383504/techs-wide_ekyhab.png", "square": "https://cdn.ticket4u.uk/v1775383502/techs-sqre_ah00iv.png", "tall": "https://cdn.ticket4u.uk/v1775383508/techs-tall_q41wkb.png"}'::jsonb WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383818/canth-wide_m4gbop.png", "square": "https://cdn.ticket4u.uk/v1775383821/canth-sqre_im0awy.png", "tall": "https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'Vũ Trụ Cận Thị';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383940/dream-wide_knggr2.png", "square": "https://cdn.ticket4u.uk/v1775383942/dream-sqre_zlwxep.png", "tall": "https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384284/kzart-wide_qvhiub.png", "square": "https://cdn.ticket4u.uk/v1775384345/kzart-sqre_v3harc.png", "tall": "https://cdn.ticket4u.uk/v1775384294/kzart-tall_lphcur.png"}'::jsonb WHERE name = 'KAIZEN: The Art of Precision';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384450/luvia-wide_gyizyq.png", "square": "https://cdn.ticket4u.uk/v1775384446/luvia-sqre_lqtogb.png", "tall": "https://cdn.ticket4u.uk/v1775384451/luvia-tall_dzcyjo.png"}'::jsonb WHERE name = 'LUVIA: The Echo of Highlands';
+UPDATE public.events SET banner_url = '{"wide": "", "square": "", "tall": ""}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+UPDATE public.events SET banner_url = '{"wide": "", "square": "", "tall": ""}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+
+-- Descriptions
+
+UPDATE public.events SET 
 --4. Table: event_categories
 INSERT INTO public.event_categories (event_id, category_id)
 SELECT id, 1 FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ'

@@ -167,5 +167,37 @@
         "unknown_device": "Unknown device"
       }
     }
+  },
+  "categories": {
+    "concert": "Concert",
+    "festival": "Festival",
+    "theater": "Theater",
+    "comedy": "Comedy",
+    "sports": "Sports",
+    "conference": "Conference",
+    "workshop": "Workshop",
+    "seminar": "Seminar",
+    "networking": "Networking",
+    "exhibition": "Exhibition",
+    "nightlife": "Nightlife",
+    "wellness": "Wellness",
+    "food": "Food",
+    "drinks": "Drinks",
+    "dance": "Dance",
+    "film": "Film",
+    "gaming": "Gaming",
+    "outdoor": "Outdoor",
+    "charity": "Charity",
+    "family": "Family",
+    "cultural": "Cultural",
+    "fashion": "Fashion",
+    "tech": "Tech",
+    "art": "Art",
+    "literature": "Literature",
+    "science": "Science",
+    "religion": "Religion",
+    "politics": "Politics",
+    "travel": "Travel",
+    "virtual": "Virtual"
   }
 }

@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 	name 					VARCHAR(255) NOT NULL UNIQUE,
 	organizer_id 			UUID NOT NULL,
 
-	address_line 			VARCHAR(255) NOT NULL,
+	address_line 			VARCHAR(255),
 	status 					VARCHAR(50) NOT NULL,
 	banner_url 				TEXT NOT NULL,
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 	longitude 	DECIMAL(10, 7),
 	latitude 	DECIMAL(10, 7),
 
-	ConSTRAINT event_fk_venue FOREIGN KEY (venue_id)
+	CONSTRAINT event_fk_venue FOREIGN KEY (venue_id)
 		REFERENCES public.venues (id)
 );
 

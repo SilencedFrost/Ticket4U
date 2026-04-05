@@ -6,5 +6,7 @@ start "User Service" powershell -NoExit -Command "cd '%BLOCKING_BACKEND_DIR%'; .
 timeout /t 3 /nobreak
 start "Ticket Service" powershell -NoExit -Command "cd '%REACTIVE_BACKEND_DIR%'; .\gradlew runTicket"
 timeout /t 3 /nobreak
+start "Payment Service" powershell -NoExit -Command "cd '%REACTIVE_BACKEND_DIR%'; .\gradlew runPayment"
+timeout /t 3 /nobreak
 start "Event Service" powershell -NoExit -Command "cd '%BLOCKING_BACKEND_DIR%'; .\gradlew runEvent"
 

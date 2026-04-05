@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: ${DB_TICKET_URL:jdbc:postgresql://localhost:5432/Ticket4U-Ticket}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${SERVER_PORT:8085}
+
+application:
+  security:
+    cors:
+      allowed-origins: ${FRONTEND_URL:https://localhost:3000}
+  payment:
+    webhook-key: ${SEPAY_WEBHOOK_KEY:}
+    order-code-prefix: ${SEPAY_ORDER_CODE_PREFIX:T4U}
+    vietqr:
+      bank-code: ${SEPAY_QR_BANK_CODE:MBBank}
+      account-number: ${SEPAY_QR_ACCOUNT_NUMBER:}
+      account-name: ${SEPAY_QR_ACCOUNT_NAME:}
+      template: ${SEPAY_QR_TEMPLATE:compact}
+  services:
+    ticket:
+      url: ${TICKET_SERVICE_URL:https://localhost:8081/api/v1}
+      api-key: ${TICKET_INTERNAL_API_KEY:ticket-internal-dev-key}
+
+logging:
+  level:
+    root: INFO

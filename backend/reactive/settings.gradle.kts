@@ -1,15 +1,7 @@
 rootProject.name = "ticket-4u-services-reactive"
 
-// Define the directory where your service subprojects live using the projectDir property
-val servicesDir = settings.rootDir.resolve("services")
+include(":services:payment-service")
+include(":services:ticket-service")
 
-// Check if the directory exists and is a directory
-if (servicesDir.isDirectory) {
-    // Iterate over all items in the directory
-    servicesDir.listFiles()
-        ?.filter { it.isDirectory && !it.name.startsWith(".") } // Filter for valid project directories
-        ?.forEach { service ->
-            // Include the project using the include() function and string template
-            include("services:${service.name}")
-        }
-}
+project(":services:payment-service").projectDir = file("services/payment-service")
+project(":services:ticket-service").projectDir = file("services/ticket-service")

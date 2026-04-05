@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Skip filter for public endpoints
-        return (pathMatcher.match("/api/*/public/**", path));
+        return pathMatcher.match("/api/*/public/**", path) || pathMatcher.match("/api/*/internal/**", path);
     }
 
     @Override

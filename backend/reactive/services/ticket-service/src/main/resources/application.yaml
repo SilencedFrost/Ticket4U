@@ -22,6 +22,8 @@ application:
     # CORS
     cors:
       allowed-origins: ${FRONTEND_URL}
+  internal:
+    api-key: ${TICKET_INTERNAL_API_KEY:ticket-internal-dev-key}
   services:
     user: ${USER_SERVICE_URL:https://localhost:8080}
 

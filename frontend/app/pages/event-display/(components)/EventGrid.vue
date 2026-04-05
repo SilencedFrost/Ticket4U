@@ -7,7 +7,7 @@
     </div>
 
     <div v-else class="text-center py-5">
-      <p class="text-reactive-secondary mb-0">No finding events</p>
+      <p class="text-reactive-secondary mb-0">No events found</p>
     </div>
   </div>
 </template>

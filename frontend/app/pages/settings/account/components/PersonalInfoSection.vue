@@ -5,14 +5,14 @@ import { useSettingsApi } from '../../composables/useSettingsApi';
 import AvatarUpload from './AvatarUpload.vue';
 import PersonalInfoForm from './PersonalInfoForm.vue';
 
-const { currentUser, fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } =
+const {fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } =
   useSettingsApi();
 
 const loading = ref(false);
 const loadingUser = ref(false);
 const genericError = ref('');
 const successMessage = ref('');
-
+const cachedUser = ref<UserSummary | null>(null);
 const fieldErrors = reactive<{
   firstName?: string;
   lastName?: string;
@@ -58,6 +58,7 @@ function resetFieldErrors() {
 }
 
 function applyUserToForm(user: UserSummary) {
+  cachedUser.value = user;
   const nextValue: ProfileForm = {
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
@@ -87,7 +88,7 @@ const hasChanges = computed(() => {
 });
 
 const fullName = computed(() => {
-  const user = currentUser.value;
+  const user = cachedUser.value;
   if (!user) {
     return '';
   }
@@ -104,21 +105,21 @@ const fullName = computed(() => {
 });
 
 const username = computed(() => {
-  const value = currentUser.value?.username?.trim();
+  const value = cachedUser.value?.username?.trim();
   return value ? `@${value}` : '';
 });
 
 const createdAtDate = computed(() => {
-  const value = currentUser.value?.createdAt;
+  const value = cachedUser.value?.createdAt;
   return value ? new Date(value) : null;
 });
 
-async function loadCurrentUser(force = false) {
+async function loadCurrentUser() {
   loadingUser.value = true;
   genericError.value = '';
 
   try {
-    const user = await fetchCurrentUser(force);
+    const user = await fetchCurrentUser();
     applyUserToForm(user);
   } catch (err) {
     const fetchError = err as FetchError;
@@ -185,11 +186,6 @@ async function saveInfo() {
 }
 
 onMounted(() => {
-  if (currentUser.value) {
-    applyUserToForm(currentUser.value);
-    return;
-  }
-
   void loadCurrentUser();
 });
 </script>

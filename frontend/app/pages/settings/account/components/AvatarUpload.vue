@@ -1,42 +1,18 @@
 <script setup lang="ts">
-import { useSettingsApi } from '../../composables/useSettingsApi';
-
-const { currentUser, fetchCurrentUser } = useSettingsApi();
+withDefaults(
+  defineProps<{
+    fullName?: string;
+    username?: string;
+    createdAt?: Date | null;
+  }>(),
+  {
+    fullName: '',
+    username: '',
+    createdAt: null,
+  },
+);
 
 const DEFAULT_AVATAR_URL = 'https://cdn.ticket4u.uk/image/upload/default-profile_s2bneu.jpg';
-
-const fullName = computed(() => {
-  const user = currentUser.value;
-  if (!user) {
-    return '';
-  }
-
-  const parts = [user.lastName, user.firstName]
-    .map((part) => part?.trim() ?? '')
-    .filter((part) => part.length > 0);
-
-  if (parts.length > 0) {
-    return parts.join(' ');
-  }
-
-  return user.username || user.email;
-});
-
-const username = computed(() => {
-  const value = currentUser.value?.username?.trim();
-  return value ? `@${value}` : '';
-});
-
-const createdAtDate = computed(() => {
-  const value = currentUser.value?.createdAt;
-  return value ? new Date(value) : null;
-});
-
-onMounted(() => {
-  if (!currentUser.value) {
-    void fetchCurrentUser();
-  }
-});
 </script>
 
 <template>
@@ -61,7 +37,7 @@ onMounted(() => {
     <p class="text-reactive-secondary small mb-1 fw-bold">{{ username || '-' }}</p>
     <p class="text-reactive-secondary small mb-3">
       {{ $t('settings.personal_information.member_since') }}
-      {{ createdAtDate ? $d(createdAtDate, 'short') : '-' }}
+      {{ createdAt ? $d(createdAt, 'short') : '-' }}
     </p>
   </div>
 </template>

@@ -6,13 +6,12 @@ export interface BannerImageGroup {
   tall: string;
 }
 
-// TODO: refactor this bannerUrl to support new format
 export interface EventSummary {
   id: string;
   name: string;
   organizerId: string;
   categories: CategorySummary[];
-  bannerUrl: string;
+  bannerUrl: BannerImageGroup;
   venueName: string;
   startDate: string;
   endDate: string;

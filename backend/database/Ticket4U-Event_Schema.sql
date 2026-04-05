@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.events (
 
 	address_line 			VARCHAR(255),
 	status 					VARCHAR(50) NOT NULL,
-	banner_url 				TEXT NOT NULL,
+	banner_url 				JSONB NOT NULL,
 
 	created_at 				TIMESTAMPTZ NOT NULL,
 	updated_at 				TIMESTAMPTZ,

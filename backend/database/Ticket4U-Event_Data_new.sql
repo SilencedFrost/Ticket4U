@@ -55,21 +55,21 @@ INSERT INTO public.venues (id, name,           address_line,                    
 --TODO: update organizers and status
 --Basic info
 INSERT INTO public.events(id, organizer_id, status, name, banner_url, created_at) VALUES
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'           , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                         , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG'                          , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine'       , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo'                   , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden'             , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON'                                  , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics', '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị'                             , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO'               , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision'               , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands'               , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'   , '', now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                , '', now());
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'           , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                         , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG'                          , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine'       , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo'                   , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden'             , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON'                                  , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics', '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị'                             , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'   , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                , '{}'::jsonb, now());
 
 --Urls
 
@@ -78,7 +78,7 @@ UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v177538
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382276/beats-wide_kq6cve.png", "square": "https://cdn.ticket4u.uk/v1775382269/beats-sqre_kf8szt.png", "tall": "https://cdn.ticket4u.uk/v1775382271/beats-tall_nzkxux.png"}'::jsonb WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382586/tloom-wide_nnsqej.png", "square": "https://cdn.ticket4u.uk/v1775382590/tloom-sqre_zqnaam.png", "tall": "https://cdn.ticket4u.uk/v1775382588/tloom-tall_wlhtt2.png"}'::jsonb WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382880/neolu-wide_wiwf4z.png", "square": "https://cdn.ticket4u.uk/v1775382884/neolu-sqre_y2ofzz.png", "tall": "https://cdn.ticket4u.uk/v1775382886/neolu-tall_spbtwy.png"}'::jsonb WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
-UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "square": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "tall": "https://cdn.ticket4u.uk/v1775383057/sclam-tall_froaue.png"}'::jsonb WHERE name = 'Sắc Lam: The Indigo Echo';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "square": "https://cdn.ticket4u.uk/v1775383104/sclam-sqre_uaxxnl.png", "tall": "https://cdn.ticket4u.uk/v1775383057/sclam-tall_froaue.png"}'::jsonb WHERE name = 'Sắc Lam: The Indigo Echo';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383196/cryst-wide_ccxmzc.png", "square": "https://cdn.ticket4u.uk/v1775383192/cryst-sqre_e76ssg.png", "tall": "https://cdn.ticket4u.uk/v1775383192/cryst-tall_h04ljf.png"}'::jsonb WHERE name = 'CRYSTAL REALM: The Neon Garden';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383391/satso-wide_vlujh3.png", "square": "https://cdn.ticket4u.uk/v1775383341/satso-sqre_vu6tau.png", "tall": "https://cdn.ticket4u.uk/v1775383338/satso-tall_dgbelz.png"}'::jsonb WHERE name = 'SẮT & SON';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383504/techs-wide_ekyhab.png", "square": "https://cdn.ticket4u.uk/v1775383502/techs-sqre_ah00iv.png", "tall": "https://cdn.ticket4u.uk/v1775383508/techs-tall_q41wkb.png"}'::jsonb WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
@@ -252,55 +252,23 @@ UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Âm Sắc Việt - THE 
 UNION ALL SELECT id, 24 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
 --3. Table: Event Sessions 
--- Session cho Hà Anh Tuấn
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '30 days', NOW() + INTERVAL '30 days 4 hours', 'ONGOING', 'Show chính', NOW()
-FROM public.events WHERE name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
--- Session cho Saigon Heat
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days' + INTERVAL '2 hours', 'FINISHED', 'Trận chính', NOW()
-FROM public.events WHERE name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
-
--- Session cho Những Thành Phố Mơ Màng
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '45 days', NOW() + INTERVAL '45 days 6 hours', 'ONGOING', 'Đêm diễn Summer Tour', NOW()
-FROM public.events WHERE name = 'Những Thành Phố Mơ Màng - Summer Tour';
-
--- Session cho Mây Lang Thang
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '25 days', NOW() + INTERVAL '25 days 3 hours', 'ONGOING', 'Đêm nhạc Trịnh', NOW()
-FROM public.events WHERE name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
-
--- Session cho Kịch Idecaf
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '5 days', NOW() + INTERVAL '5 days 3 hours', 'ONGOING', 'Buổi chiều Chủ Nhật', NOW()
-FROM public.events WHERE name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
-
--- Session cho Ravolution
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '60 days', NOW() + INTERVAL '61 days', 'ONGOING', 'Festival Day 1', NOW()
-FROM public.events WHERE name = 'Ravolution Music Festival: Unite';
-
--- Session cho Saigon Tếu
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '7 days', NOW() + INTERVAL '7 days 2 hours', 'ONGOING', 'Đêm hài độc thoại', NOW()
-FROM public.events WHERE name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
-
--- Session cho Vietnam Tech Summit
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '10 days', NOW() + INTERVAL '10 days 8 hours', 'ONGOING', 'Tech Summit Day 1', NOW()
-FROM public.events WHERE name = 'Vietnam Tech Summit 2025';
-
--- Session cho Workshop Marketing
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '14 days', NOW() + INTERVAL '14 days 4 hours', 'ONGOING', 'Workshop Session', NOW()
-FROM public.events WHERE name = 'Workshop: Marketing 0 Đồng cho Startup';
-
--- Session cho Van Gogh Art Experience
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() - INTERVAL '10 days', NOW() + INTERVAL '20 days', 'ONGOING', 'Exhibition Period', NOW()
-FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
+INSERT INTO public.event_sessions(id, start_date, end_date, status, name, created_at, event_id) VALUES
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'V-Glow: The Cyber-Heritage Night'           )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'The Echo of An Nam'                         )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'CỔ NGHỆ KIÊU HÙNG'                          )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'NEO-LUMINANCE: The Echo of Indochine'       )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'Sắc Lam: The Indigo Echo'                   )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'CRYSTAL REALM: The Neon Garden'             )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'SẮT & SON'                                  )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'Techno-Sorcery: The Zenith of AI & Robotics')),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'Vũ Trụ Cận Thị'                             )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'THE DREAMCATCHER ARCHIPELAGO'               )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'KAIZEN: The Art of Precision'               )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'LUVIA: The Echo of Highlands'               )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'Scent of the Soul: The Echoes of Vietnam'   )),
+(uuidv7(), '2027-01-01T00:00:00Z', '2027-01-02T00:00:00Z', 'SELLING', 'session', now(), (select id from public.events where name = 'Âm Sắc Việt - THE RESONANCE'                ));
 
 --4. Table: Zones 
 

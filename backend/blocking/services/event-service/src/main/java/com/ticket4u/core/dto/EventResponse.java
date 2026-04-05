@@ -1,5 +1,6 @@
 package com.ticket4u.core.dto;
 
+import com.ticket4u.core.entity.BannerUrl;
 import com.ticket4u.core.entity.Event;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public record EventResponse(
         Set<CategorySummaryResponse> categories,
         String addressLine,
         Event.EventStatus status,
-        String bannerUrl,
+        BannerUrl bannerUrl,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         String aboutVi,

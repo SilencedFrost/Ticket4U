@@ -21,8 +21,8 @@ const formatter = useFormatter();
     <div
       :class="['ratio', isLg ? 'ratio-16x9' : 'ratio-1x1', 'rounded-3', 'overflow-hidden', 'mb-2']"
     >
-      <!-- Add banner url reactivity -->
-      <shimmer-img :src="event.bannerUrl" :alt="event.name" />
+      <shimmer-img v-if="isLg" :src="event.bannerUrl.wide" :alt="event.name" />
+      <shimmer-img v-else :src="event.bannerUrl.square" :alt="event.name" />
     </div>
 
     <div class="d-flex">

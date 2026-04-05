@@ -1,5 +1,7 @@
 package com.ticket4u.core.dto;
 
+import com.ticket4u.core.entity.BannerUrl;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -15,7 +17,7 @@ public record EventSummaryResponse(
         String name,
         UUID organizerId,
         Set<CategorySummaryResponse> categories,
-        String bannerUrl,
+        BannerUrl bannerUrl,
         // Venue field flat mapped from venue
         String venueName,
         // Fields flat mapped from sessions

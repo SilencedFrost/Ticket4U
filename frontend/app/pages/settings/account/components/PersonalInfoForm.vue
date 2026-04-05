@@ -27,7 +27,7 @@ const emit = defineEmits<{
   (e: 'submit'): void;
 }>();
 
-const formData = computed<ProfileForm>({
+const syncedFormData = computed<ProfileForm>({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 });
@@ -55,7 +55,7 @@ function handleSubmit() {
       </div>
 
       <personal-info-fields
-        v-model="formData"
+        v-model="syncedFormData"
         :errors="props.errors"
         :disabled="props.loading || props.loadingUser"
       />

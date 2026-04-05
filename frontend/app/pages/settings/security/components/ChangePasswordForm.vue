@@ -7,9 +7,6 @@ const { validatePasswordValue } = usePasswordValidation();
 const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();
 const { toValidationErrorI18nKey, toGenericErrorI18nKey } = useI18nErrorKey();
 
-/**===========
- * Interfaces
- ============*/
 
 interface ChangePasswordError {
   currentPassword: string;
@@ -26,9 +23,6 @@ interface ChangePasswordTouched {
   newPassword: boolean;
 }
 
-/**======================
- * State constants
- =======================*/
 
 const emptyError: ChangePasswordError = {
   currentPassword: '',
@@ -45,10 +39,6 @@ const defaultTouched: ChangePasswordTouched = {
   newPassword: false,
 };
 
-/**======================
- * Form reactive objects
- =======================*/
-
 const loading = ref<boolean>(false);
 const isViewingCurrentPassword = ref(false);
 const isViewingNewPassword = ref(false);
@@ -59,9 +49,6 @@ const error = reactive<ChangePasswordError>(emptyError);
 const formData = reactive<ChangePasswordForm>(emptyForm);
 const touched = reactive<ChangePasswordTouched>(defaultTouched);
 
-/**==========
- * Functions
- ===========*/
 
 // Onblur function to do validation
 function onBlur(field: keyof ChangePasswordForm) {
@@ -115,10 +102,6 @@ function toggleCurrentPasswordVisibility() {
 function toggleNewPasswordVisibility() {
   isViewingNewPassword.value = !isViewingNewPassword.value;
 }
-
-/**===================
- * Computed & watches
- ====================*/
 
 const isFormValid = computed(() => {
   const allTouched = touched.newPassword && touched.currentPassword;
@@ -192,7 +175,7 @@ function applyPasswordFieldErrors(fieldErrors: Record<string, string>): boolean 
   return hasFieldErrors;
 }
 
-function hasCurrentPasswordHint(message: string): boolean {
+function isCurrentPasswordErrorMessage(message: string): boolean {
   // Fallback for legacy backend responses that do not include stable error codes.
   return message.toLowerCase().includes('current password');
 }
@@ -212,7 +195,7 @@ function handlePasswordChangeError(fetchError: FetchError) {
 
   const message = extractMessage(fetchError);
 
-  if (message && hasCurrentPasswordHint(message)) {
+  if (message && isCurrentPasswordErrorMessage(message)) {
     error.currentPassword = 'settings.security.change_password.errors.current_password_incorrect';
     return;
   }

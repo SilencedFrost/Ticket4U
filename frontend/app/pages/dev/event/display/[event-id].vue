@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import type { Event } from '~/pages/(home)/types/home';
-import EventDisplay from '~/pages/event-display/(components)/EventDisplay.vue';
+import EventGrid from '~/pages/event-display/(components)/EventGrid.vue';
 
 const route = useRoute();
 const config = useRuntimeConfig();
@@ -27,19 +27,21 @@ onMounted(async () => {
   }
 
   try {
-    eventData.value = await $fetch<{
+    const response = await $fetch<{
       id?: string;
       name?: string;
       bannerUrl?: string;
       minPrice?: number | string;
       startDate?: string;
-    }>(`${config.public.eventServiceUrl}/public/events/${routeEventId.value}`).then((event) => ({
-      id: String(event.id ?? routeEventId.value),
-      title: event.name || 'Event',
-      imageUrl: event.bannerUrl || 'https://picsum.photos/seed/ticket4u-event-fallback/1200/675',
-      price: Number(event.minPrice ?? 0),
-      date: formatLongDate(event.startDate ?? null) || '',
-    }));
+    }>(`${config.public.eventServiceUrl}/public/events/${routeEventId.value}`);
+
+    eventData.value = {
+      id: String(response.id ?? routeEventId.value),
+      title: response.name || 'Event',
+      imageUrl: response.bannerUrl || 'https://picsum.photos/seed/ticket4u-event-fallback/1200/675',
+      price: Number(response.minPrice ?? 0),
+      date: formatLongDate(response.startDate ?? null) || '',
+    };
   } catch {
     error.value = 'Failed to load event data.';
   } finally {
@@ -52,6 +54,6 @@ onMounted(async () => {
   <div class="container py-4">
     <div v-if="loading" class="text-reactive-secondary">Loading event data...</div>
     <div v-else-if="error" class="alert alert-danger mb-0">{{ error }}</div>
-    <EventDisplay v-else :events="displayEvents" />
+    <EventGrid v-else :events="displayEvents" />
   </div>
 </template>

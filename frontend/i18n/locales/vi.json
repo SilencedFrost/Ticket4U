@@ -105,7 +105,8 @@
     "last_name": "Họ",
     "phone": "Số điện thoại",
     "currency": {
-      "from": "Từ"
+      "from": "Từ",
+      "free": "Miễn phí"
     }
   },
   "permissions": {

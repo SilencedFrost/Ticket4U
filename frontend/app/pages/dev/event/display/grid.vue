@@ -21,5 +21,7 @@ onMounted(() => getFeaturedEvents());
 </script>
 
 <template>
-  <event-grid :events="eventList" />
+  <div class="p-3">
+    <event-grid :events="eventList" />
+  </div>
 </template>

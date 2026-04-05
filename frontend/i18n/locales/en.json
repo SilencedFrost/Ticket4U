@@ -105,7 +105,8 @@
     "last_name": "Last Name",
     "phone": "Phone number",
     "currency": {
-      "from": "From"
+      "from": "From",
+      "free": "Free"
     }
   },
   "permissions": {

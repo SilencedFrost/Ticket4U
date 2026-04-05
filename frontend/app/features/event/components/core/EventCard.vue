@@ -32,7 +32,11 @@ const formatter = useFormatter();
           {{ event.name }}
         </span>
         <span class="text-primary fw-bold">
-          {{ `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}` }}
+          {{
+            event.minPrice === 0
+              ? $t('common.currency.free')
+              : `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}`
+          }}
         </span>
         <p class="text-reactive-secondary d-flex align-items-center gap-1 small">
           <i class="bi bi-calendar-event"></i>

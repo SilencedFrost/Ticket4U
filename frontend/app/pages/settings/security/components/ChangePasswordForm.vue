@@ -148,11 +148,19 @@ function submitChangePassword() {
   void submitChangePasswordAsync();
 }
 
-function toI18nKeyOrFallback(message?: string, fallback = 'auth.error.validation'): string {
+function toSafeI18nKey(message: string | undefined, fallback: string): string {
   if (!message) {
     return fallback;
   }
   return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
+}
+
+function toValidationErrorI18nKey(message?: string): string {
+  return toSafeI18nKey(message, 'auth.error.validation');
+}
+
+function toGenericErrorI18nKey(message?: string): string {
+  return toSafeI18nKey(message, 'auth.error.unknown');
 }
 
 function resetFormState() {
@@ -193,12 +201,12 @@ async function submitChangePasswordAsync() {
     let hasFieldErrors = false;
 
     if (fieldErrors.currentPassword) {
-      error.oldPass = toI18nKeyOrFallback(fieldErrors.currentPassword);
+      error.oldPass = toValidationErrorI18nKey(fieldErrors.currentPassword);
       hasFieldErrors = true;
     }
 
     if (fieldErrors.newPassword) {
-      error.newPass = [toI18nKeyOrFallback(fieldErrors.newPassword)];
+      error.newPass = [toValidationErrorI18nKey(fieldErrors.newPassword)];
       hasFieldErrors = true;
     }
 
@@ -208,7 +216,7 @@ async function submitChangePasswordAsync() {
       if (message && message.toLowerCase().includes('current password')) {
         error.oldPass = 'settings.security.change_password.errors.current_password_incorrect';
       } else {
-        genericError.value = toI18nKeyOrFallback(message ?? undefined, 'auth.error.unknown');
+        genericError.value = toGenericErrorI18nKey(message ?? undefined);
       }
     }
   } finally {

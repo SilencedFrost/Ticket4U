@@ -31,7 +31,7 @@ function updateField(field: keyof ProfileForm, value: string) {
   });
 }
 
-function toI18nKeyOrFallback(message?: string): string {
+function toValidationErrorI18nKey(message?: string): string {
   if (!message) {
     return '';
   }
@@ -56,7 +56,7 @@ function toI18nKeyOrFallback(message?: string): string {
         @input="updateField('firstName', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.firstName" class="invalid-feedback d-block">
-        {{ $t(toI18nKeyOrFallback(errors.firstName)) }}
+        {{ $t(toValidationErrorI18nKey(errors.firstName)) }}
       </div>
     </div>
 
@@ -73,7 +73,7 @@ function toI18nKeyOrFallback(message?: string): string {
         @input="updateField('lastName', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.lastName" class="invalid-feedback d-block">
-        {{ $t(toI18nKeyOrFallback(errors.lastName)) }}
+        {{ $t(toValidationErrorI18nKey(errors.lastName)) }}
       </div>
     </div>
 
@@ -96,7 +96,7 @@ function toI18nKeyOrFallback(message?: string): string {
         @input="updateField('birthday', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.birthday" class="invalid-feedback d-block">
-        {{ $t(toI18nKeyOrFallback(errors.birthday)) }}
+        {{ $t(toValidationErrorI18nKey(errors.birthday)) }}
       </div>
     </div>
 
@@ -115,7 +115,7 @@ function toI18nKeyOrFallback(message?: string): string {
         @input="updateField('phoneNumber', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.phoneNumber" class="invalid-feedback d-block">
-        {{ $t(toI18nKeyOrFallback(errors.phoneNumber)) }}
+        {{ $t(toValidationErrorI18nKey(errors.phoneNumber)) }}
       </div>
     </div>
   </div>

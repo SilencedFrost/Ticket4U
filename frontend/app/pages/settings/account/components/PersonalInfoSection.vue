@@ -35,11 +35,19 @@ function normalizeToNullable(value: string): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
-function toI18nKeyOrFallback(message?: string, fallback = 'auth.error.validation'): string {
+function toSafeI18nKey(message: string | undefined, fallback: string): string {
   if (!message) {
     return fallback;
   }
   return /^[a-z]+(\.[a-z0-9_]+)+$/i.test(message) ? message : fallback;
+}
+
+function toValidationErrorI18nKey(message?: string): string {
+  return toSafeI18nKey(message, 'auth.error.validation');
+}
+
+function toGenericErrorI18nKey(message?: string): string {
+  return toSafeI18nKey(message, 'auth.error.unknown');
 }
 
 function resetFieldErrors() {
@@ -116,7 +124,7 @@ async function loadCurrentUser(force = false) {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toI18nKeyOrFallback(extractMessage(fetchError) ?? undefined, 'auth.error.unknown');
+      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
   } finally {
     loadingUser.value = false;
   }
@@ -154,25 +162,22 @@ async function saveInfo() {
     const apiFieldErrors = extractFieldErrors(fetchError);
 
     fieldErrors.firstName = apiFieldErrors.firstName
-      ? toI18nKeyOrFallback(apiFieldErrors.firstName)
+      ? toValidationErrorI18nKey(apiFieldErrors.firstName)
       : undefined;
     fieldErrors.lastName = apiFieldErrors.lastName
-      ? toI18nKeyOrFallback(apiFieldErrors.lastName)
+      ? toValidationErrorI18nKey(apiFieldErrors.lastName)
       : undefined;
     fieldErrors.birthday = apiFieldErrors.birthday
-      ? toI18nKeyOrFallback(apiFieldErrors.birthday)
+      ? toValidationErrorI18nKey(apiFieldErrors.birthday)
       : undefined;
     fieldErrors.phoneNumber = apiFieldErrors.phoneNumber
-      ? toI18nKeyOrFallback(apiFieldErrors.phoneNumber)
+      ? toValidationErrorI18nKey(apiFieldErrors.phoneNumber)
       : undefined;
 
     const hasFieldError = Object.values(fieldErrors).some((message) => !!message);
 
     if (!hasFieldError) {
-      genericError.value = toI18nKeyOrFallback(
-        extractMessage(fetchError) ?? undefined,
-        'auth.error.unknown',
-      );
+      genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
     }
   } finally {
     loading.value = false;
@@ -191,8 +196,6 @@ onMounted(() => {
 
 <template>
   <div>
-    <Title>{{ $t('settings.personal_information.title') }}</Title>
-
     <div class="page-header card shadow-sm p-3 mb-2">
       <h1 class="h3 fw-bold text-reactive-primary mb-1">
         {{ $t('settings.personal_information.title') }}

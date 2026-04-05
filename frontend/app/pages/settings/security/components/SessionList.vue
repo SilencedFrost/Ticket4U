@@ -3,7 +3,6 @@ import type { FetchError } from 'ofetch';
 import type { Session } from '../../types/settings';
 import { useSettingsApi } from '../../composables/useSettingsApi';
 
-const { locale } = useI18n();
 const { fetchSessions, deleteSession, extractMessage } = useSettingsApi();
 const loading = ref(false);
 const genericError = ref('');
@@ -11,7 +10,8 @@ const genericError = ref('');
 const sessions = ref<Session[]>([]);
 const deletingIds = ref<Set<string>>(new Set());
 
-function toI18nKeyOrFallback(message?: string, fallback = 'auth.error.unknown'): string {
+function toGenericErrorI18nKey(message?: string): string {
+  const fallback = 'auth.error.unknown';
   if (!message) {
     return fallback;
   }
@@ -28,7 +28,7 @@ async function loadSessions() {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toI18nKeyOrFallback(extractMessage(fetchError) ?? undefined);
+      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
   } finally {
     loading.value = false;
   }
@@ -49,20 +49,10 @@ async function removeSession(displayId: string) {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toI18nKeyOrFallback(extractMessage(fetchError) ?? undefined);
+      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
   } finally {
     deletingIds.value.delete(displayId);
   }
-}
-
-function formatDate(isoValue: string): string {
-  return new Intl.DateTimeFormat(locale.value, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(isoValue));
 }
 
 function resolveUserAgent(value: string | null): string | null {
@@ -120,7 +110,7 @@ onMounted(() => {
 
           <div class="small text-reactive-secondary mt-1">
             {{ $t('settings.security.sessions.columns.last_access') }}:
-            {{ formatDate(session.updatedAt) }}
+            {{ $d(new Date(session.updatedAt), 'short') }}
           </div>
         </div>
         <div>

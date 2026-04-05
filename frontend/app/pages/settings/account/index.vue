@@ -5,6 +5,7 @@ import PersonalInfoSection from './components/PersonalInfoSection.vue';
 
 <template>
   <settings-layout>
+    <Title>{{ $t('settings.personal_information.title') }} | Ticket4U</Title>
     <personal-info-section />
   </settings-layout>
 </template>

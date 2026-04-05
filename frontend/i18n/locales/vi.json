@@ -104,7 +104,10 @@
     "full_name": "Họ và tên",
     "first_name": "Tên",
     "last_name": "Họ",
-    "phone": "Số điện thoại"
+    "phone": "Số điện thoại",
+    "currency": {
+      "from": "Từ"
+    }
   },
   "permissions": {
     "location": {

@@ -104,7 +104,10 @@
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "phone": "Phone number"
+    "phone": "Phone number",
+    "currency": {
+      "from": "From"
+    }
   },
   "permissions": {
     "location": {

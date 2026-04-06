@@ -37,7 +37,7 @@ const DEFAULT_AVATAR_URL = 'https://cdn.ticket4u.uk/image/upload/default-profile
     <p class="text-reactive-secondary small mb-1 fw-bold">{{ username || '-' }}</p>
     <p class="text-reactive-secondary small mb-3">
       {{ $t('settings.personal_information.member_since') }}
-      {{ createdAt ? $d(new Date(createdAt), 'short') : '-' }}
+      {{ createdAt ? $d(createdAt, 'short') : '-' }}
     </p>
   </div>
 </template>

@@ -98,7 +98,8 @@
       "allow": "Allow",
       "deny": "Deny",
       "buy": "Buy tickets now",
-      "view": "View"
+      "view": "View",
+      "remove": "Remove"
     },
     "full_name": "Full name",
     "first_name": "First Name",
@@ -151,6 +152,9 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
+      "messages": {
+        "update_success": "Profile updated successfully."
+      },
       "basic_info": {
         "section_title": "Basic Information"
       }
@@ -161,10 +165,17 @@
       "change_password": {
         "title": "Change Password",
         "current_password": "Current Password",
-        "new_password": "New Password"
+        "new_password": "New Password",
+        "messages": {
+          "success": "Password updated successfully."
+        },
+        "errors": {
+          "current_password_incorrect": "Current password is incorrect."
+        }
       },
       "sessions": {
         "title": "Active Sessions",
+        "empty": "No active sessions.",
         "columns": {
           "last_access": "Last Access"
         },

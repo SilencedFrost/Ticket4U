@@ -21,8 +21,8 @@ const formatter = useFormatter();
     <div
       :class="['ratio', isLg ? 'ratio-16x9' : 'ratio-1x1', 'rounded-3', 'overflow-hidden', 'mb-2']"
     >
-      <!-- Add banner url reactivity -->
-      <shimmer-img :src="event.bannerUrl" :alt="event.name" />
+      <shimmer-img v-if="isLg" :src="event.bannerUrl.wide" :alt="event.name" />
+      <shimmer-img v-else :src="event.bannerUrl.square" :alt="event.name" />
     </div>
 
     <div class="d-flex">
@@ -32,7 +32,11 @@ const formatter = useFormatter();
           {{ event.name }}
         </span>
         <span class="text-primary fw-bold">
-          {{ `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}` }}
+          {{
+            event.minPrice === 0
+              ? $t('common.currency.free')
+              : `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}`
+          }}
         </span>
         <p class="text-reactive-secondary d-flex align-items-center gap-1 small">
           <i class="bi bi-calendar-event"></i>

@@ -2,6 +2,9 @@
 import SettingsLayout from '../components/SettingsLayout.vue';
 import ChangePasswordForm from './components/ChangePasswordForm.vue';
 import SessionList from './components/SessionList.vue';
+
+// TODO: parse & format user agent string thành dạng dễ đọc
+// (vd: "Chrome 120 trên Windows 10" thay vì raw UA string) - cần nghiên cứu thêm
 </script>
 
 <template>

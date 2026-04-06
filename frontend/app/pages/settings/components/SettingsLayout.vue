@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core';
 import SettingsNavMenu from './SettingsNavMenu.vue';
 import '../style/settings.css';
 
@@ -11,8 +12,7 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
-const isDesktopViewport = ref(true);
-let desktopMediaQuery: MediaQueryList | null = null;
+const isDesktopViewport = useMediaQuery('(min-width: 768px)');
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
@@ -106,32 +106,16 @@ function isSettingsPath(urlOrPath: string) {
   return settingsLocalePrefixes.value.some((prefix) => pathname.startsWith(prefix));
 }
 
-// Mobile-only handlers
-
-function handleViewportChange(event: MediaQueryListEvent) {
-  isDesktopViewport.value = event.matches;
-}
-
 /**
  * Save the pre-settings route once when the layout mounts.
  * This allows the mobile back button on /settings to return to the entry page
  * instead of stepping back to an internal settings route.
  */
 onMounted(() => {
-  desktopMediaQuery = globalThis.window.matchMedia('(min-width: 768px)');
-  isDesktopViewport.value = desktopMediaQuery.matches;
-  desktopMediaQuery.addEventListener('change', handleViewportChange);
-
   const back = router.options.history.state?.back as string | undefined;
 
   if (back && !isSettingsPath(back)) {
     previousPageUrl.value = back;
-  }
-});
-
-onBeforeUnmount(() => {
-  if (desktopMediaQuery) {
-    desktopMediaQuery.removeEventListener('change', handleViewportChange);
   }
 });
 

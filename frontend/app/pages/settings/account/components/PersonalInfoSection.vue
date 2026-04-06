@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 import type { ChangeInfo, FieldErrors, ProfileForm, UserSummary } from '../../types/settings';
 import { useSettingsApi } from '../../composables/useSettingsApi';
 import AvatarUpload from './AvatarUpload.vue';
 import PersonalInfoForm from './PersonalInfoForm.vue';
 
 const { fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } = useSettingsApi();
-const { toValidationErrorI18nKey, toGenericErrorI18nKey } = useI18nErrorKey();
 
 const FIELD_ERROR_KEYS: Array<keyof FieldErrors> = [
   'firstName',
@@ -99,9 +97,7 @@ function buildChangeInfoPayload(): ChangeInfo {
 
 function applyApiFieldErrors(apiFieldErrors: Record<string, string>): boolean {
   for (const key of FIELD_ERROR_KEYS) {
-    fieldErrors[key] = apiFieldErrors[key]
-      ? toValidationErrorI18nKey(apiFieldErrors[key])
-      : undefined;
+    fieldErrors[key] = apiFieldErrors[key] ? apiFieldErrors[key] : undefined;
   }
   return FIELD_ERROR_KEYS.some((key) => Boolean(fieldErrors[key]));
 }
@@ -121,7 +117,7 @@ function extractAndApplyFieldErrors(fetchError: FetchError): boolean {
 }
 
 function setGenericErrorFallback(fetchError: FetchError) {
-  genericError.value = toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+  genericError.value = extractMessage(fetchError) ?? 'auth.error.unknown';
 }
 
 function handleSaveInfoError(fetchError: FetchError) {
@@ -168,8 +164,7 @@ const formattedUsername = computed(() => {
 });
 
 const createdAtDate = computed(() => {
-  const value = cachedUser.value?.createdAt;
-  return value ? new Date(value) : null;
+  return cachedUser.value?.createdAt ?? null;
 });
 
 async function loadCurrentUser() {
@@ -183,7 +178,7 @@ async function loadCurrentUser() {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+      : extractMessage(fetchError) ?? 'auth.error.unknown';
   } finally {
     loadingUser.value = false;
   }

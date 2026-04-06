@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 import type { FieldErrors, ProfileForm } from '../../types/settings';
 
-const { toValidationErrorI18nKey } = useI18nErrorKey();
+const model = defineModel<ProfileForm>({ required: true });
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue: ProfileForm;
     errors?: FieldErrors;
     disabled?: boolean;
   }>(),
@@ -16,15 +14,11 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: ProfileForm): void;
-}>();
-
 function updateField(field: keyof ProfileForm, value: string) {
-  emit('update:modelValue', {
-    ...props.modelValue,
+  model.value = {
+    ...model.value,
     [field]: value,
-  });
+  };
 }
 </script>
 
@@ -36,7 +30,7 @@ function updateField(field: keyof ProfileForm, value: string) {
       <label for="first-name" class="form-label">{{ $t('common.first_name') }}</label>
       <input
         id="first-name"
-        :value="modelValue.firstName"
+        :value="model.firstName"
         type="text"
         class="form-control"
         :class="{ 'is-invalid': !!errors.firstName }"
@@ -45,7 +39,7 @@ function updateField(field: keyof ProfileForm, value: string) {
         @input="updateField('firstName', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.firstName" class="invalid-feedback d-block">
-        {{ $t(toValidationErrorI18nKey(errors.firstName)) }}
+        {{ $t(errors.firstName) }}
       </div>
     </div>
 
@@ -53,7 +47,7 @@ function updateField(field: keyof ProfileForm, value: string) {
       <label for="last-name" class="form-label">{{ $t('common.last_name') }}</label>
       <input
         id="last-name"
-        :value="modelValue.lastName"
+        :value="model.lastName"
         type="text"
         class="form-control"
         :class="{ 'is-invalid': !!errors.lastName }"
@@ -62,14 +56,14 @@ function updateField(field: keyof ProfileForm, value: string) {
         @input="updateField('lastName', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.lastName" class="invalid-feedback d-block">
-        {{ $t(toValidationErrorI18nKey(errors.lastName)) }}
+        {{ $t(errors.lastName) }}
       </div>
     </div>
 
     <!-- Email -->
     <div class="col-12">
       <label for="email" class="form-label">{{ $t('common.email') }}</label>
-      <input id="email" type="email" class="form-control" :value="modelValue.email" readonly />
+      <input id="email" type="email" class="form-control" :value="model.email" readonly />
     </div>
 
     <!-- Ngày sinh -->
@@ -77,7 +71,7 @@ function updateField(field: keyof ProfileForm, value: string) {
       <label for="birthday" class="form-label">{{ $t('common.birthday') }}</label>
       <input
         id="birthday"
-        :value="modelValue.birthday"
+        :value="model.birthday"
         type="date"
         class="form-control"
         :class="{ 'is-invalid': !!errors.birthday }"
@@ -85,7 +79,7 @@ function updateField(field: keyof ProfileForm, value: string) {
         @input="updateField('birthday', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.birthday" class="invalid-feedback d-block">
-        {{ $t(toValidationErrorI18nKey(errors.birthday)) }}
+        {{ $t(errors.birthday) }}
       </div>
     </div>
 
@@ -97,14 +91,14 @@ function updateField(field: keyof ProfileForm, value: string) {
         type="tel"
         class="form-control"
         :class="{ 'is-invalid': !!errors.phoneNumber }"
-        :value="modelValue.phoneNumber"
+        :value="model.phoneNumber"
         pattern="0[35789][0-9]{8}"
         maxlength="10"
         :disabled="disabled"
         @input="updateField('phoneNumber', ($event.target as HTMLInputElement).value)"
       />
       <div v-if="errors.phoneNumber" class="invalid-feedback d-block">
-        {{ $t(toValidationErrorI18nKey(errors.phoneNumber)) }}
+        {{ $t(errors.phoneNumber) }}
       </div>
     </div>
   </div>

@@ -2,9 +2,8 @@
 import type { FieldErrors, ProfileForm } from '../../types/settings';
 import PersonalInfoFields from './PersonalInfoFields.vue';
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue: ProfileForm;
     errors?: FieldErrors;
     loading?: boolean;
     loadingUser?: boolean;
@@ -22,15 +21,11 @@ const props = withDefaults(
   },
 );
 
+const model = defineModel<ProfileForm>({ required: true });
+
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: ProfileForm): void;
   (e: 'submit'): void;
 }>();
-
-const syncedFormData = computed<ProfileForm>({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
 
 function handleSubmit() {
   emit('submit');
@@ -46,25 +41,25 @@ function handleSubmit() {
         {{ $t('settings.personal_information.basic_info.section_title') }}
       </h2>
 
-      <div v-if="props.genericError" class="alert alert-danger py-2 mb-3" role="alert">
-        {{ $t(props.genericError) }}
+      <div v-if="genericError" class="alert alert-danger py-2 mb-3" role="alert">
+        {{ $t(genericError) }}
       </div>
 
-      <div v-if="props.successMessage" class="alert alert-success py-2 mb-3" role="status">
-        {{ $t(props.successMessage) }}
+      <div v-if="successMessage" class="alert alert-success py-2 mb-3" role="status">
+        {{ $t(successMessage) }}
       </div>
 
       <personal-info-fields
-        v-model="syncedFormData"
-        :errors="props.errors"
-        :disabled="props.loading || props.loadingUser"
+        v-model="model"
+        :errors="errors"
+        :disabled="loading || loadingUser"
       />
 
       <!-- Save button inside the card, bottom right -->
       <button
         type="submit"
         class="btn btn-primary ms-auto mt-3 d-inline-flex align-items-center"
-        :disabled="props.loading || props.loadingUser || !props.hasChanges"
+        :disabled="loading || loadingUser || !hasChanges"
       >
         <i class="bi bi-floppy-fill text-white"></i>
       </button>

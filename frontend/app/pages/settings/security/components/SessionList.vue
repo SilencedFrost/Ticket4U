@@ -2,10 +2,8 @@
 import type { FetchError } from 'ofetch';
 import type { Session } from '../../types/settings';
 import { useSettingsApi } from '../../composables/useSettingsApi';
-import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 
 const { fetchSessions, deleteSession, extractMessage } = useSettingsApi();
-const { toGenericErrorI18nKey } = useI18nErrorKey();
 const loading = ref(false);
 const genericError = ref('');
 
@@ -22,7 +20,7 @@ async function loadSessions() {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+      : extractMessage(fetchError) ?? 'auth.error.unknown';
   } finally {
     loading.value = false;
   }
@@ -43,7 +41,7 @@ async function removeSession(displayId: string) {
     const fetchError = err as FetchError;
     genericError.value = !fetchError.statusCode
       ? 'auth.error.network'
-      : toGenericErrorI18nKey(extractMessage(fetchError) ?? undefined);
+      : extractMessage(fetchError) ?? 'auth.error.unknown';
   } finally {
     deletingIds.value.delete(displayId);
   }

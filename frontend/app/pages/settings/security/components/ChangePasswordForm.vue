@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import { useI18nErrorKey } from '../../../../composables/useI18nErrorKey';
 import { useSettingsApi } from '../../composables/useSettingsApi';
 
 const { validatePasswordValue } = usePasswordValidation();
 const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();
-const { toValidationErrorI18nKey, toGenericErrorI18nKey } = useI18nErrorKey();
 
 
 interface ChangePasswordError {
@@ -45,9 +43,12 @@ const isViewingNewPassword = ref(false);
 const genericError = ref('');
 const successMessage = ref('');
 
-const error = reactive<ChangePasswordError>(emptyError);
-const formData = reactive<ChangePasswordForm>(emptyForm);
-const touched = reactive<ChangePasswordTouched>(defaultTouched);
+const error = reactive<ChangePasswordError>({
+  ...emptyError,
+  newPassword: [],
+});
+const formData = reactive<ChangePasswordForm>({ ...emptyForm });
+const touched = reactive<ChangePasswordTouched>({ ...defaultTouched });
 
 
 // Onblur function to do validation
@@ -140,12 +141,12 @@ function submitChangePassword() {
 }
 
 function resetFormState() {
-  formData.currentPassword = '';
-  formData.newPassword = '';
-  touched.currentPassword = false;
-  touched.newPassword = false;
-  error.currentPassword = '';
-  error.newPassword = [];
+  Object.assign(formData, emptyForm);
+  Object.assign(touched, defaultTouched);
+  Object.assign(error, {
+    ...emptyError,
+    newPassword: [],
+  });
 }
 
 function beginSubmit() {
@@ -163,21 +164,16 @@ function applyPasswordFieldErrors(fieldErrors: Record<string, string>): boolean 
   let hasFieldErrors = false;
 
   if (fieldErrors.currentPassword) {
-    error.currentPassword = toValidationErrorI18nKey(fieldErrors.currentPassword);
+    error.currentPassword = fieldErrors.currentPassword;
     hasFieldErrors = true;
   }
 
   if (fieldErrors.newPassword) {
-    error.newPassword = [toValidationErrorI18nKey(fieldErrors.newPassword)];
+    error.newPassword = [fieldErrors.newPassword];
     hasFieldErrors = true;
   }
 
   return hasFieldErrors;
-}
-
-function isCurrentPasswordErrorMessage(message: string): boolean {
-  // Fallback for legacy backend responses that do not include stable error codes.
-  return message.toLowerCase().includes('current password');
 }
 
 function handlePasswordChangeError(fetchError: FetchError) {
@@ -193,14 +189,7 @@ function handlePasswordChangeError(fetchError: FetchError) {
     return;
   }
 
-  const message = extractMessage(fetchError);
-
-  if (message && isCurrentPasswordErrorMessage(message)) {
-    error.currentPassword = 'settings.security.change_password.errors.current_password_incorrect';
-    return;
-  }
-
-  genericError.value = toGenericErrorI18nKey(message ?? undefined);
+  genericError.value = extractMessage(fetchError) ?? 'auth.error.unknown';
 }
 
 async function submitChangePasswordAsync() {

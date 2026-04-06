@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core';
+import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core';
 import SettingsNavMenu from './SettingsNavMenu.vue';
 import '../style/settings.css';
 
@@ -12,7 +12,8 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
-const isDesktopViewport = useMediaQuery('(min-width: 768px)');
+const isDesktopViewport = useBreakpoints(breakpointsBootstrapV5).greaterOrEqual('md');
+
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 

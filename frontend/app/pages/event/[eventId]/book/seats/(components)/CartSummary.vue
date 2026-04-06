@@ -12,10 +12,13 @@ const props = defineProps<{
   totalTickets: number
 }>()
 
-defineEmits<{ (e: 'removeItem', index: number): void }>()
+const emit = defineEmits<{
+  (e: 'removeItem', index: number): void
+  (e: 'removeSeat', itemIndex: number, seatUuid: string): void
+}>()
 
 const expandedIds = ref<Set<string>>(new Set())
-const toggleExpanded = (id: string) => {
+function toggleExpanded(id: string) {
   if (expandedIds.value.has(id)) expandedIds.value.delete(id)
   else expandedIds.value.add(id)
 }
@@ -49,7 +52,7 @@ function formatPrice(price: number): string {
 
     <!-- Ticket Info -->
     <div class="mb-4">
-      <h5 class="mb-3 text-reactive-secondary">{{ $t('select_ticket.ticket_info.title') }}</h5>
+      <h5 class="mb-3 text-reactive-primary">{{ $t('select_ticket.ticket_info.title') }}</h5>
 
       <!-- plain .card: light=#fcfcfc, dark=#1a1a1a
            gives lift over the #ececec/#111111 sidebar in both modes -->
@@ -114,7 +117,7 @@ function formatPrice(price: number): string {
                   </div>
                 </div>
                 <div v-if="ticket.giftImageUrl" class="mt-2">
-                  <img :src="ticket.giftImageUrl" class="rounded" style="max-height:80px;object-fit:cover;width:100%;" alt="GiftImage"/>
+                  <img :src="ticket.giftImageUrl" class="rounded" style="max-height:80px;object-fit:cover;width:100%;" alt="GiftImg"/>
                 </div>
               </div>
             </Transition>
@@ -150,15 +153,16 @@ function formatPrice(price: number): string {
               <div v-if="!item.isStanding && item.seats?.length" class="mt-2 d-flex flex-wrap gap-1">
                 <span
                     v-for="seat in item.seats" :key="seat.seatId"
-                    class="badge"
+                    class="badge d-inline-flex align-items-center gap-1"
                     :style="{ background: getTicketColor(item.zoneId) + '33', color: getTicketColor(item.zoneId), border: `1px solid ${getTicketColor(item.zoneId)}55` }"
                     style="font-size:0.65rem;"
                 >
                   {{ seat.seatId }}
+                  <i class="bi bi-x" style="cursor:pointer;font-size:0.7rem;" @click="emit('removeSeat', index, seat.seatUuid)"/>
                 </span>
               </div>
             </div>
-            <button class="btn btn-sm btn-outline-danger ms-2 flex-shrink-0" @click="$emit('removeItem', index)">
+            <button class="btn btn-sm btn-outline-danger ms-2 flex-shrink-0" @click="emit('removeItem', index)">
               <i class="bi bi-trash"/>
             </button>
           </div>

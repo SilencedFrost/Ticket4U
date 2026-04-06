@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import type { Ticket, SelectedSeat } from '../(types)/ticket.type'
-import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
-import type { CartItem } from '../(types)/event-payment.type'
+import type { Ticket, SelectedSeat } from '../(types)/ticket'
+import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout'
+import type { CartItem } from '../(types)/event-payment'
 
 const props = defineProps<{ tickets: Ticket[]; floors: Floor[]; cart: CartItem[] }>()
 const emit  = defineEmits<{
@@ -15,7 +15,8 @@ const activeFloorId = ref('')
 const floorDropdownOpen = ref(false)
 const activeFloor   = computed(() => props.floors.find(f => f.id === activeFloorId.value))
 watch(() => props.floors, floors => {
-  if (floors.length > 0 && !activeFloorId.value) activeFloorId.value = floors[0].id
+  const first = floors[0]
+  if (first && !activeFloorId.value) activeFloorId.value = first.id
 }, { immediate: true })
 watch(activeFloor, () => nextTick(() => draw()))
 
@@ -52,14 +53,14 @@ function onClickOutside() { floorDropdownOpen.value = false }
 onMounted(() => {
   updateSize()
   window.addEventListener('resize', updateSize)
-  window.addEventListener('click', onClickOutside)
+  globalThis.addEventListener('click', onClickOutside)
   const observer = new MutationObserver(() => draw())
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-bs-theme'] })
   onUnmounted(() => observer.disconnect())
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateSize)
-  window.removeEventListener('click', onClickOutside)
+  globalThis.removeEventListener('click', onClickOutside)
 })
 
 function zoomIn()    { scale.value = Math.min(MAX_SCALE, scale.value + ZOOM_STEP); draw() }
@@ -98,16 +99,21 @@ function handleWheel(e: WheelEvent) {
 
 let lastTouchDist = 0
 function onTouchStart(e: TouchEvent) {
-  if (e.touches.length === 1) { dragging = true; dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY }; panStart = { ...pan.value } }
+  const t0 = e.touches[0]
+  if (e.touches.length === 1 && t0) { dragging = true; dragStart = { x: t0.clientX, y: t0.clientY }; panStart = { ...pan.value } }
 }
 function onTouchMove(e: TouchEvent) {
   if (e.touches.length === 2) {
-    const dx = e.touches[0].clientX - e.touches[1].clientX, dy = e.touches[0].clientY - e.touches[1].clientY
-    const dist = Math.sqrt(dx * dx + dy * dy)
+    const t0 = e.touches[0], t1 = e.touches[1]
+    if (!t0 || !t1) return
+    const dx = t0.clientX - t1.clientX, dy = t0.clientY - t1.clientY
+    const dist = Math.hypot(dx, dy)
     if (lastTouchDist > 0) { scale.value = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale.value * dist / lastTouchDist)); draw() }
     lastTouchDist = dist
   } else if (dragging && e.touches.length === 1) {
-    pan.value = { x: panStart.x + e.touches[0].clientX - dragStart.x, y: panStart.y + e.touches[0].clientY - dragStart.y }; draw()
+    const t0 = e.touches[0]
+    if (!t0) return
+    pan.value = { x: panStart.x + t0.clientX - dragStart.x, y: panStart.y + t0.clientY - dragStart.y }; draw()
   }
 }
 function onTouchEnd() { dragging = false; lastTouchDist = 0 }
@@ -132,21 +138,21 @@ function getSeatGridPositions(zone: LayoutZone): Map<string, { x: number; y: num
   const map   = new Map<string, { x: number; y: number }>()
   if (!seats.length) return map
   const sorted = [...seats].sort((a, b) => {
-    const ra = a.seat_id.replace(/\d/g, ''), rb = b.seat_id.replace(/\d/g, '')
+    const ra = a.seat_id.replaceAll(/\d/g, ''), rb = b.seat_id.replaceAll(/\d/g, '')
     if (ra !== rb) return ra.localeCompare(rb)
-    return parseInt(a.seat_id.replace(/\D/g, '') || '0') - parseInt(b.seat_id.replace(/\D/g, '') || '0')
+    return Number.parseInt(a.seat_id.replaceAll(/\D/g, '') || '0') - Number.parseInt(b.seat_id.replaceAll(/\D/g, '') || '0')
   })
   const minX  = Math.min(zone.corner1.x, zone.corner4.x)
   const maxX  = Math.max(zone.corner2.x, zone.corner3.x)
   const minY  = Math.min(zone.corner1.y, zone.corner2.y)
   const maxY  = Math.max(zone.corner3.y, zone.corner4.y)
-  const rows  = [...new Set(sorted.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
-  const cols  = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+  const rows  = [...new Set(sorted.map(s => s.seat_id.replaceAll(/\d/g, '').toUpperCase()))].sort()
+  const cols  = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replaceAll(/\d/g, '').toUpperCase() === r).length))
   const cellW = (maxX - minX) / (cols + 1)
   const cellH = (maxY - minY) / (rows.length + 1)
   for (const seat of sorted) {
-    const row = seat.seat_id.replace(/\d/g, '').toUpperCase()
-    const col = parseInt(seat.seat_id.replace(/\D/g, '') || '1') - 1
+    const row = seat.seat_id.replaceAll(/\d/g, '').toUpperCase()
+    const col = Number.parseInt(seat.seat_id.replaceAll(/\D/g, '') || '1') - 1
     const ri  = rows.indexOf(row)
     map.set(seat.seat_id, {
       x: minX + cellW * (col + 0.5) + cellW / 2,
@@ -157,9 +163,97 @@ function getSeatGridPositions(zone: LayoutZone): Map<string, { x: number; y: num
 }
 
 // Key by UUID — seat_id like "A1" is not globally unique across zones
-const isSeatSelected = (seat: LayoutSeat) =>
-    selectedSeats.value.some(s => s.seatUuid === seat.seat_uuid) ||
-    cartSeats.value.has(seat.seat_uuid ?? '')
+function isSeatSelected(seat: LayoutSeat): boolean {
+  return selectedSeats.value.some(s => s.seatUuid === seat.seat_uuid) ||
+      cartSeats.value.has(seat.seat_uuid ?? '')
+}
+
+// Draw helpers
+function drawStage(ctx: CanvasRenderingContext2D, stage: { x1: number; y1: number; x2: number; y2: number }) {
+  const sp1 = toCanvas(stage.x1, stage.y1), sp2 = toCanvas(stage.x2, stage.y2)
+  ctx.fillStyle = '#f59e0b'
+  ctx.beginPath(); ctx.roundRect(sp1.x, sp1.y, sp2.x - sp1.x, sp2.y - sp1.y, 4); ctx.fill()
+  ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12px sans-serif'
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+  ctx.fillText('Stage / Screen', (sp1.x + sp2.x) / 2, (sp1.y + sp2.y) / 2)
+}
+
+function drawZonePolygon(ctx: CanvasRenderingContext2D, zone: LayoutZone, soldOut: boolean) {
+  const c1 = toCanvas(zone.corner1.x, zone.corner1.y)
+  const c2 = toCanvas(zone.corner2.x, zone.corner2.y)
+  const c3 = toCanvas(zone.corner3.x, zone.corner3.y)
+  const c4 = toCanvas(zone.corner4.x, zone.corner4.y)
+  ctx.beginPath(); ctx.moveTo(c1.x, c1.y); ctx.lineTo(c2.x, c2.y)
+  ctx.lineTo(c3.x, c3.y); ctx.lineTo(c4.x, c4.y); ctx.closePath()
+  ctx.fillStyle   = soldOut ? '#37415133' : zone.color + '44'
+  ctx.strokeStyle = soldOut ? '#4B5563'   : zone.color
+  ctx.lineWidth   = 2; ctx.globalAlpha = soldOut ? 0.5 : 1
+  ctx.fill(); ctx.stroke(); ctx.globalAlpha = 1
+}
+
+function drawZoneLabel(ctx: CanvasRenderingContext2D, zone: LayoutZone, soldOut: boolean, price: string) {
+  const cx  = (zone.corner1.x + zone.corner2.x + zone.corner3.x + zone.corner4.x) / 4
+  const cy  = (zone.corner1.y + zone.corner2.y + zone.corner3.y + zone.corner4.y) / 4
+  const lp  = toCanvas(cx, cy)
+  const label = zone.display_name ?? zone.zone_name
+  ctx.fillStyle = getTextColor(); ctx.font = 'bold 12px sans-serif'
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+  ctx.fillText(label, lp.x, lp.y - (price ? 8 : 0))
+  if (price) { ctx.font = '11px sans-serif'; ctx.fillStyle = getTextColor(); ctx.fillText(price, lp.x, lp.y + 8) }
+  if (zone.zone_type === 'standing' && !soldOut) {
+    ctx.font = '10px sans-serif'; ctx.fillStyle = zone.color + 'cc'
+    ctx.fillText('[ Standing ]', lp.x, lp.y + 22)
+  }
+}
+
+function computeSeatRadius(zone: LayoutZone, seatSize: number): number {
+  const zoneW = Math.max(zone.corner2.x, zone.corner3.x) - Math.min(zone.corner1.x, zone.corner4.x)
+  const zoneH = Math.max(zone.corner3.y, zone.corner4.y) - Math.min(zone.corner1.y, zone.corner2.y)
+  const rows  = [...new Set(zone.seats.map(s => s.seat_id.replaceAll(/\d/g, '').toUpperCase()))].sort()
+  const cols  = Math.max(...rows.map(r => zone.seats.filter(s => s.seat_id.replaceAll(/\d/g, '').toUpperCase() === r).length))
+  const cellW = (zoneW / (cols + 1)) * CANVAS_W * scale.value
+  const cellH = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
+  const maxR  = Math.min(cellW, cellH) / 2 * 0.7
+  return Math.min(Math.max(4, seatSize / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR)
+}
+
+function getSeatColor(unavailable: boolean, selected: boolean): string {
+  if (unavailable) return '#6b7280'
+  if (selected)    return '#3b82f6'
+  return '#22c55e'
+}
+
+function drawSeat(ctx: CanvasRenderingContext2D, seat: LayoutSeat, cp: { x: number; y: number }, r: number) {
+  const unavailable = seat.status === 'BOOKED' || seat.status === 'HOLD'
+  const selected    = isSeatSelected(seat)
+  ctx.beginPath(); ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2)
+  ctx.fillStyle = getSeatColor(unavailable, selected)
+  ctx.fill()
+  if (selected) { ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.stroke() }
+  if (r >= 7) {
+    ctx.fillStyle = '#fff'; ctx.font = `${Math.max(6, r * 0.7)}px sans-serif`
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    ctx.fillText(seat.seat_id, cp.x, cp.y)
+  }
+}
+
+function drawZoneSeats(ctx: CanvasRenderingContext2D, zone: LayoutZone, seatSize: number) {
+  const gridPos = getSeatGridPositions(zone)
+  const r       = computeSeatRadius(zone, seatSize)
+  for (const seat of zone.seats) {
+    const np = gridPos.get(seat.seat_id); if (!np) continue
+    drawSeat(ctx, seat, toCanvas(np.x, np.y), r)
+  }
+}
+
+function drawZone(ctx: CanvasRenderingContext2D, zone: LayoutZone, seatSize: number) {
+  const zoneTicket = getZoneTicket(zone)
+  const soldOut    = zoneTicket?.soldOut ?? false
+  const price      = zoneTicket ? formatPrice(zoneTicket.price) : ''
+  drawZonePolygon(ctx, zone, soldOut)
+  if (zone.zone_type === 'standing' || zone.seats.length === 0) drawZoneLabel(ctx, zone, soldOut, price)
+  if (zone.zone_type === 'sitting' && zone.seats.length > 0) drawZoneSeats(ctx, zone, seatSize)
+}
 
 // Draw
 function draw() {
@@ -168,121 +262,52 @@ function draw() {
   const floor  = activeFloor.value; if (!floor) { ctx.clearRect(0, 0, canvas.width, canvas.height); return }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+  if (floor.layout.stage) drawStage(ctx, floor.layout.stage)
+  for (const zone of floor.layout.zones) drawZone(ctx, zone, floor.layout.seat_size ?? 14)
+}
 
-  // Stage bar
-  const st = floor.layout.stage
-  if (st) {
-    const sp1 = toCanvas(st.x1, st.y1), sp2 = toCanvas(st.x2, st.y2)
-    ctx.fillStyle = '#f59e0b'
-    ctx.beginPath(); ctx.roundRect(sp1.x, sp1.y, sp2.x - sp1.x, sp2.y - sp1.y, 4); ctx.fill()
-    ctx.fillStyle = '#1a1a1a'; ctx.font = 'bold 12px sans-serif'
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-    ctx.fillText('Stage / Screen', (sp1.x + sp2.x) / 2, (sp1.y + sp2.y) / 2)
-  }
-
-  // Zones
+function findClickedSeat(floor: Floor, cx: number, cy: number): { seat: LayoutSeat; zone: LayoutZone } | null {
   for (const zone of floor.layout.zones) {
-    const zoneTicket = getZoneTicket(zone)
-    const soldOut    = zoneTicket?.soldOut ?? false
-
-    const c1 = toCanvas(zone.corner1.x, zone.corner1.y)
-    const c2 = toCanvas(zone.corner2.x, zone.corner2.y)
-    const c3 = toCanvas(zone.corner3.x, zone.corner3.y)
-    const c4 = toCanvas(zone.corner4.x, zone.corner4.y)
-
-    ctx.beginPath(); ctx.moveTo(c1.x, c1.y); ctx.lineTo(c2.x, c2.y)
-    ctx.lineTo(c3.x, c3.y); ctx.lineTo(c4.x, c4.y); ctx.closePath()
-    ctx.fillStyle   = soldOut ? '#37415133' : zone.color + '44'
-    ctx.strokeStyle = soldOut ? '#4B5563'   : zone.color
-    ctx.lineWidth   = 2; ctx.globalAlpha = soldOut ? 0.5 : 1
-    ctx.fill(); ctx.stroke(); ctx.globalAlpha = 1
-
-    const cx    = (zone.corner1.x + zone.corner2.x + zone.corner3.x + zone.corner4.x) / 4
-    const cy    = (zone.corner1.y + zone.corner2.y + zone.corner3.y + zone.corner4.y) / 4
-    const lp    = toCanvas(cx, cy)
-    const label = zone.display_name ?? zone.zone_name
-    const price = zoneTicket ? formatPrice(zoneTicket.price) : ''
-
-    if (zone.zone_type === 'standing' || zone.seats.length === 0) {
-      ctx.fillStyle = getTextColor(); ctx.font = 'bold 12px sans-serif'
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-      ctx.fillText(label, lp.x, lp.y - (price ? 8 : 0))
-      if (price) { ctx.font = '11px sans-serif'; ctx.fillStyle = getTextColor(); ctx.fillText(price, lp.x, lp.y + 8) }
-      if (zone.zone_type === 'standing' && !soldOut) {
-        ctx.font = '10px sans-serif'; ctx.fillStyle = zone.color + 'cc'
-        ctx.fillText('[ Standing ]', lp.x, lp.y + 22)
-      }
-    }
-
-    // Seats
-    if (zone.zone_type === 'sitting' && zone.seats.length > 0) {
-      const gridPos = getSeatGridPositions(zone)
-      const zoneW   = Math.max(zone.corner2.x, zone.corner3.x) - Math.min(zone.corner1.x, zone.corner4.x)
-      const zoneH   = Math.max(zone.corner3.y, zone.corner4.y) - Math.min(zone.corner1.y, zone.corner2.y)
-      const rows    = [...new Set(zone.seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
-      const cols    = Math.max(...rows.map(r => zone.seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
-      const cellW   = (zoneW / (cols + 1)) * CANVAS_W * scale.value
-      const cellH   = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
-      const maxR    = Math.min(cellW, cellH) / 2 * 0.7
-      const r       = Math.min(Math.max(4, (floor.layout.seat_size ?? 14) / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR)
-
-      for (const seat of zone.seats) {
-        const np = gridPos.get(seat.seat_id); if (!np) continue
-        const cp = toCanvas(np.x, np.y)
-        const unavailable = seat.status === 'BOOKED' || seat.status === 'HOLD'
-        const selected    = isSeatSelected(seat)
-        ctx.beginPath(); ctx.arc(cp.x, cp.y, r, 0, Math.PI * 2)
-        ctx.fillStyle = unavailable ? '#6b7280' : selected ? '#3b82f6' : '#22c55e'
-        ctx.fill()
-        if (selected) { ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.stroke() }
-        if (r >= 7) {
-          ctx.fillStyle = '#fff'; ctx.font = `${Math.max(6, r * 0.7)}px sans-serif`
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-          ctx.fillText(seat.seat_id, cp.x, cp.y)
-        }
-      }
+    if (zone.zone_type !== 'sitting') continue
+    const gridPos = getSeatGridPositions(zone)
+    const r       = computeSeatRadius(zone, floor.layout.seat_size ?? 14) + 4
+    for (const seat of zone.seats) {
+      const np = gridPos.get(seat.seat_id); if (!np) continue
+      if (Math.hypot(cx - toCanvas(np.x, np.y).x, cy - toCanvas(np.x, np.y).y) <= r) return { seat, zone }
     }
   }
+  return null
+}
+
+function findClickedZone(floor: Floor, nx: number, ny: number): LayoutZone | null {
+  for (const zone of floor.layout.zones) {
+    if (isPointInZone(nx, ny, zone)) return zone
+  }
+  return null
 }
 
 // Click handling
 function handleCanvasClick(e: MouseEvent) {
   if (dragging) return
-  const rect = canvasRef.value!.getBoundingClientRect()
-  const cx = e.clientX - rect.left, cy = e.clientY - rect.top
+  const rect        = canvasRef.value!.getBoundingClientRect()
+  const cx          = e.clientX - rect.left, cy = e.clientY - rect.top
   const { x: nx, y: ny } = toNorm(cx, cy)
-  const floor = activeFloor.value; if (!floor) return
+  const floor       = activeFloor.value; if (!floor) return
 
-  // Hit-test seats first
-  for (const zone of floor.layout.zones) {
-    if (zone.zone_type !== 'sitting') continue
-    const gridPos = getSeatGridPositions(zone)
-    const zoneW   = Math.max(zone.corner2.x, zone.corner3.x) - Math.min(zone.corner1.x, zone.corner4.x)
-    const zoneH   = Math.max(zone.corner3.y, zone.corner4.y) - Math.min(zone.corner1.y, zone.corner2.y)
-    const rows    = [...new Set(zone.seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
-    const cols    = Math.max(...rows.map(r => zone.seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
-    const cellW   = (zoneW / (cols + 1)) * CANVAS_W * scale.value
-    const cellH   = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
-    const maxR    = Math.min(cellW, cellH) / 2 * 0.7
-    const r       = Math.min(Math.max(4, (floor.layout.seat_size ?? 14) / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR) + 4
-    for (const seat of zone.seats) {
-      const np = gridPos.get(seat.seat_id); if (!np) continue
-      const cp = toCanvas(np.x, np.y)
-      if (Math.hypot(cx - cp.x, cy - cp.y) <= r) { handleSeatClick(seat, zone); return }
-    }
-  }
+  const hitSeat = findClickedSeat(floor, cx, cy)
+  if (hitSeat) { handleSeatClick(hitSeat.seat, hitSeat.zone); return }
 
-  // Hit-test zones (standing or seated with no seats)
-  for (const zone of floor.layout.zones) {
-    if (isPointInZone(nx, ny, zone)) { handleZoneClick(zone); return }
-  }
+  const hitZone = findClickedZone(floor, nx, ny)
+  if (hitZone) handleZoneClick(hitZone)
 }
 
-const isPointInZone = (x: number, y: number, zone: LayoutZone): boolean => {
+function isPointInZone(x: number, y: number, zone: LayoutZone): boolean {
   const pts = [zone.corner1, zone.corner2, zone.corner3, zone.corner4]
   let inside = false
   for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
-    const xi = pts[i].x, yi = pts[i].y, xj = pts[j].x, yj = pts[j].y
+    const pi = pts[i], pj = pts[j]
+    if (!pi || !pj) continue
+    const xi = pi.x, yi = pi.y, xj = pj.x, yj = pj.y
     if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside
   }
   return inside
@@ -306,7 +331,7 @@ const maxStandingAllowed = computed(() => {
       .find(item => item.zoneId === selectedStandingZone.value?.zone_uuid && item.isStanding)
       ?.quantity ?? 0
   // null means unlimited — use capacity as ceiling
-  const max = t.maxPerAccount != null ? Math.min(cap, t.maxPerAccount) : cap
+  const max = Math.min(cap, t.maxPerAccount ?? cap)
   return Math.max(0, max - inCart)
 })
 watch(maxStandingAllowed, (newMax) => {
@@ -342,7 +367,7 @@ function handleSeatClick(seat: LayoutSeat, zone: LayoutZone) {
     const seatsInCart = props.cart.find(item => item.zoneId === zone.zone_uuid && !item.isStanding)?.seats?.length ?? 0
     const cap         = zoneTicket.capacity ?? 0
     // null means unlimited — use capacity as ceiling
-    const max = zoneTicket.maxPerAccount != null ? Math.min(cap, zoneTicket.maxPerAccount) : cap
+    const max = Math.min(cap, zoneTicket.maxPerAccount ?? cap)
     if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length + seatsInCart >= max) {
       seatLimitReached.value = true; seatLimitMax.value = max
       setTimeout(() => { seatLimitReached.value = false }, 2500)
@@ -356,7 +381,7 @@ function handleSeatClick(seat: LayoutSeat, zone: LayoutZone) {
       zoneUuid:  zone.zone_uuid,
       zoneName:  zone.display_name ?? zone.zone_name,
       zoneColor: zone.color,
-      price:     seat.priceOverride != null ? seat.priceOverride : zoneTicket.price,
+      price: seat.priceOverride ?? zoneTicket.price,
     })
   }
   draw()
@@ -372,38 +397,49 @@ function addSeatsToCart() {
   const byZone = selectedSeats.value.reduce((acc, s) => {
     const k = s.zoneUuid ?? s.zoneName
     if (!acc[k]) acc[k] = []
-    acc[k].push(s); return acc
+    acc[k]!.push(s); return acc
   }, {} as Record<string, SelectedSeat[]>)
   for (const seats of Object.values(byZone)) {
-    const f        = seats[0]
+    const f = seats[0]
+    if (!f) continue
     const dbTicket = props.tickets.find(t => t.id === f.zoneUuid)
     const zoneName = dbTicket?.name ?? f.zoneName
     emit('addTicket', f.zoneUuid ?? f.zoneName, zoneName, seats.length, f.price, false, seats)
   }
-  // Add to cartSeats immediately so seats turn blue right away,
-  // without waiting for parent watch → syncCartSeats roundtrip
   for (const s of selectedSeats.value) cartSeats.value.add(s.seatUuid)
   selectedSeats.value = []
   draw()
 }
 
-const syncCartSeats = (items: CartItem[]) => {
+function syncCartSeats(items: CartItem[]) {
   cartSeats.value = new Set(items.flatMap(item => item.seats?.map(s => s.seatUuid) ?? []))
   draw()
 }
 defineExpose({ syncCartSeats })
 
 // Helpers
-const getZoneTicket = (zone: LayoutZone): Ticket | undefined =>
-    props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
+function getZoneTicket(zone: LayoutZone): Ticket | undefined {
+  return props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
+}
 
 // Theme-reactive: dark mode = white text, light mode = dark text
-const getTextColor = () =>
-    document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#ffffff' : '#111111'
+function getTextColor(): string {
+  return document.documentElement.dataset.bsTheme === 'dark' ? '#ffffff' : '#111111'
+}
 
-const formatPrice = (price: number) => new Intl.NumberFormat('vi-VN').format(price) + ' đ'
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
+}
 
 watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick(() => draw()), { deep: true })
+
+// Watch cart prop directly so cartSeats stays in sync whenever the parent
+// mutates it — covers both removeFromCart and removeSeatFromCart without
+// relying on the parent explicitly calling syncCartSeats via ref
+watch(() => props.cart, (newCart) => {
+  cartSeats.value = new Set(newCart.flatMap(item => item.seats?.map(s => s.seatUuid) ?? []))
+  draw()
+}, { deep: true })
 </script>
 
 <template>
@@ -442,9 +478,9 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
     <div ref="canvasContainer" class="flex-grow-1 position-relative overflow-hidden bg-reactive-secondary">
       <!-- Zoom controls — top left -->
       <div class="position-absolute d-flex flex-column gap-1" style="top:12px;left:12px;z-index:10;">
-        <button class="btn btn-sm btn-primary" @click="zoomIn" title="Zoom in"><i class="bi bi-plus-lg"/></button>
-        <button class="btn btn-sm btn-primary" @click="zoomOut" title="Zoom out"><i class="bi bi-dash-lg"/></button>
-        <button class="btn btn-sm btn-primary" @click="resetZoom" title="Reset zoom"><i class="bi bi-arrows-fullscreen"/></button>
+        <button class="btn btn-sm btn-primary" title="Zoom in" @click="zoomIn" ><i class="bi bi-plus-lg"/></button>
+        <button class="btn btn-sm btn-primary" title="Zoom out" @click="zoomOut" ><i class="bi bi-dash-lg"/></button>
+        <button class="btn btn-sm btn-primary" title="Reset zoom" @click="resetZoom" ><i class="bi bi-arrows-fullscreen"/></button>
       </div>
 
       <!-- Floor selector — top right, only shown when floors exist -->

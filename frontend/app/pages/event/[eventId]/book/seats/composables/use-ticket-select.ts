@@ -116,7 +116,7 @@ function buildFloor(fl: RawLayoutFloor, zoneById: Map<string, Zone>): Floor {
     floor_order: fl.floor_order ?? 1,
     layout: {
       seat_size: fl.global_seat_size ?? 14,
-      stage:     fl.stage ?? { x1: -0.3, y1: -1.0, x2: 0.3, y2: -0.85 },
+      stage:     fl.stage ?? { x1: -0.3, y1: -1, x2: 0.3, y2: -0.85 },
       zones:     (fl.zones ?? []).map(z => buildLayoutZone(z, zoneById)),
     },
   }
@@ -143,7 +143,7 @@ function buildFloors(layoutJson: string | null, zones: Zone[]): Floor[] {
   const zoneById = new Map(zones.map(zone => [zone.id, zone]))
 
   return rawFloors
-      .sort((a, b) => (a.floor_order ?? 0) - (b.floor_order ?? 0))
+      .toSorted((a, b) => (a.floor_order ?? 0) - (b.floor_order ?? 0))
       .map(fl => buildFloor(fl, zoneById))
 }
 
@@ -162,7 +162,6 @@ function mapSeatingPlan(data: SeatingPlan): { tickets: Ticket[]; floors: Floor[]
   // Back-fill color from layout zone data (search all floors, not just floor 0).
   // Do NOT back-fill isStanding — it is already correct from DB zone.isStanding.
   // layout JSON zone_type is a display hint and can differ from the ticket type
-  // (e.g. all CIS Arena zones say zone_type=standing even for seated bleachers).
   for (const ticket of tickets) {
     for (const floor of floors) {
       const layoutZone = floor.layout.zones.find(z => z.zone_uuid === ticket.id)

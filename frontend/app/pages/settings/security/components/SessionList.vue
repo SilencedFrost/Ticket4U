@@ -8,6 +8,8 @@ const loading = ref(false);
 const genericError = ref('');
 
 const sessions = ref<Session[]>([]);
+// TODO: backend thêm field isCurrent: boolean vào Session response
+// để identify session hiện tại của người dùng
 const deletingIds = ref<Set<string>>(new Set());
 
 async function loadSessions() {
@@ -88,6 +90,7 @@ onMounted(() => {
           <code class="text-primary fw-bold">
             #{{ session.displayId.toUpperCase() }}
           </code>
+          <!-- TODO: hiển thị badge "Thiết bị này" nếu session.isCurrent === true -->
         </div>
 
         <div class="flex-fill">

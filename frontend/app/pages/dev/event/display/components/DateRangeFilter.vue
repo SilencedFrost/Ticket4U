@@ -2,8 +2,8 @@
   <details name="dev-event-filter-group" class="position-relative">
     <summary class="btn btn-info text-white d-inline-flex align-items-center gap-2 list-unstyled">
       <i class="bi bi-calendar-event fs-5"></i>
-      <span class="d-none d-sm-inline">Tất cả các ngày</span>
-      <span class="d-sm-none">Ngày</span>
+      <span class="d-none d-sm-inline">{{ $t('event_filter.date.all_dates') }}</span>
+      <span class="d-sm-none">{{ $t('event_filter.date.short') }}</span>
       <i class="bi bi-chevron-down ms-auto"></i>
     </summary>
 
@@ -13,32 +13,40 @@
     >
       <div class="d-flex flex-wrap gap-2 pb-3 mb-3 border-bottom">
         <button type="button" class="btn btn-sm btn-info text-white rounded-2">
-          Tất cả các ngày
+          {{ $t('event_filter.date.all_dates') }}
         </button>
-        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">Hôm nay</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">Ngày mai</button>
         <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">
-          Cuối tuần này
+          {{ $t('event_filter.date.today') }}
         </button>
-        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">Tháng này</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">
+          {{ $t('event_filter.date.tomorrow') }}
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">
+          {{ $t('event_filter.date.this_weekend') }}
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary rounded-2">
+          {{ $t('event_filter.date.this_month') }}
+        </button>
       </div>
 
       <div class="row g-3 mb-3">
         <div class="col-12 col-sm-6">
-          <label class="form-label small">Từ ngày</label>
+          <label class="form-label small">{{ $t('event_filter.date.from_date') }}</label>
           <input type="date" class="form-control" />
         </div>
         <div class="col-12 col-sm-6">
-          <label class="form-label small">Đến ngày</label>
+          <label class="form-label small">{{ $t('event_filter.date.to_date') }}</label>
           <input type="date" class="form-control" />
         </div>
       </div>
 
       <div class="d-flex gap-3 pt-3">
         <button type="button" class="btn btn-outline-secondary flex-fill rounded-2">
-          Thiết lập lại
+          {{ $t('common.action.reset') }}
         </button>
-        <button type="button" class="btn btn-primary flex-fill rounded-2">Áp dụng</button>
+        <button type="button" class="btn btn-primary flex-fill rounded-2">
+          {{ $t('common.action.apply') }}
+        </button>
       </div>
     </div>
   </details>

@@ -99,12 +99,16 @@
       "deny": "Deny",
       "buy": "Buy tickets now",
       "view": "View",
-      "remove": "Remove"
+      "remove": "Remove",
+      "reset": "Reset",
+      "apply": "Apply"
     },
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
+    "price": "Price",
+    "category": "Category",
     "currency": {
       "from": "From",
       "free": "Free"
@@ -139,6 +143,21 @@
       "about": "About the event",
       "ticket_info": "Ticket Information",
       "related": "You May Also Like"
+    }
+  },
+  "event_filter": {
+    "main": {
+      "button": "Filter"
+    },
+    "date": {
+      "all_dates": "All dates",
+      "short": "Date",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "this_weekend": "This weekend",
+      "this_month": "This month",
+      "from_date": "From date",
+      "to_date": "To date"
     }
   },
   "settings": {

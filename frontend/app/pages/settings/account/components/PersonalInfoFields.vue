@@ -3,6 +3,10 @@ import type { FieldErrors, ProfileForm } from '../../types/settings';
 
 const model = defineModel<ProfileForm>({ required: true });
 
+// TODO: add i18n key for birthday errors
+// TODO: add proper validation for old password field
+// TODO: add [i] that when user hovers mouse over or click "blank fields are unsaved"
+// TODO: allow nullable phone number
 withDefaults(
   defineProps<{
     errors?: FieldErrors;

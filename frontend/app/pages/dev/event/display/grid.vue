@@ -1,18 +1,22 @@
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core';
 import EventGrid from '~/features/event/components/layout/EventGrid.vue';
-import DateRangeFilter from './components/DateRangeFilter.vue';
-import MainFilter from './components/MainFilter.vue';
+import FilterBarDesktop from './components/FilterBarDesktop.vue';
+import FilterBarMobile from './components/FilterBarMobile.vue';
 import type { EventSummary } from '~/features/event/types/Event';
 
 const config = useRuntimeConfig();
 
 const eventList = ref<EventSummary[]>([]);
+const isDesktop = useMediaQuery('(min-width: 768px)');
 
 function closeOpenedFilterPanels() {
   const openedPanels = document.querySelectorAll<HTMLDetailsElement>(
     'details[name="dev-event-filter-group"][open]',
   );
-  openedPanels.forEach((panel) => panel.removeAttribute('open'));
+  openedPanels.forEach((panel) => {
+    panel.open = false;
+  });
 }
 
 function handleClickOutsideFilters(event: MouseEvent) {
@@ -37,21 +41,28 @@ async function getFeaturedEvents() {
 }
 
 onMounted(() => {
+  nextTick(() => closeOpenedFilterPanels());
   getFeaturedEvents();
   document.addEventListener('click', handleClickOutsideFilters);
+  window.addEventListener('pageshow', closeOpenedFilterPanels);
+});
+
+watch(isDesktop, () => {
+  nextTick(() => closeOpenedFilterPanels());
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutsideFilters);
+  window.removeEventListener('pageshow', closeOpenedFilterPanels);
 });
 </script>
 
 <template>
   <div class="p-3">
-    <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
-      <DateRangeFilter />
-      <MainFilter />
-    </div>
+    <ClientOnly>
+      <FilterBarDesktop v-if="isDesktop" />
+      <FilterBarMobile v-else />
+    </ClientOnly>
     <event-grid :events="eventList" />
   </div>
 </template>

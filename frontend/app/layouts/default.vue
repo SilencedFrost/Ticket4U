@@ -8,7 +8,7 @@ const route = useRoute();
 
 <template>
   <div class="d-flex flex-column overflow-hidden h-100">
-    <header class="sticky-top z-3">
+    <header class="sticky-top">
       <nav-bar />
     </header>
     <div class="overflow-auto flex-fill">

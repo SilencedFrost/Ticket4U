@@ -119,6 +119,43 @@
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
+  "navbar": {
+    "menu": {
+      "events": "Sự kiện",
+      "contact": "Liên hệ"
+    },
+    "searchOverlay": {
+      "recentSearches": "Tìm kiếm gần đây",
+      "popularSemantics": "Xu hướng phổ biến",
+      "browseByCategory": "Duyệt theo thể loại",
+      "browseByCity": "Duyệt theo thành phố",
+      "releaseDate": "Ngày công chiếu",
+      "eventPrice": "Giá vé",
+      "noResult": "Không tìm thấy sự kiện phù hợp.",
+      "recentTerms": {
+        "music": "âm nhạc",
+        "lullaboy": "tui muốn xem sự kiện lullaboy",
+        "comedy": "tui muốn xem hài"
+      },
+      "popularTerms": {
+        "anhTraiSayHi": "anh trai say hi",
+        "nhungThanhPhoMoMang": "những thành phố mơ màng",
+        "idecaf": "idecaf"
+      },
+      "categories": {
+        "music": "Âm nhạc",
+        "theatersAndArt": "Sân khấu & Nghệ thuật",
+        "sport": "Thể thao",
+        "workshops": "Hội thảo & Chuyên đề"
+      },
+      "cities": {
+        "hcmc": "TP. Ho Chi Minh",
+        "hanoi": "Hà Nội",
+        "dalat": "Đà Lạt",
+        "other": "Khu vực khác"
+      }
+    }
+  },
   "placeholder": {
     "search": "Tìm kiếm sự kiện, nghệ sĩ..."
   },

@@ -119,6 +119,43 @@
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
   },
+  "navbar": {
+    "menu": {
+      "events": "Events",
+      "contact": "Contact us"
+    },
+    "searchOverlay": {
+      "recentSearches": "Recent searches",
+      "popularSemantics": "Popular now",
+      "browseByCategory": "Browse by Category",
+      "browseByCity": "Browse by City",
+      "releaseDate": "Release date",
+      "eventPrice": "Price",
+      "noResult": "No matching events were found.",
+      "recentTerms": {
+        "music": "music",
+        "lullaboy": "I want to see lullaboy event",
+        "comedy": "I want to watch comedy"
+      },
+      "popularTerms": {
+        "anhTraiSayHi": "anh trai say hi",
+        "nhungThanhPhoMoMang": "nhung thanh pho mo mang",
+        "idecaf": "idecaf"
+      },
+      "categories": {
+        "music": "Music",
+        "theatersAndArt": "Theaters & Art",
+        "sport": "Sport",
+        "workshops": "Seminars & Workshops"
+      },
+      "cities": {
+        "hcmc": "Ho Chi Minh City",
+        "hanoi": "Ha Noi",
+        "dalat": "Da Lat",
+        "other": "Other locations"
+      }
+    }
+  },
   "placeholder": {
     "search": "Search events, artists..."
   },

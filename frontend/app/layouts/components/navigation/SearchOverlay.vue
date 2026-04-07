@@ -1,0 +1,194 @@
+<script setup lang="ts">
+import { useFormatter } from '~/composables/useFormatter';
+import SearchOverlayEmptyState from './search-overlay/SearchOverlayEmptyState.vue';
+import SearchOverlayResultsState from './search-overlay/SearchOverlayResultsState.vue';
+import { CATEGORY_CARD_SEEDS, CITY_CARD_SEEDS, SEARCH_RESULT_SEEDS } from './search-overlay/data';
+import type { BrowseCardItem, BrowseTab, SearchResultViewItem } from './search-overlay/types';
+
+const props = defineProps<{
+  query: string;
+}>();
+
+const emit = defineEmits<{
+  semanticSelected: [value: string];
+  close: [];
+}>();
+
+const { t, locale } = useI18n();
+const { formatPrice } = useFormatter();
+
+const historyStorageKey = 'ticket4u.search-history';
+const activeBrowseTab = ref<BrowseTab>('category');
+const recentSearchTerms = ref<string[]>([]);
+const internalQuery = ref<string>('');
+
+const fallbackRecentTerms = computed(() => [
+  t('navbar.searchOverlay.recentTerms.music'),
+  t('navbar.searchOverlay.recentTerms.lullaboy'),
+  t('navbar.searchOverlay.recentTerms.comedy'),
+]);
+
+const popularSemanticTerms = computed(() => [
+  t('navbar.searchOverlay.popularTerms.anhTraiSayHi'),
+  t('navbar.searchOverlay.popularTerms.nhungThanhPhoMoMang'),
+  t('navbar.searchOverlay.popularTerms.idecaf'),
+]);
+
+const categoryCards = computed<BrowseCardItem[]>(() =>
+  CATEGORY_CARD_SEEDS.map((seed) => ({
+    id: seed.id,
+    label: t(seed.labelKey),
+    imageUrl: seed.imageUrl,
+  })),
+);
+
+const cityCards = computed<BrowseCardItem[]>(() =>
+  CITY_CARD_SEEDS.map((seed) => ({
+    id: seed.id,
+    label: t(seed.labelKey),
+    imageUrl: seed.imageUrl,
+  })),
+);
+
+const normalizedQuery = computed(() => internalQuery.value.trim());
+const hasSearchQuery = computed(() => normalizedQuery.value.length > 0);
+
+const filteredResults = computed(() => {
+  if (!hasSearchQuery.value) return [];
+
+  const keyword = normalizedQuery.value.toLowerCase();
+
+  return SEARCH_RESULT_SEEDS.filter((event) => {
+    const searchableText = [event.title, ...event.tags].join(' ').toLowerCase();
+    return searchableText.includes(keyword);
+  })
+    .slice(0, 6)
+    .map<SearchResultViewItem>((event) => ({
+      id: event.id,
+      title: event.title,
+      imageUrl: event.imageUrl,
+      releaseDateLabel: formatReleaseDate(event.releaseDate),
+      priceLabel: formatPrice(event.price) ?? event.price.toLocaleString(),
+    }));
+});
+
+const effectiveRecentSearchTerms = computed(() => {
+  if (recentSearchTerms.value.length > 0) {
+    return recentSearchTerms.value;
+  }
+
+  return fallbackRecentTerms.value;
+});
+
+const activeBrowseCards = computed(() => {
+  return activeBrowseTab.value === 'category' ? categoryCards.value : cityCards.value;
+});
+
+function formatReleaseDate(releaseDate: string) {
+  const parsedDate = new Date(releaseDate);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return releaseDate;
+  }
+
+  return new Intl.DateTimeFormat(locale.value === 'vi' ? 'vi-VN' : 'en-US', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(parsedDate);
+}
+
+function persistRecentSearchTerms(nextTerms: string[]) {
+  if (!import.meta.client) return;
+  localStorage.setItem(historyStorageKey, JSON.stringify(nextTerms));
+}
+
+function saveRecentSearch(term: string) {
+  const normalizedTerm = term.trim();
+
+  if (!normalizedTerm) return;
+
+  const nextTerms = [
+    normalizedTerm,
+    ...recentSearchTerms.value.filter(
+      (currentTerm) => currentTerm.toLowerCase() !== normalizedTerm.toLowerCase(),
+    ),
+  ].slice(0, 5);
+
+  recentSearchTerms.value = nextTerms;
+  persistRecentSearchTerms(nextTerms);
+}
+
+function loadRecentSearchTerms() {
+  if (!import.meta.client) return;
+
+  const cachedTerms = localStorage.getItem(historyStorageKey);
+  if (!cachedTerms) return;
+
+  try {
+    const parsedTerms = JSON.parse(cachedTerms);
+
+    if (Array.isArray(parsedTerms)) {
+      recentSearchTerms.value = parsedTerms.filter((term) => typeof term === 'string').slice(0, 5);
+    }
+  } catch {
+    localStorage.removeItem(historyStorageKey);
+  }
+}
+
+function applySearchTerm(term: string) {
+  const nextSemantic = term.trim();
+
+  if (!nextSemantic) return;
+
+  internalQuery.value = nextSemantic;
+  emit('semanticSelected', nextSemantic);
+  saveRecentSearch(nextSemantic);
+}
+
+function chooseResult(result: SearchResultViewItem) {
+  internalQuery.value = result.title;
+  emit('semanticSelected', result.title);
+  saveRecentSearch(result.title);
+  emit('close');
+}
+
+watch(
+  () => props.query,
+  (nextQuery) => {
+    if (nextQuery !== internalQuery.value) {
+      internalQuery.value = nextQuery;
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
+  loadRecentSearchTerms();
+});
+</script>
+
+<template>
+  <div
+    class="search-overlay-scroll w-100 rounded-4 border border-secondary-subtle bg-reactive-primary text-reactive-primary p-3 shadow-lg overflow-auto"
+    @click.stop
+  >
+    <search-overlay-empty-state
+      v-if="!hasSearchQuery"
+      :recent-terms="effectiveRecentSearchTerms"
+      :popular-terms="popularSemanticTerms"
+      :active-browse-tab="activeBrowseTab"
+      :browse-cards="activeBrowseCards"
+      @update:active-browse-tab="activeBrowseTab = $event"
+      @pick-term="applySearchTerm"
+    />
+
+    <search-overlay-results-state v-else :results="filteredResults" @choose-result="chooseResult" />
+  </div>
+</template>
+
+<style scoped>
+.search-overlay-scroll {
+  max-height: calc(100vh - 7rem);
+}
+</style>

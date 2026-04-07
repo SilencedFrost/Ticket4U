@@ -43,6 +43,7 @@
       "blank": {
         "password": "Password can't be blank",
         "email": "Email can't be blank",
+        "identifier": "Email or phone number can't be blank",
         "phone": "Phone number can't be blank",
         "full_name": "Full name can't be blank"
       },
@@ -97,12 +98,17 @@
       "allow": "Allow",
       "deny": "Deny",
       "buy": "Buy tickets now",
-      "view": "View"
+      "view": "View",
+      "remove": "Remove"
     },
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
-    "phone": "Phone number"
+    "phone": "Phone number",
+    "currency": {
+      "from": "From",
+      "free": "Free"
+    }
   },
   "permissions": {
     "location": {
@@ -146,6 +152,9 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
+      "messages": {
+        "update_success": "Profile updated successfully."
+      },
       "basic_info": {
         "section_title": "Basic Information"
       }
@@ -156,16 +165,55 @@
       "change_password": {
         "title": "Change Password",
         "current_password": "Current Password",
-        "new_password": "New Password"
+        "new_password": "New Password",
+        "messages": {
+          "success": "Password updated successfully."
+        },
+        "errors": {
+          "current_password_incorrect": "Current password is incorrect."
+        }
       },
       "sessions": {
         "title": "Active Sessions",
+        "empty": "No active sessions.",
         "columns": {
           "last_access": "Last Access"
         },
         "unknown_device": "Unknown device"
       }
     }
+  },
+  "categories": {
+    "concert": "Concert",
+    "festival": "Festival",
+    "theater": "Theater",
+    "comedy": "Comedy",
+    "sports": "Sports",
+    "conference": "Conference",
+    "workshop": "Workshop",
+    "seminar": "Seminar",
+    "networking": "Networking",
+    "exhibition": "Exhibition",
+    "nightlife": "Nightlife",
+    "wellness": "Wellness",
+    "food": "Food",
+    "drinks": "Drinks",
+    "dance": "Dance",
+    "film": "Film",
+    "gaming": "Gaming",
+    "outdoor": "Outdoor",
+    "charity": "Charity",
+    "family": "Family",
+    "cultural": "Cultural",
+    "fashion": "Fashion",
+    "tech": "Tech",
+    "art": "Art",
+    "literature": "Literature",
+    "science": "Science",
+    "religion": "Religion",
+    "politics": "Politics",
+    "travel": "Travel",
+    "virtual": "Virtual"
   },
   "organizer": {
     "nav": {

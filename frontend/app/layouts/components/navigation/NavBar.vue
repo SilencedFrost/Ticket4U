@@ -22,15 +22,13 @@ function clearSearch() {
   }
 }
 
-function toggleMenu(menuKey?: string) {
-  const targetKey = menuKey || 'none';
+function toggleMenu(targetKey = 'none') {
   currentMenuKey.value = currentMenuKey.value === targetKey ? 'none' : targetKey;
 }
 
 onClickOutside(menuContainer, () => {
   toggleMenu();
 });
-const localePath = useLocalePath();
 </script>
 <template>
   <div ref="menuContainer">
@@ -41,7 +39,7 @@ const localePath = useLocalePath();
       <div class="container-fluid p-0 position-relative d-flex">
         <!-- Logo -->
         <div class="nav-container">
-          <nuxt-link-locale :to="localePath('/')">
+          <nuxt-link-locale :to="'/'">
             <img src="/logo-primary-128.png" class="h-100" alt="brand-logo" />
           </nuxt-link-locale>
         </div>

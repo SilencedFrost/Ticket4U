@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core';
 import SettingsNavMenu from './SettingsNavMenu.vue';
 import '../style/settings.css';
 
@@ -11,6 +12,8 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
+const isDesktopViewport = useBreakpoints(breakpointsBootstrapV5).greaterOrEqual('md');
+
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
@@ -104,8 +107,6 @@ function isSettingsPath(urlOrPath: string) {
   return settingsLocalePrefixes.value.some((prefix) => pathname.startsWith(prefix));
 }
 
-// Mobile-only handlers
-
 /**
  * Save the pre-settings route once when the layout mounts.
  * This allows the mobile back button on /settings to return to the entry page
@@ -164,7 +165,7 @@ function goBackToPreviousPage() {
 <template>
   <div>
     <!-- Desktop layout -->
-    <div class="d-none d-md-block p-3 overflow-visible">
+    <div v-if="isDesktopViewport" class="p-3 overflow-visible">
       <div class="d-flex">
         <aside class="d-flex flex-column h-100 settings-sidebar card shadow-sm me-2">
           <settings-nav-menu />
@@ -176,7 +177,7 @@ function goBackToPreviousPage() {
     </div>
 
     <!-- Mobile layout -->
-    <div class="settings-mobile-shell d-md-none">
+    <div v-else class="settings-mobile-shell">
       <div class="settings-mobile-track" :class="mobileTrackClass">
         <section class="settings-mobile-panel settings-mobile-menu-screen text-reactive-primary">
           <header

@@ -1,98 +1,98 @@
 <script setup lang="ts">
+import type { FetchError } from 'ofetch';
+import { useSettingsApi } from '../../composables/useSettingsApi';
+
 const { validatePasswordValue } = usePasswordValidation();
+const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();
 
-/**===========
- * Interfaces
- ============*/
 
-interface ChangepassError {
-  oldPass: string;
-  newPass: string[];
+interface ChangePasswordError {
+  currentPassword: string;
+  newPassword: string[];
 }
 
-interface ChangepassForm {
-  oldPass: string;
-  newPass: string;
+interface ChangePasswordForm {
+  currentPassword: string;
+  newPassword: string;
 }
 
-interface ChangepassTouched {
-  oldPass: boolean;
-  newPass: boolean;
+interface ChangePasswordTouched {
+  currentPassword: boolean;
+  newPassword: boolean;
 }
 
-/**======================
- * State constants
- =======================*/
 
-const emptyError: ChangepassError = {
-  oldPass: '',
-  newPass: [],
+const emptyError: ChangePasswordError = {
+  currentPassword: '',
+  newPassword: [],
 };
 
-const emptyForm: ChangepassForm = {
-  oldPass: '',
-  newPass: '',
+const emptyForm: ChangePasswordForm = {
+  currentPassword: '',
+  newPassword: '',
 };
 
-const defaultTouched: ChangepassTouched = {
-  oldPass: false,
-  newPass: false,
+const defaultTouched: ChangePasswordTouched = {
+  currentPassword: false,
+  newPassword: false,
 };
-
-/**======================
- * Form reactive objects
- =======================*/
 
 const loading = ref<boolean>(false);
 const isViewingCurrentPassword = ref(false);
 const isViewingNewPassword = ref(false);
+const genericError = ref('');
+const successMessage = ref('');
 
-const error = reactive<ChangepassError>(emptyError);
-const formData = reactive<ChangepassForm>(emptyForm);
-const touched = reactive<ChangepassTouched>(defaultTouched);
+const error = reactive<ChangePasswordError>({
+  ...emptyError,
+  newPassword: [],
+});
+const formData = reactive<ChangePasswordForm>({ ...emptyForm });
+const touched = reactive<ChangePasswordTouched>({ ...defaultTouched });
 
-/**==========
- * Functions
- ===========*/
 
 // Onblur function to do validation
-function onBlur(field: keyof ChangepassForm) {
-  if (touched[field] === false) {
-    touched[field] = true;
-    const validators: Record<keyof ChangepassForm, () => boolean> = {
-      oldPass: validateOldPass,
-      newPass: validateNewPass,
-    };
-
-    validators[field]?.();
+function onBlur(field: keyof ChangePasswordForm) {
+  if (touched[field]) {
+    return;
   }
+
+  touched[field] = true;
+
+  if (field === 'currentPassword') {
+    validateCurrentPassword();
+    return;
+  }
+
+  validateNewPassword();
 }
 
 // Validation functions
-function validateOldPass(): boolean {
-  const val = formData.oldPass.trim();
+function validateCurrentPassword(): boolean {
+  const val = formData.currentPassword.trim();
   if (!val) {
-    error.oldPass = 'auth.error.blank.password';
+    error.currentPassword = 'auth.error.blank.password';
     return false;
   }
 
-  error.oldPass = '';
+  error.currentPassword = '';
   return true;
 }
 
-function validateNewPass(): boolean {
-  const val = formData.newPass.trim();
+function validateNewPassword(): boolean {
+  const val = formData.newPassword.trim();
   if (!val) {
-    error.newPass = ['auth.error.blank.password'];
+    error.newPassword = ['auth.error.blank.password'];
     return false;
   }
-  error.newPass = validatePasswordValue(val);
-  return error.newPass.length === 0;
+
+  error.newPassword = validatePasswordValue(val);
+  return error.newPassword.length === 0;
 }
 
 // Validate the form, return status
 function validateForm(): boolean {
-  return validateNewPass() && validateOldPass();
+  return validateCurrentPassword() && validateNewPassword();
 }
 
 // Helper function to view password
@@ -104,47 +104,131 @@ function toggleNewPasswordVisibility() {
   isViewingNewPassword.value = !isViewingNewPassword.value;
 }
 
-/**===================
- * Computed & watches
- ====================*/
-
 const isFormValid = computed(() => {
-  const allTouched = touched.newPass && touched.oldPass;
+  const allTouched = touched.newPassword && touched.currentPassword;
 
-  const noErrors = error.oldPass === '' && error.newPass.length === 0;
+  const noErrors = error.currentPassword === '' && error.newPassword.length === 0;
 
   return allTouched && noErrors;
 });
 
 watch(
-  () => (formData.oldPass.trim().length > 0 ? formData.oldPass : null),
-  () => {
-    touched.oldPass = true;
-    validateOldPass();
+  () => (formData.currentPassword.trim().length > 0 ? formData.currentPassword : null),
+  (value) => {
+    if (value === null) {
+      return;
+    }
+
+    touched.currentPassword = true;
+    validateCurrentPassword();
   },
 );
 
 watch(
-  () => (formData.newPass.trim().length > 0 ? formData.newPass : null),
-  () => {
-    touched.newPass = true;
-    validateNewPass();
+  () => (formData.newPassword.trim().length > 0 ? formData.newPassword : null),
+  (value) => {
+    if (value === null) {
+      return;
+    }
+
+    touched.newPassword = true;
+    validateNewPassword();
   },
 );
 
 function submitChangePassword() {
-  if (!validateForm()) return;
-  // TODO: wire up API submit.
+  void submitChangePasswordAsync();
+}
+
+function resetFormState() {
+  Object.assign(formData, emptyForm);
+  Object.assign(touched, defaultTouched);
+  Object.assign(error, {
+    ...emptyError,
+    newPassword: [],
+  });
+}
+
+function beginSubmit() {
+  loading.value = true;
+  genericError.value = '';
+  successMessage.value = '';
+}
+
+function applyPasswordChangeSuccess() {
+  resetFormState();
+  successMessage.value = 'settings.security.change_password.messages.success';
+}
+
+function applyPasswordFieldErrors(fieldErrors: Record<string, string>): boolean {
+  let hasFieldErrors = false;
+
+  if (fieldErrors.currentPassword) {
+    error.currentPassword = fieldErrors.currentPassword;
+    hasFieldErrors = true;
+  }
+
+  if (fieldErrors.newPassword) {
+    error.newPassword = [fieldErrors.newPassword];
+    hasFieldErrors = true;
+  }
+
+  return hasFieldErrors;
+}
+
+function handlePasswordChangeError(fetchError: FetchError) {
+  if (!fetchError.statusCode) {
+    genericError.value = 'auth.error.network';
+    return;
+  }
+
+  const fieldErrors = extractFieldErrors(fetchError);
+  const hasFieldErrors = applyPasswordFieldErrors(fieldErrors);
+
+  if (hasFieldErrors) {
+    return;
+  }
+
+  genericError.value = extractMessage(fetchError) ?? 'auth.error.unknown';
+}
+
+async function submitChangePasswordAsync() {
+  if (!validateForm() || loading.value) {
+    return;
+  }
+
+  beginSubmit();
+
+  try {
+    await changePassword({
+      currentPassword: formData.currentPassword.trim(),
+      newPassword: formData.newPassword.trim(),
+    });
+
+    applyPasswordChangeSuccess();
+  } catch (err) {
+    handlePasswordChangeError(err as FetchError);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
 <template>
   <div class="change-password-form">
-    <div class="card p-3 shadow-sm">
+    <form class="card p-3 shadow-sm" novalidate @submit.prevent="submitChangePassword">
       <h2 class="h6 fw-bold mb-3 text-primary">
         <i class="bi bi-key-fill"></i>
         {{ $t('settings.security.change_password.title') }}
       </h2>
+
+      <div v-if="genericError" class="alert alert-danger py-2" role="alert">
+        {{ $t(genericError) }}
+      </div>
+
+      <div v-if="successMessage" class="alert alert-success py-2" role="status">
+        {{ $t(successMessage) }}
+      </div>
 
       <div class="row g-2">
         <div class="col-12 col-lg-6">
@@ -154,10 +238,10 @@ function submitChangePassword() {
           <div class="input-group">
             <input
               id="current-password"
-              v-model="formData.oldPass"
+              v-model="formData.currentPassword"
               :type="isViewingCurrentPassword ? 'text' : 'password'"
-              :class="['form-control', { 'is-invalid': error.oldPass }]"
-              @blur="onBlur('oldPass')"
+              :class="['form-control', { 'is-invalid': error.currentPassword }]"
+              @blur="onBlur('currentPassword')"
             />
             <button
               class="btn btn-outline-secondary bg-reactive-primary"
@@ -167,8 +251,8 @@ function submitChangePassword() {
               <i :class="isViewingCurrentPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" />
             </button>
           </div>
-          <div v-if="error.oldPass" id="old-password-error" class="text-danger small">
-            {{ $t(error.oldPass) }}
+          <div v-if="error.currentPassword" id="current-password-error" class="text-danger small">
+            {{ $t(error.currentPassword) }}
           </div>
         </div>
 
@@ -179,10 +263,10 @@ function submitChangePassword() {
           <div class="input-group">
             <input
               id="new-password"
-              v-model="formData.newPass"
+              v-model="formData.newPassword"
               :type="isViewingNewPassword ? 'text' : 'password'"
-              :class="['form-control', { 'is-invalid': error.newPass.length > 0 }]"
-              @blur="onBlur('newPass')"
+              :class="['form-control', { 'is-invalid': error.newPassword.length > 0 }]"
+              @blur="onBlur('newPassword')"
             />
             <button
               class="btn btn-outline-secondary bg-reactive-primary"
@@ -193,28 +277,28 @@ function submitChangePassword() {
             </button>
           </div>
           <ul
-            v-if="error.newPass.length > 0"
+            v-if="error.newPassword.length > 0"
             id="reg-password-error"
             :class="[
               'text-danger',
               'small',
               'mt-1',
               'mb-0',
-              { 'ps-3': error.newPass.length !== 1 },
-              { 'list-unstyled': error.newPass.length === 1 },
+              { 'ps-3': error.newPassword.length !== 1 },
+              { 'list-unstyled': error.newPassword.length === 1 },
             ]"
             aria-live="assertive"
           >
-            <li v-for="(err, index) in error.newPass" :key="index">
+            <li v-for="(err, index) in error.newPassword" :key="index">
               {{ $t(err) }}
             </li>
           </ul>
         </div>
       </div>
 
-      <button class="btn btn-primary ms-auto mt-3" :disabled="loading || !isFormValid">
-        <i class="bi bi-floppy-fill text-white" @click="submitChangePassword()"></i>
+      <button type="submit" class="btn btn-primary ms-auto mt-3" :disabled="loading || !isFormValid">
+        <i class="bi bi-floppy-fill text-white"></i>
       </button>
-    </div>
+    </form>
   </div>
 </template>

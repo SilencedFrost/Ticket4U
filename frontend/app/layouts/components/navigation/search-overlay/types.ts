@@ -24,7 +24,7 @@ export interface SearchResultItem {
 export interface SearchResultViewItem {
   id: string;
   title: string;
-  releaseDateLabel: string;
   priceLabel: string;
+  releaseDate: string;
   imageUrl: string;
 }

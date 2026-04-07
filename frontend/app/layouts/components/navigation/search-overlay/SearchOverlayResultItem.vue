@@ -32,12 +32,10 @@ const emit = defineEmits<{
 
       <div class="col-8 col-md-10 text-start">
         <p class="mb-1 fw-semibold small text-truncate">{{ item.title }}</p>
-        <p class="mb-1 text-secondary small">
-          {{ t('navbar.searchOverlay.releaseDate') }}: {{ item.releaseDateLabel }}
+        <p class="mb-1 text-success fw-semibold small">
+          {{ t('common.currency.from') }}: {{ item.priceLabel }}
         </p>
-        <p class="mb-0 text-success fw-semibold small">
-          {{ t('navbar.searchOverlay.eventPrice') }}: {{ item.priceLabel }}
-        </p>
+        <p class="mb-0 text-secondary small">{{ item.releaseDate }}</p>
       </div>
     </div>
   </button>

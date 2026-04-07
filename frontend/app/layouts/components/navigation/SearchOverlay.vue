@@ -14,7 +14,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const { formatPrice } = useFormatter();
 
 const historyStorageKey = 'ticket4u.search-history';
@@ -22,11 +22,7 @@ const activeBrowseTab = ref<BrowseTab>('category');
 const recentSearchTerms = ref<string[]>([]);
 const internalQuery = ref<string>('');
 
-const fallbackRecentTerms = computed(() => [
-  t('navbar.searchOverlay.recentTerms.music'),
-  t('navbar.searchOverlay.recentTerms.lullaboy'),
-  t('navbar.searchOverlay.recentTerms.comedy'),
-]);
+const fallbackRecentTerms = ['The Studio', 'Seminars & Workshops', 'Music'];
 
 const categoryCards = computed<BrowseCardItem[]>(() =>
   CATEGORY_CARD_SEEDS.map((seed) => ({
@@ -61,8 +57,8 @@ const filteredResults = computed(() => {
       id: event.id,
       title: event.title,
       imageUrl: event.imageUrl,
-      releaseDateLabel: formatReleaseDate(event.releaseDate),
       priceLabel: formatPrice(event.price) ?? event.price.toLocaleString(),
+      releaseDate: event.releaseDate,
     }));
 });
 
@@ -71,26 +67,12 @@ const effectiveRecentSearchTerms = computed(() => {
     return recentSearchTerms.value;
   }
 
-  return fallbackRecentTerms.value;
+  return fallbackRecentTerms;
 });
 
 const activeBrowseCards = computed(() => {
   return activeBrowseTab.value === 'category' ? categoryCards.value : cityCards.value;
 });
-
-function formatReleaseDate(releaseDate: string) {
-  const parsedDate = new Date(releaseDate);
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return releaseDate;
-  }
-
-  return new Intl.DateTimeFormat(locale.value === 'vi' ? 'vi-VN' : 'en-US', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(parsedDate);
-}
 
 function persistRecentSearchTerms(nextTerms: string[]) {
   if (!import.meta.client) return;

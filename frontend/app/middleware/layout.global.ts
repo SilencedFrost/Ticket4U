@@ -3,4 +3,5 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (routeName.startsWith('auth')) setPageLayout('auth');
   if (routeName.startsWith('settings')) to.meta.hideFooter = true;
+  if (routeName.startsWith('organizer')) setPageLayout('organizer');
 });

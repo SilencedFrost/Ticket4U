@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { Zone, ZoneFormState } from '../(types)/zone.type'
+import type { Zone, ZoneFormState } from '../(types)/zone'
 
 export function useEventZones(initial: Zone[] = []) {
   const zones = ref<Zone[]>([...initial])

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import type { Zone, ZoneFormState } from '../../(types)/zone.type'
+import type { Zone, ZoneFormState } from '../../(types)/zone'
 
 const props = defineProps<{
   zone: Zone | null

@@ -101,6 +101,7 @@ const roleLabel = computed(() => {
 const navItems = computed(() => [
   { to: localePath('/organizer'),                 label: $t('organizer.nav.home'),     icon: 'bi-house'          },
   { to: localePath('/organizer/events'),          label: $t('organizer.nav.events'),   icon: 'bi-calendar-event' },
+  { to: localePath('/organizer/team'),            label: $t('organizer.nav.team'),     icon: 'bi-people'         },
   { to: localePath('/organizer/reports'),         label: $t('organizer.nav.reports'),  icon: 'bi-bar-chart'      },
   { to: localePath('/organizer/events/archived'), label: $t('organizer.nav.archived'), icon: 'bi-archive'        },
 ])

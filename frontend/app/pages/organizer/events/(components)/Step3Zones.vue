@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Zone, ZoneFormState } from '../../(types)/zone.type'
+import type { Zone, ZoneFormState } from '../../(types)/zone'
 import { formatPrice } from '../../mock.data'
 import ZoneModal from './ZoneModal.vue'
 

@@ -171,6 +171,7 @@
     "nav": {
       "home": "Trang chủ",
       "events": "Sự kiện",
+      "team": "Nhóm",
       "reports": "Báo cáo",
       "archived": "Sự kiện lưu trữ",
       "collapse": "Thu gọn thanh bên",
@@ -230,6 +231,59 @@
         "title": "Xóa sự kiện",
         "confirm": "Bạn có chắc muốn xóa \"{name}\"? Hành động này không thể hoàn tác.",
         "confirm_btn": "Xác nhận xóa"
+      }
+    },
+    "team": {
+      "title": "Nhóm",
+      "subtitle": "Quản lý nhân sự sự kiện và vai trò của họ",
+      "invite": "Mời thành viên",
+      "search_placeholder": "Tìm theo tên hoặc email...",
+      "filter_role": "Vai trò",
+      "all_roles": "Tất cả vai trò",
+      "empty": "Chưa có thành viên nào",
+      "empty_sub": "Mời nhân sự để hỗ trợ quản lý sự kiện",
+      "col": {
+        "member": "Thành viên",
+        "role": "Vai trò",
+        "status": "Trạng thái",
+        "invited": "Ngày mời",
+        "actions": "Hành động"
+      },
+      "status": {
+        "active": "Hoạt động",
+        "inactive": "Không hoạt động"
+      },
+      "roles": {
+        "event_manager": "Quản lý sự kiện",
+        "gatekeeper": "Kiểm soát cửa",
+        "support_agent": "Nhân viên hỗ trợ",
+        "finance_manager": "Quản lý tài chính"
+      },
+      "role_hint": {
+        "event_manager": "Có thể quản lý sự kiện, sơ đồ chỗ ngồi và giá vé",
+        "gatekeeper": "Có thể quét vé tại cửa vào",
+        "support_agent": "Có thể xử lý yêu cầu hỗ trợ khách hàng",
+        "finance_manager": "Có thể xem báo cáo tài chính và quản lý thanh toán"
+      },
+      "action": {
+        "edit_role": "Đổi vai trò",
+        "deactivate": "Vô hiệu hóa",
+        "activate": "Kích hoạt",
+        "remove": "Xóa"
+      },
+      "remove_confirm": {
+        "title": "Xóa thành viên",
+        "confirm": "Bạn có chắc muốn xóa {name} khỏi nhóm không?",
+        "confirm_btn": "Xác nhận xóa"
+      },
+      "invite_modal": {
+        "title": "Mời thành viên mới",
+        "email": "Địa chỉ email",
+        "email_placeholder": "Nhập địa chỉ email",
+        "role": "Vai trò",
+        "select_role": "— Chọn vai trò —",
+        "submit": "Gửi lời mời",
+        "cancel": "Hủy"
       }
     },
     "archived": {

@@ -22,10 +22,14 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
 
-const isFocused     = ref(false)
-const showLinkModal = ref(false)
-const linkUrl       = ref('')
-const linkInputRef  = ref<HTMLInputElement | null>(null)
+const isFocused      = ref(false)
+const showLinkModal  = ref(false)
+const linkUrl        = ref('')
+const linkInputRef   = ref<HTMLInputElement | null>(null)
+const showImageModal = ref(false)
+const imageUrl       = ref('')
+const imageAlt       = ref('')
+const imageInputRef  = ref<HTMLInputElement | null>(null)
 
 const editor = useEditor({
   content:  props.modelValue,
@@ -37,37 +41,43 @@ const editor = useEditor({
     TextStyle,
     Color,
     Highlight.configure({ multicolor: true }),
-    Image.configure({ inline: false, allowBase64: true }),
+    Image.configure({ inline: false, allowBase64: false }),
   ],
   editorProps: {
     attributes: { class: 'rich-editor-inner', spellcheck: 'true' },
   },
-  onUpdate: ({ editor }) => { emit('update:modelValue', editor.getHTML()) },
-  onFocus:  () => { isFocused.value = true  },
-  onBlur:   () => { isFocused.value = false },
+  onUpdate({ editor }) { emit('update:modelValue', editor.getHTML()) },
+  onFocus()  { isFocused.value = true  },
+  onBlur()   { isFocused.value = false },
 })
 
-watch(() => props.modelValue, (val) => {
-  if (editor.value && editor.value.getHTML() !== val)
-    editor.value.commands.setContent(val || '', false)
-})
-
-watch(() => props.disabled, (val) => {
-  editor.value?.setEditable(!val)
-})
-
-const currentTextColor = computed(() =>
-  (editor.value?.getAttributes('textStyle')?.color as string) ?? '#ffffff'
+watch(
+  function () { return props.modelValue },
+  function (val) {
+    if (editor.value && editor.value.getHTML() !== val)
+      editor.value.commands.setContent(val || '', false)
+  }
 )
 
-const currentHighlight = computed(() =>
-  (editor.value?.getAttributes('highlight')?.color as string) ?? '#ffff00'
+watch(
+  function () { return props.disabled },
+  function (val) { editor.value?.setEditable(!val) }
 )
 
-function addLink() {
+const currentTextColor = computed(function () {
+  return (editor.value?.getAttributes('textStyle')?.color as string) ?? '#ffffff'
+})
+
+const currentHighlight = computed(function () {
+  return (editor.value?.getAttributes('highlight')?.color as string) ?? '#ffff00'
+})
+
+// ── Link ──────────────────────────────────────────────────────
+
+function openLinkModal() {
   linkUrl.value       = editor.value?.getAttributes('link')?.href ?? ''
   showLinkModal.value = true
-  nextTick(() => linkInputRef.value?.focus())
+  nextTick(function () { linkInputRef.value?.focus() })
 }
 
 function confirmLink() {
@@ -80,14 +90,29 @@ function confirmLink() {
   linkUrl.value       = ''
 }
 
-function addImage() {
-  const url = prompt('Image URL:')
-  if (url) editor.value?.chain().focus().setImage({ src: url }).run()
+// ── Image ─────────────────────────────────────────────────────
+
+function openImageModal() {
+  imageUrl.value       = ''
+  imageAlt.value       = ''
+  showImageModal.value = true
+  nextTick(function () { imageInputRef.value?.focus() })
 }
 
-function clearFormatting() {
-  editor.value?.chain().focus().unsetColor().unsetHighlight().run()
+function confirmImage() {
+  const url = imageUrl.value.trim()
+  if (url) {
+    editor.value?.chain().focus().setImage({
+      src: url,
+      alt: imageAlt.value.trim() || undefined,
+    }).run()
+  }
+  showImageModal.value = false
+  imageUrl.value       = ''
+  imageAlt.value       = ''
 }
+
+// ── Colors ────────────────────────────────────────────────────
 
 function onTextColorInput(e: Event) {
   editor.value?.chain().focus().setColor((e.target as HTMLInputElement).value).run()
@@ -97,7 +122,11 @@ function onHighlightInput(e: Event) {
   editor.value?.chain().focus().setHighlight({ color: (e.target as HTMLInputElement).value }).run()
 }
 
-onBeforeUnmount(() => editor.value?.destroy())
+function clearFormatting() {
+  editor.value?.chain().focus().unsetColor().unsetHighlight().run()
+}
+
+onBeforeUnmount(function () { editor.value?.destroy() })
 </script>
 
 <template>
@@ -139,10 +168,10 @@ onBeforeUnmount(() => editor.value?.destroy())
 
       <!-- Inline marks -->
       <div class="btn-group btn-group-sm me-1">
-        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('bold') }"      title="Bold"          @click="editor?.chain().focus().toggleBold().run()">      <i class="bi bi-type-bold"/>         </button>
-        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('italic') }"    title="Italic"        @click="editor?.chain().focus().toggleItalic().run()">    <i class="bi bi-type-italic"/>       </button>
-        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('underline') }" title="Underline"     @click="editor?.chain().focus().toggleUnderline().run()"> <i class="bi bi-type-underline"/>    </button>
-        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('strike') }"    title="Strikethrough" @click="editor?.chain().focus().toggleStrike().run()">    <i class="bi bi-type-strikethrough"/></button>
+        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('bold') }"      title="Bold"          @click="editor?.chain().focus().toggleBold().run()">      <i class="bi bi-type-bold"/>          </button>
+        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('italic') }"    title="Italic"        @click="editor?.chain().focus().toggleItalic().run()">    <i class="bi bi-type-italic"/>        </button>
+        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('underline') }" title="Underline"     @click="editor?.chain().focus().toggleUnderline().run()"> <i class="bi bi-type-underline"/>     </button>
+        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('strike') }"    title="Strikethrough" @click="editor?.chain().focus().toggleStrike().run()">    <i class="bi bi-type-strikethrough"/> </button>
       </div>
 
       <div class="toolbar-divider"/>
@@ -157,7 +186,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 
       <!-- Link -->
       <div class="btn-group btn-group-sm me-1">
-        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('link') }" title="Add link" @click="addLink">
+        <button type="button" class="toolbar-btn" :class="{ active: editor?.isActive('link') }" title="Add link" @click="openLinkModal">
           <i class="bi bi-link-45deg"/>
         </button>
         <button v-if="editor?.isActive('link')" type="button" class="toolbar-btn" title="Remove link" @click="editor?.chain().focus().unsetLink().run()">
@@ -171,14 +200,14 @@ onBeforeUnmount(() => editor.value?.destroy())
       <div class="d-flex align-items-center gap-1 me-1">
         <div class="position-relative" title="Text color">
           <input type="color" class="color-input" :value="currentTextColor" @input="onTextColorInput"/>
-          <button type="button" class="toolbar-btn color-btn" title="Text color">
+          <button type="button" class="toolbar-btn color-btn" tabindex="-1">
             <i class="bi bi-fonts"/>
             <span class="color-indicator" :style="{ background: currentTextColor }"/>
           </button>
         </div>
-        <div class="position-relative" title="Highlight">
+        <div class="position-relative" title="Highlight color">
           <input type="color" class="color-input" :value="currentHighlight" @input="onHighlightInput"/>
-          <button type="button" class="toolbar-btn color-btn" title="Highlight">
+          <button type="button" class="toolbar-btn color-btn" tabindex="-1">
             <i class="bi bi-highlighter"/>
             <span class="color-indicator" :style="{ background: currentHighlight }"/>
           </button>
@@ -193,7 +222,7 @@ onBeforeUnmount(() => editor.value?.destroy())
       <div class="toolbar-divider"/>
 
       <!-- Image -->
-      <button type="button" class="toolbar-btn me-1" title="Insert image" @click="addImage">
+      <button type="button" class="toolbar-btn me-1" title="Insert image" @click="openImageModal">
         <i class="bi bi-image"/>
       </button>
 
@@ -209,22 +238,22 @@ onBeforeUnmount(() => editor.value?.destroy())
 
     </div>
 
-    <!-- Editor content -->
+    <!-- Editor body -->
     <div class="rich-editor-body" :style="{ minHeight: `${minHeight}px` }">
       <editor-content :editor="editor" class="rich-editor-content"/>
     </div>
 
     <!-- Link modal -->
-    <div v-if="showLinkModal" class="modal-backdrop-simple" @click.self="showLinkModal = false">
-      <div class="link-modal bg-reactive-secondary p-3 rounded-3 shadow-lg" style="min-width:320px;">
-        <div class="fw-semibold text-reactive-primary mb-2">
-          <i class="bi bi-link-45deg me-2"/>Insert Link
+    <div v-if="showLinkModal" class="editor-modal-backdrop" @click.self="showLinkModal = false">
+      <div class="editor-modal bg-reactive-secondary p-4 rounded-3 shadow-lg">
+        <div class="fw-semibold text-reactive-primary mb-3">
+          <i class="bi bi-link-45deg me-2 text-primary"/>Insert Link
         </div>
         <input
           ref="linkInputRef"
           v-model="linkUrl"
           type="url"
-          class="form-control form-control-sm bg-reactive-primary border-0 text-reactive-primary mb-2"
+          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
           placeholder="https://..."
           @keyup.enter="confirmLink"
         />
@@ -235,15 +264,55 @@ onBeforeUnmount(() => editor.value?.destroy())
       </div>
     </div>
 
+    <!-- Image modal -->
+    <div v-if="showImageModal" class="editor-modal-backdrop" @click.self="showImageModal = false">
+      <div class="editor-modal bg-reactive-secondary p-4 rounded-3 shadow-lg">
+        <div class="fw-semibold text-reactive-primary mb-3">
+          <i class="bi bi-image me-2 text-primary"/>Insert Image
+        </div>
+
+        <label class="form-label small text-reactive-secondary">Image URL <span class="text-danger">*</span></label>
+        <input
+          ref="imageInputRef"
+          v-model="imageUrl"
+          type="url"
+          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
+          placeholder="https://example.com/image.jpg"
+          @keyup.enter="confirmImage"
+        />
+
+        <!-- Preview -->
+        <div v-if="imageUrl.trim()" class="image-preview-box mb-3 rounded overflow-hidden bg-reactive-primary d-flex align-items-center justify-content-center">
+          <img :src="imageUrl" alt="preview" class="image-preview" @error="imageUrl = imageUrl"/>
+        </div>
+
+        <label class="form-label small text-reactive-secondary">Alt text <span class="text-reactive-secondary opacity-50">(optional)</span></label>
+        <input
+          v-model="imageAlt"
+          type="text"
+          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
+          placeholder="Describe the image..."
+        />
+
+        <div class="d-flex gap-2 justify-content-end">
+          <button class="btn btn-sm btn-outline-secondary" @click="showImageModal = false">Cancel</button>
+          <button class="btn btn-sm btn-primary" :disabled="!imageUrl.trim()" @click="confirmImage">
+            <i class="bi bi-image me-1"/>Insert
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
 .rich-editor {
   border: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
-  border-radius: 8px; overflow: hidden;
+  border-radius: 8px; overflow: visible;
   background: var(--bs-body-bg, #1a1a2e);
   transition: border-color 0.2s;
+  position: relative;
 }
 .rich-editor.is-focused {
   border-color: var(--bs-primary);
@@ -252,6 +321,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 .rich-editor-toolbar {
   background: rgba(var(--bs-secondary-rgb), 0.08);
   border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.15);
+  border-radius: 8px 8px 0 0;
 }
 .toolbar-btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -277,10 +347,13 @@ onBeforeUnmount(() => editor.value?.destroy())
 .color-input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; border: none; padding: 0; }
 .rich-editor-body { padding: 12px 16px; }
 .rich-editor-content { outline: none; }
-.modal-backdrop-simple {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+.editor-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   z-index: 2000; display: flex; align-items: center; justify-content: center;
 }
+.editor-modal { width: 100%; max-width: 440px; border-radius: 10px; }
+.image-preview-box { height: 160px; }
+.image-preview { max-width: 100%; max-height: 160px; object-fit: contain; }
 </style>
 
 <style>
@@ -306,6 +379,6 @@ onBeforeUnmount(() => editor.value?.destroy())
   color: var(--bs-secondary); margin: 0.8em 0; font-style: italic;
 }
 .rich-editor-inner hr { border: none; border-top: 1px solid rgba(var(--bs-secondary-rgb), 0.3); margin: 1em 0; }
-.rich-editor-inner img { max-width: 100%; border-radius: 6px; margin: 0.5em 0; }
+.rich-editor-inner img { max-width: 100%; border-radius: 6px; margin: 0.5em 0; display: block; }
 .rich-editor-inner mark { border-radius: 3px; padding: 0 2px; }
 </style>

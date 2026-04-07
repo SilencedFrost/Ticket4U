@@ -171,6 +171,7 @@
     "nav": {
       "home": "Home",
       "events": "Events",
+      "team": "Team",
       "reports": "Reports",
       "archived": "Archived Events",
       "collapse": "Collapse sidebar",
@@ -237,6 +238,59 @@
       "subtitle": "Finished and cancelled events",
       "empty": "No archived events",
       "empty_sub": "Finished and cancelled events will appear here"
+    },
+    "team": {
+      "title": "Team",
+      "subtitle": "Manage your event staff and their roles",
+      "invite": "Invite Member",
+      "search_placeholder": "Search by name or email...",
+      "filter_role": "Role",
+      "all_roles": "All roles",
+      "empty": "No team members yet",
+      "empty_sub": "Invite staff to help manage your events",
+      "col": {
+        "member": "Member",
+        "role": "Role",
+        "status": "Status",
+        "invited": "Invited",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "roles": {
+        "event_manager": "Event Manager",
+        "gatekeeper": "Gatekeeper",
+        "support_agent": "Support Agent",
+        "finance_manager": "Finance Manager"
+      },
+      "role_hint": {
+        "event_manager": "Can manage events, seating charts and ticket prices",
+        "gatekeeper": "Can scan tickets at entry gates",
+        "support_agent": "Can handle customer support queries",
+        "finance_manager": "Can view financial reports and manage payouts"
+      },
+      "action": {
+        "edit_role": "Change role",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "remove": "Remove"
+      },
+      "remove_confirm": {
+        "title": "Remove Member",
+        "confirm": "Are you sure you want to remove {name} from your team?",
+        "confirm_btn": "Yes, remove"
+      },
+      "invite_modal": {
+        "title": "Invite Team Member",
+        "email": "Email Address",
+        "email_placeholder": "Enter email address",
+        "role": "Role",
+        "select_role": "— Select a role —",
+        "submit": "Send Invite",
+        "cancel": "Cancel"
+      }
     },
     "event_form": {
       "create_title": "Create New Event",

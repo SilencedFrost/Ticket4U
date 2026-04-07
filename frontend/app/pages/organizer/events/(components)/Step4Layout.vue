@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { mockVenues, getVenueZoneNames } from '../../mock.data'
-import type { Zone } from '../../(types)/zone.type'
-import type { EventFormState } from '../../(types)/event.type'
+import LayoutPreview from './LayoutPreview.vue'
+import type { Zone } from '../../(types)/zone'
+import type { EventFormState } from '../../(types)/event'
+import type { VenueLayout, VenueLayoutZone, VenueLayoutFloor } from '../../(types)/venue'
 
 const props = defineProps<{
   form: EventFormState
@@ -34,6 +36,35 @@ const seatedZones = computed(() =>
 const standingZones = computed(() =>
   props.zones.filter(z => z.isStanding)
 )
+
+// ── Zone mapping: venue zone name → event zone id ('' = decorative) ──
+const zoneMapping = ref<Record<string, string>>({})
+
+// Reset mapping when venue changes
+watch(() => form.value.venueId, () => { zoneMapping.value = {} })
+
+// Derived layout with accessibility driven by zoneMapping
+const mappedLayout = computed<VenueLayout | null>(() => {
+  const layout = selectedVenue.value?.layout
+  if (!layout) return null
+
+  const applyMapping = (zones: VenueLayoutZone[]): VenueLayoutZone[] =>
+    zones.map(z => ({
+      ...z,
+      accessible: zoneMapping.value[z.zone_name] !== '' ? true : false,
+    }))
+
+  if (layout.floors?.length) {
+    return {
+      ...layout,
+      floors: layout.floors.map((f: VenueLayoutFloor) => ({
+        ...f,
+        zones: applyMapping(f.zones ?? []),
+      })),
+    }
+  }
+  return { ...layout, zones: applyMapping(layout.zones ?? []) }
+})
 </script>
 
 <template>
@@ -85,10 +116,11 @@ const standingZones = computed(() =>
 
         <div v-if="selectedVenue" class="row g-4">
 
-          <!-- Layout preview placeholder -->
+          <!-- Layout preview -->
           <div class="col-lg-7">
             <div class="fw-semibold text-reactive-primary mb-2">{{ selectedVenue.name }}</div>
-            <div class="layout-preview-placeholder bg-reactive-primary rounded d-flex align-items-center justify-content-center" style="height:340px;">
+            <LayoutPreview v-if="mappedLayout" :layout="mappedLayout" />
+            <div v-else class="layout-preview-placeholder bg-reactive-primary rounded d-flex align-items-center justify-content-center" style="height:340px;">
               <div class="text-center text-reactive-secondary">
                 <i class="bi bi-grid-3x3 fs-1 d-block mb-3 opacity-25"/>
                 <small class="opacity-50">{{ $t('organizer.event_form.step4.venue_no_layout') }}</small>
@@ -109,7 +141,7 @@ const standingZones = computed(() =>
               <div v-for="vz in getVenueZoneNames(selectedVenue)" :key="vz" class="d-flex align-items-center gap-2 mb-2">
                 <small class="text-reactive-primary fw-semibold text-truncate" style="min-width:130px;">{{ vz }}</small>
                 <i class="bi bi-arrow-right text-reactive-secondary flex-shrink-0"/>
-                <select class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1">
+                <select v-model="zoneMapping[vz]" class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1">
                   <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
                   <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
                     <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>

@@ -5,19 +5,20 @@
 //    → event_categories (N-N) → event_sessions → zones
 // ─────────────────────────────────────────────────────────────
 
-import type { Category }          from './(types)/category.type'
-import type { Venue, VenueLayout } from './(types)/venue.type'
-import type { Zone }               from './(types)/zone.type'
-import type { Session }            from './(types)/session.type'
-import type { Event, EventStatus, EventFormState, EventContentState } from './(types)/event.type'
-import type { Profile }            from './(types)/profile.type'
-import type { Seat }               from './(types)/seat.type'
+import type { Category }          from './(types)/category'
+import type { Venue, VenueLayout } from './(types)/venue'
+import type { Zone }               from './(types)/zone'
+import type { Session }            from './(types)/session'
+import type { Event, EventStatus, EventFormState, EventContentState } from './(types)/event'
+import type { Profile }            from './(types)/profile'
+import type { Seat }               from './(types)/seat'
+import type { OrganizerStaff, AssignableRole } from './(types)/staff'
 
 // Re-export types so existing imports still work
 export type {
   Category, Venue, VenueLayout, Zone, Session,
   Event, EventStatus, EventFormState, EventContentState,
-  Profile, Seat,
+  Profile, Seat, OrganizerStaff, AssignableRole,
 }
 
 // ── Profile ───────────────────────────────────────────────────
@@ -957,4 +958,50 @@ export function formatTime(d: string): string {
 /** Returns venue layout zone names — used for zone linking in Step4 */
 export function getVenueZoneNames(venue: Venue): string[] {
   return venue.layout?.zones.map(z => z.zone_name) ?? []
+}
+
+// ── Staff ─────────────────────────────────────────────────────
+
+export const ASSIGNABLE_ROLES: AssignableRole[] = [
+  { id: 1,  key: 'event_manager',   icon: 'bi-calendar-event', color: '#3b82f6' },
+  { id: 10, key: 'gatekeeper',      icon: 'bi-door-open-fill', color: '#22c55e' },
+  { id: 11, key: 'support_agent',   icon: 'bi-headset',        color: '#f59e0b' },
+  { id: 12, key: 'finance_manager', icon: 'bi-cash-stack',     color: '#ec4899' },
+]
+
+export const mockStaff: OrganizerStaff[] = [
+  {
+    id: 'staff-1', email: 'nguyen.van.b@example.com', username: 'nvb',
+    firstName: 'Văn B', lastName: 'Nguyễn',
+    roleId: 1, invitedAt: '2025-01-15T08:00:00Z', isActive: true,
+  },
+  {
+    id: 'staff-2', email: 'tran.thi.c@example.com', username: 'ttc',
+    firstName: 'Thị C', lastName: 'Trần',
+    roleId: 10, invitedAt: '2025-02-10T08:00:00Z', isActive: true,
+  },
+  {
+    id: 'staff-3', email: 'le.van.d@example.com', username: 'lvd',
+    firstName: 'Văn D', lastName: 'Lê',
+    roleId: 10, invitedAt: '2025-02-18T08:00:00Z', isActive: true,
+  },
+  {
+    id: 'staff-4', email: 'pham.finance@example.com', username: 'pfinance',
+    firstName: 'Tài Chính', lastName: 'Phạm',
+    roleId: 12, invitedAt: '2025-03-01T08:00:00Z', isActive: false,
+  },
+  {
+    id: 'staff-5', email: 'support.agent@example.com', username: 'support1',
+    firstName: 'Hỗ Trợ', lastName: 'Hồ',
+    roleId: 11, invitedAt: '2025-03-20T08:00:00Z', isActive: true,
+  },
+]
+
+export function getStaffDisplayName(s: OrganizerStaff): string {
+  if (s.firstName || s.lastName) return [s.firstName, s.lastName].filter(Boolean).join(' ')
+  return s.username
+}
+
+export function getAssignableRole(roleId: number): AssignableRole | undefined {
+  return ASSIGNABLE_ROLES.find(function (r) { return r.id === roleId })
 }

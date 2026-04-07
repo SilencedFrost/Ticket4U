@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { VenueLayout, VenueLayoutZone, VenueLayoutFloor } from '../../(types)/venue.type'
+import type { VenueLayout, VenueLayoutZone, VenueLayoutFloor } from '../../(types)/venue'
 
 const props = defineProps<{
   layout: VenueLayout

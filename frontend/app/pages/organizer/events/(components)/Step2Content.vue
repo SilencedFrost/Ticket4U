@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { EventContentState } from '../../(types)/event.type'
+import { ref, computed } from 'vue'
+import type { EventContentState } from '../../(types)/event'
+import RichTextEditor from './RichTextEditor.vue'
 
 const props = defineProps<{
   content: EventContentState
@@ -14,11 +15,27 @@ const emit = defineEmits<{
 }>()
 
 const content = computed({
-  get: () => props.content,
-  set: (val) => emit('update:content', val),
+  get: function () { return props.content },
+  set: function (val) { emit('update:content', val) },
 })
 
 const contentLang = ref<'vi' | 'en'>('vi')
+
+function setAboutVi(val: string) {
+  content.value = { ...content.value, aboutVi: val }
+}
+
+function setAboutEn(val: string) {
+  content.value = { ...content.value, aboutEn: val }
+}
+
+function setTerms(val: string) {
+  content.value = { ...content.value, termsAndConditions: val }
+}
+
+function setRefund(val: string) {
+  content.value = { ...content.value, policyRefund: val }
+}
 </script>
 
 <template>
@@ -27,12 +44,15 @@ const contentLang = ref<'vi' | 'en'>('vi')
       <h5 class="fw-semibold text-reactive-primary mb-4">
         <i class="bi bi-file-text me-2 text-primary"/>{{ $t('organizer.event_form.step2.title') }}
       </h5>
+
       <div class="row g-4">
 
+        <!-- About (bilingual) -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
             {{ $t('organizer.event_form.step2.about') }}
           </label>
+
           <ul class="nav nav-tabs mb-3 border-0">
             <li class="nav-item">
               <button type="button" class="nav-link px-3" :class="{ active: contentLang === 'vi' }" @click="contentLang = 'vi'">
@@ -45,45 +65,46 @@ const contentLang = ref<'vi' | 'en'>('vi')
               </button>
             </li>
           </ul>
-          <div class="bg-reactive-primary rounded p-3">
-            <textarea
-              v-if="contentLang === 'vi'"
-              v-model="content.aboutVi"
-              class="form-control bg-transparent border-0 text-reactive-primary p-0"
-              style="min-height:180px; resize:vertical;"
-              :placeholder="$t('organizer.event_form.step2.about_vi_placeholder')"
-            />
-            <textarea
-              v-else
-              v-model="content.aboutEn"
-              class="form-control bg-transparent border-0 text-reactive-primary p-0"
-              style="min-height:180px; resize:vertical;"
-              :placeholder="$t('organizer.event_form.step2.about_en_placeholder')"
-            />
-          </div>
+
+          <RichTextEditor
+            v-if="contentLang === 'vi'"
+            :model-value="content.aboutVi"
+            :placeholder="$t('organizer.event_form.step2.about_vi_placeholder')"
+            :min-height="220"
+            @update:model-value="setAboutVi"
+          />
+          <RichTextEditor
+            v-else
+            :model-value="content.aboutEn"
+            :placeholder="$t('organizer.event_form.step2.about_en_placeholder')"
+            :min-height="220"
+            @update:model-value="setAboutEn"
+          />
         </div>
 
+        <!-- Terms & Conditions -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
             {{ $t('organizer.event_form.step2.terms') }}
           </label>
-          <textarea
-            v-model="content.termsAndConditions"
-            rows="4"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+          <RichTextEditor
+            :model-value="content.termsAndConditions"
             :placeholder="$t('organizer.event_form.step2.terms_placeholder')"
+            :min-height="160"
+            @update:model-value="setTerms"
           />
         </div>
 
+        <!-- Refund Policy -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
             {{ $t('organizer.event_form.step2.refund') }}
           </label>
-          <textarea
-            v-model="content.policyRefund"
-            rows="3"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+          <RichTextEditor
+            :model-value="content.policyRefund"
             :placeholder="$t('organizer.event_form.step2.refund_placeholder')"
+            :min-height="140"
+            @update:model-value="setRefund"
           />
         </div>
 

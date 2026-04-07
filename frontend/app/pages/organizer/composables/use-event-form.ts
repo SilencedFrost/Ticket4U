@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { mockEvents } from '../mock.data'
-import type { EventFormState, EventContentState, EventStatus } from '../(types)/event.type'
-import type { Session } from '../(types)/session.type'
+import type { EventFormState, EventContentState, EventStatus } from '../(types)/event'
+import type { Session } from '../(types)/session'
 
 export function useEventForm() {
   const { t: $t } = useI18n()

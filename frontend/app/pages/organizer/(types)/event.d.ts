@@ -1,4 +1,4 @@
-import type { Session } from './session.type'
+import type { Session } from './session'
 
 export type EventStatus =
   | 'EDITING'

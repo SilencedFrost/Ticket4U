@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useFormatter } from '~/composables/useFormatter';
-import SearchOverlayEmptyState from './search-overlay/SearchOverlayEmptyState.vue';
-import SearchOverlayResultsState from './search-overlay/SearchOverlayResultsState.vue';
+import SearchOverlayDesktopView from './search-overlay/SearchOverlayDesktopView.vue';
+import SearchOverlayMobileView from './search-overlay/SearchOverlayMobileView.vue';
 import { CATEGORY_CARD_SEEDS, CITY_CARD_SEEDS, SEARCH_RESULT_SEEDS } from './search-overlay/data';
 import type { BrowseCardItem, BrowseTab, SearchResultViewItem } from './search-overlay/types';
 
@@ -26,12 +26,6 @@ const fallbackRecentTerms = computed(() => [
   t('navbar.searchOverlay.recentTerms.music'),
   t('navbar.searchOverlay.recentTerms.lullaboy'),
   t('navbar.searchOverlay.recentTerms.comedy'),
-]);
-
-const popularSemanticTerms = computed(() => [
-  t('navbar.searchOverlay.popularTerms.anhTraiSayHi'),
-  t('navbar.searchOverlay.popularTerms.nhungThanhPhoMoMang'),
-  t('navbar.searchOverlay.popularTerms.idecaf'),
 ]);
 
 const categoryCards = computed<BrowseCardItem[]>(() =>
@@ -173,17 +167,30 @@ onMounted(() => {
     class="search-overlay-scroll w-100 rounded-4 border border-secondary-subtle bg-reactive-primary text-reactive-primary p-3 shadow-lg overflow-auto"
     @click.stop
   >
-    <search-overlay-empty-state
-      v-if="!hasSearchQuery"
-      :recent-terms="effectiveRecentSearchTerms"
-      :popular-terms="popularSemanticTerms"
-      :active-browse-tab="activeBrowseTab"
-      :browse-cards="activeBrowseCards"
-      @update:active-browse-tab="activeBrowseTab = $event"
-      @pick-term="applySearchTerm"
-    />
+    <div class="d-none d-lg-block">
+      <search-overlay-desktop-view
+        :has-search-query="hasSearchQuery"
+        :recent-terms="effectiveRecentSearchTerms"
+        :active-browse-tab="activeBrowseTab"
+        :browse-cards="activeBrowseCards"
+        :results="filteredResults"
+        @update:active-browse-tab="activeBrowseTab = $event"
+        @pick-term="applySearchTerm"
+        @choose-result="chooseResult"
+      />
+    </div>
 
-    <search-overlay-results-state v-else :results="filteredResults" @choose-result="chooseResult" />
+    <div class="d-lg-none">
+      <search-overlay-mobile-view
+        :has-search-query="hasSearchQuery"
+        :recent-terms="effectiveRecentSearchTerms"
+        :category-cards="categoryCards"
+        :city-cards="cityCards"
+        :results="filteredResults"
+        @pick-term="applySearchTerm"
+        @choose-result="chooseResult"
+      />
+    </div>
   </div>
 </template>
 

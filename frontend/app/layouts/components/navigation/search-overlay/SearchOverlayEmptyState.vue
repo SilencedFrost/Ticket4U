@@ -6,7 +6,6 @@ const { t } = useI18n();
 
 defineProps<{
   recentTerms: string[];
-  popularTerms: string[];
   activeBrowseTab: BrowseTab;
   browseCards: BrowseCardItem[];
 }>();
@@ -28,20 +27,22 @@ function selectBrowseTab(tab: BrowseTab) {
         <p class="small text-uppercase fw-semibold text-secondary mb-2">
           {{ t('navbar.searchOverlay.recentSearches') }}
         </p>
-        <button
-          v-for="(term, index) in recentTerms"
-          :key="`recent-${index}-${term}`"
-          type="button"
-          class="btn btn-link d-flex align-items-center w-100 px-0 py-2 text-decoration-none text-reset"
-          @click="emit('pickTerm', term)"
-        >
-          <i class="bi bi-clock-history me-2 text-secondary" />
-          <span class="text-start">{{ term }}</span>
-        </button>
+        <div class="list-group list-group-flush overflow-hidden">
+          <button
+            v-for="(term, index) in recentTerms"
+            :key="`recent-${index}-${term}`"
+            type="button"
+            class="bg-reactive-primary list-group-item list-group-item-action border-0 d-flex align-items-center w-100 px-2 py-2 text-decoration-none text-reset text-start"
+            @click="emit('pickTerm', term)"
+          >
+            <i class="bi bi-clock-history me-2 text-secondary" />
+            <span class="text-start">{{ term }}</span>
+          </button>
+        </div>
       </div>
     </div>
 
-    <ul class="nav mb-3 border-bottom border-secondary-subtle" role="tablist">
+    <ul class="nav mb-3 border-bottom" role="tablist">
       <li class="nav-item" role="presentation">
         <button
           type="button"

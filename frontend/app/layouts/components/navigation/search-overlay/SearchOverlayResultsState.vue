@@ -14,7 +14,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div v-if="results.length > 0" class="list-group list-group-flush rounded-3 overflow-hidden">
+  <div v-if="results.length > 0" class="list-group list-group-flush overflow-hidden">
     <search-overlay-result-item
       v-for="result in results"
       :key="result.id"

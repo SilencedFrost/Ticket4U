@@ -15,7 +15,7 @@ const emit = defineEmits<{
 <template>
   <button
     type="button"
-    class="list-group-item list-group-item-action bg-transparent border-secondary-subtle px-2 px-md-3 py-2 text-reset"
+    class="bg-reactive-primary list-group-item list-group-item-action px-2 px-md-3 py-2 text-reset"
     @click="emit('choose')"
   >
     <div class="row g-2 align-items-center">

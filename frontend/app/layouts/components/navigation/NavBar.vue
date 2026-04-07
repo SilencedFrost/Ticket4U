@@ -125,18 +125,11 @@ onClickOutside(menuContainer, () => {
 
     <div
       v-if="currentMenuKey === 'search'"
-      class="position-fixed top-0 start-0 w-100 vh-100"
-      @click="toggleMenu()"
-    />
-
-    <div
-      v-if="currentMenuKey === 'search'"
-      class="position-absolute top-100 start-0 end-0 mt-2 px-2"
-      @click="toggleMenu()"
+      class="position-absolute top-100 start-0 end-0 mt-2 px-2 pe-none"
     >
       <div class="container px-0">
         <div class="row justify-content-center">
-          <div class="col-12 col-xl-8">
+          <div class="col-12 col-xl-8 pe-auto">
             <search-overlay
               :query="searchSemantic"
               @semantic-selected="onSemanticSelected"

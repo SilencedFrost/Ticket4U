@@ -1,4 +1,9 @@
 <script setup lang="ts">
+
+// TODO: khi thêm tab preferences - lọc navItems theo auth state
+// - chưa auth: ẩn tab account & security, hoặc bôi xám + tooltip "đăng nhập để cài đặt thêm"
+// - đã auth: hiện full
+
 const navItems = [
   {
     to: '/settings/account',

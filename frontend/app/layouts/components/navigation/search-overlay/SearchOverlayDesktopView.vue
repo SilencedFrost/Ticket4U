@@ -13,8 +13,6 @@ defineProps<{
 
 const emit = defineEmits<{
   'update:activeBrowseTab': [value: BrowseTab];
-  pickTerm: [term: string];
-  chooseResult: [result: SearchResultViewItem];
 }>();
 </script>
 
@@ -25,12 +23,7 @@ const emit = defineEmits<{
     :active-browse-tab="activeBrowseTab"
     :browse-cards="browseCards"
     @update:active-browse-tab="emit('update:activeBrowseTab', $event)"
-    @pick-term="emit('pickTerm', $event)"
   />
 
-  <search-overlay-results-state
-    v-else
-    :results="results"
-    @choose-result="emit('chooseResult', $event)"
-  />
+  <search-overlay-results-state v-else :results="results" />
 </template>

@@ -1,5 +1,7 @@
 import type { BrowseCardSeed, SearchResultItem } from './types';
 
+export const RECENT_SEARCH_SEEDS = ['The Studio', 'Seminars & Workshops', 'Music'];
+
 export const CATEGORY_CARD_SEEDS: BrowseCardSeed[] = [
   {
     id: 'music',

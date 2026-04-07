@@ -19,10 +19,6 @@ function openSearchOverlay() {
   searchInput.value?.focus();
 }
 
-function onSemanticSelected(nextSemantic: string) {
-  searchSemantic.value = nextSemantic;
-}
-
 function toggleMenu(targetKey = 'none') {
   currentMenuKey.value = currentMenuKey.value === targetKey ? 'none' : targetKey;
 }
@@ -130,11 +126,7 @@ onClickOutside(menuContainer, () => {
       <div class="container px-0">
         <div class="row justify-content-center">
           <div class="col-12 col-xl-8 pe-auto">
-            <search-overlay
-              :query="searchSemantic"
-              @semantic-selected="onSemanticSelected"
-              @close="toggleMenu()"
-            />
+            <search-overlay :query="searchSemantic" />
           </div>
         </div>
       </div>

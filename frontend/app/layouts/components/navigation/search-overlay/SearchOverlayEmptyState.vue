@@ -12,7 +12,6 @@ defineProps<{
 
 const emit = defineEmits<{
   'update:activeBrowseTab': [value: BrowseTab];
-  pickTerm: [term: string];
 }>();
 
 function selectBrowseTab(tab: BrowseTab) {
@@ -33,7 +32,6 @@ function selectBrowseTab(tab: BrowseTab) {
             :key="`recent-${index}-${term}`"
             type="button"
             class="bg-reactive-primary list-group-item list-group-item-action border-0 d-flex align-items-center w-100 px-2 py-2 text-decoration-none text-reset text-start"
-            @click="emit('pickTerm', term)"
           >
             <i class="bi bi-clock-history me-2 text-secondary" />
             <span class="text-start">{{ term }}</span>
@@ -67,8 +65,8 @@ function selectBrowseTab(tab: BrowseTab) {
     </ul>
 
     <div class="row g-2 align-items-stretch">
-      <div v-for="card in browseCards" :key="card.id" class="col-4 col-md-3 d-flex">
-        <search-overlay-browse-card :item="card" @select="emit('pickTerm', $event)" />
+      <div v-for="card in browseCards" :key="card.id" class="col-6 col-md-3 d-flex">
+        <search-overlay-browse-card :item="card" />
       </div>
     </div>
   </div>

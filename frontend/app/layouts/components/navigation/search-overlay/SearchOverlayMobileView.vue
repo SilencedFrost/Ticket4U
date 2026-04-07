@@ -12,11 +12,6 @@ defineProps<{
   cityCards: BrowseCardItem[];
   results: SearchResultViewItem[];
 }>();
-
-const emit = defineEmits<{
-  pickTerm: [term: string];
-  chooseResult: [result: SearchResultViewItem];
-}>();
 </script>
 
 <template>
@@ -29,7 +24,6 @@ const emit = defineEmits<{
             :key="`mobile-recent-${index}-${term}`"
             type="button"
             class="bg-reactive-primary list-group-item list-group-item-action border-0 d-flex align-items-center w-100 px-2 py-1 text-decoration-none text-reset text-start"
-            @click="emit('pickTerm', term)"
           >
             <i class="bi bi-clock-history me-2 text-secondary" />
             <span class="text-start small">{{ term }}</span>
@@ -45,7 +39,7 @@ const emit = defineEmits<{
             :key="`mobile-category-${card.id}`"
             class="col-6 col-sm-5 col-md-4"
           >
-            <search-overlay-browse-card :item="card" compact @select="emit('pickTerm', $event)" />
+            <search-overlay-browse-card :item="card" compact />
           </div>
         </div>
       </div>
@@ -58,17 +52,13 @@ const emit = defineEmits<{
             :key="`mobile-city-${card.id}`"
             class="col-6 col-sm-5 col-md-4"
           >
-            <search-overlay-browse-card :item="card" compact @select="emit('pickTerm', $event)" />
+            <search-overlay-browse-card :item="card" compact />
           </div>
         </div>
       </div>
     </div>
 
-    <search-overlay-results-state
-      v-else
-      :results="results"
-      @choose-result="emit('chooseResult', $event)"
-    />
+    <search-overlay-results-state v-else :results="results" />
   </div>
 </template>
 

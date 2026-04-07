@@ -7,20 +7,11 @@ const { t } = useI18n();
 defineProps<{
   results: SearchResultViewItem[];
 }>();
-
-const emit = defineEmits<{
-  chooseResult: [result: SearchResultViewItem];
-}>();
 </script>
 
 <template>
   <div v-if="results.length > 0" class="list-group list-group-flush overflow-hidden">
-    <search-overlay-result-item
-      v-for="result in results"
-      :key="result.id"
-      :item="result"
-      @choose="emit('chooseResult', result)"
-    />
+    <search-overlay-result-item v-for="result in results" :key="result.id" :item="result" />
   </div>
 
   <div v-else class="text-center py-4 text-secondary">

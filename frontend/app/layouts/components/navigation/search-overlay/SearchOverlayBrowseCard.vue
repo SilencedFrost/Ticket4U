@@ -10,18 +10,10 @@ withDefaults(
     compact: false,
   },
 );
-
-const emit = defineEmits<{
-  select: [label: string];
-}>();
 </script>
 
 <template>
-  <button
-    type="button"
-    class="btn p-0 bg-transparent border-0 text-start w-100 h-100"
-    @click="emit('select', item.label)"
-  >
+  <button type="button" class="btn p-0 bg-transparent border-0 text-start w-100 h-100">
     <div class="card text-bg-dark border-0 overflow-hidden h-100">
       <div :class="['ratio', compact ? 'ratio-21x9' : 'ratio-16x9']">
         <img

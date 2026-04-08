@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useMediaQuery } from '@vueuse/core';
+import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core';
 import EventGrid from '~/features/event/components/layout/EventGrid.vue';
-import FilterBarDesktop from './components/FilterBarDesktop.vue';
-import FilterBarMobile from './components/FilterBarMobile.vue';
+import FilterBarDesktop from '~/features/filter/components/FilterBarDesktop.vue';
+import FilterBarMobile from '~/features/filter/components/FilterBarMobile.vue';
 import type { EventSummary } from '~/features/event/types/Event';
 
 const config = useRuntimeConfig();
 
 const eventList = ref<EventSummary[]>([]);
-const isDesktop = useMediaQuery('(min-width: 768px)');
+const breakpoints = useBreakpoints(breakpointsBootstrapV5);
+const isDesktop = breakpoints.greaterOrEqual('md');
 
 function closeOpenedFilterPanels() {
   const openedPanels = document.querySelectorAll<HTMLDetailsElement>(

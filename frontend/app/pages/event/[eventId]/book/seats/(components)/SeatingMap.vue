@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import type { Ticket, SelectedSeat } from '../(types)/ticket'
-import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout'
-import type { CartItem } from '../(types)/event-payment'
+import type { Ticket, SelectedSeat } from '../(types)/ticket.type'
+import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
+import type { CartItem } from '../(types)/event-payment.type'
 
 const props = defineProps<{ tickets: Ticket[]; floors: Floor[]; cart: CartItem[] }>()
 const emit  = defineEmits<{

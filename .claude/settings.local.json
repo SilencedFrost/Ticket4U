@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/pages/event/[eventId]/book/seats/\\(types\\)/event.ts\" \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/types/event.ts\")",
+      "Bash(cp \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/pages/event/[eventId]/book/seats/\\(types\\)/event-payment.ts\" \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/types/event-payment.ts\")",
+      "Bash(cp \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/pages/event/[eventId]/book/seats/\\(types\\)/seating-layout.ts\" \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/types/seating-layout.ts\")",
+      "Bash(cp \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/pages/event/[eventId]/book/seats/\\(types\\)/ticket.ts\" \"E:/Code Projects/Java6/Clone/Ticket4U-Clone/frontend/app/types/ticket.ts\")"
+    ]
+  }
+}

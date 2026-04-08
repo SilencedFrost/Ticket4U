@@ -1,5 +1,4 @@
-// TODO: refactor to features/
-import type { SelectedSeat } from './ticket'
+import type { SelectedSeat } from './ticket.type'
 
 export interface CartItem {
   zoneId:     string

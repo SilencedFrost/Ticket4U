@@ -5,7 +5,7 @@ import { useEventPayment } from './composables/useEventPayment'
 import SeatingMap  from './(components)/SeatingMap.vue'
 import EventInfo   from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'
-import type { SelectedSeat } from './(types)/ticket'
+import type { SelectedSeat } from './(types)/ticket.type'
 
 
 const route     = useRoute()

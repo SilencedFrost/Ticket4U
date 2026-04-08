@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Ticket } from '../(types)/ticket'
-import type { CartItem } from '../(types)/event-payment'
+import type { Ticket } from '../(types)/ticket.type'
+import type { CartItem } from '../(types)/event-payment.type'
 
 const { t: translate, locale } = useI18n()
 

@@ -1,4 +1,3 @@
-// TODO: refactor to features/
 export interface Event {
   id:    string
   title: string

@@ -1,8 +1,3 @@
-export interface ChangePassword {
-  currentPassword: string;
-  newPassword: string;
-}
-
 export interface Session {
   displayId: string;
   userAgent: string | null;

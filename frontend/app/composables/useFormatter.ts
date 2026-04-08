@@ -1,7 +1,7 @@
 export function useFormatter() {
   const { locale } = useI18n();
 
-  function formatPrice(price: number, currency: 'USD' | 'VND' = 'VND') {
+  function formatPrice(price: number, currency: 'USD' | 'VND' = 'VND'): string {
     const isVi = locale.value === 'vi';
 
     if (currency === 'VND') {
@@ -16,6 +16,8 @@ export function useFormatter() {
       });
       return isVi ? `${formatted}$` : `$${formatted}`;
     }
+
+    return price.toString();
   }
 
   return {

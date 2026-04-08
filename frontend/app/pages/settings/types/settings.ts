@@ -1,10 +1,3 @@
-export interface ChangeInfo {
-  firstName: string | null;
-  lastName: string | null;
-  birthday: string | null;
-  phoneNumber: string | null;
-}
-
 export interface ChangePassword {
   currentPassword: string;
   newPassword: string;

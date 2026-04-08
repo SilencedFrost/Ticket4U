@@ -85,6 +85,7 @@
     }
   },
   "common": {
+    "birthday": "Ngày sinh",
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
@@ -94,11 +95,26 @@
       "less": "Ẩn bớt"
     },
     "action": {
+      "allow": "Cho phép",
+      "deny": "Để sau",
       "buy": "Mua vé ngay",
-      "view": "Xem"
+      "view": "Xem",
+      "remove": "Xóa"
     },
     "full_name": "Họ và tên",
-    "phone": "Số điện thoại"
+    "first_name": "Tên",
+    "last_name": "Họ",
+    "phone": "Số điện thoại",
+    "currency": {
+      "from": "Từ",
+      "free": "Miễn phí"
+    }
+  },
+  "permissions": {
+    "location": {
+      "title": "Cho phép truy cập vị trí",
+      "message": "Tìm các sự kiện gần bạn. Cho phép truy cập vị trí để xem các buổi hòa nhạc và chương trình biểu diễn đang diễn ra trong khu vực của bạn."
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -187,6 +203,9 @@
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
       "member_since": "Thành viên từ",
+      "messages": {
+        "update_success": "Cập nhật thông tin cá nhân thành công."
+      },
       "basic_info": {
         "section_title": "Thông tin cơ bản"
       }
@@ -197,15 +216,54 @@
       "change_password": {
         "title": "Đổi mật khẩu",
         "current_password": "Mật khẩu hiện tại",
-        "new_password": "Mật khẩu mới"
+        "new_password": "Mật khẩu mới",
+        "messages": {
+          "success": "Đổi mật khẩu thành công."
+        },
+        "errors": {
+          "current_password_incorrect": "Mật khẩu hiện tại không chính xác."
+        }
       },
       "sessions": {
         "title": "Phiên đăng nhập đang hoạt động",
+        "empty": "Không có phiên đăng nhập đang hoạt động.",
         "columns": {
           "last_access": "Lần truy cập cuối"
         },
         "unknown_device": "Thiết bị không xác định"
       }
     }
+  },
+  "categories": {
+    "concert": "Buổi Hòa Nhạc",
+    "festival": "Lễ Hội",
+    "theater": "Sân Khấu",
+    "comedy": "Hài Kịch",
+    "sports": "Thể Thao",
+    "conference": "Hội Nghị",
+    "workshop": "Hội Thảo",
+    "seminar": "Chuyên Đề",
+    "networking": "Kết Nối",
+    "exhibition": "Triển Lãm",
+    "nightlife": "Giải Trí Đêm",
+    "wellness": "Sức Khỏe",
+    "food": "Ẩm Thực",
+    "drinks": "Đồ Uống",
+    "dance": "Khiêu Vũ",
+    "film": "Điện Ảnh",
+    "gaming": "Trò Chơi",
+    "outdoor": "Ngoài Trời",
+    "charity": "Từ Thiện",
+    "family": "Gia Đình",
+    "cultural": "Văn Hóa",
+    "fashion": "Thời Trang",
+    "tech": "Công Nghệ",
+    "art": "Nghệ Thuật",
+    "literature": "Văn Học",
+    "science": "Khoa Học",
+    "religion": "Tôn Giáo",
+    "politics": "Chính Trị",
+    "travel": "Du Lịch",
+    "virtual": "Trực Tuyến"
   }
 }

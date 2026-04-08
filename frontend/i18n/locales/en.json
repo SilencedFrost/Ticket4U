@@ -85,6 +85,7 @@
     }
   },
   "common": {
+    "birthday": "Date of birth",
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
@@ -94,11 +95,26 @@
       "less": "See less"
     },
     "action": {
+      "allow": "Allow",
+      "deny": "Deny",
       "buy": "Buy tickets now",
-      "view": "View"
+      "view": "View",
+      "remove": "Remove"
     },
     "full_name": "Full name",
-    "phone": "Phone number"
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "phone": "Phone number",
+    "currency": {
+      "from": "From",
+      "free": "Free"
+    }
+  },
+  "permissions": {
+    "location": {
+      "title": "Allow location access",
+      "message": "Find events near you. Allow location access to see concerts and shows happening in your area."
+    }
   },
   "brand": {
     "name": "Ticket4U",
@@ -187,6 +203,9 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
+      "messages": {
+        "update_success": "Profile updated successfully."
+      },
       "basic_info": {
         "section_title": "Basic Information"
       }
@@ -197,7 +216,13 @@
       "change_password": {
         "title": "Change Password",
         "current_password": "Current Password",
-        "new_password": "New Password"
+        "new_password": "New Password",
+        "messages": {
+          "success": "Password updated successfully."
+        },
+        "errors": {
+          "current_password_incorrect": "Current password is incorrect."
+        }
       },
       "sessions": {
         "title": "Active Sessions",
@@ -207,5 +232,37 @@
         "unknown_device": "Unknown device"
       }
     }
+  },
+  "categories": {
+    "concert": "Concert",
+    "festival": "Festival",
+    "theater": "Theater",
+    "comedy": "Comedy",
+    "sports": "Sports",
+    "conference": "Conference",
+    "workshop": "Workshop",
+    "seminar": "Seminar",
+    "networking": "Networking",
+    "exhibition": "Exhibition",
+    "nightlife": "Nightlife",
+    "wellness": "Wellness",
+    "food": "Food",
+    "drinks": "Drinks",
+    "dance": "Dance",
+    "film": "Film",
+    "gaming": "Gaming",
+    "outdoor": "Outdoor",
+    "charity": "Charity",
+    "family": "Family",
+    "cultural": "Cultural",
+    "fashion": "Fashion",
+    "tech": "Tech",
+    "art": "Art",
+    "literature": "Literature",
+    "science": "Science",
+    "religion": "Religion",
+    "politics": "Politics",
+    "travel": "Travel",
+    "virtual": "Virtual"
   }
 }

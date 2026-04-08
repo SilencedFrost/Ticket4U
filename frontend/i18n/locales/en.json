@@ -233,5 +233,17 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
+  },
+  "status": {
+    "title": "Status",
+    "status_options": {
+      "premiere": "Premiere",
+      "selling": "Selling",
+      "ongoing": "Ongoing",
+      "finished": "Finished",
+      "canceled": "Canceled",
+      "editing": "Editing",
+      "paused": "Paused"
+    }
   }
 }

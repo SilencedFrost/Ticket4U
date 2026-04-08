@@ -16,6 +16,18 @@ const props = withDefaults(
   },
 );
 
+const panelMobileStyle: Record<string, string> = {
+  width: 'calc(100vw - 16px)',
+  maxWidth: '560px',
+  maxHeight: 'calc(100vh - 148px)',
+  overflowY: 'auto',
+};
+
+const panelDesktopStyle: Record<string, string> = {
+  minWidth: '480px',
+  width: 'min(96vw, 560px)',
+};
+
 const config = useRuntimeConfig();
 const { t, te } = useI18n();
 
@@ -71,8 +83,10 @@ watch(
     summary-class="btn btn-outline-secondary"
     summary-icon-class="bi bi-funnel fs-5"
     :summary-label="t('event_filter.main.button')"
-    panel-class-mobile="position-fixed start-50 translate-middle-x w-100 dev-main-panel-mobile"
+    panel-class-mobile="position-absolute top-100 start-50 translate-middle-x mt-2 dev-main-panel-mobile"
     panel-class-desktop="position-absolute start-0 mt-2 dev-main-panel-desktop"
+    :panel-style-mobile="panelMobileStyle"
+    :panel-style-desktop="panelDesktopStyle"
   >
     <div v-if="showPriceSection" class="mb-3">
       <h6 class="fw-bold mb-3 small">{{ t('common.price') }}</h6>
@@ -86,20 +100,6 @@ watch(
 
     <hr v-if="showPriceSection && (showCategorySection || showStatusSection)" class="my-3" />
 
-    <div v-if="showCategorySection" class="mb-3">
-      <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
-      <div class="d-flex flex-wrap gap-2">
-        <button
-          v-for="category in categoryList"
-          :key="category.id"
-          type="button"
-          class="btn btn-sm btn-outline-secondary rounded-pill"
-        >
-          {{ getCategoryLabel(category.name) }}
-        </button>
-      </div>
-    </div>
-
     <div v-if="showStatusSection" class="mb-3">
       <h6 class="fw-bold mb-3 small">{{ statusTitle }}</h6>
       <slot name="status" :options="props.statusOptions">
@@ -108,12 +108,28 @@ watch(
             v-for="status in props.statusOptions"
             :key="status.value"
             type="button"
-            class="btn btn-sm btn-outline-secondary rounded-pill"
+            class="btn btn-sm btn-outline-secondary text-reactive-secondary rounded-pill"
           >
             {{ status.label }}
           </button>
         </div>
       </slot>
+    </div>
+
+    <hr v-if="showPriceSection && (showCategorySection || showStatusSection)" class="my-3" />
+
+    <div v-if="showCategorySection" class="mb-3">
+      <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
+      <div class="d-flex flex-wrap gap-2">
+        <button
+          v-for="category in categoryList"
+          :key="category.id"
+          type="button"
+          class="btn btn-sm btn-outline-secondary text-reactive-secondary rounded-pill"
+        >
+          {{ getCategoryLabel(category.name) }}
+        </button>
+      </div>
     </div>
 
     <div class="d-flex gap-2 mt-3">
@@ -126,18 +142,3 @@ watch(
     </div>
   </FilterPanel>
 </template>
-
-<style scoped>
-:deep(.dev-main-panel-mobile) {
-  top: 132px;
-  width: calc(100vw - 16px);
-  max-width: 560px;
-  max-height: calc(100vh - 148px);
-  overflow-y: auto;
-}
-
-:deep(.dev-main-panel-desktop) {
-  min-width: 480px;
-  width: min(96vw, 560px);
-}
-</style>

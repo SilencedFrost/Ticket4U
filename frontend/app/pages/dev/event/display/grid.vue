@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core';
 import EventGrid from '~/features/event/components/layout/EventGrid.vue';
-import FilterBarDesktop from '~/features/filter/components/FilterBarDesktop.vue';
-import FilterBarMobile from '~/features/filter/components/FilterBarMobile.vue';
-import type { EventSummary } from '~/features/event/types/Event';
+import FilterBar from '~/features/filter/components/FilterBar.vue';
+import { type EventSummary, EventStatus } from '~/features/event/types/Event';
+import type { FilterStatusOption, MainFilterSection } from '~/features/filter/types';
 
 const config = useRuntimeConfig();
+const { t } = useI18n();
 
 const eventList = ref<EventSummary[]>([]);
-const breakpoints = useBreakpoints(breakpointsBootstrapV5);
-const isDesktop = breakpoints.greaterOrEqual('md');
 
-function closeOpenedFilterPanels() {
-  const openedPanels = document.querySelectorAll<HTMLDetailsElement>(
-    'details[name="dev-event-filter-group"][open]',
-  );
-  openedPanels.forEach((panel) => {
-    panel.open = false;
-  });
-}
+const mainSections: MainFilterSection[] = ['price', 'category', 'status'];
 
-function handleClickOutsideFilters(event: MouseEvent) {
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-
-  const clickedInsideFilter = target.closest('details[name="dev-event-filter-group"]');
-  if (!clickedInsideFilter) {
-    closeOpenedFilterPanels();
-  }
-}
+const statusOptions = computed<FilterStatusOption[]>(() => [
+  {
+    value: EventStatus.PREMIERE,
+    label: t('status.status_options.premiere'),
+  },
+  {
+    value: EventStatus.SELLING,
+    label: t('status.status_options.selling'),
+  },
+  {
+    value: EventStatus.ONGOING,
+    label: t('status.status_options.ongoing'),
+  },
+  {
+    value: EventStatus.FINISHED,
+    label: t('status.status_options.finished'),
+  },
+]);
 
 async function getFeaturedEvents() {
   try {
@@ -42,27 +42,14 @@ async function getFeaturedEvents() {
 }
 
 onMounted(() => {
-  nextTick(() => closeOpenedFilterPanels());
   getFeaturedEvents();
-  document.addEventListener('click', handleClickOutsideFilters);
-  window.addEventListener('pageshow', closeOpenedFilterPanels);
-});
-
-watch(isDesktop, () => {
-  nextTick(() => closeOpenedFilterPanels());
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutsideFilters);
-  window.removeEventListener('pageshow', closeOpenedFilterPanels);
 });
 </script>
 
 <template>
   <div class="p-3">
     <ClientOnly>
-      <FilterBarDesktop v-if="isDesktop" />
-      <FilterBarMobile v-else />
+      <FilterBar :main-sections="mainSections" :status-options="statusOptions" />
     </ClientOnly>
     <event-grid :events="eventList" />
   </div>

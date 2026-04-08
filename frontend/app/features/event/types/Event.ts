@@ -17,3 +17,13 @@ export interface EventSummary {
   endDate: string;
   minPrice: number;
 }
+
+export enum EventStatus {
+  PREMIERE = 'PREMIERE',
+  SELLING = 'SELLING',
+  ONGOING = 'ONGOING',
+  FINISHED = 'FINISHED',
+  CANCELLED = 'CANCELLED',
+  EDITING = 'EDITING',
+  PAUSED = 'PAUSED',
+}

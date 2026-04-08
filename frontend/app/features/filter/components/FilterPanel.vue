@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onClickOutside } from '@vueuse/core';
 import type { FilterMode } from '../types';
 
 const props = withDefaults(
@@ -10,15 +11,24 @@ const props = withDefaults(
     summaryMobileLabel?: string;
     panelClassDesktop: string;
     panelClassMobile: string;
+    panelStyleDesktop?: Record<string, string | number>;
+    panelStyleMobile?: Record<string, string | number>;
     panelName?: string;
   }>(),
   {
     mode: 'desktop',
+    summaryMobileLabel: '',
+    panelStyleDesktop: () => ({}),
+    panelStyleMobile: () => ({}),
     panelName: 'dev-event-filter-group',
   },
 );
 
 const isPanelOpen = ref(false);
+const detailsRef = ref<HTMLDetailsElement | null>(null);
+const panelInlineStyle = computed(() =>
+  props.mode === 'mobile' ? props.panelStyleMobile : props.panelStyleDesktop,
+);
 
 function handleDetailsToggle(event: Event) {
   const details = event.target as HTMLDetailsElement;
@@ -29,16 +39,20 @@ function closePanel() {
   isPanelOpen.value = false;
 }
 
-onMounted(() => {
-  isPanelOpen.value = false;
+onClickOutside(detailsRef, () => {
+  if (isPanelOpen.value) {
+    closePanel();
+  }
 });
 </script>
 
 <template>
   <details
+    ref="detailsRef"
     :open="isPanelOpen"
     :name="props.panelName"
-    class="position-relative d-inline-block"
+    class="d-inline-block"
+    :class="props.mode === 'mobile' ? 'position-static' : 'position-relative'"
     @toggle="handleDetailsToggle"
   >
     <summary
@@ -61,6 +75,7 @@ onMounted(() => {
     <div
       class="p-3 p-sm-4 border rounded-3 shadow bg-body z-3"
       :class="props.mode === 'mobile' ? props.panelClassMobile : props.panelClassDesktop"
+      :style="panelInlineStyle"
     >
       <div v-if="props.mode === 'mobile'" class="d-flex justify-content-end mb-2">
         <button

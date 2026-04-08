@@ -233,5 +233,17 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
+  },
+  "status": {
+    "title": "Trạng thái",
+    "status_options": {
+      "premiere": "Công chiếu",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Đã tạm dừng"
+    }
   }
 }

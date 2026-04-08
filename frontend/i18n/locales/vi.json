@@ -237,13 +237,14 @@
   "status": {
     "title": "Trạng thái",
     "status_options": {
-      "premiere": "Công chiếu",
+      "premiere": "Ra mắt",
       "selling": "Đang mở bán",
       "ongoing": "Đang diễn ra",
       "finished": "Đã kết thúc",
       "canceled": "Đã hủy",
       "editing": "Đang chỉnh sửa",
-      "paused": "Đã tạm dừng"
+      "paused": "Ngừng bán vé",
+      "sold_out": "Hết vé"
     }
   }
 }

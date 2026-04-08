@@ -243,7 +243,8 @@
       "finished": "Finished",
       "canceled": "Canceled",
       "editing": "Editing",
-      "paused": "Paused"
+      "paused": "Stopped selling",
+      "sold_out": "Sold out"
     }
   }
 }

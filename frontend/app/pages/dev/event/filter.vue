@@ -7,24 +7,19 @@ const { t } = useI18n();
 
 const mainSections: MainFilterSection[] = ['price', 'category', 'status'];
 
-const statusOptions = computed<FilterStatusOption[]>(() => [
-  {
-    value: EventStatus.PREMIERE,
-    label: t('status.status_options.premiere'),
-  },
-  {
-    value: EventStatus.SELLING,
-    label: t('status.status_options.selling'),
-  },
-  {
-    value: EventStatus.ONGOING,
-    label: t('status.status_options.ongoing'),
-  },
-  {
-    value: EventStatus.FINISHED,
-    label: t('status.status_options.finished'),
-  },
-]);
+const ACTIVE_STATUS_KEYS = [
+  EventStatus.PREMIERE,
+  EventStatus.SELLING,
+  EventStatus.ONGOING,
+  EventStatus.FINISHED,
+];
+
+const statusOptions = computed<FilterStatusOption[]>(() =>
+  ACTIVE_STATUS_KEYS.map((status) => ({
+    value: status,
+    label: t(`status.status_options.${status.toLowerCase()}`),
+  })),
+);
 </script>
 
 <template>

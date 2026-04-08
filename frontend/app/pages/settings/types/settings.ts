@@ -1,9 +1,3 @@
-export interface Session {
-  displayId: string;
-  userAgent: string | null;
-  updatedAt: string;
-}
-
 export interface ProfileForm {
   firstName: string;
   lastName: string;

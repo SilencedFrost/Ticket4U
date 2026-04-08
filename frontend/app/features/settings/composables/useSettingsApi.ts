@@ -1,7 +1,7 @@
 import type { FetchError } from 'ofetch';
 import type { ChangeInfo } from '../types/changeInfo';
 import type { ChangePassword } from '../types/changePassword';
-import type { Session } from '../../../pages/settings/types/settings';
+import type { Session } from '../types/session';
 
 type UseSettingsApiReturn = {
   fetchCurrentUser: () => Promise<UserSummary>;

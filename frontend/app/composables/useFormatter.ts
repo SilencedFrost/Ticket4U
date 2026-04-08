@@ -6,7 +6,7 @@ export function useFormatter() {
 
     if (currency === 'VND') {
       const formatted = price.toLocaleString(isVi ? 'vi-VN' : 'en-US');
-      return isVi ? `${formatted}đ` : `đ${formatted}`;
+      return isVi ? `${formatted}đ` : `VND ${formatted}`;
     }
 
     if (currency === 'USD') {

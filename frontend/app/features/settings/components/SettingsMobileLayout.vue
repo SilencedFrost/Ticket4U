@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import '../style/settings.css';
+import '../../../pages/settings/style/settings.css';
 
 const { currentTheme } = useTheme();
 

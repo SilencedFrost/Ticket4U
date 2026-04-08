@@ -3,7 +3,6 @@ import { breakpointsBootstrapV5, useBreakpoints } from '@vueuse/core';
 import SettingsDesktopLayout from './SettingsDesktopLayout.vue';
 import SettingsMobileLayout from './SettingsMobileLayout.vue';
 
-// ssrWidth fix lỗi layout vỡ sau khi refresh
 const isDesktopViewport = useBreakpoints(breakpointsBootstrapV5).greaterOrEqual('md');
 </script>
 

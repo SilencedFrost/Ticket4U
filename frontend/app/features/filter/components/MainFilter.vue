@@ -1,31 +1,23 @@
 <script setup lang="ts">
 import type { CategorySummary } from '~/features/event/types/Category';
 import FilterPanel from './FilterPanel.vue';
-import type { FilterMode, FilterStatusOption, MainFilterSection } from '../types';
+import type { FilterStatusOption, MainFilterSection } from '../types';
 
 const props = withDefaults(
   defineProps<{
-    mode?: FilterMode;
     sections?: MainFilterSection[];
     statusOptions?: FilterStatusOption[];
   }>(),
   {
-    mode: 'desktop',
     sections: () => ['price', 'category'],
     statusOptions: () => [],
   },
 );
 
-const panelMobileStyle: Record<string, string> = {
-  width: 'calc(100vw - 16px)',
-  maxWidth: '560px',
+const panelStyle: Record<string, string> = {
+  width: 'min(96vw, 560px)',
   maxHeight: 'calc(100vh - 148px)',
   overflowY: 'auto',
-};
-
-const panelDesktopStyle: Record<string, string> = {
-  minWidth: '480px',
-  width: 'min(96vw, 560px)',
 };
 
 const config = useRuntimeConfig();
@@ -79,14 +71,11 @@ watch(
 
 <template>
   <FilterPanel
-    :mode="props.mode"
     summary-class="btn btn-outline-secondary"
     summary-icon-class="bi bi-funnel fs-5"
     :summary-label="t('event_filter.main.button')"
-    panel-class-mobile="position-absolute top-100 start-50 translate-middle-x mt-2 dev-main-panel-mobile"
-    panel-class-desktop="position-absolute start-0 mt-2 dev-main-panel-desktop"
-    :panel-style-mobile="panelMobileStyle"
-    :panel-style-desktop="panelDesktopStyle"
+    panel-class="dev-main-panel"
+    :panel-style="panelStyle"
   >
     <div v-if="showPriceSection" class="mb-3">
       <h6 class="fw-bold mb-3 small">{{ t('common.price') }}</h6>

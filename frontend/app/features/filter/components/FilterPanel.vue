@@ -1,33 +1,36 @@
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core';
-import type { FilterMode } from '../types';
+import { breakpointsBootstrapV5, onClickOutside, useBreakpoints } from '@vueuse/core';
 
 const props = withDefaults(
   defineProps<{
-    mode?: FilterMode;
     summaryClass: string;
     summaryIconClass: string;
     summaryLabel: string;
     summaryMobileLabel?: string;
-    panelClassDesktop: string;
-    panelClassMobile: string;
-    panelStyleDesktop?: Record<string, string | number>;
-    panelStyleMobile?: Record<string, string | number>;
+    panelClass?: string;
+    panelStyle?: Record<string, string | number>;
     panelName?: string;
   }>(),
   {
-    mode: 'desktop',
     summaryMobileLabel: '',
-    panelStyleDesktop: () => ({}),
-    panelStyleMobile: () => ({}),
+    panelClass: '',
+    panelStyle: () => ({}),
     panelName: 'dev-event-filter-group',
   },
 );
 
 const isPanelOpen = ref(false);
 const detailsRef = ref<HTMLDetailsElement | null>(null);
-const panelInlineStyle = computed(() =>
-  props.mode === 'mobile' ? props.panelStyleMobile : props.panelStyleDesktop,
+const breakpoints = useBreakpoints(breakpointsBootstrapV5);
+const isDesktop = breakpoints.greaterOrEqual('md');
+const panelInlineStyle = computed(() => props.panelStyle);
+const detailsPositionClass = computed(() =>
+  isDesktop.value ? 'position-relative' : 'position-static',
+);
+const panelPositionClass = computed(() =>
+  isDesktop.value
+    ? 'position-absolute top-100 start-0 mt-2'
+    : 'position-absolute top-100 start-50 translate-middle-x mt-2',
 );
 
 function handleDetailsToggle(event: Event) {
@@ -52,7 +55,7 @@ onClickOutside(detailsRef, () => {
     :open="isPanelOpen"
     :name="props.panelName"
     class="d-inline-block"
-    :class="props.mode === 'mobile' ? 'position-static' : 'position-relative'"
+    :class="detailsPositionClass"
     @toggle="handleDetailsToggle"
   >
     <summary
@@ -74,10 +77,10 @@ onClickOutside(detailsRef, () => {
 
     <div
       class="p-3 p-sm-4 border rounded-3 shadow bg-body z-3"
-      :class="props.mode === 'mobile' ? props.panelClassMobile : props.panelClassDesktop"
+      :class="[panelPositionClass, props.panelClass]"
       :style="panelInlineStyle"
     >
-      <div v-if="props.mode === 'mobile'" class="d-flex justify-content-end mb-2">
+      <div class="d-flex justify-content-end mb-2 d-md-none">
         <button
           type="button"
           class="btn btn-sm p-0 border-0 bg-transparent text-secondary"

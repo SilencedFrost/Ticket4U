@@ -226,6 +226,7 @@
       },
       "sessions": {
         "title": "Active Sessions",
+        "empty": "No active sessions.",
         "columns": {
           "last_access": "Last Access"
         },

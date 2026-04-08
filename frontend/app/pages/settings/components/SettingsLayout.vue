@@ -10,8 +10,9 @@ const isMounted = ref(false);
 
 <template>
   <div>
+    <!-- TODO: test fallback behavior khi SSR chưa hydrate -->
     <div v-if="!isMounted" class="p-3" style="min-height: 400px" />
-    
+
     <ClientOnly @vue:mounted="isMounted = true">
       <settings-desktop-layout v-if="isDesktopViewport">
         <slot />

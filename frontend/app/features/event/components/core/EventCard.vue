@@ -21,6 +21,7 @@ const isMounted = ref(false);
 <template>
 <div class="cursor-pointer" @click="$emit('event-click', event.id)">
     <!-- Chỉ hiện khi chưa hydrate (SSR), ẩn sau khi ClientOnly mount xong -->
+    <!-- TODO: test fallback behavior khi SSR chưa hydrate -->
     <template v-if="!isMounted">
       <div class="ratio ratio-1x1 rounded-3 overflow-hidden mb-2 bg-secondary opacity-25 d-lg-none" />
       <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-2 bg-secondary opacity-25 d-none d-lg-block" />

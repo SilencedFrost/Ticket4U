@@ -36,7 +36,7 @@
           },
           "lowercase": "Mật khẩu phải có ít nhất một chữ thường",
           "uppercase": "Mật khẩu phải có ít nhất một chữ hoa",
-          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "special_char": "Mật khẩu phải có ít nhất một ký tự đặc biệt (!$^*()_=+[]{'@'}{'{'}{'}'}{'|'};:\",./?~`-)\\",
           "digit": "Mật khẩu phải có ít nhất một số"
         }
       },

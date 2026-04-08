@@ -36,7 +36,7 @@
           },
           "lowercase": "Password must contain at least one lowercase letter",
           "uppercase": "Password must contain at least one uppercase letter",
-          "special_char": "Password must contain at least one special character (!$^*()_=+[]{'@'}{'{'}{'}'}\\{'|'};:\",./?~`-)",
+          "special_char": "Password must contain at least one special character (!$^*()_=+[]{'@'}{'{'}{'}'}{'|'};:\",./?~`-)\\",
           "digit": "Password must contain at least one digit"
         }
       },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue'
-import { useTicketSelect } from './composables/use-ticket-select'
-import { useEventPayment } from './composables/use-event-payment'
+import { useTicketSelect } from './composables/useTicketSelect'
+import { useEventPayment } from './composables/useEventPayment'
 import SeatingMap  from './(components)/SeatingMap.vue'
 import EventInfo   from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'

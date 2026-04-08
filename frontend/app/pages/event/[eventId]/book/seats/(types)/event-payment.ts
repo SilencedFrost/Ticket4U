@@ -1,3 +1,4 @@
+// TODO: refactor to features/
 import type { SelectedSeat } from './ticket'
 
 export interface CartItem {

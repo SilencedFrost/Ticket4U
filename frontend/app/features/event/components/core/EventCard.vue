@@ -14,19 +14,23 @@ defineEmits<{
 const isLg = useBreakpoints(breakpointsBootstrapV5).greaterOrEqual('lg');
 
 const formatter = useFormatter();
+
+const isMounted = ref(false); 
 </script>
 
 <template>
-  <div class="cursor-pointer" @click="$emit('event-click', event.id)">
-    <ClientOnly>
+<div class="cursor-pointer" @click="$emit('event-click', event.id)">
+    <!-- Chỉ hiện khi chưa hydrate (SSR), ẩn sau khi ClientOnly mount xong -->
+    <template v-if="!isMounted">
+      <div class="ratio ratio-1x1 rounded-3 overflow-hidden mb-2 bg-secondary opacity-25 d-lg-none" />
+      <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-2 bg-secondary opacity-25 d-none d-lg-block" />
+    </template>
+
+    <ClientOnly @vue:mounted="isMounted = true">
       <div :class="['ratio', isLg ? 'ratio-16x9' : 'ratio-1x1', 'rounded-3', 'overflow-hidden', 'mb-2']">
         <shimmer-img v-if="isLg" :src="event.bannerUrl.wide" :alt="event.name" />
         <shimmer-img v-else :src="event.bannerUrl.square" :alt="event.name" />
       </div>
-
-      <template #fallback>
-        <div class="ratio ratio-1x1 rounded-3 overflow-hidden mb-2 bg-secondary opacity-25" />
-      </template>
     </ClientOnly>
     <div class="d-flex">
       <i class="bi bi-person-circle text-reactive-secondary me-2" style="font-size: 35px" />

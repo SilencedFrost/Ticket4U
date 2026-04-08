@@ -26,4 +26,5 @@ export enum EventStatus {
   CANCELLED = 'CANCELLED',
   EDITING = 'EDITING',
   PAUSED = 'PAUSED',
+  SOLD = 'SOLD',
 }

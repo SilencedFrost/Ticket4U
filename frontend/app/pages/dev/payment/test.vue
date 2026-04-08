@@ -1,5 +1,5 @@
 <script setup lang="ts">
-interface VietQrPaymentResponse {
+interface SepayPaymentResponse {
   orderId: string;
   orderCode: string;
   amount: number;
@@ -34,7 +34,7 @@ const autoPoll = ref<boolean>(true);
 const loading = ref<boolean>(false);
 const statusLoading = ref<boolean>(false);
 const errorMessage = ref<string>('');
-const payment = ref<VietQrPaymentResponse | null>(null);
+const payment = ref<SepayPaymentResponse | null>(null);
 const status = ref<PaymentStatusResponse | null>(null);
 const orderIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const isOrderIdValid = computed(() => orderIdPattern.test(form.orderId.trim()));
@@ -60,7 +60,7 @@ const setupPolling = () => {
   }, pollRate.value);
 };
 
-const createVietQr = async () => {
+const createSepay = async () => {
   if (!isOrderIdValid.value || loading.value) {
     return;
   }
@@ -69,8 +69,8 @@ const createVietQr = async () => {
   errorMessage.value = '';
 
   try {
-    payment.value = await $fetch<VietQrPaymentResponse>(
-      `${config.public.paymentServiceUrl}/public/payments/vietqr`,
+    payment.value = await $fetch<SepayPaymentResponse>(
+      `${config.public.paymentServiceUrl}/public/payments/sepay`,
       {
         method: 'POST',
         body: {
@@ -82,7 +82,7 @@ const createVietQr = async () => {
     await fetchStatus(false);
     setupPolling();
   } catch {
-    errorMessage.value = 'Unable to create VietQR payment for this order.';
+    errorMessage.value = 'Unable to create SePay payment for this order.';
     payment.value = null;
   } finally {
     loading.value = false;
@@ -134,16 +134,15 @@ onUnmounted(() => {
 
       <div class="row g-2 mb-2">
         <div class="col-md-8">
-          <input
-            v-model="form.orderId"
-            type="text"
-            class="form-control"
-            placeholder="Order UUID"
-          />
+          <input v-model="form.orderId" type="text" class="form-control" placeholder="Order UUID" />
         </div>
         <div class="col-md-4 d-grid">
-          <button class="btn btn-primary" :disabled="!isOrderIdValid || loading" @click="createVietQr">
-            {{ loading ? 'Creating...' : 'Create VietQR' }}
+          <button
+            class="btn btn-primary"
+            :disabled="!isOrderIdValid || loading"
+            @click="createSepay"
+          >
+            {{ loading ? 'Creating...' : 'Create SePay' }}
           </button>
         </div>
       </div>
@@ -160,7 +159,11 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="col-md-4 d-flex align-items-end gap-2">
-          <button class="btn btn-outline-primary" :disabled="!isOrderIdValid" @click="fetchStatus()">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!isOrderIdValid"
+            @click="fetchStatus()"
+          >
             {{ statusLoading ? 'Checking...' : 'Check Status' }}
           </button>
           <button class="btn btn-outline-secondary" @click="resetPage">Reset</button>
@@ -172,7 +175,7 @@ onUnmounted(() => {
       <div v-if="payment" class="row g-3">
         <div class="col-md-5">
           <div class="border rounded p-2 bg-white text-center">
-            <img :src="payment.qrUrl" alt="VietQR" class="img-fluid" />
+            <img :src="payment.qrUrl" alt="SePay QR" class="img-fluid" />
           </div>
         </div>
         <div class="col-md-7">

@@ -23,7 +23,7 @@ application:
   payment:
     webhook-key: ${SEPAY_WEBHOOK_KEY:}
     order-code-prefix: ${SEPAY_ORDER_CODE_PREFIX:T4U}
-    vietqr:
+    sepay:
       bank-code: ${SEPAY_QR_BANK_CODE:MBBank}
       account-number: ${SEPAY_QR_ACCOUNT_NUMBER:}
       account-name: ${SEPAY_QR_ACCOUNT_NAME:}

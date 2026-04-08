@@ -1,8 +1,8 @@
 package com.ticket4u.controller;
 
-import com.ticket4u.dto.CreateVietQrPaymentRequest;
+import com.ticket4u.dto.CreateSepayPaymentRequest;
 import com.ticket4u.dto.PaymentStatusResponse;
-import com.ticket4u.dto.VietQrPaymentResponse;
+import com.ticket4u.dto.SepayPaymentResponse;
 import com.ticket4u.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,9 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/vietqr")
-    public ResponseEntity<VietQrPaymentResponse> createVietQr(@Valid @RequestBody CreateVietQrPaymentRequest request) {
-        return ResponseEntity.ok(paymentService.createVietQrPayment(request));
+    @PostMapping("/sepay")
+    public ResponseEntity<SepayPaymentResponse> createSepay(@Valid @RequestBody CreateSepayPaymentRequest request) {
+        return ResponseEntity.ok(paymentService.createSepayPayment(request));
     }
 
     @GetMapping("/orders/{orderId}/status")

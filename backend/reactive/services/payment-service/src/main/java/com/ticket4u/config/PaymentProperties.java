@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 public class PaymentProperties {
     private String webhookKey;
     private String orderCodePrefix = "T4U";
-    private VietQrProperties vietqr = new VietQrProperties();
+    private SepayProperties sepay = new SepayProperties();
 
     public String resolveOrderCodePrefix() {
         if (!StringUtils.hasText(orderCodePrefix)) {
@@ -25,7 +25,7 @@ public class PaymentProperties {
 
     @Getter
     @Setter
-    public static class VietQrProperties {
+    public static class SepayProperties {
         private String bankCode;
         private String accountNumber;
         private String accountName;

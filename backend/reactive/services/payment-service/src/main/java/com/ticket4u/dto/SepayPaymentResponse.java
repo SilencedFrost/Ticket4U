@@ -3,7 +3,7 @@ package com.ticket4u.dto;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record VietQrPaymentResponse(
+public record SepayPaymentResponse(
         UUID orderId,
         String orderCode,
         BigDecimal amount,
@@ -15,6 +15,5 @@ public record VietQrPaymentResponse(
         String qrUrl,
         String paymentStatus,
         String orderStatus,
-        String transactionId
-) {
+        String transactionId) {
 }

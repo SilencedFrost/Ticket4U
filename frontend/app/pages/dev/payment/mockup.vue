@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const fullName = ref('Hùng La Ngọc');
-const email = ref('langochungdev@gmail.com');
-const phone = ref('0901234567');
+const fullName = ref('');
+const email = ref('');
+const phone = ref('');
 const promoCode = ref('');
 const agreedPolicy = ref(false);
 const secondsLeft = ref(567);
@@ -14,6 +14,7 @@ const tickets = ref([
   { type: 'GA', zone: '-', row: 'C', seat: '10' },
   { type: 'GA', zone: '-', row: 'C', seat: '11' },
   { type: 'GA', zone: '-', row: 'C', seat: '12' },
+  { type: 'GA', zone: '-', row: 'C', seat: '13' },
 ]);
 
 const countdownLabel = computed(() => {
@@ -118,8 +119,8 @@ onBeforeUnmount(() => {
             </article>
 
             <article class="panel receiver-panel">
-              <h2 class="panel-title">Thông tin nhận vé</h2>
-              <p class="panel-subtitle">Vé của bạn sẽ được gửi tới thông tin bên dưới</p>
+              <h2 class="panel-title">Thông tin nhận hóa đơn</h2>
+              <p class="panel-subtitle">Hóa đơn của bạn sẽ được gửi tới thông tin bên dưới</p>
               <hr class="panel-divider" />
 
               <div class="receiver-row">
@@ -134,7 +135,7 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ fullName }}</strong>
+                  <strong v-else>{{ fullName || 'Chưa nhập' }}</strong>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('name')">
                   <i :class="editingField === 'name' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -153,7 +154,7 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ email }}</strong>
+                  <strong v-else>{{ email || 'Chưa nhập' }}</strong>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('email')">
                   <i :class="editingField === 'email' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -172,7 +173,7 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ phone }}</strong>
+                  <strong v-else>{{ phone || 'Chưa nhập' }}</strong>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('phone')">
                   <i :class="editingField === 'phone' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -183,8 +184,8 @@ onBeforeUnmount(() => {
 
               <p class="ticket-note">
                 <i class="bi bi-qr-code"></i>
-                Vé điện tử sẽ được gửi đến email ở trên.<br />
-                Vé được lưu trong mục <strong>Vé của bạn</strong> của tài khoản {{ email }}.<br />
+                Hóa đơn sẽ được gửi đến email ở trên.<br />
+                Vé được lưu trong mục <strong>Vé của bạn</strong> của tài khoản hiện tại.<br />
                 Khi vào cổng, chỉ cần xuất trình mã QR điện tử.
               </p>
             </article>
@@ -387,11 +388,11 @@ onBeforeUnmount(() => {
 }
 
 .payment-main {
-  flex: 1;
   min-height: 0;
   display: grid;
   grid-template-columns: 1.35fr 0.95fr;
   gap: 12px;
+  align-content: start;
 }
 
 .left-col,
@@ -399,14 +400,15 @@ onBeforeUnmount(() => {
   min-height: 0;
   display: grid;
   gap: 12px;
+  align-content: start;
 }
 
 .left-col {
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto auto;
 }
 
 .right-col {
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto;
 }
 
 .panel {
@@ -485,7 +487,7 @@ onBeforeUnmount(() => {
 }
 
 .receiver-panel {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .receiver-row {
@@ -547,7 +549,7 @@ onBeforeUnmount(() => {
 }
 
 .ticket-note {
-  margin: 0;
+  margin: 2px 0 0;
   color: #dbe1f2;
   font-size: 0.9rem;
   line-height: 1.45;
@@ -620,16 +622,19 @@ onBeforeUnmount(() => {
 }
 
 .ticket-scroll {
-  max-height: 180px;
+  max-height: 164px;
   overflow-y: auto;
   padding-right: 6px;
+  scrollbar-gutter: stable;
 }
 
 .ticket-row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  padding: 8px 0;
+  min-height: 52px;
+  align-items: center;
+  padding: 6px 0;
   border-bottom: 1px solid rgba(122, 132, 165, 0.2);
 }
 

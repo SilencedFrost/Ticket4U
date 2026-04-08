@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record CreateVietQrPaymentRequest(
-        @NotNull UUID orderId
-) {
+public record CreateSepayPaymentRequest(
+        @NotNull UUID orderId) {
 }

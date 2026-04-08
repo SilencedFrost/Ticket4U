@@ -1,60 +1,51 @@
 package com.ticket4u.service.impl;
 
 import com.ticket4u.config.PaymentProperties;
-import com.ticket4u.dto.CreateVietQrPaymentRequest;
+import com.ticket4u.dto.CreateSepayPaymentRequest;
 import com.ticket4u.dto.OrderPaymentSnapshotResponse;
 import com.ticket4u.dto.PaymentStatusResponse;
-import com.ticket4u.dto.VietQrPaymentResponse;
+import com.ticket4u.dto.SepayPaymentResponse;
+import com.ticket4u.service.PaymentOrderService;
 import com.ticket4u.service.PaymentService;
-import com.ticket4u.service.TicketOrderClient;
+import com.ticket4u.util.SepayQrUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
-    private final TicketOrderClient ticketOrderClient;
+    private final PaymentOrderService paymentOrderService;
     private final PaymentProperties paymentProperties;
+    private final SepayQrUtil sepayQrUtil;
 
     @Override
-    public VietQrPaymentResponse createVietQrPayment(CreateVietQrPaymentRequest request) {
-        OrderPaymentSnapshotResponse snapshot = ticketOrderClient.getOrderPaymentSnapshot(request.orderId());
-        validateVietQrConfig();
+    public SepayPaymentResponse createSepayPayment(CreateSepayPaymentRequest request) {
+        OrderPaymentSnapshotResponse snapshot = paymentOrderService.getOrderPaymentSnapshot(request.orderId());
 
         String orderCode = buildOrderCode(request.orderId());
-        String qrUrl = buildQrUrl(
-                paymentProperties.getVietqr().getAccountNumber(),
-                paymentProperties.getVietqr().getBankCode(),
-                snapshot.totalAmount(),
-                orderCode,
-                paymentProperties.getVietqr().getTemplate()
-        );
+        SepayQrUtil.SepayQrDetails sepayQrDetails = sepayQrUtil.build(snapshot.totalAmount(), orderCode);
 
-        return new VietQrPaymentResponse(
+        return new SepayPaymentResponse(
                 snapshot.orderId(),
                 orderCode,
                 snapshot.totalAmount(),
                 snapshot.currency(),
-                paymentProperties.getVietqr().getBankCode(),
-                paymentProperties.getVietqr().getAccountNumber(),
-                paymentProperties.getVietqr().getAccountName(),
-                paymentProperties.getVietqr().getTemplate(),
-                qrUrl,
+                sepayQrDetails.bankCode(),
+                sepayQrDetails.accountNumber(),
+                sepayQrDetails.accountName(),
+                sepayQrDetails.template(),
+                sepayQrDetails.qrUrl(),
                 snapshot.paymentStatus(),
                 snapshot.orderStatus(),
-                snapshot.transactionId()
-        );
+                snapshot.transactionId());
     }
 
     @Override
     public PaymentStatusResponse getPaymentStatus(UUID orderId) {
-        OrderPaymentSnapshotResponse snapshot = ticketOrderClient.getOrderPaymentSnapshot(orderId);
+        OrderPaymentSnapshotResponse snapshot = paymentOrderService.getOrderPaymentSnapshot(orderId);
 
         return new PaymentStatusResponse(
                 snapshot.orderId(),
@@ -62,34 +53,11 @@ public class PaymentServiceImpl implements PaymentService {
                 snapshot.orderStatus(),
                 snapshot.transactionId(),
                 snapshot.totalAmount(),
-                snapshot.currency()
-        );
-    }
-
-    private void validateVietQrConfig() {
-        if (!StringUtils.hasText(paymentProperties.getVietqr().getAccountNumber())) {
-            throw new IllegalStateException("Missing SEPAY_QR_ACCOUNT_NUMBER configuration");
-        }
-
-        if (!StringUtils.hasText(paymentProperties.getVietqr().getBankCode())) {
-            throw new IllegalStateException("Missing SEPAY_QR_BANK_CODE configuration");
-        }
+                snapshot.currency());
     }
 
     private String buildOrderCode(UUID orderId) {
-        return paymentProperties.resolveOrderCodePrefix() + "-" + orderId;
-    }
-
-    private String buildQrUrl(String accountNumber, String bankCode, BigDecimal amount, String orderCode, String template) {
-        String amountValue = amount.stripTrailingZeros().toPlainString();
-
-        return UriComponentsBuilder.fromUriString("https://qr.sepay.vn/img")
-                .queryParam("acc", accountNumber)
-                .queryParam("bank", bankCode)
-                .queryParam("amount", amountValue)
-                .queryParam("des", orderCode)
-                .queryParam("template", template)
-                .build()
-                .toUriString();
+        String compactOrderId = orderId.toString().replace("-", "");
+        return paymentProperties.resolveOrderCodePrefix() + " " + compactOrderId;
     }
 }

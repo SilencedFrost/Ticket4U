@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useTicketSelect } from './composables/use-ticket-select'
 import { useEventPayment } from './composables/use-event-payment'
 import SeatingMap  from './(components)/SeatingMap.vue'
 import EventInfo   from './(components)/EventInfo.vue'
 import CartSummary from './(components)/CartSummary.vue'
-import type { SelectedSeat } from './(types)/ticket.type'
+import type { SelectedSeat } from './(types)/ticket'
 
 
 const route     = useRoute()
@@ -15,11 +15,18 @@ const sessionId = route.params.sessionId as string
 const seatingMapRef = ref()
 
 const { event, tickets, floors, loading, error, fetchTicketSelect } = useTicketSelect()
-const { cart, totalPrice, totalTickets, addToCart, removeFromCart, formatPrice } = useEventPayment()
+const { cart, totalPrice, totalTickets, addToCart, removeFromCart, removeSeatFromCart, formatPrice } = useEventPayment()
 
 watch(cart, (newCart) => {
   seatingMapRef.value?.syncCartSeats(newCart)
 }, { deep: true })
+
+function handleRemoveSeat(itemIndex: number, seatUuid: string) {
+  removeSeatFromCart(itemIndex, seatUuid)
+  // Call syncCartSeats directly — the deep watch on cart may not fire
+  // reliably when a nested seats array is mutated in place
+  nextTick(() => seatingMapRef.value?.syncCartSeats(cart.value))
+}
 
 const drawerOpen = ref(true)
 const cartWidth  = ref(420)
@@ -55,9 +62,9 @@ function startResize(e: MouseEvent) {
   const startX     = e.clientX
   const startWidth = cartWidth.value
   function onMove(ev: MouseEvent) { cartWidth.value = Math.min(700, Math.max(300, startWidth + startX - ev.clientX)) }
-  function onUp() { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
-  window.addEventListener('mousemove', onMove)
-  window.addEventListener('mouseup', onUp)
+  function onUp() { globalThis.removeEventListener('mousemove', onMove); globalThis.removeEventListener('mouseup', onUp) }
+  globalThis.addEventListener('mousemove', onMove)
+  globalThis.addEventListener('mouseup', onUp)
 }
 </script>
 
@@ -94,10 +101,14 @@ function startResize(e: MouseEvent) {
               @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <div class="resize-handle" @mousedown="startResize"/>
-        <div class="cart-sidebar bg-reactive-secondary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">
+        <div class="cart-sidebar bg-reactive-primary d-flex flex-column h-100" :style="{ width: cartWidth + 'px', flexShrink: '0' }">
           <div class="flex-grow-1 overflow-auto px-4 pt-4">
             <EventInfo :event="event"/>
-            <CartSummary :tickets="tickets" :cart="cart" :total-price="totalPrice" :total-tickets="totalTickets" @remove-item="removeFromCart"/>
+            <CartSummary
+                :tickets="tickets" :cart="cart"
+                :total-price="totalPrice" :total-tickets="totalTickets"
+                @remove-item="removeFromCart"
+                @remove-seat="handleRemoveSeat"/>
           </div>
           <div class="p-4 pt-3 border-top border-secondary">
             <button class="btn btn-primary w-100 py-3 fw-semibold" :disabled="cart.length === 0" @click="proceedToCheckout">
@@ -131,7 +142,11 @@ function startResize(e: MouseEvent) {
           </div>
           <div class="drawer-content px-3 pb-3">
             <EventInfo :event="event"/>
-            <CartSummary :tickets="tickets" :cart="cart" :total-price="totalPrice" :total-tickets="totalTickets" @remove-item="removeFromCart"/>
+            <CartSummary
+                :tickets="tickets" :cart="cart"
+                :total-price="totalPrice" :total-tickets="totalTickets"
+                @remove-item="removeFromCart"
+                @remove-seat="handleRemoveSeat"/>
           </div>
           <div class="px-3 pb-3 pt-2 border-top border-secondary">
             <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="cart.length === 0" @click="proceedToCheckout">

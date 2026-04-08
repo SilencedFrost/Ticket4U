@@ -1,7 +1,7 @@
 import { ref } from 'vue'
-import type { Ticket } from '../(types)/ticket.type'
-import type { Event } from '../(types)/event.type'
-import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout.type'
+import type { Ticket } from '../(types)/ticket'
+import type { Event } from '../(types)/event'
+import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seating-layout'
 
 // Backend response shapes
 interface Seat {
@@ -55,6 +55,7 @@ interface RawLayoutFloor {
 interface RawLayoutZone {
   zone_id?:    string | null
   zone_name?:  string
+  zone_type?:  'sitting' | 'standing'
   accessible?: boolean
   color?:      string
   rotation?:   number
@@ -84,19 +85,24 @@ function buildLayoutSeats(zoneSeats: Seat[]): LayoutSeat[] {
 }
 
 function buildLayoutZone(z: RawLayoutZone, zoneById: Map<string, Zone>): LayoutZone {
-  const zoneId    = z.zone_id ?? null
-  const zoneData  = zoneId ? zoneById.get(zoneId) : undefined
-  const zoneSeats = zoneData?.seats ?? []
+  const zoneId   = z.zone_id ?? null
+  const zoneData = zoneId ? zoneById.get(zoneId) : undefined
+
+  // Use isStanding from the DB zone as source of truth — the layout JSON's
+  // zone_type only describes polygon display style and can be wrong
+  // (e.g. CIS Arena marks all zones as "standing" even for seated bleachers).
+  // Fall back to z.zone_type only when no DB zone is linked.
+  const zoneType: 'sitting' | 'standing' =
+      zoneData != null
+          ? (zoneData.isStanding ? 'standing' : 'sitting')
+          : (z.zone_type ?? 'standing')
 
   return {
+    ...z,
     zone_name:    z.zone_name ?? 'Zone',
-    zone_type:    z.accessible !== false ? 'sitting' : 'standing',
+    zone_type:    zoneType,
     color:        z.color ?? FALLBACK_COLORS[0]!,
-    corner1:      z.corner1,
-    corner2:      z.corner2,
-    corner3:      z.corner3,
-    corner4:      z.corner4,
-    seats:        buildLayoutSeats(zoneSeats),
+    seats:        buildLayoutSeats(zoneData?.seats ?? []),
     zone_uuid:    zoneId ?? undefined,
     display_name: z.zone_name,
     rotation:     z.rotation ?? 0,
@@ -110,7 +116,7 @@ function buildFloor(fl: RawLayoutFloor, zoneById: Map<string, Zone>): Floor {
     floor_order: fl.floor_order ?? 1,
     layout: {
       seat_size: fl.global_seat_size ?? 14,
-      stage:     fl.stage ?? { x1: -0.3, y1: -1.0, x2: 0.3, y2: -0.85 },
+      stage:     fl.stage ?? { x1: -0.3, y1: -1, x2: 0.3, y2: -0.85 },
       zones:     (fl.zones ?? []).map(z => buildLayoutZone(z, zoneById)),
     },
   }
@@ -137,37 +143,29 @@ function buildFloors(layoutJson: string | null, zones: Zone[]): Floor[] {
   const zoneById = new Map(zones.map(zone => [zone.id, zone]))
 
   return rawFloors
-      .sort((a, b) => (a.floor_order ?? 0) - (b.floor_order ?? 0))
+      .toSorted((a, b) => (a.floor_order ?? 0) - (b.floor_order ?? 0))
       .map(fl => buildFloor(fl, zoneById))
 }
 
 function mapSeatingPlan(data: SeatingPlan): { tickets: Ticket[]; floors: Floor[] } {
   const tickets: Ticket[] = data.zones.map((zone, i): Ticket => ({
-    id:            zone.id,
-    name:          zone.name,
-    price:         zone.price,
+    ...zone,
     color:         FALLBACK_COLORS[i % FALLBACK_COLORS.length] ?? '#6366f1',
     zone:          zone.name,
-    capacity:      zone.capacity,
     soldOut:       zone.capacity <= 0,
     maxPerAccount: zone.purchaseLimit ?? null,
     isStanding:    zone.isStanding ?? false,
-    descriptionVi: zone.descriptionVi,
-    descriptionEn: zone.descriptionEn,
-    giftImageUrl:  zone.giftImageUrl,
-    perks:         zone.perks,
   }))
 
   const floors = buildFloors(data.layout, data.zones)
 
-  // Back-fill color and standing flag from layout zone data
-  if (floors.length > 0) {
-    for (const ticket of tickets) {
-      const layoutZone = floors[0]?.layout.zones.find(z => z.zone_uuid === ticket.id)
-      if (layoutZone) {
-        ticket.color      = layoutZone.color
-        ticket.isStanding = layoutZone.zone_type === 'standing'
-      }
+  // Back-fill color from layout zone data (search all floors, not just floor 0).
+  // Do NOT back-fill isStanding — it is already correct from DB zone.isStanding.
+  // layout JSON zone_type is a display hint and can differ from the ticket type
+  for (const ticket of tickets) {
+    for (const floor of floors) {
+      const layoutZone = floor.layout.zones.find(z => z.zone_uuid === ticket.id)
+      if (layoutZone) { ticket.color = layoutZone.color; break }
     }
   }
 
@@ -189,7 +187,6 @@ export const useTicketSelect = () => {
     loading.value = true
     error.value   = null
     try {
-      // Fetch event info and layout in parallel — both IDs known from URL
       const [eventData, seatingData] = await Promise.all([
         $fetch<EventInfo>(`${config.public.eventServiceUrl}/public/events/${eventId}`),
         $fetch<SeatingPlan>(`${config.public.eventServiceUrl}/public/sessions/${sessionId}/layout`),

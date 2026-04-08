@@ -37,7 +37,6 @@ public class Event {
 
     @Column(nullable = false, unique = true)
     private String name;
-    // TODO: implement vector embedding of name
 
     @Column(nullable = false)
     private UUID organizerId;

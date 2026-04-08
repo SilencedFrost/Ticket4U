@@ -196,244 +196,610 @@ INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, n
 SELECT uuidv7(), id, NOW() - INTERVAL '10 days', NOW() + INTERVAL '20 days', 'ONGOING', 'Exhibition Period', NOW()
 FROM public.events WHERE name = 'Van Gogh Art Lighting Experience';
 
---4. Table: Zones 
--- Zones cho Hà Anh Tuấn
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'VVIP', false, 50, 2, 2500000.00,
-       'Khu vực VIP cao cấp gần sân khấu, ghế ngồi hạng sang, phục vụ đồ uống cao cấp.',
-       'Premium VIP area near stage, luxury seating, premium beverage service.',
+--4. Table: Zones
+-- ─── Hà Anh Tuấn: Chân Trời Rực Rỡ ───────────────────────────────────────────
+-- Venue: Sân Lễ Hội Đền Vua Đinh - Vua Lê
+-- Venue zones: VIP → VVIP | Zone A → GA Standing - Zone A | Zone B → GA Standing - Zone B | GA → GA Standing - GA
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'VVIP', false, 50, 2, 2500000,
+       'Khu vực VIP cao cấp với vị trí đẹp nhất, dịch vụ đặc biệt và nhiều ưu đãi độc quyền. Ghế ngồi hạng sang gần sân khấu, phục vụ đồ uống cao cấp, quà tặng đặc biệt.',
+       'Premium VIP area with the best location, exclusive services and special privileges. Luxury seats near the stage, premium beverage service, special gift package.',
        'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-       '["Vòng tay check-in VIP", "Goodie bag", "Meet & Greet"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+       '["Vòng tay check-in VIP", "Goodie bag", "Meet & Greet"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'GA Standing', true, 800, 4, 650000.00,
-       'Khu vực đứng tự do gần sân khấu, trải nghiệm âm nhạc bùng nổ cùng đám đông.',
-       'Standing area near stage for an explosive music experience with the crowd.',
-       NULL, '["Vòng tay check-in", "Nước suối"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Standing - Zone A', true, 800, 4, 650000,
+       'Khu vực đứng tự do Zone A gần sân khấu, trải nghiệm âm nhạc bùng nổ cùng đám đông.',
+       'Standing area Zone A near the stage for an explosive music experience with the crowd.',
+       NULL,
+       '["Vòng tay check-in", "Nước suối"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
--- VBA Saigon Heat
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Courtside VIP', false, 50, 2, 2500000.00,
-       'Ghế ngồi sát sàn đấu, cảm nhận từng bước chạy của cầu thủ.',
-       'Courtside seats to feel every move of the players.',
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Standing - Zone B', true, 800, 4, 650000,
+       'Khu vực đứng tự do Zone B gần sân khấu, trải nghiệm âm nhạc bùng nổ cùng đám đông.',
+       'Standing area Zone B near the stage for an explosive music experience with the crowd.',
+       NULL,
+       '["Vòng tay check-in", "Nước suối"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Standing - GA', true, 800, 4, 650000,
+       'Khu vực đứng tự do khu GA gần sân khấu, trải nghiệm âm nhạc bùng nổ cùng đám đông.',
+       'Standing area GA section near the stage for an explosive music experience with the crowd.',
+       NULL,
+       '["Vòng tay check-in", "Nước suối"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
+
+
+-- ─── VBA 2025: Saigon Heat vs Hanoi Buffaloes ─────────────────────────────────
+-- Venue: CIS Arena
+-- Venue zones: VIP Floor → Courtside VIP | Lower Bowl Left/Right, GA Pit, Lower Bowl Back, Upper Bowl → Standard Bleachers splits
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Courtside VIP', false, 50, 2, 2500000,
+       'Ghế ngồi sát sàn đấu, cảm nhận từng bước chạy của cầu thủ. Ghế ngồi VIP sát sân, áo đấu phiên bản giới hạn, F&B phục vụ tại chỗ.',
+       'Courtside seats to feel every move of the players. VIP courtside seats, limited edition jersey, F&B service at seat.',
        'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-       '["Áo đấu phiên bản giới hạn", "F&B phục vụ tại chỗ"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+       '["Áo đấu phiên bản giới hạn", "F&B phục vụ tại chỗ"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Standard Bleachers', false, 800, 4, 150000.00,
-       'Khu vực khán đài tiêu chuẩn với tầm nhìn tốt.',
-       'Standard bleachers with good view.',
-       NULL, NULL, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Standard Bleachers - Lower Bowl Left', false, 160, 4, 150000,
+       'Khán đài trái phía dưới với tầm nhìn tốt. Giá cả phải chăng cho người hâm mộ.',
+       'Lower left bleachers with good view. Affordable price for fans.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
 
--- Những Thành Phố Mơ Màng
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Cư Dân VIP', false, 200, 2, 1500000.00,
-       'Đặc quyền cư dân VIP với khu vực nghỉ ngơi riêng, quà tặng độc quyền.',
-       'VIP resident privileges with private lounge and exclusive gifts.',
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Standard Bleachers - Lower Bowl Right', false, 160, 4, 150000,
+       'Khán đài phải phía dưới với tầm nhìn tốt. Giá cả phải chăng cho người hâm mộ.',
+       'Lower right bleachers with good view. Affordable price for fans.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Standard Bleachers - GA Pit', false, 160, 4, 150000,
+       'Khán đài khu GA giữa sân với tầm nhìn tốt. Giá cả phải chăng cho người hâm mộ.',
+       'GA Pit bleachers with good view. Affordable price for fans.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Standard Bleachers - Lower Bowl Back', false, 160, 4, 150000,
+       'Khán đài phía sau dưới với tầm nhìn tốt. Giá cả phải chăng cho người hâm mộ.',
+       'Lower back bleachers with good view. Affordable price for fans.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Standard Bleachers - Upper Bowl', false, 160, 4, 150000,
+       'Khán đài tầng trên với tầm nhìn toàn cảnh. Giá cả phải chăng cho người hâm mộ.',
+       'Upper bowl bleachers with panoramic view. Affordable price for fans.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+
+
+-- ─── Những Thành Phố Mơ Màng - Summer Tour ───────────────────────────────────
+-- Venue: Công viên Yên Sở
+-- Venue zones: VIP → Cư Dân VIP | Zone A/B/GA → GA Thường splits
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Cư Dân VIP', false, 200, 2, 1500000,
+       'Đặc quyền cư dân VIP với khu vực nghỉ ngơi riêng, quà tặng độc quyền, lối đi ưu tiên và nước uống miễn phí cả ngày.',
+       'VIP resident privileges with private lounge, exclusive gifts, priority access and unlimited beverages.',
        'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
-       '["Bộ quà tặng Cư Dân", "Lối đi ưu tiên", "Nước uống miễn phí"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+       '["Bộ quà tặng Cư Dân", "Lối đi ưu tiên", "Nước uống miễn phí"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'GA Thường', true, 2000, 4, 650000.00,
-       'Khu vực tự do dành cho các cư dân yêu âm nhạc.',
-       'General admission area for music-loving residents.',
-       NULL, '["Vòng tay vải", "Sticker"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Thường - Zone A', true, 700, 4, 650000,
+       'Khu vực tự do Zone A dành cho các cư dân yêu âm nhạc. Hòa mình vào không khí sôi động của festival.',
+       'General admission Zone A for music-loving residents. Immerse in the vibrant festival atmosphere.',
+       NULL,
+       '["Vòng tay vải", "Sticker"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
 
--- Mây Lang Thang
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Khu VVIP (Gần ca sĩ)', false, 50, 2, 1800000.00,
-       'Vị trí đẹp nhất để tương tác cùng nghệ sĩ, thưởng thức nhạc Trịnh bất hủ.',
-       'The best spot to interact with the artist, enjoying timeless Trinh melodies.',
-       NULL, '["Một phần nước tự chọn", "Đĩa CD nhạc Trịnh"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Thường - Zone B', true, 700, 4, 650000,
+       'Khu vực tự do Zone B dành cho các cư dân yêu âm nhạc. Hòa mình vào không khí sôi động của festival.',
+       'General admission Zone B for music-loving residents. Immerse in the vibrant festival atmosphere.',
+       NULL,
+       '["Vòng tay vải", "Sticker"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Thường - GA', true, 600, 4, 650000,
+       'Khu vực tự do GA dành cho các cư dân yêu âm nhạc. Hòa mình vào không khí sôi động của festival.',
+       'General admission GA section for music-loving residents. Immerse in the vibrant festival atmosphere.',
+       NULL,
+       '["Vòng tay vải", "Sticker"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
+
+
+-- ─── Mây Lang Thang: Đêm Nhạc Trịnh ─────────────────────────────────────────
+-- Venue: Mây in The Nest
+-- Venue zones: VIP → Khu VVIP | Zone A/B/Standing → Khu Khán Đài splits
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu VVIP (Gần ca sĩ)', false, 50, 2, 1800000,
+       'Vị trí đẹp nhất để tương tác cùng nghệ sĩ, thưởng thức nhạc Trịnh bất hủ. Một phần nước tự chọn cao cấp, đĩa CD nhạc Trịnh kỷ niệm, cơ hội chụp ảnh với nghệ sĩ.',
+       'The best spot to interact with the artist, enjoying timeless Trinh melodies. Premium beverage of choice, commemorative CD, photo opportunity with artist.',
+       NULL,
+       '["Một phần nước tự chọn", "Đĩa CD nhạc Trịnh"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Khu Khán Đài', false, 200, 4, 800000.00,
-       'Khu vực ngồi thoải mái với tầm nhìn đẹp, thưởng thức đêm nhạc trong không gian lãng mạn.',
-       'Comfortable seating with beautiful view, enjoy the music night in romantic atmosphere.',
-       NULL, '["Nước uống", "Chăn len"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu Khán Đài - Zone A', false, 80, 4, 800000,
+       'Khu khán đài Zone A bên trái, ngồi thoải mái với tầm nhìn đẹp trong không gian lãng mạn của Đà Lạt.',
+       'Bleachers Zone A left side, comfortable seating with beautiful view in romantic Dalat atmosphere.',
+       NULL,
+       '["Nước uống", "Chăn len"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
--- Kịch Idecaf
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Khu A (Lầu 1)', false, 300, 4, 350000.00,
-       'Khu vực lầu 1 gần sân khấu nhất, phù hợp cho trẻ em.',
-       'Floor 1 area closest to the stage, perfect for children.',
-       NULL, NULL, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu Khán Đài - Zone B', false, 80, 4, 800000,
+       'Khu khán đài Zone B bên phải, ngồi thoải mái với tầm nhìn đẹp trong không gian lãng mạn của Đà Lạt.',
+       'Bleachers Zone B right side, comfortable seating with beautiful view in romantic Dalat atmosphere.',
+       NULL,
+       '["Nước uống", "Chăn len"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu Khán Đài - Standing', true, 40, 4, 800000,
+       'Khu đứng phía sau khán đài, hòa mình vào không gian lãng mạn của Đà Lạt.',
+       'Standing area behind the bleachers, immerse in the romantic Dalat atmosphere.',
+       NULL,
+       '["Nước uống", "Chăn len"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
+
+
+-- ─── Kịch Idecaf: Ngày Xửa Ngày Xưa 35 ──────────────────────────────────────
+-- Venue: Nhà Hát Bến Thành
+-- Venue zones (F1): Orchestra → Khu A (Lầu 1) | Box Left/Right/Mezzanine → splits
+-- Venue zones (F2): Balcony → Khu B (Lầu 2)
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu A (Lầu 1)', false, 300, 4, 350000,
+       'Khu vực lầu 1 gần sân khấu nhất, phù hợp cho trẻ em để có trải nghiệm tốt nhất.',
+       'Floor 1 area closest to the stage, perfect for children to have the best experience.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'Khu B (Lầu 2)', false, 200, 4, 250000.00,
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu A (Lầu 1) - Box Left', false, 40, 4, 350000,
+       'Khu box bên trái lầu 1, gần sân khấu với góc nhìn độc đáo.',
+       'Box Left section floor 1, near the stage with a unique viewing angle.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu A (Lầu 1) - Box Right', false, 40, 4, 350000,
+       'Khu box bên phải lầu 1, gần sân khấu với góc nhìn độc đáo.',
+       'Box Right section floor 1, near the stage with a unique viewing angle.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu A (Lầu 1) - Mezzanine', false, 80, 4, 350000,
+       'Khu mezzanine lầu 1 với tầm nhìn rộng hơn.',
+       'Mezzanine section floor 1 with a wider view.',
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu B (Lầu 2)', false, 200, 4, 250000,
        'Khu vực lầu 2 với tầm nhìn toàn cảnh, giá cả phải chăng.',
        'Floor 2 area with panoramic view, affordable price.',
-       NULL, NULL, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+       NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
 
--- Ravolution
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'SVIP Deck', false, 100, 2, 4500000.00,
-       'Tận hưởng lễ hội trên khán đài cao cấp với không gian riêng tư.',
-       'Enjoy the festival from the premium deck with private space.',
-       NULL, '["Private Bar", "Quà tặng từ nhà tài trợ", "Lối đi VIP"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+
+-- ─── Ravolution Music Festival: Unite ────────────────────────────────────────
+-- Venue: Khu đô thị Vạn Phúc
+-- Venue zones: VIP → SVIP Deck | Zone A/B/GA → GA Early Bird splits
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'SVIP Deck', false, 100, 2, 4500000,
+       'Tận hưởng lễ hội trên khán đài cao cấp với không gian riêng tư. Private Bar với bartender riêng, quà tặng từ nhà tài trợ cao cấp, lối đi VIP không xếp hàng, khu vực nghỉ ngơi riêng biệt.',
+       'Enjoy the festival from premium deck with private space. Private Bar with dedicated bartender, premium sponsor gifts, VIP access with no queuing, private lounge area.',
+       'https://salt.tkbcdn.com/ts/ds/3f/2b/6d/05bfae404c85f7ba8f3b8f1c982b86ab.png',
+       '["Private Bar", "Quà tặng từ nhà tài trợ", "Lối đi VIP"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Ravolution Music Festival: Unite';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at)
-SELECT uuidv7(), es.id, 'GA Early Bird', true, 1500, 4, 850000.00,
-       'Khu vực tự do cho những người đến sớm, hòa mình vào không khí EDM bùng nổ.',
-       'General admission for early arrivals, immerse in explosive EDM atmosphere.',
-       NULL, '["Vòng tay vải"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Early Bird - Zone A', true, 500, 4, 850000,
+       'Khu GA Early Bird Zone A bên trái sân khấu, hòa mình vào không khí EDM bùng nổ cùng hàng nghìn fan hâm mộ.',
+       'GA Early Bird Zone A left of stage, immerse in explosive EDM atmosphere with thousands of fans.',
+       NULL,
+       '["Vòng tay vải"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Ravolution Music Festival: Unite';
 
--- Saigon Tếu
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, created_at)
-SELECT uuidv7(), es.id, 'Khu ngồi chính', false, 300, 4, 0.00, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Early Bird - Zone B', true, 500, 4, 850000,
+       'Khu GA Early Bird Zone B bên phải sân khấu, hòa mình vào không khí EDM bùng nổ cùng hàng nghìn fan hâm mộ.',
+       'GA Early Bird Zone B right of stage, immerse in explosive EDM atmosphere with thousands of fans.',
+       NULL,
+       '["Vòng tay vải"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Ravolution Music Festival: Unite';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'GA Early Bird - GA', true, 500, 4, 850000,
+       'Khu GA Early Bird phía sau sân khấu, hòa mình vào không khí EDM bùng nổ cùng hàng nghìn fan hâm mộ.',
+       'GA Early Bird rear section, immerse in explosive EDM atmosphere with thousands of fans.',
+       NULL,
+       '["Vòng tay vải"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Ravolution Music Festival: Unite';
+
+
+-- ─── Saigon Tếu: Hài Độc Thoại - Lẻ Loi ────────────────────────────────────
+-- Custom layout, no venue mode, unchanged
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu ngồi chính', false, 200, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
 
--- Vietnam Tech Summit
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, created_at)
-SELECT uuidv7(), es.id, 'Hội trường chính', false, 500, 4, 0.00, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+
+-- ─── Vietnam Tech Summit 2025 ─────────────────────────────────────────────────
+-- Venue: GEM Center
+-- Venue zones: VIP → Hội trường chính | Zone A/B/C → splits | Standing → split
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính', false, 500, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Vietnam Tech Summit 2025';
 
--- Workshop Marketing
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, created_at)
-SELECT uuidv7(), es.id, 'Khu học viên', false, 100, 4, 0.00, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính - Zone A', false, 120, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Vietnam Tech Summit 2025';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính - Zone B', false, 120, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Vietnam Tech Summit 2025';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính - Zone C', false, 120, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Vietnam Tech Summit 2025';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Hội trường chính - Standing', true, 140, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Vietnam Tech Summit 2025';
+
+
+-- ─── Workshop: Marketing 0 Đồng cho Startup ──────────────────────────────────
+-- Venue: Dreamplex Điện Biên Phủ
+-- Venue zones: Zone A → Khu học viên | Zone B → split | Standing → split
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu học viên', false, 100, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
--- Van Gogh
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, perks, created_at)
-SELECT uuidv7(), es.id, 'VIP (Kèm quà tặng)', false, 200, 2, 1200000.00,
-       'Trải nghiệm nghệ thuật đa giác quan không giới hạn.',
-       'Unlimited multi-sensory art experience.',
-       '["Sổ tay Van Gogh", "Ưu tiên chụp ảnh tại khu vực đặc biệt"]'::jsonb, NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Van Gogh Art Lighting Experience';
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu học viên - Zone B', false, 40, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
-INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, created_at)
-SELECT uuidv7(), es.id, 'Standard', false, 1000, 4, 650000.00,
-       'Khu vực tham quan tiêu chuẩn.',
-       'Standard viewing area.', NOW()
-FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
-WHERE e.name = 'Van Gogh Art Lighting Experience';
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price,
+                          description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'Khu học viên - Standing', true, 20, 4, 0,
+       NULL, NULL, NULL, NULL, NOW(), NULL
+FROM public.event_sessions es
+         JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
 --5. Table: Seats 
--- VVIP - Hà Anh Tuấn (5 rows x 10 cols = 50)
+-- VVIP - Hà Anh Tuấn (5 rows × 10 cols = 50)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 5) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 5) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'VVIP' AND e.name = 'Hà Anh Tuấn: Chân Trời Rực Rỡ';
 
--- Courtside VIP - VBA (5 rows x 10 cols = 50)
+-- Courtside VIP - VBA (5 rows × 10 cols = 50)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 5) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 5) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'Courtside VIP' AND e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
 
--- Standard Bleachers - VBA (20 rows x 20 cols = 400)
+-- Standard Bleachers splits - VBA (each 8 rows × 20 cols = 160)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 20) c
-WHERE z.name = 'Standard Bleachers' AND e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 8) r
+         CROSS JOIN generate_series(1, 20) c
+WHERE z.name IN (
+                 'Standard Bleachers - Lower Bowl Left',
+                 'Standard Bleachers - Lower Bowl Right',
+                 'Standard Bleachers - GA Pit',
+                 'Standard Bleachers - Lower Bowl Back',
+                 'Standard Bleachers - Upper Bowl'
+    ) AND e.name = 'VBA 2025: Saigon Heat vs Hanoi Buffaloes';
 
--- Cư Dân VIP - Những Thành Phố Mơ Màng (15 rows x 14 cols = 210)
+-- Cư Dân VIP - Những Thành Phố Mơ Màng (15 rows × 14 cols = 210)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 15) r CROSS JOIN generate_series(1, 14) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 15) r
+         CROSS JOIN generate_series(1, 14) c
 WHERE z.name = 'Cư Dân VIP' AND e.name = 'Những Thành Phố Mơ Màng - Summer Tour';
 
--- Khu VVIP - Mây Lang Thang (5 rows x 10 cols = 50)
+-- Khu VVIP (Gần ca sĩ) - Mây Lang Thang (5 rows × 10 cols = 50)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 5) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 5) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'Khu VVIP (Gần ca sĩ)' AND e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
--- Khu Khán Đài - Mây Lang Thang (20 rows x 10 cols = 200)
+-- Khu Khán Đài Zone A and Zone B - Mây Lang Thang (each 8 rows × 10 cols = 80)
+-- Khu Khán Đài - Standing is is_standing=true, no seats
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 10) c
-WHERE z.name = 'Khu Khán Đài' AND e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 8) r
+         CROSS JOIN generate_series(1, 10) c
+WHERE z.name IN ('Khu Khán Đài - Zone A', 'Khu Khán Đài - Zone B')
+  AND e.name = 'Mây Lang Thang: Đêm Nhạc Trịnh';
 
--- Khu A Lầu 1 - Kịch Idecaf (20 rows x 15 cols = 300)
+-- Khu A (Lầu 1) - Kịch Idecaf Orchestra (20 rows × 15 cols = 300)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 15) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 20) r
+         CROSS JOIN generate_series(1, 15) c
 WHERE z.name = 'Khu A (Lầu 1)' AND e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
 
--- Khu B Lầu 2 - Kịch Idecaf (20 rows x 10 cols = 200)
+-- Khu A Box Left and Box Right - Kịch Idecaf (each 5 rows × 8 cols = 40)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 5) r
+         CROSS JOIN generate_series(1, 8) c
+WHERE z.name IN ('Khu A (Lầu 1) - Box Left', 'Khu A (Lầu 1) - Box Right')
+  AND e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+-- Khu A Mezzanine - Kịch Idecaf (8 rows × 10 cols = 80)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
+SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 8) r
+         CROSS JOIN generate_series(1, 10) c
+WHERE z.name = 'Khu A (Lầu 1) - Mezzanine' AND e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
+
+-- Khu B (Lầu 2) - Kịch Idecaf (20 rows × 10 cols = 200)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
+SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 20) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'Khu B (Lầu 2)' AND e.name = 'Kịch Idecaf: Ngày Xửa Ngày Xưa 35';
 
--- SVIP Deck - Ravolution (10 rows x 10 cols = 100)
+-- SVIP Deck - Ravolution (10 rows × 10 cols = 100)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 10) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 10) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'SVIP Deck' AND e.name = 'Ravolution Music Festival: Unite';
 
--- Khu ngồi chính - Saigon Tếu (20 rows x 10 cols = 200)
+-- Khu ngồi chính - Saigon Tếu (20 rows × 10 cols = 200)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 20) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'Khu ngồi chính' AND e.name = 'Saigon Tếu: Hài Độc Thoại - Lẻ Loi';
 
--- Hội trường chính - Vietnam Tech Summit (25 rows x 20 cols = 500)
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 25) r CROSS JOIN generate_series(1, 20) c
+-- Hội trường chính - Vietnam Tech Summit
+-- Row A (first row): price_override applied (20 seats)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, price_override)
+SELECT uuidv7(), z.id, 'Ghế A' || c, 'A', c::text, 'A' || c, 500000
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 20) c
 WHERE z.name = 'Hội trường chính' AND e.name = 'Vietnam Tech Summit 2025';
 
--- Khu học viên - Workshop (10 rows x 10 cols = 100)
+-- Rows B–Y (remaining 24 rows × 20 cols = 480)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 10) r CROSS JOIN generate_series(1, 10) c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(2, 25) r
+         CROSS JOIN generate_series(1, 20) c
+WHERE z.name = 'Hội trường chính' AND e.name = 'Vietnam Tech Summit 2025';
+
+-- Hội trường chính Zone A/B/C - Vietnam Tech Summit
+-- Row A (first row): price_override applied (20 seats each zone)
+-- Hội trường chính - Standing is is_standing=true, no seats
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code, price_override)
+SELECT uuidv7(), z.id, 'Ghế A' || c, 'A', c::text, 'A' || c, 500000
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 20) c
+WHERE z.name IN (
+                 'Hội trường chính - Zone A',
+                 'Hội trường chính - Zone B',
+                 'Hội trường chính - Zone C'
+    ) AND e.name = 'Vietnam Tech Summit 2025';
+
+-- Rows B–F (remaining 5 rows × 20 cols = 100 per zone)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
+SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(2, 6) r
+         CROSS JOIN generate_series(1, 20) c
+WHERE z.name IN (
+                 'Hội trường chính - Zone A',
+                 'Hội trường chính - Zone B',
+                 'Hội trường chính - Zone C'
+    ) AND e.name = 'Vietnam Tech Summit 2025';
+
+-- Khu học viên - Workshop (10 rows × 10 cols = 100)
+INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
+SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 10) r
+         CROSS JOIN generate_series(1, 10) c
 WHERE z.name = 'Khu học viên' AND e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
--- VIP Kèm quà tặng - Van Gogh (20 rows x 10 cols = 200)
+-- Khu học viên Zone B - Workshop (4 rows × 10 cols = 40)
+-- Khu học viên - Standing is is_standing=true, no seats
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 20) r CROSS JOIN generate_series(1, 10) c
-WHERE z.name = 'VIP (Kèm quà tặng)' AND e.name = 'Van Gogh Art Lighting Experience';
+SELECT uuidv7(), z.id, 'Ghế ' || chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
+FROM public.zones z
+         JOIN public.event_sessions es ON z.session_id = es.id
+         JOIN public.events e ON es.event_id = e.id
+         CROSS JOIN generate_series(1, 4) r
+         CROSS JOIN generate_series(1, 10) c
+WHERE z.name = 'Khu học viên - Zone B' AND e.name = 'Workshop: Marketing 0 Đồng cho Startup';
 
--- Standard - Van Gogh (25 rows x 20 cols = 500)
-INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
-SELECT uuidv7(), z.id, chr(64 + r) || c, chr(64 + r), c::text, chr(64 + r) || c
-FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id
-                    CROSS JOIN generate_series(1, 25) r CROSS JOIN generate_series(1, 20) c
-WHERE z.name = 'Standard' AND e.name = 'Van Gogh Art Lighting Experience';
 
 
 --6. Venues Layout

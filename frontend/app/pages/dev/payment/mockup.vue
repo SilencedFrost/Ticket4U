@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const { t } = useI18n();
 const { formatPrice } = useFormatter();
 const { isEmailFormatValid } = useEmailValidation();
 const { isPhoneFormatValid } = usePhoneValidation();
@@ -70,24 +69,24 @@ const canPay = computed(() => {
   return hasValidContact && agreedPolicy.value;
 });
 
-const errorHint = computed(() => {
+const errorHintKey = computed(() => {
   if (canPay.value) {
     return '';
   }
 
   if (fullNameErrorKey.value) {
-    return t(fullNameErrorKey.value);
+    return fullNameErrorKey.value;
   }
 
   if (emailErrorKey.value) {
-    return t(emailErrorKey.value);
+    return emailErrorKey.value;
   }
 
   if (phoneErrorKey.value) {
-    return t(phoneErrorKey.value);
+    return phoneErrorKey.value;
   }
 
-  return t('payment_mockup.validation.agree_policy');
+  return 'payment_mockup.validation.agree_policy';
 });
 
 let countdownTimer: ReturnType<typeof setInterval> | null = null;
@@ -169,28 +168,28 @@ onBeforeUnmount(() => {
               <img
                 class="event-thumb"
                 src="https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop"
-                :alt="t('payment_mockup.event.image_alt')"
+                :alt="$t('payment_mockup.event.image_alt')"
               />
               <div class="event-meta">
-                <h1 class="event-title">{{ t('payment_mockup.event.title') }}</h1>
+                <h1 class="event-title">{{ $t('payment_mockup.event.title') }}</h1>
                 <div class="event-subline">
-                  <span><i class="bi bi-calendar3"></i> {{ t('payment_mockup.event.date') }}</span>
-                  <span><i class="bi bi-clock"></i> {{ t('payment_mockup.event.time') }}</span>
+                  <span><i class="bi bi-calendar3"></i> {{ $t('payment_mockup.event.date') }}</span>
+                  <span><i class="bi bi-clock"></i> {{ $t('payment_mockup.event.time') }}</span>
                 </div>
-                <p class="event-address">{{ t('payment_mockup.event.address') }}</p>
+                <p class="event-address">{{ $t('payment_mockup.event.address') }}</p>
               </div>
             </article>
 
             <article class="panel receiver-panel">
-              <h2 class="panel-title">{{ t('payment_mockup.receiver.title') }}</h2>
-              <p class="panel-subtitle">{{ t('payment_mockup.receiver.subtitle') }}</p>
+              <h2 class="panel-title">{{ $t('payment_mockup.receiver.title') }}</h2>
+              <p class="panel-subtitle">{{ $t('payment_mockup.receiver.subtitle') }}</p>
               <hr class="panel-divider" />
 
               <div class="receiver-row">
                 <i class="bi bi-person"></i>
                 <div class="receiver-col">
                   <span class="receiver-label"
-                    >{{ t('payment_mockup.receiver.full_name') }} <b>*</b></span
+                    >{{ $t('payment_mockup.receiver.full_name') }} <b>*</b></span
                   >
                   <input
                     v-if="editingField === 'name'"
@@ -200,8 +199,8 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ fullName || t('payment_mockup.receiver.empty') }}</strong>
-                  <p v-if="fullNameErrorKey" class="receiver-error">{{ t(fullNameErrorKey) }}</p>
+                  <strong v-else>{{ fullName || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="fullNameErrorKey" class="receiver-error">{{ $t(fullNameErrorKey) }}</p>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('name')">
                   <i :class="editingField === 'name' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -212,7 +211,7 @@ onBeforeUnmount(() => {
                 <i class="bi bi-envelope"></i>
                 <div class="receiver-col">
                   <span class="receiver-label"
-                    >{{ t('payment_mockup.receiver.email') }} <b>*</b></span
+                    >{{ $t('payment_mockup.receiver.email') }} <b>*</b></span
                   >
                   <input
                     v-if="editingField === 'email'"
@@ -222,8 +221,8 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ email || t('payment_mockup.receiver.empty') }}</strong>
-                  <p v-if="emailErrorKey" class="receiver-error">{{ t(emailErrorKey) }}</p>
+                  <strong v-else>{{ email || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="emailErrorKey" class="receiver-error">{{ $t(emailErrorKey) }}</p>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('email')">
                   <i :class="editingField === 'email' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -234,7 +233,7 @@ onBeforeUnmount(() => {
                 <i class="bi bi-telephone"></i>
                 <div class="receiver-col">
                   <span class="receiver-label"
-                    >{{ t('payment_mockup.receiver.phone') }} <b>*</b></span
+                    >{{ $t('payment_mockup.receiver.phone') }} <b>*</b></span
                   >
                   <input
                     v-if="editingField === 'phone'"
@@ -244,8 +243,8 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ phone || t('payment_mockup.receiver.empty') }}</strong>
-                  <p v-if="phoneErrorKey" class="receiver-error">{{ t(phoneErrorKey) }}</p>
+                  <strong v-else>{{ phone || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="phoneErrorKey" class="receiver-error">{{ $t(phoneErrorKey) }}</p>
                 </div>
                 <button type="button" class="icon-button" @click="toggleEditing('phone')">
                   <i :class="editingField === 'phone' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
@@ -256,26 +255,26 @@ onBeforeUnmount(() => {
 
               <p class="ticket-note">
                 <i class="bi bi-qr-code"></i>
-                {{ t('payment_mockup.receiver.note_line_1') }}<br />
-                {{ t('payment_mockup.receiver.note_line_2') }}
-                <strong>{{ t('payment_mockup.receiver.note_ticket_hub') }}</strong>
-                {{ t('payment_mockup.receiver.note_line_3') }}<br />
-                {{ t('payment_mockup.receiver.note_line_4') }}
+                {{ $t('payment_mockup.receiver.note_line_1') }}<br />
+                {{ $t('payment_mockup.receiver.note_line_2') }}
+                <strong>{{ $t('payment_mockup.receiver.note_ticket_hub') }}</strong>
+                {{ $t('payment_mockup.receiver.note_line_3') }}<br />
+                {{ $t('payment_mockup.receiver.note_line_4') }}
               </p>
             </article>
 
             <article class="panel method-panel">
-              <h2 class="panel-title">{{ t('payment_mockup.payment_method.title') }}</h2>
+              <h2 class="panel-title">{{ $t('payment_mockup.payment_method.title') }}</h2>
               <div class="method-single">
                 <i class="bi bi-bank"></i>
-                {{ t('payment_mockup.payment_method.sepay_bank') }}
+                {{ $t('payment_mockup.payment_method.sepay_bank') }}
               </div>
             </article>
           </section>
 
           <section class="right-col">
             <article class="panel hold-panel">
-              <h2 class="panel-title center">{{ t('payment_mockup.timer.title') }}</h2>
+              <h2 class="panel-title center">{{ $t('payment_mockup.timer.title') }}</h2>
               <div class="time-boxes">
                 <div class="time-cell">{{ minuteBox }}</div>
                 <span class="time-dot">:</span>
@@ -284,33 +283,33 @@ onBeforeUnmount(() => {
             </article>
 
             <article class="panel policy-panel">
-              <h2 class="panel-title">{{ t('payment_mockup.policy.title') }}</h2>
+              <h2 class="panel-title">{{ $t('payment_mockup.policy.title') }}</h2>
               <p class="policy-text">
-                {{ t('payment_mockup.policy.content') }}
+                {{ $t('payment_mockup.policy.content') }}
               </p>
             </article>
 
             <article class="panel order-panel">
               <h2 class="panel-title">
-                {{ t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
+                {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
               </h2>
 
               <div class="ticket-scroll">
                 <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
                   <div>
-                    <small>{{ t('payment_mockup.ticket_info.columns.type') }}</small
+                    <small>{{ $t('payment_mockup.ticket_info.columns.type') }}</small
                     ><strong>{{ ticket.type }}</strong>
                   </div>
                   <div>
-                    <small>{{ t('payment_mockup.ticket_info.columns.zone') }}</small
+                    <small>{{ $t('payment_mockup.ticket_info.columns.zone') }}</small
                     ><strong>{{ ticket.zone }}</strong>
                   </div>
                   <div>
-                    <small>{{ t('payment_mockup.ticket_info.columns.row') }}</small
+                    <small>{{ $t('payment_mockup.ticket_info.columns.row') }}</small
                     ><strong>{{ ticket.row }}</strong>
                   </div>
                   <div>
-                    <small>{{ t('payment_mockup.ticket_info.columns.seat') }}</small
+                    <small>{{ $t('payment_mockup.ticket_info.columns.seat') }}</small
                     ><strong>{{ ticket.seat }}</strong>
                   </div>
                 </div>
@@ -321,28 +320,28 @@ onBeforeUnmount(() => {
                   v-model="promoCode"
                   type="text"
                   class="promo-input"
-                  :placeholder="t('payment_mockup.ticket_info.promo_placeholder')"
+                  :placeholder="$t('payment_mockup.ticket_info.promo_placeholder')"
                 />
                 <button class="promo-btn" type="button">
-                  {{ t('payment_mockup.ticket_info.apply') }}
+                  {{ $t('payment_mockup.ticket_info.apply') }}
                 </button>
               </div>
 
               <div class="total-line">
-                <strong>{{ t('payment_mockup.checkout.total') }}</strong>
+                <strong>{{ $t('payment_mockup.checkout.total') }}</strong>
                 <strong class="total-amount">{{ formatPrice(total, 'VND') }}</strong>
               </div>
 
               <label class="policy-check">
                 <input v-model="agreedPolicy" type="checkbox" />
-                {{ t('payment_mockup.checkout.agree_policy') }}
+                {{ $t('payment_mockup.checkout.agree_policy') }}
               </label>
 
               <button class="pay-btn" type="button" :disabled="!canPay" @click="openPaymentPopup">
-                {{ t('payment_mockup.checkout.pay') }}
+                {{ $t('payment_mockup.checkout.pay') }}
               </button>
 
-              <p v-if="errorHint" class="error-line">{{ errorHint }}</p>
+              <p v-if="errorHintKey" class="error-line">{{ $t(errorHintKey) }}</p>
             </article>
           </section>
         </main>
@@ -362,7 +361,7 @@ onBeforeUnmount(() => {
         <div class="sepay-header">
           <div class="sepay-header-left">
             <i class="bi bi-bank"></i>
-            <strong id="sepay-title">{{ t('payment_mockup.popup.title') }}</strong>
+            <strong id="sepay-title">{{ $t('payment_mockup.popup.title') }}</strong>
           </div>
           <button type="button" class="close-btn" @click="closePaymentPopup">
             <i class="bi bi-x-lg"></i>
@@ -371,7 +370,7 @@ onBeforeUnmount(() => {
 
         <div class="sepay-timer">
           <div class="sepay-timer-main">
-            <span>{{ t('payment_mockup.timer.title') }}</span>
+            <span>{{ $t('payment_mockup.timer.title') }}</span>
             <div class="time-boxes compact">
               <div class="time-cell">{{ minuteBox }}</div>
               <span class="time-dot">:</span>
@@ -387,15 +386,15 @@ onBeforeUnmount(() => {
           <div class="sepay-warning">
             <i class="bi bi-exclamation-triangle"></i>
             <div>
-              <p>{{ t('payment_mockup.popup.warning_line_1') }}</p>
-              <p>{{ t('payment_mockup.popup.warning_line_2') }}</p>
-              <p>{{ t('payment_mockup.popup.warning_line_3') }}</p>
+              <p>{{ $t('payment_mockup.popup.warning_line_1') }}</p>
+              <p>{{ $t('payment_mockup.popup.warning_line_2') }}</p>
+              <p>{{ $t('payment_mockup.popup.warning_line_3') }}</p>
             </div>
           </div>
 
           <div class="sepay-info-wrap">
             <div class="qr-wrap">
-              <div class="qr-placeholder" :aria-label="t('payment_mockup.popup.qr_alt')">
+              <div class="qr-placeholder" :aria-label="$t('payment_mockup.popup.qr_alt')">
                 <i class="bi bi-qr-code"></i>
                 <span>QR Placeholder</span>
               </div>
@@ -403,13 +402,13 @@ onBeforeUnmount(() => {
 
             <div class="bank-info">
               <div class="info-row">
-                <span>{{ t('payment_mockup.popup.bank') }}</span>
+                <span>{{ $t('payment_mockup.popup.bank') }}</span>
                 <div class="info-row-end">
                   <strong>BIDV</strong>
                   <button
                     type="button"
                     class="copy-icon-btn"
-                    :aria-label="t('payment_mockup.popup.copy')"
+                    :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('BIDV')"
                   >
                     <i class="bi bi-copy"></i>
@@ -417,7 +416,7 @@ onBeforeUnmount(() => {
                 </div>
               </div>
               <div class="info-row">
-                <span>{{ t('payment_mockup.popup.cart_code') }}</span>
+                <span>{{ $t('payment_mockup.popup.cart_code') }}</span>
                 <div class="info-row-end">
                   <strong class="content-preview" :title="transferContent">{{
                     transferContentPreview
@@ -425,7 +424,7 @@ onBeforeUnmount(() => {
                   <button
                     type="button"
                     class="copy-icon-btn"
-                    :aria-label="t('payment_mockup.popup.copy')"
+                    :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue(transferContent)"
                   >
                     <i class="bi bi-copy"></i>
@@ -433,13 +432,13 @@ onBeforeUnmount(() => {
                 </div>
               </div>
               <div class="info-row">
-                <span>{{ t('payment_mockup.popup.account_number') }}</span>
+                <span>{{ $t('payment_mockup.popup.account_number') }}</span>
                 <div class="info-row-end">
                   <strong class="text-primary">123</strong>
                   <button
                     type="button"
                     class="copy-icon-btn"
-                    :aria-label="t('payment_mockup.popup.copy')"
+                    :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('123')"
                   >
                     <i class="bi bi-copy"></i>
@@ -447,13 +446,13 @@ onBeforeUnmount(() => {
                 </div>
               </div>
               <div class="info-row">
-                <span>{{ t('payment_mockup.popup.receiver_name') }}</span>
+                <span>{{ $t('payment_mockup.popup.receiver_name') }}</span>
                 <div class="info-row-end">
                   <strong>ticket4u</strong>
                   <button
                     type="button"
                     class="copy-icon-btn"
-                    :aria-label="t('payment_mockup.popup.copy')"
+                    :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('ticket4u')"
                   >
                     <i class="bi bi-copy"></i>
@@ -461,13 +460,13 @@ onBeforeUnmount(() => {
                 </div>
               </div>
               <div class="info-row">
-                <span>{{ t('payment_mockup.popup.amount') }}</span>
+                <span>{{ $t('payment_mockup.popup.amount') }}</span>
                 <div class="info-row-end">
                   <strong class="text-primary">{{ formatPrice(total, 'VND') }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn"
-                    :aria-label="t('payment_mockup.popup.copy')"
+                    :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue(formatPrice(total, 'VND'))"
                   >
                     <i class="bi bi-copy"></i>
@@ -478,16 +477,16 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="sepay-note">
-            <strong>{{ t('payment_mockup.popup.note_title') }}</strong>
+            <strong>{{ $t('payment_mockup.popup.note_title') }}</strong>
             <ul>
-              <li>{{ t('payment_mockup.popup.note_line_1') }}</li>
+              <li>{{ $t('payment_mockup.popup.note_line_1') }}</li>
             </ul>
           </div>
         </div>
 
         <div class="sepay-footer">
           <button type="button" class="confirm-paid-btn" @click="confirmPaid">
-            {{ t('payment_mockup.popup.confirm_paid') }}
+            {{ $t('payment_mockup.popup.confirm_paid') }}
           </button>
         </div>
       </div>

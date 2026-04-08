@@ -8,7 +8,6 @@ const email = ref('');
 const phone = ref('');
 const promoCode = ref('');
 const agreedPolicy = ref(false);
-const secondsLeft = ref(567);
 const total = 100000;
 const transferContent = 'T4UCODE';
 const transferContentMaxLength = 20;
@@ -16,24 +15,22 @@ const showSepayPopup = ref(false);
 const editingField = ref<'name' | 'email' | 'phone' | null>(null);
 const shouldCloseOnPointerUp = ref(false);
 
-const tickets = ref([
-  { type: 'GA', zone: '-', row: 'C', seat: '10' },
-  { type: 'GA', zone: '-', row: 'C', seat: '11' },
-  { type: 'GA', zone: '-', row: 'C', seat: '12' },
-  { type: 'GA', zone: '-', row: 'C', seat: '13' },
+type MockSelectedTicket = {
+  ticket_type: string;
+  zone_name: string;
+  seat_name: string;
+  base_price: number;
+};
+
+const tickets = ref<MockSelectedTicket[]>([
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C10', base_price: 25000 },
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C11', base_price: 25000 },
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C12', base_price: 25000 },
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C13', base_price: 25000 },
 ]);
 
-const countdownLabel = computed(() => {
-  const safe = Math.max(0, secondsLeft.value);
-  const m = Math.floor(safe / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = (safe % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
-});
-
-const minuteBox = computed(() => countdownLabel.value.split(':')[0] ?? '00');
-const secondBox = computed(() => countdownLabel.value.split(':')[1] ?? '00');
+const minuteBox = '00';
+const secondBox = '00';
 const transferContentPreview = computed(() => {
   if (transferContent.length <= transferContentMaxLength) {
     return transferContent;
@@ -89,8 +86,6 @@ const errorHintKey = computed(() => {
   return 'payment_mockup.validation.agree_policy';
 });
 
-let countdownTimer: ReturnType<typeof setInterval> | null = null;
-
 function toggleEditing(field: 'name' | 'email' | 'phone') {
   editingField.value = editingField.value === field ? null : field;
 }
@@ -142,16 +137,10 @@ function handleEscape(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-  countdownTimer = setInterval(() => {
-    if (secondsLeft.value <= 0) return;
-    secondsLeft.value -= 1;
-  }, 1000);
-
   window.addEventListener('keydown', handleEscape);
 });
 
 onBeforeUnmount(() => {
-  if (countdownTimer) clearInterval(countdownTimer);
   window.removeEventListener('keydown', handleEscape);
 });
 </script>
@@ -295,23 +284,17 @@ onBeforeUnmount(() => {
               </h2>
 
               <div class="ticket-scroll">
+                <div class="ticket-header">
+                  <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
+                  <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
+                  <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
+                  <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
+                </div>
                 <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
-                  <div>
-                    <small>{{ $t('payment_mockup.ticket_info.columns.type') }}</small
-                    ><strong>{{ ticket.type }}</strong>
-                  </div>
-                  <div>
-                    <small>{{ $t('payment_mockup.ticket_info.columns.zone') }}</small
-                    ><strong>{{ ticket.zone }}</strong>
-                  </div>
-                  <div>
-                    <small>{{ $t('payment_mockup.ticket_info.columns.row') }}</small
-                    ><strong>{{ ticket.row }}</strong>
-                  </div>
-                  <div>
-                    <small>{{ $t('payment_mockup.ticket_info.columns.seat') }}</small
-                    ><strong>{{ ticket.seat }}</strong>
-                  </div>
+                  <div class="ticket-cell">{{ ticket.ticket_type }}</div>
+                  <div class="ticket-cell">{{ ticket.zone_name }}</div>
+                  <div class="ticket-cell">{{ ticket.seat_name }}</div>
+                  <div class="ticket-cell">{{ formatPrice(ticket.base_price, 'VND') }}</div>
                 </div>
               </div>
 
@@ -779,23 +762,31 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  min-height: 52px;
+  min-height: 46px;
   align-items: center;
   padding: 6px 0;
   border-bottom: 1px solid rgba(122, 132, 165, 0.2);
 }
 
-.ticket-row small {
+.ticket-header {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+}
+
+.ticket-header small {
   color: #98a2bf;
   font-size: 0.8rem;
   display: block;
 }
 
-.ticket-row strong {
-  display: block;
+.ticket-cell {
   color: #f7f8ff;
   font-size: 1.05rem;
   line-height: 1.2;
+  font-weight: 600;
 }
 
 .promo-wrap {
@@ -1148,7 +1139,7 @@ onBeforeUnmount(() => {
 [data-bs-theme='light'] .flip-payment-page .receiver-col strong,
 [data-bs-theme='light'] .flip-payment-page .method-single,
 [data-bs-theme='light'] .flip-payment-page .policy-text,
-[data-bs-theme='light'] .flip-payment-page .ticket-row strong,
+[data-bs-theme='light'] .flip-payment-page .ticket-cell,
 [data-bs-theme='light'] .flip-payment-page .total-line,
 [data-bs-theme='light'] .flip-payment-page .policy-check,
 [data-bs-theme='light'] .flip-payment-page .sepay-header-left,
@@ -1162,7 +1153,7 @@ onBeforeUnmount(() => {
 [data-bs-theme='light'] .flip-payment-page .event-subline,
 [data-bs-theme='light'] .flip-payment-page .event-address,
 [data-bs-theme='light'] .flip-payment-page .receiver-label,
-[data-bs-theme='light'] .flip-payment-page .ticket-row small,
+[data-bs-theme='light'] .flip-payment-page .ticket-header small,
 [data-bs-theme='light'] .flip-payment-page .info-row span {
   color: #4f5b77;
 }
@@ -1273,7 +1264,7 @@ onBeforeUnmount(() => {
     font-size: 1rem;
   }
 
-  .ticket-row strong {
+  .ticket-cell {
     font-size: 0.95rem;
   }
 

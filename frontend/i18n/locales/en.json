@@ -223,10 +223,10 @@
     "ticket_info": {
       "title": "Ticket information ({count} tickets)",
       "columns": {
-        "type": "TICKET TYPE",
-        "zone": "ZONE",
-        "row": "ROW",
-        "seat": "SEAT"
+        "ticket_type": "TICKET TYPE",
+        "zone_name": "ZONE",
+        "seat_name": "SEAT",
+        "base_price": "BASE PRICE"
       },
       "promo_placeholder": "Promotion code",
       "apply": "Apply"

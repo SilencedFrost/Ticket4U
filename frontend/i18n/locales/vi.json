@@ -223,10 +223,10 @@
     "ticket_info": {
       "title": "Thông tin vé ({count} vé)",
       "columns": {
-        "type": "LOẠI VÉ",
-        "zone": "KHU",
-        "row": "HÀNG",
-        "seat": "GHẾ"
+        "ticket_type": "LOẠI VÉ",
+        "zone_name": "KHU",
+        "seat_name": "GHẾ",
+        "base_price": "GIÁ GỐC"
       },
       "promo_placeholder": "Mã khuyến mại",
       "apply": "Áp dụng"

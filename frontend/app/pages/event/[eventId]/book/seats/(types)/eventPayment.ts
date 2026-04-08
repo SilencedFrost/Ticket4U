@@ -1,4 +1,5 @@
-import type { SelectedSeat } from './ticket.type'
+// TODO: Resolve no content error
+import type { SelectedSeat } from './ticket'
 
 export interface CartItem {
   zoneId:     string

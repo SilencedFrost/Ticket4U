@@ -1,3 +1,4 @@
+// TODO: Resolve no content error
 export interface Event {
   id:    string
   title: string

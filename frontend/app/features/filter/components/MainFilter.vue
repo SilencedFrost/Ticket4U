@@ -119,15 +119,11 @@ watch(
 
     <div v-if="showCategorySection && categoryList.length > 0" class="mb-3">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
-      <div class="d-flex flex-wrap gap-2">
-        <button
-          v-for="category in categoryList"
-          :key="category.id"
-          type="button"
-          class="btn btn-sm btn-outline-secondary text-reactive-primary rounded-pill"
-        >
-          {{ getCategoryLabel(category.name) }}
+      <div class="input-group">
+        <button class="btn btn-outline-secondary" type="button">
+          <i class="bi bi-search"></i>
         </button>
+        <input type="text" class="form-control" :placeholder="t('placeholder.category')" />
       </div>
     </div>
 

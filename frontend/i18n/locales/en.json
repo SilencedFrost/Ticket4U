@@ -125,7 +125,8 @@
     "motto": "Customer-first ticketing platform"
   },
   "placeholder": {
-    "search": "Search events, artists..."
+    "search": "Search events, artists...",
+    "category": "Search categories"
   },
   "theme": {
     "light": "Light mode",

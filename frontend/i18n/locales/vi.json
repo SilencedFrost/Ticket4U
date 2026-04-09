@@ -125,7 +125,8 @@
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
   "placeholder": {
-    "search": "Tìm kiếm sự kiện, nghệ sĩ..."
+    "search": "Tìm kiếm sự kiện, nghệ sĩ...",
+    "category": "Tìm kiếm thể loại"
   },
   "theme": {
     "light": "Chế độ sáng",

@@ -15,6 +15,12 @@ const navItems = [
     icon: 'bi bi-shield-fill',
     labelKey: 'settings.nav.security',
   },
+
+  {
+    to: '/settings/preferences',
+    icon: 'bi bi-palette-fill',
+    labelKey: 'settings.nav.preferences',
+  },
 ];
 </script>
 
@@ -25,9 +31,7 @@ const navItems = [
       <p class="small text-reactive-secondary mb-0 text-nowrap">{{ $t('settings.subtitle') }}</p>
     </div>
 
-    <nav
-      class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100"
-    >
+    <nav class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <li v-for="item in navItems" :key="item.to">
           <nuxt-link-locale :to="item.to" class="settings-nav__item" exact-active-class="active">
@@ -83,7 +87,7 @@ const navItems = [
 }
 
 .settings-nav__item.active .settings-nav__item-left,
-.settings-nav__item.active .settings-nav__item-left > i,
+.settings-nav__item.active .settings-nav__item-left>i,
 .settings-nav__item.active .settings-nav__chevron {
   color: var(--bs-primary);
 }

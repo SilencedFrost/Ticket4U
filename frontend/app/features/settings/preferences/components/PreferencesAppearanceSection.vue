@@ -48,11 +48,11 @@ const options: AppearanceOption[] = [
           :aria-label="$t(option.titleKey)"
           @click="model = option.value"
         >
-          <span class="border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :data-bs-theme="option.value">
+          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :data-bs-theme="option.value">
             <span class="appearance-card-preview-frame d-block mx-auto">
               <span class="ratio ratio-16x9">
-                <span class="d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
-                  <span class="d-flex align-items-center gap-1 px-2 py-1 border-bottom border-reactive-subtle bg-reactive-secondary">
+                <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
+                  <span class="appearance-card-preview-toolbar d-flex align-items-center gap-1 px-2 py-1 border-bottom border-reactive-subtle bg-reactive-secondary">
                     <i class="bi bi-dot text-reactive-secondary"></i>
                     <i class="bi bi-dot text-reactive-secondary"></i>
                     <i class="bi bi-dot text-reactive-secondary"></i>
@@ -95,6 +95,20 @@ const options: AppearanceOption[] = [
 
 .appearance-card:hover {
   transform: translateY(-1px);
+}
+
+/* Override for light theme to use hardcoded light color for card preview (global scss dont have yet) */
+.appearance-card-preview[data-bs-theme='light'] {
+  --bg-reactive-primary: var(--bg-primary-light);
+  --bg-reactive-secondary: var(--bg-secondary-light);
+  --bg-reactive-gray: #c7c7c7;
+  --text-reactive-primary: var(--text-primary-light);
+  --text-reactive-secondary: var(--text-secondary-light);
+  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.2);
+}
+
+.border-reactive-subtle {
+  border-color: var(--border-reactive-subtle, rgba(var(--bs-secondary-rgb), 0.2)) !important;
 }
 
 .appearance-card-preview-frame {

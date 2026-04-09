@@ -29,7 +29,6 @@
   --bg-reactive-dark: #252525;
   --text-reactive-primary: var(--text-primary-light);
   --text-reactive-secondary: var(--text-secondary-light);
-  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.2);
   --bs-primary-rgb: 7, 179, 223;
 }
 
@@ -42,19 +41,6 @@
   --bg-reactive-dark: #181818;
   --text-reactive-primary: var(--text-primary-dark);
   --text-reactive-secondary: var(--text-secondary-dark);
-  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.35);
-}
-
-[data-bs-theme='light'] {
-  --bg-reactive-primary: var(--bg-primary-light);
-  --bg-reactive-secondary: var(--bg-secondary-light);
-  --bg-reactive-gray: #c7c7c7;
-  --bg-reactive-gray-hover: #{bs.shade-color(#c7c7c7, 10%)};
-  --bg-reactive-gray-active: #{bs.shade-color(#c7c7c7, 20%)};
-  --bg-reactive-dark: #252525;
-  --text-reactive-primary: var(--text-primary-light);
-  --text-reactive-secondary: var(--text-secondary-light);
-  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.2);
 }
 // Base background color, changes based on theme
 .bg-reactive-primary {
@@ -91,10 +77,6 @@
 // Reactive secondary text, to look gray in both modes
 .text-reactive-secondary {
   color: var(--text-reactive-secondary);
-}
-
-.border-reactive-subtle {
-  border-color: var(--border-reactive-subtle) !important;
 }
 
 .card {

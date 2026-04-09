@@ -107,6 +107,7 @@
     "first_name": "Tên",
     "last_name": "Họ",
     "phone": "Số điện thoại",
+    "status": "Trạng thái",
     "price": "Giá tiền",
     "category": "Thể loại",
     "currency": {
@@ -144,6 +145,18 @@
       "about": "Về sự kiện",
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
+    }
+  },
+  "event": {
+    "status_options": {
+      "premiere": "Ra mắt",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Ngừng bán vé",
+      "sold_out": "Hết vé"
     }
   },
   "event_filter": {
@@ -234,18 +247,5 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
-  },
-  "status": {
-    "title": "Trạng thái",
-    "status_options": {
-      "premiere": "Ra mắt",
-      "selling": "Đang mở bán",
-      "ongoing": "Đang diễn ra",
-      "finished": "Đã kết thúc",
-      "canceled": "Đã hủy",
-      "editing": "Đang chỉnh sửa",
-      "paused": "Ngừng bán vé",
-      "sold_out": "Hết vé"
-    }
   }
 }

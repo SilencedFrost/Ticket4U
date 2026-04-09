@@ -107,6 +107,7 @@
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
+    "status": "Status",
     "price": "Price",
     "category": "Category",
     "currency": {
@@ -131,6 +132,18 @@
   "theme": {
     "light": "Light mode",
     "dark": "Dark mode"
+  },
+  "event": {
+    "status_options": {
+      "premiere": "Premiere",
+      "selling": "Selling",
+      "ongoing": "Ongoing",
+      "finished": "Finished",
+      "canceled": "Canceled",
+      "editing": "Editing",
+      "paused": "Stopped selling",
+      "sold_out": "Sold out"
+    }
   },
   "event_detail": {
     "label": {
@@ -234,18 +247,5 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
-  },
-  "status": {
-    "title": "Status",
-    "status_options": {
-      "premiere": "Premiere",
-      "selling": "Selling",
-      "ongoing": "Ongoing",
-      "finished": "Finished",
-      "canceled": "Canceled",
-      "editing": "Editing",
-      "paused": "Stopped selling",
-      "sold_out": "Sold out"
-    }
   }
 }

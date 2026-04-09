@@ -17,7 +17,7 @@ const props = withDefaults(
 const panelStyle: Record<string, string> = {
   width: 'min(96vw, 400px)',
   maxHeight: 'calc(100vh - 148px)',
-  overflowY: 'auto',
+  overflowY: 'visible',
 };
 
 const config = useRuntimeConfig();
@@ -30,6 +30,26 @@ const activeSections = computed(() => new Set(props.sections));
 const showPriceSection = computed(() => activeSections.value.has('price'));
 const showCategorySection = computed(() => activeSections.value.has('category'));
 const showStatusSection = computed(() => activeSections.value.has('status'));
+
+const searchQuery = ref('');
+const isCategoryInputFocused = ref(false);
+
+const filteredList = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (!query) return [];
+  return categoryList.value.filter((item) =>
+    getCategoryLabel(item.name).toLowerCase().includes(query),
+  );
+});
+
+const shouldShowOverlay = computed(
+  () => isCategoryInputFocused.value && filteredList.value.length > 0,
+);
+
+const selectItem = (item: CategorySummary) => {
+  searchQuery.value = getCategoryLabel(item.name);
+  isCategoryInputFocused.value = false;
+};
 
 const statusTitle = computed(() => {
   if (te('event_filter.main.status')) {
@@ -44,7 +64,22 @@ const statusTitle = computed(() => {
 });
 
 function getCategoryLabel(categoryName: string) {
-  return te(categoryName) ? t(categoryName) : categoryName;
+  const fallbackCategoryKey = `categories.${categoryName.toLowerCase()}`;
+
+  if (te(categoryName)) {
+    return t(categoryName);
+  }
+
+  if (te(fallbackCategoryKey)) {
+    return t(fallbackCategoryKey);
+  }
+
+  return categoryName;
+}
+
+function resetCategorySearch() {
+  searchQuery.value = '';
+  isCategoryInputFocused.value = false;
 }
 
 async function getCategories() {
@@ -117,18 +152,41 @@ watch(
       class="my-3"
     />
 
-    <div v-if="showCategorySection && categoryList.length > 0" class="mb-3">
+    <div class="mb-3 position-relative">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
-      <div class="input-group">
-        <button class="btn btn-outline-secondary" type="button">
-          <i class="bi bi-search"></i>
-        </button>
-        <input type="text" class="form-control" :placeholder="t('placeholder.category')" />
+
+      <div class="input-group input-group-sm">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="form-control"
+          :placeholder="t('placeholder.category')"
+          @input="searchQuery = ($event.target as HTMLInputElement).value"
+          @focus="isCategoryInputFocused = true"
+          @blur="isCategoryInputFocused = false"
+        />
       </div>
+
+      <ul
+        v-if="shouldShowOverlay"
+        class="dropdown-menu d-block w-100 mt-1 shadow-sm overflow-auto p-1 bg-reactive-primary"
+        style="max-height: 220px; scrollbar-width: none; -ms-overflow-style: none"
+      >
+        <li v-for="item in filteredList" :key="item.id">
+          <button
+            class="dropdown-item rounded small py-2"
+            type="button"
+            @mousedown.prevent
+            @click="selectItem(item)"
+          >
+            {{ getCategoryLabel(item.name) }}
+          </button>
+        </li>
+      </ul>
     </div>
 
     <div class="d-flex gap-2 mt-3">
-      <button type="button" class="btn btn-secondary flex-fill">
+      <button type="button" class="btn btn-secondary flex-fill" @click="resetCategorySearch">
         {{ t('common.action.reset') }}
       </button>
       <button type="button" class="btn btn-primary flex-fill">

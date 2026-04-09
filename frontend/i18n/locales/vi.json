@@ -101,7 +101,8 @@
       "view": "Xem",
       "remove": "Xóa",
       "reset": "Thiết lập lại",
-      "apply": "Áp dụng"
+      "apply": "Áp dụng",
+      "filter": "Bộ lọc"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
@@ -113,6 +114,16 @@
     "currency": {
       "from": "Từ",
       "free": "Miễn phí"
+    },
+    "date": {
+      "all_dates": "Tất cả các ngày",
+      "short": "Ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "this_weekend": "Cuối tuần này",
+      "this_month": "Tháng này",
+      "from_date": "Từ ngày",
+      "to_date": "Đến ngày"
     }
   },
   "permissions": {
@@ -157,21 +168,6 @@
       "editing": "Đang chỉnh sửa",
       "paused": "Ngừng bán vé",
       "sold_out": "Hết vé"
-    }
-  },
-  "event_filter": {
-    "main": {
-      "button": "Bộ lọc"
-    },
-    "date": {
-      "all_dates": "Tất cả các ngày",
-      "short": "Ngày",
-      "today": "Hôm nay",
-      "tomorrow": "Ngày mai",
-      "this_weekend": "Cuối tuần này",
-      "this_month": "Tháng này",
-      "from_date": "Từ ngày",
-      "to_date": "Đến ngày"
     }
   },
   "settings": {

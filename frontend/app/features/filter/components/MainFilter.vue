@@ -82,7 +82,12 @@ watch(
       <div class="d-flex justify-content-between align-items-center">
         <span class="small">{{ t('common.currency.free') }}</span>
         <div class="form-check form-switch m-0">
-          <input id="free-event-only" class="form-check-input" type="checkbox" role="switch" />
+          <input
+            id="free-event-only"
+            class="form-check-input bg-reactive-gray"
+            type="checkbox"
+            role="switch"
+          />
         </div>
       </div>
     </div>
@@ -97,7 +102,7 @@ watch(
             v-for="status in props.statusOptions"
             :key="status.value"
             type="button"
-            class="btn btn-sm btn-outline-secondary text-reactive-secondary rounded-pill"
+            class="btn btn-sm btn-outline-secondary text-reactive-primary rounded-pill"
           >
             {{ status.label }}
           </button>
@@ -114,7 +119,7 @@ watch(
           v-for="category in categoryList"
           :key="category.id"
           type="button"
-          class="btn btn-sm btn-outline-secondary text-reactive-secondary rounded-pill"
+          class="btn btn-sm btn-outline-secondary text-reactive-primary rounded-pill"
         >
           {{ getCategoryLabel(category.name) }}
         </button>
@@ -122,10 +127,10 @@ watch(
     </div>
 
     <div class="d-flex gap-2 mt-3">
-      <button type="button" class="btn btn-outline-secondary flex-fill rounded-2">
+      <button type="button" class="btn btn-secondary flex-fill">
         {{ t('common.action.reset') }}
       </button>
-      <button type="button" class="btn btn-primary flex-fill rounded-2">
+      <button type="button" class="btn btn-primary flex-fill">
         {{ t('common.action.apply') }}
       </button>
     </div>

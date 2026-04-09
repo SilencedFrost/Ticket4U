@@ -76,14 +76,14 @@ onClickOutside(detailsRef, () => {
     </summary>
 
     <div
-      class="p-3 p-sm-4 border rounded-3 shadow bg-reactive-secondary z-3"
+      class="card-border p-3 rounded-3 shadow bg-reactive-primary z-3"
       :class="[panelPositionClass, props.panelClass]"
       :style="panelInlineStyle"
     >
       <div class="d-flex justify-content-end mb-2 d-md-none">
         <button
           type="button"
-          class="btn btn-sm p-0 border-0 bg-transparent text-secondary"
+          class="btn btn-sm p-0 border-0 bg-transparent text-reactive-primary"
           aria-label="Close"
           @click.stop="closePanel"
         >

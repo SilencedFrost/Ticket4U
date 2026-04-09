@@ -32,7 +32,7 @@ const filterOptions = [
         type="button"
         :class="[
           'btn btn-sm rounded-pill',
-          option.primary ? 'btn-primary' : 'btn-outline-secondary text-reactive-secondary',
+          option.primary ? 'btn-primary' : 'btn-outline-secondary text-reactive-primary',
         ]"
       >
         {{ $t(option.label) }}
@@ -51,10 +51,10 @@ const filterOptions = [
     </div>
 
     <div class="d-flex gap-3 pt-3">
-      <button type="button" class="btn btn-outline-secondary flex-fill rounded-2">
+      <button type="button" class="btn btn-secondary flex-fill">
         {{ $t('common.action.reset') }}
       </button>
-      <button type="button" class="btn btn-primary flex-fill rounded-2">
+      <button type="button" class="btn btn-primary flex-fill">
         {{ $t('common.action.apply') }}
       </button>
     </div>

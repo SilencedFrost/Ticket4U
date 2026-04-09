@@ -6,6 +6,14 @@ const panelStyle: Record<string, string> = {
   maxHeight: 'calc(100vh - 148px)',
   overflowY: 'auto',
 };
+
+const filterOptions = [
+  { label: 'event_filter.date.all_dates', value: 'all', primary: true },
+  { label: 'event_filter.date.today', value: 'today' },
+  { label: 'event_filter.date.tomorrow', value: 'tomorrow' },
+  { label: 'event_filter.date.this_weekend', value: 'weekend' },
+  { label: 'event_filter.date.this_month', value: 'month' },
+];
 </script>
 
 <template>
@@ -18,32 +26,16 @@ const panelStyle: Record<string, string> = {
     :panel-style="panelStyle"
   >
     <div class="d-flex flex-wrap gap-2 pb-3 mb-3 border-bottom">
-      <button type="button" class="btn btn-sm btn-primary rounded-2">
-        {{ $t('event_filter.date.all_dates') }}
-      </button>
       <button
+        v-for="option in filterOptions"
+        :key="option.value"
         type="button"
-        class="btn btn-sm btn-outline-secondary rounded-2 text-reactive-secondary"
+        :class="[
+          'btn btn-sm rounded-2',
+          option.primary ? 'btn-primary' : 'btn-outline-secondary text-reactive-secondary',
+        ]"
       >
-        {{ $t('event_filter.date.today') }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary rounded-2 text-reactive-secondary"
-      >
-        {{ $t('event_filter.date.tomorrow') }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary rounded-2 text-reactive-secondary"
-      >
-        {{ $t('event_filter.date.this_weekend') }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary rounded-2 text-reactive-secondary"
-      >
-        {{ $t('event_filter.date.this_month') }}
+        {{ $t(option.label) }}
       </button>
     </div>
 

@@ -61,7 +61,7 @@ onClickOutside(detailsRef, () => {
     <summary
       :class="[
         props.summaryClass,
-        'd-inline-flex align-items-center gap-2 list-unstyled text-nowrap',
+        'd-inline-flex align-items-center gap-2 list-unstyled text-nowrap rounded-pill',
       ]"
     >
       <i :class="props.summaryIconClass"></i>
@@ -76,7 +76,7 @@ onClickOutside(detailsRef, () => {
     </summary>
 
     <div
-      class="p-3 p-sm-4 border rounded-3 shadow bg-body z-3"
+      class="p-3 p-sm-4 border rounded-3 shadow bg-reactive-secondary z-3"
       :class="[panelPositionClass, props.panelClass]"
       :style="panelInlineStyle"
     >

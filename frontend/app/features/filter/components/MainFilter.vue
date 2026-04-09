@@ -33,23 +33,25 @@ const showStatusSection = computed(() => activeSections.value.has('status'));
 
 const searchQuery = ref('');
 const isCategoryInputFocused = ref(false);
+const selectedCategories = ref<CategorySummary[]>([]);
 
 const filteredList = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
-  if (!query) return [];
-  return categoryList.value.filter((item) =>
-    getCategoryLabel(item.name).toLowerCase().includes(query),
+
+  let list = categoryList.value;
+
+  if (query) {
+    list = list.filter((item) => getCategoryLabel(item.name).toLowerCase().includes(query));
+  }
+
+  return list.filter(
+    (item) => !selectedCategories.value.some((selected) => selected.id === item.id),
   );
 });
 
 const shouldShowOverlay = computed(
   () => isCategoryInputFocused.value && filteredList.value.length > 0,
 );
-
-const selectItem = (item: CategorySummary) => {
-  searchQuery.value = getCategoryLabel(item.name);
-  isCategoryInputFocused.value = false;
-};
 
 const statusTitle = computed(() => {
   if (te('event_filter.main.status')) {
@@ -62,6 +64,17 @@ const statusTitle = computed(() => {
 
   return 'Status';
 });
+
+const selectItem = (item: CategorySummary) => {
+  if (!selectedCategories.value.find((cat) => cat.id === item.id)) {
+    selectedCategories.value.push(item);
+  }
+  searchQuery.value = '';
+};
+
+const removeCategory = (id: number) => {
+  selectedCategories.value = selectedCategories.value.filter((cat) => cat.id !== id);
+};
 
 function getCategoryLabel(categoryName: string) {
   const fallbackCategoryKey = `categories.${categoryName.toLowerCase()}`;
@@ -79,6 +92,7 @@ function getCategoryLabel(categoryName: string) {
 
 function resetCategorySearch() {
   searchQuery.value = '';
+  selectedCategories.value = [];
   isCategoryInputFocused.value = false;
 }
 
@@ -155,6 +169,21 @@ watch(
     <div class="mb-3 position-relative">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
 
+      <div v-if="selectedCategories.length > 0" class="d-flex flex-wrap gap-2 mb-2">
+        <div
+          v-for="cat in selectedCategories"
+          :key="cat.id"
+          class="btn btn-secondary btn-sm d-inline-flex align-items-center gap-1"
+        >
+          {{ getCategoryLabel(cat.name) }}
+          <i
+            class="bi bi-x-lg cursor-pointer hover-text-danger"
+            style="font-size: 0.7rem"
+            @click="removeCategory(cat.id)"
+          ></i>
+        </div>
+      </div>
+
       <div class="input-group input-group-sm">
         <input
           v-model="searchQuery"
@@ -169,7 +198,7 @@ watch(
 
       <ul
         v-if="shouldShowOverlay"
-        class="dropdown-menu d-block w-100 mt-1 shadow-sm overflow-auto p-1 bg-reactive-primary"
+        class="dropdown-menu d-block w-100 mt-1 overflow-auto p-1 bg-reactive-primary"
         style="max-height: 220px; scrollbar-width: none; -ms-overflow-style: none"
       >
         <li v-for="item in filteredList" :key="item.id">

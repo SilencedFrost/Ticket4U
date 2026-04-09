@@ -2,7 +2,7 @@
 import FilterPanel from './FilterPanel.vue';
 
 const panelStyle: Record<string, string> = {
-  width: 'min(96vw, 920px)',
+  width: 'min(96vw, 500px)',
   maxHeight: 'calc(100vh - 148px)',
   overflowY: 'auto',
 };

@@ -15,7 +15,7 @@ const props = withDefaults(
 );
 
 const panelStyle: Record<string, string> = {
-  width: 'min(96vw, 560px)',
+  width: 'min(96vw, 400px)',
   maxHeight: 'calc(100vh - 148px)',
   overflowY: 'auto',
 };

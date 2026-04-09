@@ -87,17 +87,18 @@ const gridStyle = computed(() => ({
 <template>
   <div v-if="items.length" class="carousel-container d-flex">
     <div
-      class="arrow-container text-clickable text-reactive-primary"
+      class="arrow-container"
       :style="{
         marginRight: `-${chevronInset}px`,
         paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
         paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        visibility: currentIndex === 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
       }"
-      @click="prev()"
     >
       <i
-        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill"
+        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
         :style="{ fontSize: `${chevronSize}pt` }"
+        @click="prev()"
       />
     </div>
 
@@ -108,17 +109,19 @@ const gridStyle = computed(() => ({
     </div>
 
     <div
-      class="arrow-container text-clickable text-reactive-primary"
+      class="arrow-container"
       :style="{
         marginLeft: `-${chevronInset}px`,
         paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
         paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        visibility:
+          currentIndex === maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
       }"
-      @click="next()"
     >
       <i
-        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill"
+        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
         :style="{ fontSize: `${chevronSize}pt` }"
+        @click="next()"
       />
     </div>
   </div>

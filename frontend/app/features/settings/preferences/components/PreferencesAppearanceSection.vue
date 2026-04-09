@@ -43,24 +43,24 @@ const options: AppearanceOption[] = [
         <button
           type="button"
           class="appearance-card card w-100 h-100 text-start border p-0 overflow-hidden bg-reactive-primary"
-          :class="model === option.value ? 'border-primary shadow-sm bg-reactive-secondary' : 'border-secondary-subtle'"
+          :class="model === option.value ? 'border-primary shadow-sm bg-reactive-secondary' : 'border-reactive-subtle'"
           :aria-pressed="model === option.value"
           :aria-label="$t(option.titleKey)"
           @click="model = option.value"
         >
-          <span class="appearance-card-preview border-bottom p-2" :data-bs-theme="option.value">
+          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :data-bs-theme="option.value">
             <span class="appearance-card-preview-frame d-block mx-auto">
               <span class="ratio ratio-16x9">
-                <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border">
-                  <span class="appearance-card-preview-toolbar d-flex align-items-center gap-1 px-2 py-1 border-bottom">
-                    <i class="appearance-card-preview-dot bi bi-dot"></i>
-                    <i class="appearance-card-preview-dot bi bi-dot"></i>
-                    <i class="appearance-card-preview-dot bi bi-dot"></i>
+                <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
+                  <span class="appearance-card-preview-toolbar d-flex align-items-center gap-1 px-2 py-1 border-bottom border-reactive-subtle bg-reactive-secondary">
+                    <i class="bi bi-dot text-reactive-secondary"></i>
+                    <i class="bi bi-dot text-reactive-secondary"></i>
+                    <i class="bi bi-dot text-reactive-secondary"></i>
                   </span>
-                  <span class="appearance-card-preview-content d-flex flex-column gap-1 px-2 py-2">
-                    <span class="appearance-card-line appearance-card-line-primary d-block rounded-pill w-75"></span>
-                    <span class="appearance-card-line appearance-card-line-secondary d-block rounded-pill w-50"></span>
-                    <span class="appearance-card-line appearance-card-line-secondary d-block rounded-pill w-100"></span>
+                  <span class="d-flex flex-column gap-1 px-2 py-2 bg-reactive-primary">
+                    <span class="appearance-card-line d-block rounded-pill w-75 bg-primary opacity-75"></span>
+                    <span class="appearance-card-line d-block rounded-pill w-50 bg-reactive-gray"></span>
+                    <span class="appearance-card-line d-block rounded-pill w-100 bg-reactive-gray"></span>
                   </span>
                 </span>
               </span>
@@ -95,63 +95,6 @@ const options: AppearanceOption[] = [
 
 .appearance-card:hover {
   transform: translateY(-1px);
-}
-
-.appearance-card-preview {
-  --appearance-preview-bg: #f3f4f6;
-  --appearance-preview-surface: #ffffff;
-  --appearance-preview-toolbar: #f5f6f8;
-  --appearance-preview-border: rgba(15, 23, 42, 0.18);
-  --appearance-preview-dot: #9ca3af;
-  --appearance-preview-line-primary: var(--bs-primary, #20c2ea);
-  --appearance-preview-line-secondary: #c4cad3;
-  background-color: var(--appearance-preview-bg);
-  border-bottom-color: var(--appearance-preview-border) !important;
-}
-
-.appearance-card-preview[data-bs-theme='light'] {
-  --appearance-preview-bg: #ececec;
-  --appearance-preview-surface: #ffffff;
-  --appearance-preview-toolbar: #f5f6f8;
-  --appearance-preview-border: rgba(15, 23, 42, 0.18);
-  --appearance-preview-dot: #9ca3af;
-  --appearance-preview-line-secondary: #c4cad3;
-}
-
-.appearance-card-preview[data-bs-theme='dark'] {
-  --appearance-preview-bg: #161a20;
-  --appearance-preview-surface: #111111;
-  --appearance-preview-toolbar: #171d26;
-  --appearance-preview-border: rgba(148, 163, 184, 0.32);
-  --appearance-preview-dot: #8f9bad;
-  --appearance-preview-line-secondary: #616b7a;
-}
-
-.appearance-card-preview-window {
-  background-color: var(--appearance-preview-surface);
-  border-color: var(--appearance-preview-border) !important;
-}
-
-.appearance-card-preview-toolbar {
-  background-color: var(--appearance-preview-toolbar);
-  border-bottom-color: var(--appearance-preview-border) !important;
-}
-
-.appearance-card-preview-dot {
-  color: var(--appearance-preview-dot);
-}
-
-.appearance-card-preview-content {
-  background-color: var(--appearance-preview-surface);
-}
-
-.appearance-card-line-primary {
-  background-color: var(--appearance-preview-line-primary);
-  opacity: 0.75;
-}
-
-.appearance-card-line-secondary {
-  background-color: var(--appearance-preview-line-secondary);
 }
 
 .appearance-card-preview-frame {

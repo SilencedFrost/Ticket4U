@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { FieldErrors, ProfileForm } from '../../types/settings';
+import type { FieldErrors } from '../../types/fieldErrors';
+import type { ProfileForm } from '../../types/profileForm';
 
 const model = defineModel<ProfileForm>({ required: true });
 

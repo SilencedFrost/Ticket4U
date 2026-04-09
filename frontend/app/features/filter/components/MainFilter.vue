@@ -71,7 +71,7 @@ watch(
 
 <template>
   <FilterPanel
-    summary-class="btn btn-outline-secondary"
+    summary-class="btn btn-secondary"
     summary-icon-class="bi bi-funnel fs-5"
     :summary-label="t('event_filter.main.button')"
     panel-class="dev-main-panel"

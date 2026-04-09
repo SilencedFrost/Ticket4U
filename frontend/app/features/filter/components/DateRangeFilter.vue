@@ -10,7 +10,7 @@ const panelStyle: Record<string, string> = {
 
 <template>
   <FilterPanel
-    summary-class="btn btn-info text-white"
+    summary-class="btn btn-primary"
     summary-icon-class="bi bi-calendar-event fs-5"
     :summary-label="$t('event_filter.date.all_dates')"
     :summary-mobile-label="$t('event_filter.date.short')"
@@ -18,7 +18,7 @@ const panelStyle: Record<string, string> = {
     :panel-style="panelStyle"
   >
     <div class="d-flex flex-wrap gap-2 pb-3 mb-3 border-bottom">
-      <button type="button" class="btn btn-sm btn-info text-white rounded-2">
+      <button type="button" class="btn btn-sm btn-primary rounded-2">
         {{ $t('event_filter.date.all_dates') }}
       </button>
       <button

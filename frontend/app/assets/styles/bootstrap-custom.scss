@@ -63,7 +63,7 @@
 
 // Main text color, white in dark mode, black in light mode
 .text-reactive-primary {
-  color: var(--text-reactive-primary);
+  color: var(--text-reactive-primary) !important;
 }
 
 // Reactive secondary text, to look gray in both modes

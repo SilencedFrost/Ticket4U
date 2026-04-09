@@ -7,11 +7,17 @@ const props = withDefaults(
     mode?: 'page' | 'carousel';
     wrapAround?: boolean;
     visibleCount?: number;
+    chevronOffset?: number;
+    chevronSize?: number;
+    chevronInset?: number;
   }>(),
   {
     visibleCount: 1,
     mode: 'carousel',
     wrapAround: true,
+    chevronOffset: 100,
+    chevronSize: 30,
+    chevronInset: 18,
   },
 );
 
@@ -79,14 +85,52 @@ const gridStyle = computed(() => ({
 </script>
 
 <template>
-  <div v-if="items.length" class="carousel-container">
-    <button @click="prev()">prv</button>
-    <div class="carousel-content" :style="gridStyle">
+  <div v-if="items.length" class="carousel-container d-flex">
+    <div
+      class="arrow-container text-clickable text-reactive-primary"
+      :style="{
+        marginRight: `-${chevronInset}px`,
+        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
+        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+      }"
+      @click="prev()"
+    >
+      <i
+        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill"
+        :style="{ fontSize: `${chevronSize}pt` }"
+      />
+    </div>
+
+    <div class="carousel-content flex-grow-1" :style="gridStyle">
       <div v-for="item in activeArray" :key="JSON.stringify(item)">
         <slot name="item" :item="item" />
       </div>
     </div>
-    <button @click="next()">nxt</button>
+
+    <div
+      class="arrow-container text-clickable text-reactive-primary"
+      :style="{
+        marginLeft: `-${chevronInset}px`,
+        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
+        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+      }"
+      @click="next()"
+    >
+      <i
+        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill"
+        :style="{ fontSize: `${chevronSize}pt` }"
+      />
+    </div>
   </div>
+
   <div v-else class="alternate-message"></div>
 </template>
+
+<style scoped>
+.arrow-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+</style>

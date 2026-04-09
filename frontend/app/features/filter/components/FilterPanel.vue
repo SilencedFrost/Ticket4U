@@ -80,17 +80,6 @@ onClickOutside(detailsRef, () => {
       :class="[panelPositionClass, props.panelClass]"
       :style="panelInlineStyle"
     >
-      <div class="d-flex justify-content-end mb-2 d-md-none">
-        <button
-          type="button"
-          class="btn btn-sm p-0 border-0 bg-transparent text-reactive-primary"
-          aria-label="Close"
-          @click.stop="closePanel"
-        >
-          <i class="bi bi-x-lg fs-2"></i>
-        </button>
-      </div>
-
       <slot />
     </div>
   </details>

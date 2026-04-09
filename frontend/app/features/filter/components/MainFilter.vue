@@ -38,7 +38,7 @@ const selectedCategories = ref<CategorySummary[]>([]);
 const filteredList = computed(getFilteredList);
 
 function getFilteredList() {
-  const query = searchQuery.value.trim().toLowerCase();
+  const query = searchQuery.value.toLowerCase();
 
   let list = categoryList.value;
 
@@ -60,10 +60,6 @@ function getShouldShowOverlay() {
 const statusTitle = computed(getStatusTitle);
 
 function getStatusTitle() {
-  if (te('event_filter.main.status')) {
-    return t('event_filter.main.status');
-  }
-
   if (te('common.status')) {
     return t('common.status');
   }
@@ -126,7 +122,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
   <FilterPanel
     summary-class="btn btn-secondary"
     summary-icon-class="bi bi-funnel fs-5"
-    :summary-label="t('event_filter.main.button')"
+    :summary-label="t('common.action.filter')"
     panel-class="dev-main-panel"
     :panel-style="panelStyle"
   >
@@ -202,6 +198,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
           type="text"
           class="form-control"
           :placeholder="t('placeholder.category')"
+          @input="searchQuery = ($event.target as HTMLInputElement).value"
           @focus="isCategoryInputFocused = true"
           @blur="isCategoryInputFocused = false"
         />

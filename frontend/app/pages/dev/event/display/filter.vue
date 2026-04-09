@@ -17,7 +17,7 @@ const ACTIVE_STATUS_KEYS = [
 const statusOptions = computed<FilterStatusOption[]>(() =>
   ACTIVE_STATUS_KEYS.map((status) => ({
     value: status,
-    label: t(`status.status_options.${status.toLowerCase()}`),
+    label: t(`event.status_options.${status.toLowerCase()}`),
   })),
 );
 </script>

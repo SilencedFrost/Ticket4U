@@ -8,11 +8,11 @@ const panelStyle: Record<string, string> = {
 };
 
 const filterOptions = [
-  { label: 'event_filter.date.all_dates', value: 'all', primary: true },
-  { label: 'event_filter.date.today', value: 'today' },
-  { label: 'event_filter.date.tomorrow', value: 'tomorrow' },
-  { label: 'event_filter.date.this_weekend', value: 'weekend' },
-  { label: 'event_filter.date.this_month', value: 'month' },
+  { label: 'common.date.all_dates', value: 'all', primary: true },
+  { label: 'common.date.today', value: 'today' },
+  { label: 'common.date.tomorrow', value: 'tomorrow' },
+  { label: 'common.date.this_weekend', value: 'weekend' },
+  { label: 'common.date.this_month', value: 'month' },
 ];
 </script>
 
@@ -20,8 +20,8 @@ const filterOptions = [
   <FilterPanel
     summary-class="btn btn-primary"
     summary-icon-class="bi bi-calendar-event fs-5"
-    :summary-label="$t('event_filter.date.all_dates')"
-    :summary-mobile-label="$t('event_filter.date.short')"
+    :summary-label="$t('common.date.all_dates')"
+    :summary-mobile-label="$t('common.date.short')"
     panel-class="dev-date-panel"
     :panel-style="panelStyle"
   >
@@ -41,11 +41,11 @@ const filterOptions = [
 
     <div class="row g-3 mb-3">
       <div class="col-12 col-sm-6">
-        <label class="form-label small">{{ $t('event_filter.date.from_date') }}</label>
+        <label class="form-label small">{{ $t('common.date.from_date') }}</label>
         <input type="date" class="form-control" />
       </div>
       <div class="col-12 col-sm-6">
-        <label class="form-label small">{{ $t('event_filter.date.to_date') }}</label>
+        <label class="form-label small">{{ $t('common.date.to_date') }}</label>
         <input type="date" class="form-control" />
       </div>
     </div>

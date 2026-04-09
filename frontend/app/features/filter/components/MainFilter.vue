@@ -166,7 +166,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
       class="my-3"
     />
 
-    <div class="mb-3 position-relative">
+    <div v-if="showCategorySection && categoryList.length > 0" class="mb-3 position-relative">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
 
       <div

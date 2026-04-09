@@ -110,9 +110,14 @@ watch(
       </slot>
     </div>
 
-    <hr v-if="showPriceSection && (showCategorySection || showStatusSection)" class="my-3" />
+    <hr
+      v-if="
+        showPriceSection && (showCategorySection || showStatusSection) && categoryList.length > 0
+      "
+      class="my-3"
+    />
 
-    <div v-if="showCategorySection" class="mb-3">
+    <div v-if="showCategorySection && categoryList.length > 0" class="mb-3">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
       <div class="d-flex flex-wrap gap-2">
         <button

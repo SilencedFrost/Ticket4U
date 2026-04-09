@@ -76,7 +76,7 @@ onClickOutside(detailsRef, () => {
     </summary>
 
     <div
-      class="card-border p-3 rounded-3 shadow bg-reactive-primary z-3"
+      class="card-border p-3 bg-reactive-primary z-3"
       :class="[panelPositionClass, props.panelClass]"
       :style="panelInlineStyle"
     >

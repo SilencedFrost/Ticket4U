@@ -97,7 +97,6 @@ const options: AppearanceOption[] = [
   transform: translateY(-1px);
 }
 
-/* Override for light theme to use hardcoded light color for card preview (global scss dont have yet) */
 .appearance-card-preview[data-bs-theme='light'] {
   --bg-reactive-primary: var(--bg-primary-light);
   --bg-reactive-secondary: var(--bg-secondary-light);
@@ -105,6 +104,15 @@ const options: AppearanceOption[] = [
   --text-reactive-primary: var(--text-primary-light);
   --text-reactive-secondary: var(--text-secondary-light);
   --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.2);
+}
+
+.appearance-card-preview[data-bs-theme='dark'] {
+  --bg-reactive-primary: var(--bg-primary-dark);
+  --bg-reactive-secondary: var(--bg-secondary-dark);
+  --bg-reactive-gray: #5e5e5e;
+  --text-reactive-primary: var(--text-primary-dark);
+  --text-reactive-secondary: var(--text-secondary-dark);
+  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.35);
 }
 
 .border-reactive-subtle {

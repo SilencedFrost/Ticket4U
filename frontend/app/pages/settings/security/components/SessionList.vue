@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import type { Session } from '../../types/settings';
-import { useSettingsApi } from '../../composables/useSettingsApi';
+import type { Session } from '../../../../features/settings/types/session';
+import { useSettingsApi } from '../../../../features/settings/composables/useSettingsApi';
 
 const { fetchSessions, deleteSession, extractMessage } = useSettingsApi();
 const loading = ref(false);

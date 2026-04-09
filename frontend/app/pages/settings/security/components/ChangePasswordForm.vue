@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import { useSettingsApi } from '../../composables/useSettingsApi';
+import { useSettingsApi } from '../../../../features/settings/composables/useSettingsApi';
 
 const { validatePasswordValue } = usePasswordValidation();
 const { changePassword, extractFieldErrors, extractMessage } = useSettingsApi();

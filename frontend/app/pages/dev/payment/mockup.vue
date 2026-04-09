@@ -17,6 +17,9 @@ const transferContentMaxLength = 20;
 const showSepayPopup = ref(false);
 const editingField = ref<'name' | 'email' | 'phone' | null>(null);
 const shouldCloseOnPointerUp = ref(false);
+const eventPanelRef = ref<HTMLElement | null>(null);
+const holdPanelHeight = ref<number | null>(null);
+let eventPanelResizeObserver: ResizeObserver | null = null;
 
 type MockSelectedTicket = {
   ticket_type: string;
@@ -100,6 +103,10 @@ const errorHintKey = computed(() => {
   return 'payment_mockup.validation.agree_policy';
 });
 
+const holdPanelStyle = computed(() => {
+  return holdPanelHeight.value ? { minHeight: `${holdPanelHeight.value}px` } : null;
+});
+
 function toggleEditing(field: 'name' | 'email' | 'phone') {
   editingField.value = editingField.value === field ? null : field;
 }
@@ -150,6 +157,19 @@ function handleEscape(event: KeyboardEvent) {
   }
 }
 
+function syncTopPanelsHeight() {
+  if (!import.meta.client || !eventPanelRef.value) {
+    return;
+  }
+
+  if (!window.matchMedia('(min-width: 992px)').matches) {
+    holdPanelHeight.value = null;
+    return;
+  }
+
+  holdPanelHeight.value = Math.ceil(eventPanelRef.value.getBoundingClientRect().height);
+}
+
 function buildFullNameFromUser(user: UserSummary): string {
   const parts = [user.lastName, user.firstName]
     .map((part) => part?.trim() ?? '')
@@ -175,11 +195,28 @@ async function prefillReceiverInfo() {
 
 onMounted(() => {
   window.addEventListener('keydown', handleEscape);
+
+  window.addEventListener('resize', syncTopPanelsHeight);
+
+  if (import.meta.client && 'ResizeObserver' in window && eventPanelRef.value) {
+    eventPanelResizeObserver = new ResizeObserver(() => {
+      syncTopPanelsHeight();
+    });
+    eventPanelResizeObserver.observe(eventPanelRef.value);
+  }
+
+  syncTopPanelsHeight();
   void prefillReceiverInfo();
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleEscape);
+  window.removeEventListener('resize', syncTopPanelsHeight);
+
+  if (eventPanelResizeObserver) {
+    eventPanelResizeObserver.disconnect();
+    eventPanelResizeObserver = null;
+  }
 });
 </script>
 
@@ -191,7 +228,7 @@ onBeforeUnmount(() => {
       <div class="payment-shell">
         <main class="payment-main">
           <section class="left-col">
-            <article class="panel event-panel">
+            <article ref="eventPanelRef" class="card payment-card event-panel">
               <img
                 class="event-thumb"
                 src="https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop"
@@ -207,7 +244,7 @@ onBeforeUnmount(() => {
               </div>
             </article>
 
-            <article class="panel receiver-panel">
+            <article class="card payment-card receiver-panel">
               <h2 class="panel-title">{{ $t('payment_mockup.receiver.title') }}</h2>
               <p class="panel-subtitle">{{ $t('payment_mockup.receiver.subtitle') }}</p>
               <hr class="panel-divider" />
@@ -229,7 +266,11 @@ onBeforeUnmount(() => {
                   <strong v-else>{{ fullName || $t('payment_mockup.receiver.empty') }}</strong>
                   <p v-if="fullNameErrorKey" class="receiver-error">{{ $t(fullNameErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('name')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('name')"
+                >
                   <i :class="editingField === 'name' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -251,7 +292,11 @@ onBeforeUnmount(() => {
                   <strong v-else>{{ email || $t('payment_mockup.receiver.empty') }}</strong>
                   <p v-if="emailErrorKey" class="receiver-error">{{ $t(emailErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('email')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('email')"
+                >
                   <i :class="editingField === 'email' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -277,7 +322,11 @@ onBeforeUnmount(() => {
                   <strong v-else>{{ phone || $t('payment_mockup.receiver.empty') }}</strong>
                   <p v-if="phoneErrorKey" class="receiver-error">{{ $t(phoneErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('phone')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('phone')"
+                >
                   <i :class="editingField === 'phone' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -294,9 +343,9 @@ onBeforeUnmount(() => {
               </p>
             </article>
 
-            <article class="panel method-panel">
+            <article class="card payment-card method-panel">
               <h2 class="panel-title">{{ $t('payment_mockup.payment_method.title') }}</h2>
-              <div class="method-single">
+              <div class="method-single d-inline-flex align-items-center gap-2 align-self-start">
                 <i class="bi bi-bank"></i>
                 {{ $t('payment_mockup.payment_method.sepay_bank') }}
               </div>
@@ -304,7 +353,10 @@ onBeforeUnmount(() => {
           </section>
 
           <section class="right-col">
-            <article class="panel hold-panel">
+            <article
+              class="card payment-card hold-panel d-flex flex-column align-items-center"
+              :style="holdPanelStyle"
+            >
               <h2 class="panel-title center">{{ $t('payment_mockup.timer.title') }}</h2>
               <div class="time-boxes">
                 <div class="time-cell">{{ minuteBox }}</div>
@@ -313,14 +365,14 @@ onBeforeUnmount(() => {
               </div>
             </article>
 
-            <article class="panel policy-panel">
+            <article class="card payment-card policy-panel">
               <h2 class="panel-title">{{ $t('payment_mockup.policy.title') }}</h2>
               <p class="policy-text">
                 {{ $t('payment_mockup.policy.content') }}
               </p>
             </article>
 
-            <article class="panel order-panel">
+            <article class="card payment-card order-panel">
               <h2 class="panel-title">
                 {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
               </h2>
@@ -352,12 +404,12 @@ onBeforeUnmount(() => {
                 </button>
               </div>
 
-              <div class="total-line">
+              <div class="total-line d-flex justify-content-between align-items-baseline">
                 <strong>{{ $t('payment_mockup.checkout.total') }}</strong>
                 <strong class="total-amount">{{ formatPrice(total, 'VND') }}</strong>
               </div>
 
-              <label class="policy-check">
+              <label class="policy-check d-inline-flex align-items-center gap-2">
                 <input v-model="agreedPolicy" type="checkbox" />
                 {{ $t('payment_mockup.checkout.agree_policy') }}
               </label>
@@ -383,12 +435,16 @@ onBeforeUnmount(() => {
       @pointerup="handleOverlayPointerUp"
     >
       <div class="sepay-modal">
-        <div class="sepay-header">
-          <div class="sepay-header-left">
+        <div class="sepay-header d-flex justify-content-between align-items-center">
+          <div class="sepay-header-left d-flex align-items-center gap-2">
             <i class="bi bi-bank"></i>
             <strong id="sepay-title">{{ $t('payment_mockup.popup.title') }}</strong>
           </div>
-          <button type="button" class="close-btn" @click="closePaymentPopup">
+          <button
+            type="button"
+            class="close-btn d-inline-flex align-items-center justify-content-center"
+            @click="closePaymentPopup"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
@@ -402,7 +458,11 @@ onBeforeUnmount(() => {
               <div class="time-cell">{{ secondBox }}</div>
             </div>
           </div>
-          <button type="button" class="timer-close-btn d-lg-none" @click="closePaymentPopup">
+          <button
+            type="button"
+            class="timer-close-btn d-lg-none d-inline-flex align-items-center justify-content-center"
+            @click="closePaymentPopup"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
@@ -428,11 +488,11 @@ onBeforeUnmount(() => {
             <div class="bank-info">
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.bank') }}</span>
-                <div class="info-row-end">
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
                   <strong>BIDV</strong>
                   <button
                     type="button"
-                    class="copy-icon-btn"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('BIDV')"
                   >
@@ -442,13 +502,13 @@ onBeforeUnmount(() => {
               </div>
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.cart_code') }}</span>
-                <div class="info-row-end">
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
                   <strong class="content-preview" :title="transferContent">{{
                     transferContentPreview
                   }}</strong>
                   <button
                     type="button"
-                    class="copy-icon-btn"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue(transferContent)"
                   >
@@ -458,11 +518,11 @@ onBeforeUnmount(() => {
               </div>
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.account_number') }}</span>
-                <div class="info-row-end">
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
                   <strong class="text-primary">123</strong>
                   <button
                     type="button"
-                    class="copy-icon-btn"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('123')"
                   >
@@ -472,11 +532,11 @@ onBeforeUnmount(() => {
               </div>
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.receiver_name') }}</span>
-                <div class="info-row-end">
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
                   <strong>ticket4u</strong>
                   <button
                     type="button"
-                    class="copy-icon-btn"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue('ticket4u')"
                   >
@@ -486,11 +546,11 @@ onBeforeUnmount(() => {
               </div>
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.amount') }}</span>
-                <div class="info-row-end">
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
                   <strong class="text-primary">{{ formatPrice(total, 'VND') }}</strong>
                   <button
                     type="button"
-                    class="copy-icon-btn"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
                     @click="copyValue(formatPrice(total, 'VND'))"
                   >
@@ -576,12 +636,13 @@ onBeforeUnmount(() => {
   grid-template-rows: auto auto auto;
 }
 
-.panel {
-  background: rgba(17, 17, 17, 0.96);
+.payment-card {
+  background: rgba(17, 17, 17, 0.96) !important;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   padding: 14px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: none;
 }
 
 .panel-title {
@@ -608,6 +669,7 @@ onBeforeUnmount(() => {
 
 .event-panel {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
 }
@@ -720,9 +782,6 @@ onBeforeUnmount(() => {
   border: 0;
   background: transparent;
   color: #d9dfef;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 26px;
   height: 26px;
 }
@@ -745,19 +804,9 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(139, 149, 176, 0.36);
   background: rgba(255, 255, 255, 0.05);
   color: #ecf0ff;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   padding: 10px 12px;
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.hold-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
 }
 
 .time-boxes {
@@ -794,14 +843,24 @@ onBeforeUnmount(() => {
   line-height: 1.45;
 }
 
+@media (min-width: 992px) {
+  .policy-panel {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .policy-panel .panel-title {
+    margin-bottom: 6px;
+  }
+}
+
 .order-panel {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  overflow: visible;
+  display: block;
 }
 
 .ticket-scroll {
-  max-height: 164px;
+  max-height: 146px;
   overflow-y: auto;
   padding-right: 6px;
   scrollbar-gutter: stable;
@@ -892,9 +951,6 @@ onBeforeUnmount(() => {
 
 .total-line {
   margin-top: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
   color: #f9fbff;
   font-size: 1rem;
 }
@@ -906,9 +962,6 @@ onBeforeUnmount(() => {
 
 .policy-check {
   margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   color: #edf1ff;
   font-size: 0.9rem;
 }
@@ -965,17 +1018,11 @@ onBeforeUnmount(() => {
 }
 
 .sepay-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 14px 18px;
   border-bottom: 1px solid rgba(122, 132, 165, 0.3);
 }
 
 .sepay-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-size: 1.1rem;
 }
 
@@ -1016,9 +1063,6 @@ onBeforeUnmount(() => {
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.12);
   color: #f7f9ff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -1119,12 +1163,6 @@ onBeforeUnmount(() => {
   gap: 12px;
 }
 
-.info-row-end {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .info-row:last-child {
   border-bottom: 0;
 }
@@ -1157,9 +1195,6 @@ onBeforeUnmount(() => {
   color: #d9dfef;
   width: 24px;
   height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
 }
 
@@ -1200,9 +1235,9 @@ onBeforeUnmount(() => {
     linear-gradient(180deg, #f7f9ff 0%, #eef2fb 100%);
 }
 
-[data-bs-theme='light'] .flip-payment-page .panel,
+[data-bs-theme='light'] .flip-payment-page .payment-card,
 [data-bs-theme='light'] .flip-payment-page .sepay-modal {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.95) !important;
   border-color: rgba(122, 132, 165, 0.24);
   box-shadow: 0 10px 24px rgba(23, 32, 59, 0.08);
 }
@@ -1318,7 +1353,7 @@ onBeforeUnmount(() => {
     overflow: visible;
   }
 
-  .panel {
+  .payment-card {
     padding: 12px;
     border-radius: 12px;
   }

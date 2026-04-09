@@ -83,6 +83,18 @@ function initializePreferences() {
 	initialSnapshot.value = { ...snapshot };
 }
 
+watch(currentTheme, (theme) => {
+	const normalizedTheme: ThemePreference = theme === 'dark' ? 'dark' : 'light';
+	formData.theme = normalizedTheme;
+
+	if (initialSnapshot.value) {
+		initialSnapshot.value = {
+			...initialSnapshot.value,
+			theme: normalizedTheme,
+		};
+	}
+});
+
 const hasChanges = computed(() => {
 	if (!initialSnapshot.value) {
 		return false;

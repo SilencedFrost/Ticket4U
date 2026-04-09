@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useSettingsApi } from '~/features/settings/composables/useSettingsApi';
+
 const { formatPrice } = useFormatter();
 const { isEmailFormatValid } = useEmailValidation();
 const { isPhoneFormatValid } = usePhoneValidation();
+const { fetchCurrentUser } = useSettingsApi();
 
 const fullName = ref('');
 const email = ref('');
@@ -20,14 +23,25 @@ type MockSelectedTicket = {
   zone_name: string;
   seat_name: string;
   base_price: number;
+  requires_phone?: boolean;
 };
 
 const tickets = ref<MockSelectedTicket[]>([
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C10', base_price: 25000 },
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C11', base_price: 25000 },
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C12', base_price: 25000 },
-  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C13', base_price: 25000 },
+  {
+    ticket_type: 'VIP',
+    zone_name: 'Premium',
+    seat_name: 'A03',
+    base_price: 25000,
+    requires_phone: false,
+  },
 ]);
+
+const isPhoneRequired = computed(() =>
+  tickets.value.some((ticket) => ticket.requires_phone === true),
+);
 
 const minuteBox = '00';
 const secondBox = '00';
@@ -55,7 +69,7 @@ const emailErrorKey = computed(() => {
 const phoneErrorKey = computed(() => {
   const value = phone.value.trim();
   if (!value) {
-    return 'auth.error.blank.phone';
+    return isPhoneRequired.value ? 'auth.error.blank.phone' : '';
   }
 
   return isPhoneFormatValid(value) ? '' : 'auth.error.format.phone';
@@ -136,8 +150,32 @@ function handleEscape(event: KeyboardEvent) {
   }
 }
 
+function buildFullNameFromUser(user: UserSummary): string {
+  const parts = [user.lastName, user.firstName]
+    .map((part) => part?.trim() ?? '')
+    .filter((part) => part.length > 0);
+
+  if (parts.length > 0) {
+    return parts.join(' ');
+  }
+
+  return user.username?.trim() ?? '';
+}
+
+async function prefillReceiverInfo() {
+  try {
+    const user = await fetchCurrentUser();
+    fullName.value = buildFullNameFromUser(user);
+    email.value = user.email?.trim() ?? '';
+    phone.value = user.phoneNumber?.trim() ?? '';
+  } catch {
+    return;
+  }
+}
+
 onMounted(() => {
   window.addEventListener('keydown', handleEscape);
+  void prefillReceiverInfo();
 });
 
 onBeforeUnmount(() => {
@@ -222,7 +260,11 @@ onBeforeUnmount(() => {
                 <i class="bi bi-telephone"></i>
                 <div class="receiver-col">
                   <span class="receiver-label"
-                    >{{ $t('payment_mockup.receiver.phone') }} <b>*</b></span
+                    >{{ $t('payment_mockup.receiver.phone') }}
+                    <b v-if="isPhoneRequired">*</b>
+                    <em v-else class="receiver-optional">{{
+                      $t('payment_mockup.receiver.optional')
+                    }}</em></span
                   >
                   <input
                     v-if="editingField === 'phone'"
@@ -283,13 +325,13 @@ onBeforeUnmount(() => {
                 {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
               </h2>
 
+              <div class="ticket-header">
+                <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
+              </div>
               <div class="ticket-scroll">
-                <div class="ticket-header">
-                  <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
-                  <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
-                  <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
-                  <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
-                </div>
                 <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
                   <div class="ticket-cell">{{ ticket.ticket_type }}</div>
                   <div class="ticket-cell">{{ ticket.zone_name }}</div>
@@ -656,6 +698,13 @@ onBeforeUnmount(() => {
   line-height: 1.3;
 }
 
+.receiver-optional {
+  font-style: normal;
+  margin-left: 4px;
+  color: #9aa7c8;
+  font-size: 0.82rem;
+}
+
 .inline-edit-input {
   width: min(320px, 100%);
   height: 36px;
@@ -756,6 +805,29 @@ onBeforeUnmount(() => {
   overflow-y: auto;
   padding-right: 6px;
   scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(204, 215, 242, 0.82) rgba(255, 255, 255, 0.12);
+}
+
+.ticket-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.ticket-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb {
+  background: rgba(204, 215, 242, 0.82);
+  border-radius: 999px;
+  border: 2px solid rgba(17, 17, 17, 0.96);
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb:active {
+  background: rgba(232, 239, 255, 0.96);
 }
 
 .ticket-row {
@@ -772,8 +844,9 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  padding: 4px 0 8px;
+  padding: 4px 6px 8px 0;
   border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+  background: rgba(17, 17, 17, 0.96);
 }
 
 .ticket-header small {
@@ -1179,6 +1252,31 @@ onBeforeUnmount(() => {
 [data-bs-theme='light'] .flip-payment-page .icon-button,
 [data-bs-theme='light'] .flip-payment-page .copy-icon-btn {
   color: #516186;
+}
+
+[data-bs-theme='light'] .flip-payment-page .receiver-optional {
+  color: #5a6d94;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-header {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll {
+  scrollbar-color: rgba(64, 83, 126, 0.62) rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-track {
+  background: rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb {
+  background: rgba(64, 83, 126, 0.62);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb:active {
+  background: rgba(45, 64, 108, 0.74);
 }
 
 [data-bs-theme='light'] .flip-payment-page .pay-btn,

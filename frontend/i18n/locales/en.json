@@ -202,6 +202,7 @@
       "full_name": "Full name",
       "email": "Email",
       "phone": "Phone number",
+      "optional": "(optional)",
       "empty": "Not entered",
       "note_line_1": "The invoice will be sent to the email above.",
       "note_line_2": "Tickets are stored in",

@@ -202,6 +202,7 @@
       "full_name": "Họ và tên",
       "email": "Email",
       "phone": "Số điện thoại",
+      "optional": "(không bắt buộc)",
       "empty": "Chưa nhập",
       "note_line_1": "Hóa đơn sẽ được gửi đến email ở trên.",
       "note_line_2": "Vé được lưu trong mục",

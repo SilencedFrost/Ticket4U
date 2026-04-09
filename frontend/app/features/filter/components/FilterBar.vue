@@ -18,13 +18,15 @@ const props = withDefaults(
 
 const slots = useSlots();
 
-const resolvedFilters = computed<FilterBarItem[]>(() => {
+const resolvedFilters = computed<FilterBarItem[]>(getResolvedFilters);
+
+function getResolvedFilters(): FilterBarItem[] {
   if (props.filters?.length) {
     return props.filters;
   }
 
   return ['main', 'date'];
-});
+}
 </script>
 
 <template>

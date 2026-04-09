@@ -23,15 +23,23 @@ const isPanelOpen = ref(false);
 const detailsRef = ref<HTMLDetailsElement | null>(null);
 const breakpoints = useBreakpoints(breakpointsBootstrapV5);
 const isDesktop = breakpoints.greaterOrEqual('md');
-const panelInlineStyle = computed(() => props.panelStyle);
-const detailsPositionClass = computed(() =>
-  isDesktop.value ? 'position-relative' : 'position-static',
-);
-const panelPositionClass = computed(() =>
-  isDesktop.value
+const panelInlineStyle = computed(getPanelInlineStyle);
+const detailsPositionClass = computed(getDetailsPositionClass);
+const panelPositionClass = computed(getPanelPositionClass);
+
+function getPanelInlineStyle() {
+  return props.panelStyle;
+}
+
+function getDetailsPositionClass() {
+  return isDesktop.value ? 'position-relative' : 'position-static';
+}
+
+function getPanelPositionClass() {
+  return isDesktop.value
     ? 'position-absolute top-100 start-0 mt-2'
-    : 'position-absolute top-100 start-50 translate-middle-x mt-2',
-);
+    : 'position-absolute top-100 start-50 translate-middle-x mt-2';
+}
 
 function handleDetailsToggle(event: Event) {
   const details = event.target as HTMLDetailsElement;
@@ -42,11 +50,13 @@ function closePanel() {
   isPanelOpen.value = false;
 }
 
-onClickOutside(detailsRef, () => {
+function handlePanelOutsideClick() {
   if (isPanelOpen.value) {
     closePanel();
   }
-});
+}
+
+onClickOutside(detailsRef, handlePanelOutsideClick);
 </script>
 
 <template>

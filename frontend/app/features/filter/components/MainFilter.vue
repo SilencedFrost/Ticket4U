@@ -35,7 +35,9 @@ const searchQuery = ref('');
 const isCategoryInputFocused = ref(false);
 const selectedCategories = ref<CategorySummary[]>([]);
 
-const filteredList = computed(() => {
+const filteredList = computed(getFilteredList);
+
+function getFilteredList() {
   const query = searchQuery.value.trim().toLowerCase();
 
   let list = categoryList.value;
@@ -47,13 +49,17 @@ const filteredList = computed(() => {
   return list.filter(
     (item) => !selectedCategories.value.some((selected) => selected.id === item.id),
   );
-});
+}
 
-const shouldShowOverlay = computed(
-  () => isCategoryInputFocused.value && filteredList.value.length > 0,
-);
+const shouldShowOverlay = computed(getShouldShowOverlay);
 
-const statusTitle = computed(() => {
+function getShouldShowOverlay() {
+  return isCategoryInputFocused.value && filteredList.value.length > 0;
+}
+
+const statusTitle = computed(getStatusTitle);
+
+function getStatusTitle() {
   if (te('event_filter.main.status')) {
     return t('event_filter.main.status');
   }
@@ -63,18 +69,18 @@ const statusTitle = computed(() => {
   }
 
   return 'Status';
-});
+}
 
-const selectItem = (item: CategorySummary) => {
+function selectItem(item: CategorySummary) {
   if (!selectedCategories.value.find((cat) => cat.id === item.id)) {
     selectedCategories.value.push(item);
   }
   searchQuery.value = '';
-};
+}
 
-const removeCategory = (id: number) => {
+function removeCategory(id: number) {
   selectedCategories.value = selectedCategories.value.filter((cat) => cat.id !== id);
-};
+}
 
 function getCategoryLabel(categoryName: string) {
   const fallbackCategoryKey = `categories.${categoryName.toLowerCase()}`;
@@ -107,15 +113,13 @@ async function getCategories() {
   }
 }
 
-watch(
-  showCategorySection,
-  (shouldShowCategory) => {
-    if (shouldShowCategory && categoryList.value.length === 0) {
-      getCategories();
-    }
-  },
-  { immediate: true },
-);
+function handleCategorySectionVisibility(shouldShowCategory: boolean) {
+  if (shouldShowCategory && categoryList.value.length === 0) {
+    getCategories();
+  }
+}
+
+watch(showCategorySection, handleCategorySectionVisibility, { immediate: true });
 </script>
 
 <template>
@@ -169,18 +173,26 @@ watch(
     <div class="mb-3 position-relative">
       <h6 class="fw-bold mb-3 small">{{ t('common.category') }}</h6>
 
-      <div v-if="selectedCategories.length > 0" class="d-flex flex-wrap gap-2 mb-2">
+      <div
+        v-if="selectedCategories.length > 0"
+        class="d-flex flex-wrap gap-2 mb-2 overflow-auto align-content-start"
+        style="max-height: 168px"
+      >
         <div
           v-for="cat in selectedCategories"
           :key="cat.id"
-          class="btn btn-secondary btn-sm d-inline-flex align-items-center gap-1"
+          class="btn btn-secondary btn-sm d-inline-flex align-items-stretch p-0 overflow-hidden text-nowrap"
         >
-          {{ getCategoryLabel(cat.name) }}
-          <i
-            class="bi bi-x-lg cursor-pointer hover-text-danger"
-            style="font-size: 0.7rem"
+          <span class="px-2 py-1 d-inline-flex align-items-center">{{
+            getCategoryLabel(cat.name)
+          }}</span>
+          <button
+            type="button"
+            class="border-0 border-start border-light border-opacity-25 bg-transparent text-white d-inline-flex align-items-center justify-content-center px-2 flex-shrink-0"
             @click="removeCategory(cat.id)"
-          ></i>
+          >
+            <i class="bi bi-x-lg small"></i>
+          </button>
         </div>
       </div>
 
@@ -190,7 +202,6 @@ watch(
           type="text"
           class="form-control"
           :placeholder="t('placeholder.category')"
-          @input="searchQuery = ($event.target as HTMLInputElement).value"
           @focus="isCategoryInputFocused = true"
           @blur="isCategoryInputFocused = false"
         />

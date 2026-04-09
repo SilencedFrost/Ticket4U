@@ -1,3 +1,4 @@
+// TODO: refactor to features/organizer/
 import { ref } from 'vue'
 import { mockProfile } from '../mock.data'
 
@@ -10,8 +11,8 @@ interface OrganizerProfile {
 
 const profile = ref<OrganizerProfile | null>(null)
 
-export const useOrganizerProfile = () => {
-  const fetchProfile = () => {
+export function useOrganizerProfile() {
+  function fetchProfile() {
     if (profile.value) return
     profile.value = {
       name:    mockProfile.name,
@@ -20,7 +21,7 @@ export const useOrganizerProfile = () => {
     }
   }
 
-  const reset = () => {
+  function reset() {
     profile.value = null
   }
 

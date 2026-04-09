@@ -1,3 +1,106 @@
+<script setup lang="ts">
+import { ref, reactive, computed, onMounted } from 'vue'
+import type { Zone, ZoneFormState } from '../../(types)/zone'
+
+const props = defineProps<{
+  zone: Zone | null
+}>()
+
+const emit = defineEmits<{
+  close: []
+  saved: [data: ZoneFormState]
+}>()
+
+const { t: $t } = useI18n()
+
+const form = reactive<ZoneFormState>({
+  name:          '',
+  isStanding:    false,
+  capacity:      100,
+  price:         0,
+  purchaseLimit: null,
+  descriptionVi: '',
+  descriptionEn: '',
+  perks:         [],
+  gridRows:      5,
+  gridCols:      10,
+})
+
+const descLang = ref<'vi' | 'en'>('vi')
+const newPerk  = ref('')
+const saving   = ref(false)
+const errors   = ref<Record<string, string>>({})
+
+const totalSeats = computed(() => form.gridRows * form.gridCols)
+
+function rowLabel(idx: number): string {
+  if (idx < 26) return String.fromCharCode(65 + idx)
+  return String.fromCharCode(65 + Math.floor(idx / 26) - 1) + String.fromCharCode(65 + idx % 26)
+}
+
+function parsedPerks(p?: string | string[]): string[] {
+  if (!p) return []
+  if (Array.isArray(p)) return p
+  try { return JSON.parse(p) } catch { return [] }
+}
+
+function addPerk() {
+  if (newPerk.value.trim()) {
+    form.perks.push(newPerk.value.trim())
+    newPerk.value = ''
+  }
+}
+
+function validate(): boolean {
+  errors.value = {}
+  if (!form.name.trim())
+    errors.value.name = 'Name is required'
+  if (form.price == null || form.price < 0)
+    errors.value.price = 'Price is required'
+  if (form.isStanding && (!form.capacity || form.capacity < 1))
+    errors.value.capacity = 'Capacity must be > 0'
+  if (!form.isStanding) {
+    if (!form.gridRows || form.gridRows < 1) errors.value.gridRows = 'At least 1 row required'
+    if (!form.gridCols || form.gridCols < 1) errors.value.gridCols = 'At least 1 seat per row required'
+  }
+  return Object.keys(errors.value).length === 0
+}
+
+async function handleSave() {
+  if (!validate()) return
+  saving.value = true
+  errors.value = {}
+
+  try {
+    // Mock delay — swap for real $fetch when API is ready
+    await new Promise(r => setTimeout(r, 400))
+    emit('saved', { ...form, perks: [...form.perks] })
+  } catch (err: any) {
+    errors.value.global = err?.data?.message ?? 'Failed to save zone'
+  } finally {
+    saving.value = false
+  }
+}
+
+onMounted(() => {
+  if (props.zone) {
+    const seatCount = props.zone.seatCount ?? 0
+    Object.assign(form, {
+      name:          props.zone.name,
+      isStanding:    props.zone.isStanding,
+      capacity:      props.zone.capacity,
+      price:         props.zone.price,
+      purchaseLimit: props.zone.purchaseLimit ?? null,
+      descriptionVi: props.zone.descriptionVi ?? '',
+      descriptionEn: props.zone.descriptionEn ?? '',
+      perks:         parsedPerks(props.zone.perks),
+      gridRows:      props.zone.gridRows ?? (seatCount > 0 ? Math.ceil(Math.sqrt(seatCount)) : 5),
+      gridCols:      props.zone.gridCols ?? (seatCount > 0 ? Math.ceil(seatCount / Math.ceil(Math.sqrt(seatCount))) : 10),
+    })
+  }
+})
+</script>
+
 <template>
   <div class="modal-backdrop-custom" @click.self="$emit('close')">
     <div class="modal-box bg-reactive-secondary p-4 rounded-3 shadow-lg">
@@ -70,13 +173,12 @@
                 </div>
               </div>
 
-              <div v-if="zone?.id && zone.seatCount > 0" class="alert alert-warning py-2 small mt-3 mb-0">
+              <div v-if="zone?.id && (zone.seatCount ?? 0) > 0" class="alert alert-warning py-2 small mt-3 mb-0">
                 <i class="bi bi-exclamation-triangle me-1"/>
                 This zone already has {{ zone.seatCount }} seats. Saving new dimensions will replace them.
               </div>
               <div v-else class="alert alert-info py-2 small mt-3 mb-0">
-                <i class="bi bi-info-circle me-1"/>
-                Seats will be generated automatically when you save.
+                <i class="bi bi-info-circle me-1"/>Seats will be generated automatically when you save.
               </div>
             </div>
           </div>
@@ -109,8 +211,16 @@
         <div class="col-12">
           <label class="form-label small text-reactive-secondary mb-1">{{ $t('organizer.event_form.step3.description') }}</label>
           <ul class="nav nav-tabs mb-2 border-0">
-            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'vi' }" @click="descLang = 'vi'">🇻🇳 {{ $t('organizer.event_form.step3.desc_vi') }}</button></li>
-            <li class="nav-item"><button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'en' }" @click="descLang = 'en'">🇺🇸 {{ $t('organizer.event_form.step3.desc_en') }}</button></li>
+            <li class="nav-item">
+              <button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'vi' }" @click="descLang = 'vi'">
+                🇻🇳 {{ $t('organizer.event_form.step3.desc_vi') }}
+              </button>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'en' }" @click="descLang = 'en'">
+                🇺🇸 {{ $t('organizer.event_form.step3.desc_en') }}
+              </button>
+            </li>
           </ul>
           <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
           <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
@@ -124,7 +234,7 @@
             <button type="button" class="btn btn-outline-primary btn-sm" @click="addPerk"><i class="bi bi-plus-lg"/></button>
           </div>
           <div class="d-flex flex-wrap gap-1">
-            <span v-for="(perk, i) in form.perks" :key="i" class="badge d-inline-flex align-items-center gap-1" style="background:rgba(99,102,241,0.25);color:#a5b4fc;border:1px solid rgba(99,102,241,0.4);">
+            <span v-for="(perk, i) in form.perks" :key="i" class="badge d-inline-flex align-items-center gap-1 perk-badge">
               {{ perk }}<i class="bi bi-x" style="cursor:pointer" @click="form.perks.splice(i, 1)"/>
             </span>
           </div>
@@ -132,12 +242,10 @@
 
       </div>
 
-      <!-- Error -->
       <div v-if="errors.global" class="alert alert-danger mt-3 py-2">
         <i class="bi bi-exclamation-circle me-2"/>{{ errors.global }}
       </div>
 
-      <!-- Actions -->
       <div class="d-flex gap-2 justify-content-end mt-4">
         <button class="btn btn-outline-secondary" @click="$emit('close')">{{ $t('common.cancel') }}</button>
         <button class="btn btn-primary" :disabled="saving" @click="handleSave">
@@ -149,133 +257,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-
-interface Zone {
-  id?: string; name: string; isStanding: boolean; capacity: number; price: number
-  purchaseLimit?: number | null; descriptionVi?: string; descriptionEn?: string
-  perks?: string | string[]; seatCount: number
-  gridRows?: number; gridCols?: number
-}
-
-const props = defineProps<{
-  zone: Zone | null
-  sessionId: string
-  apiUrl: string
-}>()
-
-const emit = defineEmits<{
-  close: []
-  saved: [zone: Zone]
-}>()
-
-const { t: $t } = useI18n()
-
-const form = reactive({
-  name: '',
-  isStanding: false,
-  capacity: 100,
-  price: 0,
-  purchaseLimit: null as number | null,
-  descriptionVi: '',
-  descriptionEn: '',
-  perks: [] as string[],
-  gridRows: 5,
-  gridCols: 10,
-})
-
-const descLang = ref<'vi' | 'en'>('vi')
-const newPerk  = ref('')
-const saving   = ref(false)
-const errors   = ref<Record<string, string>>({})
-
-const totalSeats = computed(() => form.gridRows * form.gridCols)
-
-const rowLabel = (idx: number): string => {
-  if (idx < 26) return String.fromCharCode(65 + idx)
-  return String.fromCharCode(65 + Math.floor(idx / 26) - 1) + String.fromCharCode(65 + idx % 26)
-}
-
-onMounted(() => {
-  if (props.zone) {
-    Object.assign(form, {
-      name:          props.zone.name,
-      isStanding:    props.zone.isStanding,
-      capacity:      props.zone.capacity,
-      price:         props.zone.price,
-      purchaseLimit: props.zone.purchaseLimit ?? null,
-      descriptionVi: props.zone.descriptionVi ?? '',
-      descriptionEn: props.zone.descriptionEn ?? '',
-      perks:         parsedPerks(props.zone.perks),
-      gridRows:      props.zone.gridRows ?? (props.zone.seatCount > 0 ? Math.ceil(Math.sqrt(props.zone.seatCount)) : 5),
-      gridCols:      props.zone.gridCols ?? (props.zone.seatCount > 0 ? Math.ceil(props.zone.seatCount / Math.ceil(Math.sqrt(props.zone.seatCount))) : 10),
-    })
-  }
-})
-
-const parsedPerks = (p?: string | string[]): string[] => {
-  if (!p) return []
-  if (Array.isArray(p)) return p
-  try { return JSON.parse(p) } catch { return [] }
-}
-
-const addPerk = () => {
-  if (newPerk.value.trim()) { form.perks.push(newPerk.value.trim()); newPerk.value = '' }
-}
-
-const validate = () => {
-  errors.value = {}
-  if (!form.name.trim())                    errors.value.name     = 'Name is required'
-  if (form.price == null || form.price < 0) errors.value.price    = 'Price is required'
-  if (form.isStanding && (!form.capacity || form.capacity < 1))
-    errors.value.capacity = 'Capacity must be > 0'
-  if (!form.isStanding) {
-    if (!form.gridRows || form.gridRows < 1)  errors.value.gridRows = 'At least 1 row required'
-    if (!form.gridCols || form.gridCols < 1)  errors.value.gridCols = 'At least 1 seat per row required'
-  }
-  return Object.keys(errors.value).length === 0
-}
-
-const handleSave = async () => {
-  if (!validate()) return
-  saving.value = true; errors.value = {}
-  try {
-    const payload = {
-      name:          form.name,
-      isStanding:    form.isStanding,
-      capacity:      form.isStanding ? form.capacity : form.gridRows * form.gridCols,
-      price:         form.price,
-      purchaseLimit: form.purchaseLimit,
-      descriptionVi: form.descriptionVi || null,
-      descriptionEn: form.descriptionEn || null,
-      perks:         form.perks.length > 0 ? form.perks : null,
-      gridRows:      !form.isStanding ? form.gridRows : null,
-      gridCols:      !form.isStanding ? form.gridCols : null,
-    }
-
-    let savedZone: Zone
-    if (props.zone?.id) {
-      savedZone = await $fetch<Zone>(
-        `${props.apiUrl}/organizer/sessions/${props.sessionId}/zones/${props.zone.id}`,
-        { method: 'PUT', body: payload, credentials: 'include' }
-      )
-    } else {
-      savedZone = await $fetch<Zone>(
-        `${props.apiUrl}/organizer/sessions/${props.sessionId}/zones`,
-        { method: 'POST', body: payload, credentials: 'include' }
-      )
-    }
-
-    emit('saved', savedZone)
-  } catch (err: any) {
-    errors.value.global = err?.data?.message ?? 'Failed to save zone'
-  } finally {
-    saving.value = false
-  }
-}
-</script>
-
 <style scoped>
 .modal-backdrop-custom {
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
@@ -285,11 +266,20 @@ const handleSave = async () => {
 .modal-box { max-width: 560px; width: 100%; max-height: 92vh; overflow-y: auto; }
 .nav-link {
   color: var(--bs-secondary); background: none; border: none;
-  border-bottom: 2px solid transparent; border-radius: 0; padding: 0.4rem 1rem; cursor: pointer;
+  border-bottom: 2px solid transparent; border-radius: 0;
+  padding: 0.4rem 1rem; cursor: pointer;
 }
 .nav-link.active { color: var(--bs-primary); border-bottom-color: var(--bs-primary); }
-.seat-grid-section { background: rgba(var(--bs-primary-rgb), 0.04); border: 1px solid rgba(var(--bs-primary-rgb), 0.15); }
+.seat-grid-section {
+  background: rgba(var(--bs-primary-rgb), 0.04);
+  border: 1px solid rgba(var(--bs-primary-rgb), 0.15);
+}
 .seat-dot { display: inline-block; flex-shrink: 0; }
 .row-label { font-family: monospace; flex-shrink: 0; }
 .grid-preview { overflow-x: auto; }
+.perk-badge {
+  background: rgba(99,102,241,0.25);
+  color: #a5b4fc;
+  border: 1px solid rgba(99,102,241,0.4);
+}
 </style>

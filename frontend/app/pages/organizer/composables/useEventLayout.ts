@@ -1,3 +1,4 @@
+// TODO: refactor to features/organizer/
 import { ref, computed, type Ref } from 'vue'
 import { mockVenues } from '../mock.data'
 import type { Zone } from '../(types)/zone'

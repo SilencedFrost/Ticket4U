@@ -1,3 +1,4 @@
+// TODO: refactor to features/organizer/
 export interface Profile {
   id: string
   name: string

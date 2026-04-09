@@ -1,3 +1,4 @@
+// TODO: refactor to features/organizer/
 import type { Session } from './session'
 
 export type EventStatus =

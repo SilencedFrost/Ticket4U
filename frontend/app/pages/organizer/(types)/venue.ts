@@ -1,3 +1,5 @@
+// TODO: refactor to features/organizer/
+
 // ── Venue Layout JSONB shape ──────────────────────────────────
 // Mirrors the layout JSONB stored in the venues table
 

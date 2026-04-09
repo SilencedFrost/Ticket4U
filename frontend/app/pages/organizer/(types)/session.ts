@@ -1,4 +1,5 @@
-import type { Zone } from './zone.type'
+// TODO: refactor to features/organizer/
+import type { Zone } from './zone'
 
 export interface Session {
   id:        string

@@ -58,12 +58,7 @@ onClickOutside(detailsRef, () => {
     :class="detailsPositionClass"
     @toggle="handleDetailsToggle"
   >
-    <summary
-      :class="[
-        props.summaryClass,
-        'd-inline-flex align-items-center gap-2 list-unstyled text-nowrap rounded-pill',
-      ]"
-    >
+    <summary :class="[props.summaryClass, 'd-inline-flex align-items-center gap-2 text-nowrap']">
       <i :class="props.summaryIconClass"></i>
       <template v-if="props.summaryMobileLabel">
         <span class="d-none d-sm-inline">{{ props.summaryLabel }}</span>

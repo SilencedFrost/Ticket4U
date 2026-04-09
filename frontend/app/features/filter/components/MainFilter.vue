@@ -102,7 +102,7 @@ watch(
             v-for="status in props.statusOptions"
             :key="status.value"
             type="button"
-            class="btn btn-sm btn-outline-secondary text-reactive-primary rounded-pill"
+            class="btn btn-sm btn-outline-secondary text-reactive-primary"
           >
             {{ status.label }}
           </button>

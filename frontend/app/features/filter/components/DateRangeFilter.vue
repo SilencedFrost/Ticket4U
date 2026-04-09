@@ -31,7 +31,7 @@ const filterOptions = [
         :key="option.value"
         type="button"
         :class="[
-          'btn btn-sm rounded-pill',
+          'btn btn-sm',
           option.primary ? 'btn-primary' : 'btn-outline-secondary text-reactive-primary',
         ]"
       >

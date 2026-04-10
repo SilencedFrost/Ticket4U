@@ -3,6 +3,7 @@ import type { EventResponse } from '@/features/event/types/Event';
 import EventHero from './(components)/EventHero.vue';
 import EventNav from './(components)/EventNav.vue';
 import EventAbout from './(components)/EventAbout.vue';
+import EventSchedule from './(components)/EventSchedule.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 
@@ -31,6 +32,7 @@ onMounted(() => getEvent());
     <event-nav />
     <div class="rowz m-0 container-xxl mx-auto flex-column flex-lg-row">
       <div class="col-lg-12">
+        <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
       </div>
     </div>

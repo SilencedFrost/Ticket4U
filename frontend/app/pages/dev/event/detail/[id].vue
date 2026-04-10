@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EventResponse } from '@/features/event/types/Event';
 import EventHero from './(components)/EventHero.vue';
+import EventNav from './(components)/EventNav.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 
@@ -26,6 +27,7 @@ onMounted(() => getEvent());
 <template>
   <div v-if="event" class="h-auto overflow-x-hidden mw-100">
     <event-hero :event="event" />
+    <event-nav />
   </div>
   <div v-else>Loading event...</div>
 </template>

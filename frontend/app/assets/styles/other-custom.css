@@ -30,7 +30,7 @@ img {
   transition: color 0.3s ease;
 
   &:hover {
-    color: var(--bs-primary);
+    color: var(--bs-primary) !important;
   }
 }
 

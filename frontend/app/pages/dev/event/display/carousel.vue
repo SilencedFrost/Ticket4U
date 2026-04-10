@@ -32,15 +32,17 @@ onMounted(() => getFeaturedEvents());
       <option v-for="mode in modes" :key="mode" :value="mode">{{ mode }}</option>
     </select>
     <input v-model="wrapAround" type="checkbox" />Wrap around?
-    <carousel-wrapper
-      :items="eventList"
-      :visible-count="visibleCount"
-      :mode="selectedMode"
-      :wrap-around="wrapAround"
-    >
-      <template #item="{ item }">
-        <event-card :event="item" />
-      </template>
-    </carousel-wrapper>
+    <div class="p-3">
+      <carousel-wrapper
+        :items="eventList"
+        :visible-count="visibleCount"
+        :mode="selectedMode"
+        :wrap-around="wrapAround"
+      >
+        <template #item="{ item }">
+          <event-card :event="item" />
+        </template>
+      </carousel-wrapper>
+    </div>
   </div>
 </template>

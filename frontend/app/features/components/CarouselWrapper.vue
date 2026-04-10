@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="T">
+import { useSwipe } from '@vueuse/core';
+
 const props = withDefaults(
   defineProps<{
     items: T[];
@@ -27,6 +29,7 @@ defineSlots<{
 
 const currentIndex = ref<number>(0);
 const displayedIndex = ref<number>(0);
+const container = ref(null);
 
 const maxIndex = computed<number>(() => {
   if (props.mode === 'page') {
@@ -147,6 +150,13 @@ function prev() {
   }
 }
 
+const { direction: swipeDir } = useSwipe(container, {
+  onSwipeEnd() {
+    if (swipeDir.value === 'left') next();
+    if (swipeDir.value === 'right') prev();
+  },
+});
+
 defineExpose({ next, prev, currentIndex, maxIndex });
 
 const gridStyle = computed(() => ({
@@ -162,7 +172,12 @@ const trackStyle = computed(() => ({
 </script>
 
 <template>
-  <div v-if="items.length" class="carousel-container d-flex">
+  <div
+    v-if="items.length"
+    ref="container"
+    class="carousel-container d-flex"
+    style="overflow: hidden"
+  >
     <div
       class="arrow-container"
       :style="{
@@ -180,51 +195,53 @@ const trackStyle = computed(() => ({
     </div>
 
     <div v-if="mode === 'carousel'" class="carousel-viewport flex-grow-1">
-      <div
-        class="carousel-track"
-        :class="[
-          mode === 'carousel'
-            ? direction === 'next'
-              ? 'slide-next'
-              : direction === 'prev'
-                ? 'slide-prev'
-                : ''
-            : '',
-        ]"
-        :style="trackStyle"
-        @animationend="
-          displayedIndex = currentIndex;
-          isAnimating = false;
-          direction = null;
-        "
-      >
-        <!-- prev preload (carousel only) -->
+      <div class="carousel-mask-container">
         <div
-          v-if="mode === 'carousel'"
-          class="carousel-preload carousel-preload--prev"
-          :style="gridStyle"
+          class="carousel-track"
+          :class="[
+            mode === 'carousel'
+              ? direction === 'next'
+                ? 'slide-next'
+                : direction === 'prev'
+                  ? 'slide-prev'
+                  : ''
+              : '',
+          ]"
+          :style="trackStyle"
+          @animationend="
+            displayedIndex = currentIndex;
+            isAnimating = false;
+            direction = null;
+          "
         >
-          <div v-for="i in visibleCount - prevItems.length" :key="i"></div>
-          <div v-for="(item, index) in prevItems" :key="index">
-            <slot v-if="item" name="item" :item="item" />
+          <!-- prev preload (carousel only) -->
+          <div
+            v-if="mode === 'carousel'"
+            class="carousel-preload carousel-preload--prev"
+            :style="gridStyle"
+          >
+            <div v-for="i in visibleCount - prevItems.length" :key="i"></div>
+            <div v-for="(item, index) in prevItems" :key="index">
+              <slot v-if="item" name="item" :item="item" />
+            </div>
           </div>
-        </div>
 
-        <!-- active -->
-        <div class="carousel-active" :style="gridStyle">
-          <div v-for="(item, index) in activeArray" :key="index">
-            <slot v-if="item" name="item" :item="item" />
+          <!-- active -->
+          <div class="carousel-active" :style="gridStyle">
+            <div v-for="(item, index) in activeArray" :key="index">
+              <slot v-if="item" name="item" :item="item" />
+            </div>
           </div>
-        </div>
 
-        <!-- next preload (carousel only) -->
-        <div
-          v-if="mode === 'carousel'"
-          class="carousel-preload carousel-preload--next"
-          :style="gridStyle"
-        >
-          <div v-for="(item, index) in nextItems" :key="index">
-            <slot v-if="item" name="item" :item="item" />
+          <!-- next preload (carousel only) -->
+          <div
+            v-if="mode === 'carousel'"
+            class="carousel-preload carousel-preload--next"
+            :style="gridStyle"
+          >
+            <div v-for="(item, index) in nextItems" :key="index">
+              <slot v-if="item" name="item" :item="item" />
+            </div>
           </div>
         </div>
       </div>
@@ -271,6 +288,29 @@ const trackStyle = computed(() => ({
   overflow: visible;
   position: relative;
   min-width: 0;
+}
+
+.carousel-mask-container {
+  margin-left: -20px;
+  margin-right: -20px;
+
+  padding-left: 20px;
+  padding-right: 20px;
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 30px,
+    black calc(100% - 30px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 30px,
+    black calc(100% - 30px),
+    transparent 100%
+  );
 }
 
 .carousel-track {

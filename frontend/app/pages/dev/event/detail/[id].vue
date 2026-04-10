@@ -34,6 +34,7 @@ onMounted(() => getEvent());
       <div class="col-lg-12">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
+        //To do: Add event ticket section here
       </div>
     </div>
   </div>

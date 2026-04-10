@@ -2,6 +2,7 @@
 import type { EventResponse } from '@/features/event/types/Event';
 import EventHero from './(components)/EventHero.vue';
 import EventNav from './(components)/EventNav.vue';
+import EventAbout from './(components)/EventAbout.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 
@@ -28,6 +29,11 @@ onMounted(() => getEvent());
   <div v-if="event" class="h-auto overflow-x-hidden mw-100">
     <event-hero :event="event" />
     <event-nav />
+    <div class="rowz m-0 container-xxl mx-auto flex-column flex-lg-row">
+      <div class="col-lg-12">
+        <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
+      </div>
+    </div>
   </div>
   <div v-else>Loading event...</div>
 </template>

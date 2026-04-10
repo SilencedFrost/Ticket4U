@@ -1,4 +1,3 @@
-// TODO: refactor to features/organizer/
 import type { Zone } from './zone'
 
 export interface Session {

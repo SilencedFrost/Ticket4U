@@ -1,4 +1,3 @@
-// TODO: refactor to features/organizer/
 export interface OrganizerStaff {
   id:          string
   email:       string

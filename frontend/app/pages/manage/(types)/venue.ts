@@ -1,6 +1,4 @@
-// TODO: refactor to features/organizer/
-
-// ── Venue Layout JSONB shape ──────────────────────────────────
+// Venue Layout JSONB shape
 // Mirrors the layout JSONB stored in the venues table
 
 export interface VenueLayoutSeat {
@@ -47,7 +45,7 @@ export interface VenueLayoutFloor {
   global_seat_size?: number
 }
 
-// ── Venue ─────────────────────────────────────────────────────
+// Venue
 
 export interface Venue {
   id:         string

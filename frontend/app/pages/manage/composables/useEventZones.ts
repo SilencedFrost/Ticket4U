@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { Zone, ZoneFormState } from '../(types)/zone'
 
-export function useEventZones(initial: Zone[] = []) {
+export function useEventZones(sessionId: string, initial: Zone[] = []) {
   const zones = ref<Zone[]>([...initial])
 
   const showZoneModal = ref(false)
@@ -31,6 +31,7 @@ export function useEventZones(initial: Zone[] = []) {
     } else {
       zones.value.push({
         id:           'z-new-' + Date.now(),
+        sessionId,
         quantitySold: 0,
         ...formData,
         capacity,

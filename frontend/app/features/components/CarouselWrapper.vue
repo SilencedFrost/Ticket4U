@@ -282,6 +282,12 @@ const trackStyle = computed(() => ({
   align-items: center;
   position: relative;
   z-index: 2;
+  opacity: 50%;
+  transition: opacity 0.3s ease;
+}
+
+.arrow-container:hover {
+  opacity: 100%;
 }
 
 .carousel-viewport {

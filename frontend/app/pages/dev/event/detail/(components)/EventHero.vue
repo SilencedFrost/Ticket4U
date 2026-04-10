@@ -24,29 +24,38 @@ const emit = defineEmits(['buyClick']);
           <div class="col-12 h-auto">
             <div class="card d-flex flex-column flex-lg-row shadow-lg mx-auto overflow-hidden">
               <div class="card-body p-4 d-flex flex-column order-2 order-lg-1 col-12 col-lg-3">
-                <h5 class="text-reactive-primary fw-bold lh-sm mb-2">
+                <h5 class="text-reactive-primary fw-bold lh-sm mb-3">
                   {{ event.name }}
                 </h5>
-                <div class="mb-2 small">
+                <div class="d-flex mb-3 small">
                   <i class="bi bi-calendar-event text-reactive-primary me-1" />
-                  <span class="text-primary fw-semibold">
-                    {{ event.startDate }},
-                    <!-- {{ $d(new Date(event.date), 'short') }} -->
-                  </span>
+                  <div>
+                    <span class="text-primary fw-semibold">
+                      {{ $d(new Date(event.startDate), { hour: '2-digit', minute: '2-digit' }) }},
+                      {{ $d(new Date(event.startDate), 'short') }}
+                    </span>
+                  </div>
                 </div>
-                <div class="mb-2 text-reactive-secondary small">
+                <div
+                  v-if="event.venue?.name || event.addressLine"
+                  class="d-flex mb-3 text-reactive-secondary small"
+                >
                   <i class="bi bi-geo-alt-fill text-reactive-primary me-1" />
-                  <span class="text-primary fw-semibold">{{ event.venue }}</span>
-                  <!-- <p class="mb-0 small">{{  }}</p> -->
+                  <div class="">
+                    <span class="text-primary fw-semibold mb-2">{{ event.venue.name }}</span>
+                    <p v-if="event.addressLine" class="mb-0 text-muted extra-small">
+                      {{ event.addressLine }}
+                    </p>
+                  </div>
                 </div>
                 <div class="mt-auto">
                   <hr class="bg-reactive-secondary my-2" />
                   <p class="text-reactive-primary fw-semibold mb-1 text-xs">
-                    {{ $t('common.price.from') }}
+                    {{ $t('common.currency.from') }}
                   </p>
                   <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
                   <button
-                    class="btn btn-primary text-reactive-primary fw-bold w-100 py-1 small"
+                    class="btn btn-primary fw-bold w-100 py-1 small"
                     @click="emit('buyClick')"
                   >
                     {{ $t('common.action.buy') }}

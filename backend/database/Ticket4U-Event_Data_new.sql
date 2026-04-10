@@ -1122,7 +1122,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,8)  r
          CROSS JOIN generate_series(1,10) c
-WHERE z.name = 'SVIP'
+WHERE z.name = 'SVIP Lounge'
   AND e.name = 'V-Glow: The Cyber-Heritage Night';
 
 -- NEO-LUMINANCE: SVIP  (10 rows × 12 cols = 120)
@@ -1133,7 +1133,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,10) r
          CROSS JOIN generate_series(1,12) c
-WHERE z.name = 'SVIP'
+WHERE z.name = 'SVIP Deck'
   AND e.name = 'NEO-LUMINANCE: The Echo of Indochine';
 
 -- Techno-Sorcery: VIP  (8 rows × 10 cols = 80)
@@ -1144,7 +1144,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,8)  r
          CROSS JOIN generate_series(1,10) c
-WHERE z.name = 'VIP'
+WHERE z.name = 'VIP Scholars'
   AND e.name = 'Techno-Sorcery: The Zenith of AI & Robotics';
 
 -- Techno-Sorcery: Zone A  (6 rows × 20 cols = 120)
@@ -1220,7 +1220,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,10) r
          CROSS JOIN generate_series(1,10) c
-WHERE z.name = 'SVIP'
+WHERE z.name = 'SVIP Dream'
   AND e.name = 'THE DREAMCATCHER ARCHIPELAGO';
 
 -- KAIZEN: Chef's Table  (2 rows × 4 cols = 8)
@@ -1253,7 +1253,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,8)  r
          CROSS JOIN generate_series(1,10) c
-WHERE z.name = 'VIP'
+WHERE z.name = 'VIP Hammock'
   AND e.name = 'LUVIA: The Echo of Highlands';
 
 -- Scent of the Soul: VIP  (8 rows × 10 cols = 80)
@@ -1264,7 +1264,7 @@ FROM public.zones z
          JOIN public.events e ON es.event_id = e.id
          CROSS JOIN generate_series(1,8)  r
          CROSS JOIN generate_series(1,10) c
-WHERE z.name = 'VIP'
+WHERE z.name = 'VIP Sensory'
   AND e.name = 'Scent of the Soul: The Echoes of Vietnam';
 
 -- Scent of the Soul: Zone A  (6 rows × 20 cols = 120)

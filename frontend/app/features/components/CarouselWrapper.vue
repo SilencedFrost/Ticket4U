@@ -1,6 +1,4 @@
 <script setup lang="ts" generic="T">
-import { computed } from 'vue';
-
 const props = withDefaults(
   defineProps<{
     items: T[];
@@ -10,14 +8,16 @@ const props = withDefaults(
     chevronOffset?: number;
     chevronSize?: number;
     chevronInset?: number;
+    animationDuration?: number;
   }>(),
   {
     visibleCount: 1,
     mode: 'carousel',
     wrapAround: true,
     chevronOffset: 100,
-    chevronSize: 30,
-    chevronInset: 18,
+    chevronSize: 27,
+    chevronInset: 10,
+    animationDuration: 150,
   },
 );
 
@@ -26,6 +26,7 @@ defineSlots<{
 }>();
 
 const currentIndex = ref<number>(0);
+const displayedIndex = ref<number>(0);
 
 const maxIndex = computed<number>(() => {
   if (props.mode === 'page') {
@@ -35,12 +36,15 @@ const maxIndex = computed<number>(() => {
   }
 });
 
+const direction = ref<'next' | 'prev' | null>(null);
+const isAnimating = ref<boolean>(false);
+
 const activeArray = computed<T[]>(() => {
   if (props.mode === 'page') {
-    const offset = currentIndex.value * props.visibleCount;
+    const offset = displayedIndex.value * props.visibleCount;
     return props.items.slice(offset, offset + props.visibleCount);
   } else {
-    const start = currentIndex.value;
+    const start = displayedIndex.value;
     const end = start + props.visibleCount;
 
     if (end <= props.items.length) {
@@ -55,9 +59,68 @@ const activeArray = computed<T[]>(() => {
   }
 });
 
+const prevItems = computed<T[]>(() => {
+  if (props.mode !== 'carousel') return [];
+
+  const result: T[] = [];
+  const len = props.items.length;
+
+  for (let i = 1; i <= 2; i++) {
+    const idx = displayedIndex.value - i;
+
+    let item;
+    if (idx < 0) {
+      if (props.wrapAround) {
+        item = props.items[(idx + len) % len];
+      } else {
+        break;
+      }
+    } else {
+      item = props.items[idx];
+    }
+    if (item !== undefined) result.unshift(item);
+  }
+
+  return result;
+});
+
+const nextItems = computed<T[]>(() => {
+  if (props.mode !== 'carousel') return [];
+
+  const result: T[] = [];
+  const len = props.items.length;
+
+  for (let i = 1; i <= 2; i++) {
+    const idx = displayedIndex.value + props.visibleCount + (i - 1);
+
+    let item;
+    if (idx >= len) {
+      if (props.wrapAround) {
+        item = props.items[idx % len];
+      } else {
+        break;
+      }
+    } else {
+      item = props.items[idx];
+    }
+    if (item !== undefined) result.push(item);
+  }
+
+  return result;
+});
+
 function next() {
+  if (isAnimating.value) return;
+
+  if (props.mode === 'carousel') {
+    direction.value = 'next';
+    isAnimating.value = true;
+  }
+
   if (props.mode === 'page') {
-    currentIndex.value = Math.min(currentIndex.value + 1, maxIndex.value);
+    const targetIndex = Math.min(currentIndex.value + 1, maxIndex.value);
+    currentIndex.value = targetIndex;
+    displayedIndex.value = targetIndex;
   } else if (props.wrapAround) {
     currentIndex.value = (currentIndex.value + 1) % props.items.length;
   } else {
@@ -66,8 +129,17 @@ function next() {
 }
 
 function prev() {
+  if (isAnimating.value) return;
+
+  if (props.mode === 'carousel') {
+    direction.value = 'prev';
+    isAnimating.value = true;
+  }
+
   if (props.mode === 'page') {
-    currentIndex.value = Math.max(currentIndex.value - 1, 0);
+    const targetIndex = Math.max(currentIndex.value - 1, 0);
+    currentIndex.value = targetIndex;
+    displayedIndex.value = targetIndex;
   } else if (props.wrapAround) {
     currentIndex.value = (currentIndex.value - 1 + props.items.length) % props.items.length;
   } else {
@@ -82,6 +154,11 @@ const gridStyle = computed(() => ({
   gridTemplateColumns: `repeat(${props.visibleCount}, 1fr)`,
   gap: '0.5rem',
 }));
+
+const trackStyle = computed(() => ({
+  '--animation-duration': `${props.animationDuration}ms`,
+  '--step': `${33.333 / props.visibleCount}%`,
+}));
 </script>
 
 <template>
@@ -92,7 +169,7 @@ const gridStyle = computed(() => ({
         marginRight: `-${chevronInset}px`,
         paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
         paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
-        visibility: currentIndex === 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+        visibility: currentIndex <= 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
       }"
     >
       <i
@@ -102,9 +179,62 @@ const gridStyle = computed(() => ({
       />
     </div>
 
-    <div class="carousel-content flex-grow-1" :style="gridStyle">
-      <div v-for="item in activeArray" :key="JSON.stringify(item)">
-        <slot name="item" :item="item" />
+    <div v-if="mode === 'carousel'" class="carousel-viewport flex-grow-1">
+      <div
+        class="carousel-track"
+        :class="[
+          mode === 'carousel'
+            ? direction === 'next'
+              ? 'slide-next'
+              : direction === 'prev'
+                ? 'slide-prev'
+                : ''
+            : '',
+        ]"
+        :style="trackStyle"
+        @animationend="
+          displayedIndex = currentIndex;
+          isAnimating = false;
+          direction = null;
+        "
+      >
+        <!-- prev preload (carousel only) -->
+        <div
+          v-if="mode === 'carousel'"
+          class="carousel-preload carousel-preload--prev"
+          :style="gridStyle"
+        >
+          <div v-for="i in visibleCount - prevItems.length" :key="i"></div>
+          <div v-for="(item, index) in prevItems" :key="index">
+            <slot v-if="item" name="item" :item="item" />
+          </div>
+        </div>
+
+        <!-- active -->
+        <div class="carousel-active" :style="gridStyle">
+          <div v-for="(item, index) in activeArray" :key="index">
+            <slot v-if="item" name="item" :item="item" />
+          </div>
+        </div>
+
+        <!-- next preload (carousel only) -->
+        <div
+          v-if="mode === 'carousel'"
+          class="carousel-preload carousel-preload--next"
+          :style="gridStyle"
+        >
+          <div v-for="(item, index) in nextItems" :key="index">
+            <slot v-if="item" name="item" :item="item" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="page-viewport flex-grow-1">
+      <div :style="gridStyle">
+        <div v-for="(item, index) in activeArray" :key="index">
+          <slot v-if="item" name="item" :item="item" />
+        </div>
       </div>
     </div>
 
@@ -115,7 +245,7 @@ const gridStyle = computed(() => ({
         paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
         paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
         visibility:
-          currentIndex === maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+          currentIndex >= maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
       }"
     >
       <i
@@ -135,5 +265,54 @@ const gridStyle = computed(() => ({
   align-items: center;
   position: relative;
   z-index: 2;
+}
+
+.carousel-viewport {
+  overflow: visible;
+  position: relative;
+  min-width: 0;
+}
+
+.carousel-track {
+  display: flex;
+  flex-direction: row;
+  width: 300%;
+  transform: translateX(-33.333%);
+  margin-left: -0.75rem;
+}
+
+.carousel-preload--prev,
+.carousel-active,
+.carousel-preload--next {
+  width: 33.333%;
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.carousel-track.slide-next {
+  animation: slide-to-next var(--animation-duration) ease-out forwards;
+}
+
+.carousel-track.slide-prev {
+  animation: slide-to-prev var(--animation-duration) ease-out forwards;
+}
+
+@keyframes slide-to-next {
+  from {
+    transform: translateX(-33.333%);
+  }
+  to {
+    transform: translateX(calc(-33.333% - var(--step)));
+  }
+}
+
+@keyframes slide-to-prev {
+  from {
+    transform: translateX(-33.333%);
+  }
+  to {
+    transform: translateX(calc(-33.333% + var(--step)));
+  }
 }
 </style>

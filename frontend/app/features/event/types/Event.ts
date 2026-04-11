@@ -20,7 +20,7 @@ export interface EventSummary {
   minPrice: number;
 }
 
-export interface EventResponse {
+export interface Event {
   id: string;
   name: string;
   organizerId: string;

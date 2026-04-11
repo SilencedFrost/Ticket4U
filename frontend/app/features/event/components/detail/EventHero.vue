@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { EventResponse } from '@/features/event/types/Event';
+import type { Event } from '@/features/event/types/Event';
 const { formatPrice } = useFormatter();
 
 defineProps<{
-  event: EventResponse;
+  event: Event;
 }>();
 
 const emit = defineEmits(['buyClick']);

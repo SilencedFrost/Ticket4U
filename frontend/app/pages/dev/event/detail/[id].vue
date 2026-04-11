@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { EventResponse } from '@/features/event/types/Event';
-import type { OrganizerSummary } from '@/features/auth/types/Organizer';
+import type { Event } from '@/features/event/types/Event';
+import type { OrganizerSummary } from '~/features/Organizer';
 import EventHero from '../../../../features/event/components/detail/EventHero.vue';
 import EventNav from '../../../../features/event/components/detail/EventNav.vue';
 import EventAbout from '../../../../features/event/components/detail/EventAbout.vue';
@@ -10,7 +10,7 @@ import EventRelated from '../../../../features/event/components/detail/EventRela
 const config = useRuntimeConfig();
 const route = useRoute();
 
-const event = ref<EventResponse | null>(null);
+const event = ref<Event | null>(null);
 const organizer = ref<OrganizerSummary | null>(null);
 
 async function getEvent() {

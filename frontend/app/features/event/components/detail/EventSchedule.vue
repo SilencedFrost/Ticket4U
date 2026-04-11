@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { EventResponse } from '@/features/event/types/Event';
+import type { Event } from '@/features/event/types/Event';
 
 defineProps<{
-  event: EventResponse;
+  event: Event;
 }>();
 </script>
 

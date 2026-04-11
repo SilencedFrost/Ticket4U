@@ -46,22 +46,39 @@ function removeVietnameseTones(str: string): string {
     .trim();
 }
 
+// TODO: implement multi-language category search.
 function getFilteredList() {
   const query = searchQuery.value.toLowerCase();
+  const normalizedQuery = removeVietnameseTones(query);
 
-  let list = categoryList.value;
+  if (!categoryList.value.length) return [];
 
-  if (query) {
-    list = list.filter((item) =>
-      removeVietnameseTones(getCategoryLabel(item.name))
-        .toLowerCase()
-        .includes(removeVietnameseTones(query)),
-    );
-  }
-
-  return list.filter(
+  let list = categoryList.value.filter(
     (item) => !selectedCategories.value.some((selected) => selected.id === item.id),
   );
+
+  if (query) {
+    list = list.filter((item) => {
+      const label = getCategoryLabel(item.name).toLowerCase();
+      return removeVietnameseTones(label).includes(normalizedQuery);
+    });
+
+    list = list.sort((a, b) => {
+      const labelA = removeVietnameseTones(getCategoryLabel(a.name).toLowerCase());
+      const labelB = removeVietnameseTones(getCategoryLabel(b.name).toLowerCase());
+
+      const aStartsWith = labelA.startsWith(normalizedQuery) ? 1 : 0;
+      const bStartsWith = labelB.startsWith(normalizedQuery) ? 1 : 0;
+
+      if (aStartsWith !== bStartsWith) {
+        return bStartsWith - aStartsWith;
+      }
+
+      return labelA.localeCompare(labelB);
+    });
+  }
+
+  return list;
 }
 
 const shouldShowOverlay = computed(getShouldShowOverlay);

@@ -6,6 +6,7 @@ import EventNav from './(components)/EventNav.vue';
 import EventAbout from './(components)/EventAbout.vue';
 import EventSchedule from './(components)/EventSchedule.vue';
 import EventOrganizer from './(components)/EventOrganizer.vue';
+import EventRelated from './(components)/EventRelated.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 
@@ -57,6 +58,7 @@ onMounted(() => getEvent());
         <event-organizer v-if="organizer" :organizer-data="organizer" />
       </div>
     </div>
+    <event-related />
   </div>
   <div v-else>Loading event...</div>
 </template>

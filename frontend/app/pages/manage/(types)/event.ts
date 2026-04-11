@@ -1,5 +1,11 @@
 import type { Session } from './session'
 
+export interface BannerUrl {
+  wide:   string
+  square: string
+  tall:   string
+}
+
 export type EventStatus =
   | 'EDITING'
   | 'SCHEDULED'
@@ -18,7 +24,7 @@ export interface Event {
   categoryIds:         number[]
   addressLine:         string
   status:              EventStatus
-  bannerUrl:           string
+  bannerUrl:           BannerUrl
   createdAt:           string
   updatedAt?:          string | null
   cancelledAt?:        string | null
@@ -49,7 +55,7 @@ export interface EventFormState {
   addressLine: string
   startDate:   string   // datetime-local string, for first session
   endDate:     string   // datetime-local string, for first session
-  bannerUrl:   string
+  bannerUrl:   BannerUrl
   venueId:     string
   longitude?:  number | null
   latitude?:   number | null

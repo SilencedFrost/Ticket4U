@@ -63,7 +63,7 @@ function toggleCategory(id: number) {
               class="btn btn-sm"
               :class="form.categoryIds.includes(cat.id) ? 'btn-primary' : 'btn-outline-secondary'"
               @click="toggleCategory(cat.id)"
-            >{{ cat.name }}</button>
+            >{{ $t(cat.name) }}</button>
           </div>
           <div v-if="errors.categoryIds" class="text-danger small mt-1">{{ errors.categoryIds }}</div>
         </div>
@@ -134,14 +134,43 @@ function toggleCategory(id: number) {
           <label class="form-label small fw-semibold text-reactive-secondary">
             {{ $t('organizer.event_form.step1.banner_url') }}
           </label>
-          <input
-            v-model="form.bannerUrl"
-            type="url"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
-            :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
-          />
-          <div v-if="form.bannerUrl" class="mt-2">
-            <img :src="form.bannerUrl" class="rounded" style="max-height:160px;object-fit:cover;width:100%;"/>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label small text-reactive-secondary mb-1">Wide (16:9)</label>
+              <input
+                v-model="form.bannerUrl.wide"
+                type="url"
+                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+              />
+              <div v-if="form.bannerUrl.wide" class="mt-2">
+                <img :src="form.bannerUrl.wide" class="rounded" style="max-height:120px;object-fit:cover;width:100%;"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-reactive-secondary mb-1">Square (1:1)</label>
+              <input
+                v-model="form.bannerUrl.square"
+                type="url"
+                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+              />
+              <div v-if="form.bannerUrl.square" class="mt-2">
+                <img :src="form.bannerUrl.square" class="rounded" style="max-height:120px;object-fit:cover;width:100%;aspect-ratio:1;"/>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-reactive-secondary mb-1">Tall (2:3)</label>
+              <input
+                v-model="form.bannerUrl.tall"
+                type="url"
+                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+              />
+              <div v-if="form.bannerUrl.tall" class="mt-2">
+                <img :src="form.bannerUrl.tall" class="rounded" style="max-height:120px;object-fit:cover;width:100%;"/>
+              </div>
+            </div>
           </div>
         </div>
 

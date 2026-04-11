@@ -21,6 +21,7 @@ const form = reactive<ZoneFormState>({
   purchaseLimit: null,
   descriptionVi: '',
   descriptionEn: '',
+  giftImageUrl:  null,
   perks:         [],
   gridRows:      5,
   gridCols:      10,
@@ -93,6 +94,7 @@ onMounted(() => {
       purchaseLimit: props.zone.purchaseLimit ?? null,
       descriptionVi: props.zone.descriptionVi ?? '',
       descriptionEn: props.zone.descriptionEn ?? '',
+      giftImageUrl:  props.zone.giftImageUrl ?? null,
       perks:         parsedPerks(props.zone.perks),
       gridRows:      props.zone.gridRows ?? (seatCount > 0 ? Math.ceil(Math.sqrt(seatCount)) : 5),
       gridCols:      props.zone.gridCols ?? (seatCount > 0 ? Math.ceil(seatCount / Math.ceil(Math.sqrt(seatCount))) : 10),
@@ -224,6 +226,20 @@ onMounted(() => {
           </ul>
           <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
           <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
+        </div>
+
+        <!-- Gift Image URL -->
+        <div class="col-12">
+          <label class="form-label small text-reactive-secondary">Gift Image URL</label>
+          <input
+            v-model="form.giftImageUrl"
+            type="url"
+            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            placeholder="https://..."
+          />
+          <div v-if="form.giftImageUrl" class="mt-2">
+            <img :src="form.giftImageUrl" class="rounded" style="max-height:100px;object-fit:cover;width:100%;"/>
+          </div>
         </div>
 
         <!-- Perks -->

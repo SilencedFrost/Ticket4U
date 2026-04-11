@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import {
   mockEvents,
-  type MockEvent,
+  type Event,
   getTicketsSold,
   getTotalCapacity,
   getRevenue,
@@ -18,7 +18,7 @@ const { t: $t } = useI18n()
 const localePath = useLocalePath()
 
 // Local reactive copy so deletes work without mutating the shared array
-const events = ref<MockEvent[]>([...mockEvents])
+const events = ref<Event[]>([...mockEvents])
 
 // ── Filters ────────────────────────────────────────────────
 const searchQuery  = ref('')
@@ -169,7 +169,7 @@ const doDelete = () => {
           <tr v-for="event in filteredEvents" :key="event.id">
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
-                <img :src="event.bannerUrl" class="event-thumb rounded" alt=""/>
+                <img :src="event.bannerUrl.wide" class="event-thumb rounded" alt=""/>
                 <div>
                   <div class="fw-semibold text-reactive-primary">{{ event.name }}</div>
                   <small class="text-reactive-secondary">
@@ -199,7 +199,7 @@ const doDelete = () => {
                 <NuxtLink :to="localePath(`/manage/event/${event.id}`)" class="btn btn-sm btn-outline-primary" :title="$t('organizer.events.action.edit')">
                   <i class="bi bi-pencil"/>
                 </NuxtLink>
-                <NuxtLink :to="`/dashboard/${event.id}`" target="_blank" class="btn btn-sm btn-outline-secondary" :title="$t('organizer.events.action.preview')">
+                <NuxtLink :to="localePath(`/manage/event/${event.id}/preview`)" target="_blank" class="btn btn-sm btn-outline-secondary" :title="$t('organizer.events.action.preview')">
                   <i class="bi bi-eye"/>
                 </NuxtLink>
                 <button class="btn btn-sm btn-outline-danger" :title="$t('organizer.events.action.delete')" @click="confirmDelete(event)">

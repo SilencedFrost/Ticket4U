@@ -9,7 +9,7 @@ import type { Category }          from './(types)/category'
 import type { Venue, VenueLayout } from './(types)/venue'
 import type { Zone }               from './(types)/zone'
 import type { Session }            from './(types)/session'
-import type { Event, EventStatus, EventFormState, EventContentState } from './(types)/event'
+import type { Event, EventStatus, EventFormState, EventContentState, BannerUrl } from './(types)/event'
 import type { Profile }            from './(types)/profile'
 import type { Seat }               from './(types)/seat'
 import type { OrganizerStaff, AssignableRole } from './(types)/staff'
@@ -17,7 +17,7 @@ import type { OrganizerStaff, AssignableRole } from './(types)/staff'
 // Re-export types so existing imports still work
 export type {
   Category, Venue, VenueLayout, Zone, Session,
-  Event, EventStatus, EventFormState, EventContentState,
+  Event, EventStatus, EventFormState, EventContentState, BannerUrl,
   Profile, Seat, OrganizerStaff, AssignableRole,
 }
 
@@ -34,11 +34,36 @@ export const mockProfile: Profile = {
 // ── Categories ────────────────────────────────────────────────
 
 export const mockCategories: Category[] = [
-  { id: 1, name: 'Âm nhạc' },
-  { id: 2, name: 'Hội thảo' },
-  { id: 3, name: 'Sân khấu - Nghệ thuật' },
-  { id: 4, name: 'Thể thao' },
-  { id: 5, name: 'Giải trí về đêm' },
+  { id: 0,  name: 'categories.concert'    },
+  { id: 1,  name: 'categories.festival'   },
+  { id: 2,  name: 'categories.theater'    },
+  { id: 3,  name: 'categories.comedy'     },
+  { id: 4,  name: 'categories.sports'     },
+  { id: 5,  name: 'categories.conference' },
+  { id: 6,  name: 'categories.workshop'   },
+  { id: 7,  name: 'categories.seminar'    },
+  { id: 8,  name: 'categories.networking' },
+  { id: 9,  name: 'categories.exhibition' },
+  { id: 10, name: 'categories.nightlife'  },
+  { id: 11, name: 'categories.wellness'   },
+  { id: 12, name: 'categories.food'       },
+  { id: 13, name: 'categories.drinks'     },
+  { id: 14, name: 'categories.dance'      },
+  { id: 15, name: 'categories.film'       },
+  { id: 16, name: 'categories.gaming'     },
+  { id: 17, name: 'categories.outdoor'    },
+  { id: 18, name: 'categories.charity'    },
+  { id: 19, name: 'categories.family'     },
+  { id: 20, name: 'categories.cultural'   },
+  { id: 21, name: 'categories.fashion'    },
+  { id: 22, name: 'categories.tech'       },
+  { id: 23, name: 'categories.art'        },
+  { id: 24, name: 'categories.literature' },
+  { id: 25, name: 'categories.science'    },
+  { id: 26, name: 'categories.religion'   },
+  { id: 27, name: 'categories.politics'   },
+  { id: 28, name: 'categories.travel'     },
+  { id: 29, name: 'categories.virtual'    },
 ]
 
 // ── Venues ────────────────────────────────────────────────────
@@ -506,7 +531,7 @@ export const mockEvents: Event[] = [
     categoryIds: [1, 3],
     addressLine: 'Sân Lễ Hội Đền Hùng, Huyện Gia Viễn, Tỉnh Ninh Bình',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg', square: 'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg', tall: 'https://salt.tkbcdn.com/ts/ds/25/e6/b4/d79786df1e38c39beabe33c462cc381e.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<div style="max-width:800px;margin:auto;font-family:\'Open Sans\',sans-serif;text-align:center;"><h1 style="color:#d63384;">HÀ ANH TUẤN - CHÂN TRỜI RỰC RỠ</h1><p>Đêm nhạc huyền thoại với giọng ca đầy cảm xúc của Hà Anh Tuấn.</p></div>',
     aboutEn: '<div style="max-width:800px;margin:auto;font-family:\'Open Sans\',sans-serif;text-align:center;"><h1 style="color:#d63384;">HÀ ANH TUẤN - BRILLIANT HORIZON</h1><p>A legendary music night featuring the emotional voice of Ha Anh Tuan.</p></div>',
@@ -550,7 +575,7 @@ export const mockEvents: Event[] = [
     categoryIds: [4],
     addressLine: 'CIS Arena, Quận 7, TP. Hồ Chí Minh',
     status: 'FINISHED',
-    bannerUrl: 'https://cdn.nextix.cloud/nextix/81/saigonheat_1_2996fb89aa.png?updated_at=2024-06-20T06:55:12.533Z',
+    bannerUrl: { wide: 'https://cdn.nextix.cloud/nextix/81/saigonheat_1_2996fb89aa.png?updated_at=2024-06-20T06:55:12.533Z', square: 'https://cdn.nextix.cloud/nextix/81/saigonheat_1_2996fb89aa.png?updated_at=2024-06-20T06:55:12.533Z', tall: 'https://cdn.nextix.cloud/nextix/81/saigonheat_1_2996fb89aa.png?updated_at=2024-06-20T06:55:12.533Z' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Chào đón người hâm mộ quay trở lại chảo lửa CIS.</p>',
     aboutEn: '<p>Welcome fans back to the CIS arena.</p>',
@@ -594,7 +619,7 @@ export const mockEvents: Event[] = [
     categoryIds: [1],
     addressLine: 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg', square: 'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg', tall: 'https://salt.tkbcdn.com/ts/ds/9f/0b/d4/f19a8a171d730418077d310ff82e7224.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Hành trình âm nhạc indie đầy mộng mơ với sự góp mặt của Đen Vâu, Chillies, và Vũ.</p>',
     aboutEn: '<p>A dreamy indie music journey featuring Den Vau, Chillies, and Vu.</p>',
@@ -638,7 +663,7 @@ export const mockEvents: Event[] = [
     categoryIds: [1],
     addressLine: 'Mây Lang Thang, Phường 4, Thành phố Đà Lạt, Tỉnh Lâm Đồng',
     status: 'PREMIERE',
-    bannerUrl: 'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg',
+    bannerUrl: { wide: 'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg', square: 'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg', tall: 'https://images.tkbcdn.com/2/608/332/Upload/eventcover/2023/02/09/01E775.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Thưởng thức những giai điệu nhạc Trịnh bất hủ giữa khung cảnh đồi thông mộng mơ của Đà Lạt.</p>',
     aboutEn: '<p>Enjoy timeless Trinh melodies amidst the dreamy pine hills of Dalat.</p>',
@@ -681,7 +706,7 @@ export const mockEvents: Event[] = [
     categoryIds: [3],
     addressLine: 'Nhà Hát Bến Thành, Quận 1, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png', square: 'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png', tall: 'https://salt.tkbcdn.com/ts/ds/30/a9/34/a0c1474e974b399040081c8c98492939.png' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Chương trình kịch thiếu nhi được mong chờ nhất hè này.</p>',
     aboutEn: '<p>The most anticipated children\'s theater show this summer.</p>',
@@ -724,7 +749,7 @@ export const mockEvents: Event[] = [
     categoryIds: [1],
     addressLine: 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg', square: 'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg', tall: 'https://salt.tkbcdn.com/ts/ds/da/e7/ff/44433776efbd1c9e0f56570c16aa0d93.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Lễ hội âm nhạc điện tử quốc tế lớn nhất khu vực.</p>',
     aboutEn: '<p>The biggest international EDM festival in the region.</p>',
@@ -768,7 +793,7 @@ export const mockEvents: Event[] = [
     categoryIds: [3],
     addressLine: 'Cà phê Tinh Tế, Quận 3, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg', square: 'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg', tall: 'https://salt.tkbcdn.com/ts/ds/9e/f5/96/cc2541579f1e20c7ad7bcb74083bf669.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Đêm hài độc thoại giải tỏa căng thẳng cuối tuần.</p>',
     aboutEn: '<p>A stand-up comedy night to unwind your weekend stress.</p>',
@@ -799,7 +824,7 @@ export const mockEvents: Event[] = [
     categoryIds: [2],
     addressLine: 'GEM Center, Quận 1, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg', square: 'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg', tall: 'https://salt.tkbcdn.com/ts/ds/f8/cd/d1/d4b92bf62a49463c0650f1cf053be65f.jpg' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Hội thảo công nghệ lớn nhất năm với các chuyên gia AI, Cloud, Blockchain.</p>',
     aboutEn: '<p>The biggest technology conference of the year.</p>',
@@ -830,7 +855,7 @@ export const mockEvents: Event[] = [
     categoryIds: [2],
     addressLine: 'Dreamplex Điện Biên Phủ, Quận Bình Thạnh, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png',
+    bannerUrl: { wide: 'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png', square: 'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png', tall: 'https://salt.tkbcdn.com/ts/ds/5b/0d/82/e97fb295a99a2df11a1975affb349409.png' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Chia sẻ bí quyết tăng trưởng không cần ngân sách lớn.</p>',
     aboutEn: '<p>Sharing growth secrets without a big budget.</p>',
@@ -861,7 +886,7 @@ export const mockEvents: Event[] = [
     categoryIds: [3],
     addressLine: 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh',
     status: 'PREMIERE',
-    bannerUrl: 'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990',
+    bannerUrl: { wide: 'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990', square: 'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990', tall: 'https://theme.hstatic.net/200000815177/1001237592/14/custompage_gioithieu_banner03.jpg?v=2990' },
     createdAt: new Date().toISOString(),
     aboutVi: '<p>Triển lãm nghệ thuật tương tác đa giác quan với công nghệ ánh sáng hiện đại.</p>',
     aboutEn: '<p>Multi-sensory interactive art exhibition with modern lighting technology.</p>',

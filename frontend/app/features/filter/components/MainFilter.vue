@@ -37,13 +37,26 @@ const selectedCategories = ref<CategorySummary[]>([]);
 
 const filteredList = computed(getFilteredList);
 
+function removeVietnameseTones(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .trim();
+}
+
 function getFilteredList() {
   const query = searchQuery.value.toLowerCase();
 
   let list = categoryList.value;
 
   if (query) {
-    list = list.filter((item) => getCategoryLabel(item.name).toLowerCase().includes(query));
+    list = list.filter((item) =>
+      removeVietnameseTones(getCategoryLabel(item.name))
+        .toLowerCase()
+        .includes(removeVietnameseTones(query)),
+    );
   }
 
   return list.filter(

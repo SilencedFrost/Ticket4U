@@ -20,12 +20,21 @@ defineProps<{
     </div>
 
     <div class="mb-4 w-100 d-flex justify-content-center">
-      <img
-        v-img-fallback="[900, 1000]"
-        :src="event.seatingPlanImageUrl"
-        alt=""
-        class="w-75 rounded-2 object-fit-cover img-fluid mh-100"
-      />
+      <template v-if="event.seatingPlanImageUrl">
+        <img
+          v-img-fallback="[900, 1000]"
+          :src="event.seatingPlanImageUrl"
+          alt="Sơ đồ chỗ ngồi"
+          class="w-75 rounded-2 object-fit-cover img-fluid mh-100"
+        />
+      </template>
+
+      <template v-else>
+        <div class="placeholder-seatmap w-75 rounded-2 text-center py-5">
+          <i class="bi bi-geo-alt-fill fs-1 text-reactive-secondary"></i>
+          <p class="text-reactive-secondary lh-sm mb-0">Seat map currently unavailable</p>
+        </div>
+      </template>
     </div>
     <div class="border-bottom my-4" />
     <div class="d-flex justify-content-between align-items-center w-100 px-3">

@@ -125,8 +125,9 @@ const options: AppearanceOption[] = [
 
 @media (min-width: 992px) {
   .appearance-card-preview-frame {
-    --appearance-preview-max-height: 152px;
-    width: min(100%, calc(var(--appearance-preview-max-height) * 16 / 9));
+    max-height: 152px;
+    aspect-ratio: 16 / 9;
+    width: auto;
   }
 }
 

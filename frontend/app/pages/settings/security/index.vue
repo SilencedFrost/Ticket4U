@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SettingsLayout from '../../../features/settings/components/SettingsLayout.vue';
-import ChangePasswordForm from './components/ChangePasswordForm.vue';
-import SessionList from './components/SessionList.vue';
+import ChangePasswordForm from '../../../features/settings/security/components/ChangePasswordForm.vue';
+import SessionList from '../../../features/settings/security/components/SessionList.vue';
 
 // TODO: parse & format user agent string thành dạng dễ đọc
 // (vd: "Chrome 120 trên Windows 10" thay vì raw UA string) - cần nghiên cứu thêm

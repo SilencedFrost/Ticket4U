@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { FetchError } from 'ofetch';
-import type { ChangeInfo } from '../../../../features/settings/types/changeInfo';
-import type { FieldErrors } from '../../../../features/settings/types/fieldErrors';
-import type { ProfileForm } from '../../../../features/settings/types/profileForm';
-import { useSettingsApi } from '../../../../features/settings/composables/useSettingsApi';
+import type { ChangeInfo } from '../../types/changeInfo';
+import type { FieldErrors } from '../../types/fieldErrors';
+import type { ProfileForm } from '../../types/profileForm';
+import { useSettingsApi } from '../../composables/useSettingsApi';
 import AvatarUpload from './AvatarUpload.vue';
 import PersonalInfoForm from './PersonalInfoForm.vue';
 

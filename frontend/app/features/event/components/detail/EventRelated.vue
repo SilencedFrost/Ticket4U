@@ -33,9 +33,9 @@ const handleEventClick = (eventId: string) => {
 <template>
   <section class="py-5">
     <div class="container-xxl">
-      <h2 class="text-reactive-primary text-center fw-bold mb-5">
+      <h4 class="text-reactive-primary text-center fw-bold mb-5">
         {{ $t('event_detail.section.related') }}
-      </h2>
+      </h4>
 
       <EventGrid :events="eventList" take="{8}" @event-click="handleEventClick" />
     </div>

@@ -26,7 +26,7 @@ watch(locale, () => {
 </script>
 <template>
   <section id="about-section" class="card m-3 mx-auto overflow-hidden mw-100 pb-4">
-    <div class="bg-reactive-gray w-100 p-3 d-flex justify-content-between align-items-center">
+    <div class="bg-reactive-gray w-100 p-2 d-flex justify-content-center align-items-center">
       <h5 class="text-reactive-primary fw-bold mb-0">
         {{ $t('event_detail.section.about') }}
       </h5>

@@ -36,16 +36,24 @@ const emit = defineEmits(['buyClick']);
                     </span>
                   </div>
                 </div>
-                <div
-                  v-if="event.venue?.name || event.addressLine"
-                  class="d-flex mb-3 text-reactive-secondary small"
-                >
+                <div class="d-flex mb-3 text-reactive-secondary small">
                   <i class="bi bi-geo-alt-fill text-reactive-primary me-1" />
-                  <div class="">
-                    <span class="text-primary fw-semibold mb-2">{{ event.venue.name }}</span>
-                    <p v-if="event.addressLine" class="mb-0 text-muted extra-small">
-                      {{ event.addressLine }}
-                    </p>
+
+                  <div class="d-flex flex-column">
+                    <template v-if="event.venue?.name || event.addressLine">
+                      <span v-if="event.venue?.name" class="text-primary fw-semibold mb-1">
+                        {{ event.venue.name }}
+                      </span>
+                      <p v-if="event.addressLine" class="mb-0 text-muted extra-small">
+                        {{ event.addressLine }}
+                      </p>
+                    </template>
+
+                    <template v-else>
+                      <p class="mb-0 text-primary extra-small italic fw-semibold">
+                        Contact organizer for details
+                      </p>
+                    </template>
                   </div>
                 </div>
                 <div class="mt-auto">

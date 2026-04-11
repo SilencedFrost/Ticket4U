@@ -1,8 +1,30 @@
 <script setup lang="ts">
 import type { OrganizerSummary } from '~/features/Organizer';
-defineProps<{
-  organizerData: OrganizerSummary;
+
+const props = defineProps<{
+  organizerId: string | null;
 }>();
+
+const config = useRuntimeConfig();
+
+const organizer = ref<OrganizerSummary | null>(null);
+
+async function fetchOrganizer(id: string) {
+  try {
+    organizer.value = await $fetch<OrganizerSummary>(
+      `${config.public.userServiceUrl}/public/organizers/${id}`,
+    );
+  } catch (err) {
+    console.warn(err);
+    organizer.value = null;
+  }
+}
+
+onMounted(() => {
+  if (props.organizerId) {
+    fetchOrganizer(props.organizerId);
+  }
+});
 </script>
 
 <template>
@@ -19,7 +41,7 @@ defineProps<{
       <div class="flex-shrink-0 text-center">
         <img
           v-img-fallback="[400, 400]"
-          :src="organizerData.logo_url"
+          :src="organizer?.logo_url"
           alt="Organizer"
           class="img-fluid w-75 rounded-3 border shadow-sm"
         />
@@ -27,10 +49,10 @@ defineProps<{
 
       <div class="flex-grow-1 text-center text-md-start">
         <h4 class="text-reactive-primary fw-bold mb-2 fs-5">
-          {{ organizerData.name }}
+          {{ organizer?.name }}
         </h4>
         <p class="text-reactive-primary lh-base small mb-0">
-          {{ organizerData.description }}
+          {{ organizer?.description }}
         </p>
       </div>
     </div>

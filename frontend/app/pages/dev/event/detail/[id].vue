@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Event } from '@/features/event/types/Event';
-import type { OrganizerSummary } from '~/features/Organizer';
 import EventHero from '../../../../features/event/components/detail/EventHero.vue';
 import EventNav from '../../../../features/event/components/detail/EventNav.vue';
 import EventAbout from '../../../../features/event/components/detail/EventAbout.vue';
@@ -11,7 +10,6 @@ const config = useRuntimeConfig();
 const route = useRoute();
 
 const event = ref<Event | null>(null);
-const organizer = ref<OrganizerSummary | null>(null);
 const isLoading = ref(true);
 
 async function getEvent() {
@@ -24,27 +22,11 @@ async function getEvent() {
         method: 'GET',
       },
     );
-
-    if (event.value?.organizerId) {
-      fetchOrganizer(event.value.organizerId);
-    }
   } catch (e) {
     console.log(e);
     event.value = null;
-    organizer.value = null;
   } finally {
     isLoading.value = false;
-  }
-}
-
-async function fetchOrganizer(id: string) {
-  try {
-    organizer.value = await $fetch<OrganizerSummary>(
-      `${config.public.userServiceUrl}/public/organizers/${id}`,
-    );
-  } catch (err) {
-    console.warn(err);
-    organizer.value = null;
   }
 }
 
@@ -113,7 +95,7 @@ onMounted(() => getEvent());
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
         <!-- To do: Add event ticket section here -->
-        <event-organizer v-if="organizer" :organizer-data="organizer" />
+        <event-organizer v-if="event.organizerId" :organizer-id="event.organizerId" />
       </div>
     </div>
     <event-related />

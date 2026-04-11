@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { EventResponse } from '@/features/event/types/Event';
 import type { OrganizerSummary } from '@/features/auth/types/Organizer';
-import EventHero from './(components)/EventHero.vue';
-import EventNav from './(components)/EventNav.vue';
-import EventAbout from './(components)/EventAbout.vue';
-import EventSchedule from './(components)/EventSchedule.vue';
-import EventOrganizer from './(components)/EventOrganizer.vue';
-import EventRelated from './(components)/EventRelated.vue';
+import EventHero from '../../../../features/event/components/detail/EventHero.vue';
+import EventNav from '../../../../features/event/components/detail/EventNav.vue';
+import EventAbout from '../../../../features/event/components/detail/EventAbout.vue';
+import EventSchedule from '../../../../features/event/components/detail/EventSchedule.vue';
+import EventOrganizer from '../../../../features/event/components/detail/EventOrganizer.vue';
+import EventRelated from '../../../../features/event/components/detail/EventRelated.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 

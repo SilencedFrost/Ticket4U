@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OrganizerSummary } from '@/features/auth/types/Organizer';
+import type { OrganizerSummary } from '~/features/Organizer';
 defineProps<{
   organizerData: OrganizerSummary;
 }>();

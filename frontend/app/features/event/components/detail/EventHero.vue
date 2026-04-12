@@ -15,6 +15,7 @@ const emit = defineEmits(['buyClick']);
       <img
         v-img-fallback="[1200, 600]"
         :src="event.bannerUrl.wide"
+        :alt="event.name"
         class="w-100 h-100 object-fit-cover hero-bg-blur"
       />
     </div>
@@ -73,6 +74,7 @@ const emit = defineEmits(['buyClick']);
               <img
                 v-img-fallback="[1200, 600]"
                 :src="event.bannerUrl.wide"
+                :alt="event.name"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
               />
             </div>

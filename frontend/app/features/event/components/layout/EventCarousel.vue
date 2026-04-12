@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { EventSummary } from '../../types/Event';
-import CarouselWrapper from '~/features/components/CarouselWrapper.vue';
+import CarouselWrapper from '~/components/CarouselWrapper.vue';
 import EventCard from '../core/EventCard.vue';
 import { breakpointsBootstrapV5, useBreakpoints, useWindowSize } from '@vueuse/core';
 

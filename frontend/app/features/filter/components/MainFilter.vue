@@ -40,9 +40,9 @@ const filteredList = computed(getFilteredList);
 function removeVietnameseTones(str: string): string {
   return str
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replaceAll(/[\u0300-\u036f]/g, '')
+    .replaceAll('đ', 'd')
+    .replaceAll('Đ', 'D')
     .trim();
 }
 

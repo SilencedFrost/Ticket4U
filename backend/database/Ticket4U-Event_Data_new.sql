@@ -37,226 +37,57 @@ INSERT INTO public.categories (id, name) VALUES
 (28, 'categories.travel'),
 (29, 'categories.virtual');
 
+--2. Table: Venues
+INSERT INTO public.venues (id, name,           address_line,                                                 latitude,  longitude, layout, image_url, created_at, updated_at) VALUES
+(uuidv7(), 'CIS Arena',                        '7, Đường số 23, Phú Mỹ Hưng, Phường Tân Mỹ, TP.Hồ Chí Minh', 10.713750, 106.728750, NULL, 'https://s.inyourpocket.com/gallery/178413.jpg', NOW(), NULL),
+(uuidv7(), 'Nhà Hát Bến Thành',                '6 Đường Mạc Đĩnh Chi, Phường Sài Gòn, TP.Hồ Chí Minh',       10.784246, 106.700877, NULL, 'http://vietlandmarks.com/upload/142582138454fc4ec85a5d2.jpg', NOW(), NULL),
+(uuidv7(), 'Mây in The Nest',                  '519 Thôn Măng Lin, P. Langbiang, Đà Lạt, Tỉnh Lâm Đồng',     11.978842, 108.393794, NULL, 'https://media2.gody.vn/public/images/place/may-lang-thang-da-lat/614c498b500ff-1632389515.jpeg', NOW(), NULL),
+(uuidv7(), 'GEM Center',                       '8 Đường Nguyễn Bỉnh Khiêm, Phường Sài Gòn, TP.Hồ Chí Minh',  10.790146, 106.702379, NULL, 'https://images2.thanhnien.vn/528068263637045248/2023/2/22/1-gem-center-16770590914701989789155.jpg', NOW(), NULL),
+(uuidv7(), 'Tinh Tế Cafe',                     '351/56 Đ. Lê Văn Sỹ, Phường Nhiêu Lộc, TP.Hồ Chí Minh',      10.785960, 106.676488, NULL, 'https://ik.imagekit.io/tvlk/blog/2022/10/quan-cafe-nhieu-cay-xanh-tphcm-1.jpeg?tr=q-70,c-at_max,w-500,h-300,dpr-2', NOW(), NULL),
+(uuidv7(), 'Dreamplex Điện Biên Phủ',          '195 Đường Điện Biên Phủ, Phường Gia Định, TP.Hồ Chí Minh',   10.799603, 106.705507, NULL, 'https://maisonoffice.vn/wp-content/uploads/2021/09/van-phong-cho-thue-dreamplex-195-dien-bien-phu.jpg', NOW(), NULL),
+(uuidv7(), 'Gigamall Thủ Đức',                 '240-242 Phạm Văn Đồng, Phường Hiệp Bình, TP.Hồ Chí Minh',    10.828149, 106.721385, NULL, 'https://bidiland.vn/dataweb/images/tin-tuc/tong-hop-nhung-sieu-thi-va-cho-khu-vuc-quan-9-quan-2-quan-thu-duc-thanh-pho-thu-duc-coop-extra-gigamall-bidiland(1).jpg', NOW(), NULL),
+(uuidv7(), 'Sân Lễ Hội Đền Vua Đinh - Vua Lê', 'Xã Trường Yên, Huyện Hoa Lư, Tỉnh Ninh Bình',                20.284638, 105.905315, NULL, 'https://mtcs.1cdn.vn/2023/02/16/le-hoi-den-hung.jpg', NOW(), NULL),
+(uuidv7(), 'Công viên Yên Sở',                 'QL1A, Gamuda Central, Thủ đô Hà Nội',                        20.964741, 105.854647, NULL, 'https://gamudagardens.vn/wp-content/uploads/2016/09/ho-yen-so.jpg', NOW(), NULL),
+(uuidv7(), 'Khu đô thị Vạn Phúc',              '375, Quốc lộ 13, Phường Hiệp Bình, TPHCM',                   10.846066, 106.709149, NULL, 'https://khudothivanphuc.vn/wp-content/uploads/2021/07/cong-vien-ocean-world-van-phuc.jpg', NOW(), NULL);
 
--- 2. Venues
-INSERT INTO public.venues (id, name, address_line, latitude, longitude, layout, image_url, created_at, updated_at) VALUES
-(uuidv7(), 'CIS Arena',                        '7, Đường số 23, Phú Mỹ Hưng, Phường Tân Mỹ, TP.Hồ Chí Minh',  10.713750, 106.728750, NULL, 'https://s.inyourpocket.com/gallery/178413.jpg', NOW(), NULL),
-(uuidv7(), 'Nhà Hát Bến Thành',                '6 Đường Mạc Đĩnh Chi, Phường Sài Gòn, TP.Hồ Chí Minh',        10.784246, 106.700877, NULL, 'http://vietlandmarks.com/upload/142582138454fc4ec85a5d2.jpg', NOW(), NULL),
-(uuidv7(), 'Mây in The Nest',                  '519 Thôn Măng Lin, P. Langbiang, Đà Lạt, Tỉnh Lâm Đồng',      11.978842, 108.393794, NULL, 'https://media2.gody.vn/public/images/place/may-lang-thang-da-lat/614c498b500ff-1632389515.jpeg', NOW(), NULL),
-(uuidv7(), 'GEM Center',                       '8 Đường Nguyễn Bỉnh Khiêm, Phường Sài Gòn, TP.Hồ Chí Minh',   10.790146, 106.702379, NULL, 'https://images2.thanhnien.vn/528068263637045248/2023/2/22/1-gem-center-16770590914701989789155.jpg', NOW(), NULL),uuidv7(), 'Tinh Tế Cafe',                     '351/56 Đ. Lê Văn Sỹ, Phường Nhiêu Lộc, TP.Hồ Chí Minh',       10.785960, 106.676488, NULL, 'https://ik.imagekit.io/tvlk/blog/2022/10/quan-cafe-nhieu-cay-xanh-tphcm-1.jpeg?tr=q-70,c-at_max,w-500,h-300,dpr-2', NOW(), NULL),
-                                                                                                                       (uuidv7(), 'Dreamplex Điện Biên Phủ',          '195 Đường Điện Biên Phủ, Phường Gia Định, TP.Hồ Chí Minh',    10.799603, 106.705507, NULL, 'https://maisonoffice.vn/wp-content/uploads/2021/09/van-phong-cho-thue-dreamplex-195-dien-bien-phu.jpg', NOW(), NULL),
-                                                                                                                       (uuidv7(), 'Gigamall Thủ Đức',                 '240-242 Phạm Văn Đồng, Phường Hiệp Bình, TP.Hồ Chí Minh',     10.828149, 106.721385, NULL, 'https://bidiland.vn/dataweb/images/tin-tuc/tong-hop-nhung-sieu-thi-va-cho-khu-vuc-quan-9-quan-2-quan-thu-duc-thanh-pho-thu-duc-coop-extra-gigamall-bidiland(1).jpg', NOW(), NULL),
-                                                                                                                       (uuidv7(), 'Sân Lễ Hội Đền Vua Đinh - Vua Lê', 'Xã Trường Yên, Huyện Hoa Lư, Tỉnh Ninh Bình',                 20.284638, 105.905315, NULL, 'https://mtcs.1cdn.vn/2023/02/16/le-hoi-den-hung.jpg', NOW(), NULL),
-                                                                                                                       (uuidv7(), 'Công viên Yên Sở',                 'QL1A, Gamuda Central, Thủ đô Hà Nội',                         20.964741, 105.854647, NULL, 'https://gamudagardens.vn/wp-content/uploads/2016/09/ho-yen-so.jpg', NOW(), NULL),
-                                                                                                                       (uuidv7(), 'Khu đô thị Vạn Phúc',              '375, Quốc lộ 13, Phường Hiệp Bình, TPHCM',                    10.846066, 106.709149, NULL, 'https://khudothivanphuc.vn/wp-content/uploads/2021/07/cong-vien-ocean-world-van-phuc.jpg', NOW(), NULL);
+--3. Table: Events
 
+--TODO: update organizers and status
+--Basic info
+INSERT INTO public.events(id, organizer_id, status, name, banner_url, created_at) VALUES
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'           , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                         , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG'                          , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine'       , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo'                   , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden'             , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON'                                  , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics', '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị'                             , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'   , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                , '{}'::jsonb, now());
 
--- Venue layouts
--- CIS Arena  –  zones: VIP Floor | Lower Bowl Left | Lower Bowl Right | GA Pit | Lower Bowl Back | Upper Bowl
-UPDATE public.venues SET layout = '{
-  "floors": [
-    {
-      "floor_name": "Floor Level", "floor_order": 1, "global_seat_size": 10,
-      "stage": { "x1": -0.22, "y1": -0.96, "x2": 0.22, "y2": -0.8 }, "stage_shapes": [],
-      "zones": [
-        { "zone_name": "VIP Floor",        "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.28,"y":-0.78}, "corner2": {"x": 0.28,"y":-0.78}, "corner3": {"x": 0.28,"y":-0.3 }, "corner4": {"x":-0.28,"y":-0.3 } },
-        { "zone_name": "Lower Bowl Left",  "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.78}, "corner2": {"x":-0.3, "y":-0.78}, "corner3": {"x":-0.3, "y": 0.3 }, "corner4": {"x":-0.97,"y": 0.3 } },
-        { "zone_name": "Lower Bowl Right", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.3, "y":-0.78}, "corner2": {"x": 0.97,"y":-0.78}, "corner3": {"x": 0.97,"y": 0.3 }, "corner4": {"x": 0.3, "y": 0.3 } },
-        { "zone_name": "GA Pit",           "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.28,"y":-0.28}, "corner2": {"x": 0.28,"y":-0.28}, "corner3": {"x": 0.28,"y": 0.3 }, "corner4": {"x":-0.28,"y": 0.3 } },
-        { "zone_name": "Lower Bowl Back",  "zone_type": "standing", "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.32}, "corner2": {"x": 0.97,"y": 0.32}, "corner3": {"x": 0.97,"y": 0.72}, "corner4": {"x":-0.97,"y": 0.72} }
-      ]
-    },
-    {
-      "floor_name": "Upper Bowl", "floor_order": 2, "global_seat_size": 9,
-      "stage": { "x1": -0.22, "y1": -0.96, "x2": 0.22, "y2": -0.8 }, "stage_shapes": [],
-      "zones": [
-        { "zone_name": "Upper Bowl", "zone_type": "standing", "color": "#8b5cf6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.6}, "corner2": {"x": 0.97,"y":-0.6}, "corner3": {"x": 0.97,"y": 0.6}, "corner4": {"x":-0.97,"y": 0.6} }
-      ]
-    }
-  ]
-}'::jsonb WHERE name = 'CIS Arena';
+--Urls
 
--- Nhà Hát Bến Thành  –  zones (F1): Orchestra | Box Left | Box Right | Mezzanine  (F2): Balcony
-UPDATE public.venues SET layout = '{
-  "floors": [
-    {
-      "floor_name": "Orchestra", "floor_order": 1, "global_seat_size": 13,
-      "stage": { "x1": -0.6, "y1": -0.96, "x2": 0.6, "y2": -0.72 }, "stage_shapes": [],
-      "zones": [
-        { "zone_name": "Orchestra", "zone_type": "sitting", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.7, "y":-0.7 }, "corner2": {"x": 0.7, "y":-0.7 }, "corner3": {"x": 0.7, "y": 0.3 }, "corner4": {"x":-0.7, "y": 0.3 } },
-        { "zone_name": "Box Left",  "zone_type": "sitting", "color": "#ec4899", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.7 }, "corner2": {"x":-0.72,"y":-0.7 }, "corner3": {"x":-0.72,"y": 0.1 }, "corner4": {"x":-0.97,"y": 0.1 } },
-        { "zone_name": "Box Right", "zone_type": "sitting", "color": "#ec4899", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.72,"y":-0.7 }, "corner2": {"x": 0.97,"y":-0.7 }, "corner3": {"x": 0.97,"y": 0.1 }, "corner4": {"x": 0.72,"y": 0.1 } },
-        { "zone_name": "Mezzanine", "zone_type": "sitting", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.7, "y": 0.32}, "corner2": {"x": 0.7, "y": 0.32}, "corner3": {"x": 0.7, "y": 0.72}, "corner4": {"x":-0.7, "y": 0.72} }
-      ]
-    },
-    {
-      "floor_name": "Balcony", "floor_order": 2, "global_seat_size": 11,
-      "stage": { "x1": -0.6, "y1": -0.96, "x2": 0.6, "y2": -0.72 }, "stage_shapes": [],
-      "zones": [
-        { "zone_name": "Balcony", "zone_type": "sitting", "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.5}, "corner2": {"x": 0.85,"y":-0.5}, "corner3": {"x": 0.85,"y": 0.5}, "corner4": {"x":-0.85,"y": 0.5} }
-      ]
-    }
-  ]
-}'::jsonb WHERE name = 'Nhà Hát Bến Thành';
-
--- Mây in The Nest  –  zones: VIP | Zone A | Zone B | Standing
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Main Area", "floor_order": 1, "global_seat_size": 16,
-    "stage": { "x1": -0.4, "y1": -0.96, "x2": 0.4, "y2": -0.74 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "VIP",      "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.72}, "corner2": {"x": 0.4, "y":-0.72}, "corner3": {"x": 0.4, "y":-0.1 }, "corner4": {"x":-0.4, "y":-0.1 } },
-      { "zone_name": "Zone A",   "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.72}, "corner2": {"x":-0.42,"y":-0.72}, "corner3": {"x":-0.42,"y": 0.4 }, "corner4": {"x":-0.97,"y": 0.4 } },
-      { "zone_name": "Zone B",   "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.72}, "corner2": {"x": 0.97,"y":-0.72}, "corner3": {"x": 0.97,"y": 0.4 }, "corner4": {"x": 0.42,"y": 0.4 } },
-      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.42}, "corner2": {"x": 0.97,"y": 0.42}, "corner3": {"x": 0.97,"y": 0.95}, "corner4": {"x":-0.97,"y": 0.95} }
-    ]
-  }]
-}'::jsonb WHERE name = 'Mây in The Nest';
-
--- GEM Center  –  zones: VIP | Zone A | Zone B | Zone C | Standing
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Main Hall", "floor_order": 1, "global_seat_size": 12,
-    "stage": { "x1": -0.28, "y1": -0.96, "x2": 0.28, "y2": -0.78 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "VIP",      "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.32,"y":-0.76}, "corner2": {"x": 0.32,"y":-0.76}, "corner3": {"x": 0.32,"y":-0.38}, "corner4": {"x":-0.32,"y":-0.38} },
-      { "zone_name": "Zone A",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y":-0.76}, "corner2": {"x":-0.34,"y":-0.76}, "corner3": {"x":-0.34,"y": 0.2 }, "corner4": {"x":-0.95,"y": 0.2 } },
-      { "zone_name": "Zone B",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.34,"y":-0.76}, "corner2": {"x": 0.95,"y":-0.76}, "corner3": {"x": 0.95,"y": 0.2 }, "corner4": {"x": 0.34,"y": 0.2 } },
-      { "zone_name": "Zone C",   "zone_type": "sitting",  "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y": 0.22}, "corner2": {"x": 0.95,"y": 0.22}, "corner3": {"x": 0.95,"y": 0.62}, "corner4": {"x":-0.95,"y": 0.62} },
-      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y": 0.64}, "corner2": {"x": 0.95,"y": 0.64}, "corner3": {"x": 0.95,"y": 0.95}, "corner4": {"x":-0.95,"y": 0.95} }
-    ]
-  }]
-}'::jsonb WHERE name = 'GEM Center';
-
--- Tinh Tế Cafe  –  zones: Seated | Standing
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Main Floor", "floor_order": 1, "global_seat_size": 18,
-    "stage": { "x1": -0.5, "y1": -0.96, "x2": 0.5, "y2": -0.68 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "Seated",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.65}, "corner2": {"x": 0.85,"y":-0.65}, "corner3": {"x": 0.85,"y": 0.3 }, "corner4": {"x":-0.85,"y": 0.3 } },
-      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y": 0.35}, "corner2": {"x": 0.85,"y": 0.35}, "corner3": {"x": 0.85,"y": 0.92}, "corner4": {"x":-0.85,"y": 0.92} }
-    ]
-  }]
-}'::jsonb WHERE name = 'Tinh Tế Cafe';
-
--- Dreamplex Điện Biên Phủ  –  zones: Zone A | Zone B | Standing
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Event Space", "floor_order": 1, "global_seat_size": 14,
-    "stage": { "x1": -0.35, "y1": -0.96, "x2": 0.35, "y2": -0.76 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "Zone A",   "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.74}, "corner2": {"x": 0.85,"y":-0.74}, "corner3": {"x": 0.85,"y":-0.08}, "corner4": {"x":-0.85,"y":-0.08} },
-      { "zone_name": "Zone B",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.06}, "corner2": {"x": 0.85,"y":-0.06}, "corner3": {"x": 0.85,"y": 0.55}, "corner4": {"x":-0.85,"y": 0.55} },
-      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y": 0.57}, "corner2": {"x": 0.85,"y": 0.57}, "corner3": {"x": 0.85,"y": 0.95}, "corner4": {"x":-0.85,"y": 0.95} }
-    ]
-  }]
-}'::jsonb WHERE name = 'Dreamplex Điện Biên Phủ';
-
--- Gigamall Thủ Đức  –  zones: VIP | GA
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Exhibition Space", "floor_order": 1, "global_seat_size": 20,
-    "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "VIP", "zone_type": "standing", "color": "#7c3aed", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.8 }, "corner2": {"x": 0.9,"y":-0.8 }, "corner3": {"x": 0.9,"y":-0.2 }, "corner4": {"x":-0.9,"y":-0.2 } },
-      { "zone_name": "GA",  "zone_type": "standing", "color": "#5b21b6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.15}, "corner2": {"x": 0.9,"y":-0.15}, "corner3": {"x": 0.9,"y": 0.9 }, "corner4": {"x":-0.9,"y": 0.9 } }
-    ]
-  }]
-}'::jsonb WHERE name = 'Gigamall Thủ Đức';
-
--- Sân Lễ Hội Đền Vua Đinh - Vua Lê  –  zones: VVIP | VIP | GA Standing
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Grounds", "floor_order": 1, "global_seat_size": 14,
-    "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "VVIP",       "zone_type": "standing", "color": "#dc2626", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.8 }, "corner2": {"x": 0.9,"y":-0.8 }, "corner3": {"x": 0.9,"y":-0.35}, "corner4": {"x":-0.9,"y":-0.35} },
-      { "zone_name": "VIP",        "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.3 }, "corner2": {"x": 0.9,"y":-0.3 }, "corner3": {"x": 0.9,"y": 0.2 }, "corner4": {"x":-0.9,"y": 0.2 } },
-      { "zone_name": "GA Standing","zone_type": "standing", "color": "#2563eb", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y": 0.25}, "corner2": {"x": 0.9,"y": 0.25}, "corner3": {"x": 0.9,"y": 0.9 }, "corner4": {"x":-0.9,"y": 0.9 } }
-    ]
-  }]
-}'::jsonb WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê';
-
--- Công viên Yên Sở  –  zones: VIP | Zone A | Zone B | GA
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Main Stage Area", "floor_order": 1, "global_seat_size": 12,
-    "stage": { "x1": -0.35, "y1": -1.0, "x2": 0.35, "y2": -0.76 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "VIP",    "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.74}, "corner2": {"x": 0.4, "y":-0.74}, "corner3": {"x": 0.4, "y":-0.2 }, "corner4": {"x":-0.4, "y":-0.2 } },
-      { "zone_name": "Zone A", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.74}, "corner2": {"x":-0.42,"y":-0.74}, "corner3": {"x":-0.42,"y": 0.35}, "corner4": {"x":-0.97,"y": 0.35} },
-      { "zone_name": "Zone B", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.74}, "corner2": {"x": 0.97,"y":-0.74}, "corner3": {"x": 0.97,"y": 0.35}, "corner4": {"x": 0.42,"y": 0.35} },
-      { "zone_name": "GA",     "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.37}, "corner2": {"x": 0.97,"y": 0.37}, "corner3": {"x": 0.97,"y": 0.97}, "corner4": {"x":-0.97,"y": 0.97} }
-    ]
-  }]
-}'::jsonb WHERE name = 'Công viên Yên Sở';
-
--- Khu đô thị Vạn Phúc  –  zones: SVIP | VIP Left | VIP Right | GA Left | GA Early Bird
-UPDATE public.venues SET layout = '{
-  "floors": [{
-    "floor_name": "Main Stage", "floor_order": 1, "global_seat_size": 12,
-    "stage": { "x1": -0.32, "y1": -1.0, "x2": 0.32, "y2": -0.76 }, "stage_shapes": [],
-    "zones": [
-      { "zone_name": "SVIP",          "zone_type": "standing", "color": "#dc2626", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.74}, "corner2": {"x": 0.4, "y":-0.74}, "corner3": {"x": 0.4, "y":-0.18}, "corner4": {"x":-0.4, "y":-0.18} },
-      { "zone_name": "VIP Left",      "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.74}, "corner2": {"x":-0.42,"y":-0.74}, "corner3": {"x":-0.42,"y":-0.18}, "corner4": {"x":-0.97,"y":-0.18} },
-      { "zone_name": "VIP Right",     "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.74}, "corner2": {"x": 0.97,"y":-0.74}, "corner3": {"x": 0.97,"y":-0.18}, "corner4": {"x": 0.42,"y":-0.18} },
-      { "zone_name": "GA Left",       "zone_type": "standing", "color": "#2563eb", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.15}, "corner2": {"x":-0.05,"y":-0.15}, "corner3": {"x":-0.05,"y": 0.9 }, "corner4": {"x":-0.97,"y": 0.9 } },
-      { "zone_name": "GA Early Bird", "zone_type": "standing", "color": "#1d4ed8", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.05,"y":-0.15}, "corner2": {"x": 0.97,"y":-0.15}, "corner3": {"x": 0.97,"y": 0.9 }, "corner4": {"x": 0.05,"y": 0.9 } }
-    ]
-  }]
-}'::jsonb WHERE name = 'Khu đô thị Vạn Phúc';
-
--- 4. Events
--- TODO: update organizer and status
-INSERT INTO public.events (id, organizer_id, status, name, banner_url, address_line, created_at) VALUES
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night',            '{}'::jsonb, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh',              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam',                          '{}'::jsonb, 'Sân Lễ Hội Đền Vua Đinh - Vua Lê, Huyện Hoa Lư, Tỉnh Ninh Bình',     now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026',    '{}'::jsonb, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh',              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG',                          '{}'::jsonb, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội',                              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine',       '{}'::jsonb, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh',              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo',                   '{}'::jsonb, 'Gigamall Thủ Đức, Thành phố Thủ Đức, TP. Hồ Chí Minh',                 now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden',             '{}'::jsonb, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội',                              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON',                                  '{}'::jsonb, 'Sân Lễ Hội Đền Vua Đinh - Vua Lê, Huyện Hoa Lư, Tỉnh Ninh Bình',     now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics','{}'::jsonb, 'GEM Center, Quận 1, TP. Hồ Chí Minh',                                   now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị',                             '{}'::jsonb, 'Mây in The Nest, Phường Langbiang, Đà Lạt, Tỉnh Lâm Đồng',            now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO',               '{}'::jsonb, 'Khu đô thị Vạn Phúc, Thành phố Thủ Đức, TP. Hồ Chí Minh',              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision',               '{}'::jsonb, 'Tinh Tế Cafe, Quận 3, TP. Hồ Chí Minh',                                 now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands',               '{}'::jsonb, 'Công viên Yên Sở, Quận Hoàng Mai, Hà Nội',                              now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam',   '{}'::jsonb, 'GEM Center, Quận 1, TP. Hồ Chí Minh',                                   now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE',                '{}'::jsonb, 'CIS Arena, Quận 7, TP. Hồ Chí Minh',                                    now());
-
--- Banner URLs
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775381970/vglow-wide_t6cooz.png","square":"https://cdn.ticket4u.uk/v1775381967/vglow-sqre_nmypgq.png","tall":"https://cdn.ticket4u.uk/v1775381974/vglow-tall_wgekmk.png"}'::jsonb WHERE name = 'V-Glow: The Cyber-Heritage Night';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775381964/aecho-wide_cdgl6u.png","square":"https://cdn.ticket4u.uk/v1775381950/aecho-sqre_efweqg.png","tall":"https://cdn.ticket4u.uk/v1775381948/aecho-tall_xkm5ic.png"}'::jsonb WHERE name = 'The Echo of An Nam';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775382276/beats-wide_kq6cve.png","square":"https://cdn.ticket4u.uk/v1775382269/beats-sqre_kf8szt.png","tall":"https://cdn.ticket4u.uk/v1775382271/beats-tall_nzkxux.png"}'::jsonb WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775382586/tloom-wide_nnsqej.png","square":"https://cdn.ticket4u.uk/v1775382590/tloom-sqre_zqnaam.png","tall":"https://cdn.ticket4u.uk/v1775382588/tloom-tall_wlhtt2.png"}'::jsonb WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775382880/neolu-wide_wiwf4z.png","square":"https://cdn.ticket4u.uk/v1775382884/neolu-sqre_y2ofzz.png","tall":"https://cdn.ticket4u.uk/v1775382886/neolu-tall_spbtwy.png"}'::jsonb WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png","square":"https://cdn.ticket4u.uk/v1775383104/sclam-sqre_uaxxnl.png","tall":"https://cdn.ticket4u.uk/v1775383057/sclam-tall_froaue.png"}'::jsonb WHERE name = 'Sắc Lam: The Indigo Echo';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383196/cryst-wide_ccxmzc.png","square":"https://cdn.ticket4u.uk/v1775383192/cryst-sqre_e76ssg.png","tall":"https://cdn.ticket4u.uk/v1775383192/cryst-tall_h04ljf.png"}'::jsonb WHERE name = 'CRYSTAL REALM: The Neon Garden';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383391/satso-wide_vlujh3.png","square":"https://cdn.ticket4u.uk/v1775383341/satso-sqre_vu6tau.png","tall":"https://cdn.ticket4u.uk/v1775383338/satso-tall_dgbelz.png"}'::jsonb WHERE name = 'SẮT & SON';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383504/techs-wide_ekyhab.png","square":"https://cdn.ticket4u.uk/v1775383502/techs-sqre_ah00iv.png","tall":"https://cdn.ticket4u.uk/v1775383508/techs-tall_q41wkb.png"}'::jsonb WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383818/canth-wide_m4gbop.png","square":"https://cdn.ticket4u.uk/v1775383821/canth-sqre_im0awy.png","tall":"https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'Vũ Trụ Cận Thị';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775383940/dream-wide_knggr2.png","square":"https://cdn.ticket4u.uk/v1775383942/dream-sqre_zlwxep.png","tall":"https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775384284/kzart-wide_qvhiub.png","square":"https://cdn.ticket4u.uk/v1775384345/kzart-sqre_v3harc.png","tall":"https://cdn.ticket4u.uk/v1775384294/kzart-tall_lphcur.png"}'::jsonb WHERE name = 'KAIZEN: The Art of Precision';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775384450/luvia-wide_gyizyq.png","square":"https://cdn.ticket4u.uk/v1775384446/luvia-sqre_lqtogb.png","tall":"https://cdn.ticket4u.uk/v1775384451/luvia-tall_dzcyjo.png"}'::jsonb WHERE name = 'LUVIA: The Echo of Highlands';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775390582/echov-wide_paluak.png","square":"https://cdn.ticket4u.uk/v1775390593/echov-sqre_huj7ep.png","tall":"https://cdn.ticket4u.uk/v1775390592/echov-tall_tyfbot.png"}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
-UPDATE public.events SET banner_url = '{"wide":"https://cdn.ticket4u.uk/v1775390591/reson-wide_aossid.png","square":"https://cdn.ticket4u.uk/v1775390583/reson-sqre_igosvf.png","tall":"https://cdn.ticket4u.uk/v1775390583/reson-tall_segvto.png"}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
-
--- Venue links (Vũ Trụ Cận Thị and KAIZEN use custom layout – venue_id left NULL)
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'V-Glow: The Cyber-Heritage Night';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê') WHERE name = 'The Echo of An Nam';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Gigamall Thủ Đức')             WHERE name = 'Sắc Lam: The Indigo Echo';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'CRYSTAL REALM: The Neon Garden';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê') WHERE name = 'SẮT & SON';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'GEM Center')                   WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'LUVIA: The Echo of Highlands';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'GEM Center')                   WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
-UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'CIS Arena')                    WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381970/vglow-wide_t6cooz.png", "square": "https://cdn.ticket4u.uk/v1775381967/vglow-sqre_nmypgq.png", "tall": "https://cdn.ticket4u.uk/v1775381974/vglow-tall_wgekmk.png"}'::jsonb WHERE name = 'V-Glow: The Cyber-Heritage Night';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381964/aecho-wide_cdgl6u.png", "square": "https://cdn.ticket4u.uk/v1775381950/aecho-sqre_efweqg.png", "tall": "https://cdn.ticket4u.uk/v1775381948/aecho-tall_xkm5ic.png"}'::jsonb WHERE name = 'The Echo of An Nam';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382276/beats-wide_kq6cve.png", "square": "https://cdn.ticket4u.uk/v1775382269/beats-sqre_kf8szt.png", "tall": "https://cdn.ticket4u.uk/v1775382271/beats-tall_nzkxux.png"}'::jsonb WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382586/tloom-wide_nnsqej.png", "square": "https://cdn.ticket4u.uk/v1775382590/tloom-sqre_zqnaam.png", "tall": "https://cdn.ticket4u.uk/v1775382588/tloom-tall_wlhtt2.png"}'::jsonb WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382880/neolu-wide_wiwf4z.png", "square": "https://cdn.ticket4u.uk/v1775382884/neolu-sqre_y2ofzz.png", "tall": "https://cdn.ticket4u.uk/v1775382886/neolu-tall_spbtwy.png"}'::jsonb WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383130/sclam-wide_ymvfhg.png", "square": "https://cdn.ticket4u.uk/v1775383104/sclam-sqre_uaxxnl.png", "tall": "https://cdn.ticket4u.uk/v1775383057/sclam-tall_froaue.png"}'::jsonb WHERE name = 'Sắc Lam: The Indigo Echo';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383196/cryst-wide_ccxmzc.png", "square": "https://cdn.ticket4u.uk/v1775383192/cryst-sqre_e76ssg.png", "tall": "https://cdn.ticket4u.uk/v1775383192/cryst-tall_h04ljf.png"}'::jsonb WHERE name = 'CRYSTAL REALM: The Neon Garden';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383391/satso-wide_vlujh3.png", "square": "https://cdn.ticket4u.uk/v1775383341/satso-sqre_vu6tau.png", "tall": "https://cdn.ticket4u.uk/v1775383338/satso-tall_dgbelz.png"}'::jsonb WHERE name = 'SẮT & SON';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383504/techs-wide_ekyhab.png", "square": "https://cdn.ticket4u.uk/v1775383502/techs-sqre_ah00iv.png", "tall": "https://cdn.ticket4u.uk/v1775383508/techs-tall_q41wkb.png"}'::jsonb WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383818/canth-wide_m4gbop.png", "square": "https://cdn.ticket4u.uk/v1775383821/canth-sqre_im0awy.png", "tall": "https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'Vũ Trụ Cận Thị';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775383940/dream-wide_knggr2.png", "square": "https://cdn.ticket4u.uk/v1775383942/dream-sqre_zlwxep.png", "tall": "https://cdn.ticket4u.uk/v1775383941/dream-tall_fkwtkk.png"}'::jsonb WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384284/kzart-wide_qvhiub.png", "square": "https://cdn.ticket4u.uk/v1775384345/kzart-sqre_v3harc.png", "tall": "https://cdn.ticket4u.uk/v1775384294/kzart-tall_lphcur.png"}'::jsonb WHERE name = 'KAIZEN: The Art of Precision';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384450/luvia-wide_gyizyq.png", "square": "https://cdn.ticket4u.uk/v1775384446/luvia-sqre_lqtogb.png", "tall": "https://cdn.ticket4u.uk/v1775384451/luvia-tall_dzcyjo.png"}'::jsonb WHERE name = 'LUVIA: The Echo of Highlands';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390582/echov-wide_paluak.png", "square": "https://cdn.ticket4u.uk/v1775390593/echov-sqre_huj7ep.png", "tall": "https://cdn.ticket4u.uk/v1775390592/echov-tall_tyfbot.png"}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390591/reson-wide_aossid.png", "square": "https://cdn.ticket4u.uk/v1775390583/reson-sqre_igosvf.png", "tall": "https://cdn.ticket4u.uk/v1775390583/reson-tall_segvto.png"}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
 -- Descriptions + terms + refund policy
 UPDATE public.events SET
@@ -365,229 +196,113 @@ UPDATE public.events SET
 WHERE name='Âm Sắc Việt - THE RESONANCE';
 
 
--- 5. event_categories
-INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night' UNION ALL
-SELECT id,  0 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night' UNION ALL
-SELECT id, 20 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night' UNION ALL
-SELECT id, 22 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
 
+--4. Table: event_categories
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'The Echo of An Nam' UNION ALL
-SELECT id, 20 FROM public.events WHERE name = 'The Echo of An Nam' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'The Echo of An Nam' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'The Echo of An Nam';
+SELECT id, 1 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 0 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026' UNION ALL
-SELECT id, 22 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+SELECT id, 1 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'The Echo of An Nam';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 20 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG' UNION ALL
-SELECT id, 21 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG' UNION ALL
-SELECT id, 24 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+SELECT id, 1 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine' UNION ALL
-SELECT id, 22 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine' UNION ALL
-SELECT id, 20 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+SELECT id, 20 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 24 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 23 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo' UNION ALL
-SELECT id,  9 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo' UNION ALL
-SELECT id, 20 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
+SELECT id, 1 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden' UNION ALL
-SELECT id, 16 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden' UNION ALL
-SELECT id, 21 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden' UNION ALL
-SELECT id, 17 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
+SELECT id, 23 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  0 FROM public.events WHERE name = 'SẮT & SON' UNION ALL
-SELECT id,  1 FROM public.events WHERE name = 'SẮT & SON' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'SẮT & SON';
+SELECT id, 1 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 16 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 22 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics' UNION ALL
-SELECT id,  9 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics' UNION ALL
-SELECT id,  5 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics' UNION ALL
-SELECT id, 25 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+SELECT id, 0 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 1 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SẮT & SON';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  0 FROM public.events WHERE name = 'Vũ Trụ Cận Thị' UNION ALL
-SELECT id,  1 FROM public.events WHERE name = 'Vũ Trụ Cận Thị' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
+SELECT id, 22 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 5 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 25 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  1 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO' UNION ALL
-SELECT id, 19 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+SELECT id, 0 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 15 FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 12 FROM public.events WHERE name = 'KAIZEN: The Art of Precision' UNION ALL
-SELECT id, 13 FROM public.events WHERE name = 'KAIZEN: The Art of Precision' UNION ALL
-SELECT id,  9 FROM public.events WHERE name = 'KAIZEN: The Art of Precision';
+SELECT id, 1 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 19 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  0 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands' UNION ALL
-SELECT id, 17 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands' UNION ALL
-SELECT id, 11 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
+SELECT id, 12 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'KAIZEN: The Art of Precision';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  0 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam' UNION ALL
-SELECT id, 23 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam' UNION ALL
-SELECT id,  9 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+SELECT id, 0 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 11 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 28 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
 
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id,  0 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE' UNION ALL
-SELECT id,  1 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE' UNION ALL
-SELECT id, 10 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+SELECT id, 0 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 11 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
 
-SELECT setval(pg_get_serial_sequence('public.categories', 'id'), 29);
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 24 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
+--5. Table: Event Sessions
 
--- 4. Event Sessions
--- V-Glow: The Cyber-Heritage Night (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '30 days', NOW() + INTERVAL '30 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '31 days', NOW() + INTERVAL '31 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
-
--- The Echo of An Nam (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '45 days', NOW() + INTERVAL '45 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'The Echo of An Nam';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '46 days', NOW() + INTERVAL '46 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'The Echo of An Nam';
-
--- SÀI GÒN NEON BEATS: THE CYBER-FEST 2026 (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '60 days', NOW() + INTERVAL '60 days 8 hours', 'SCHEDULED', 'Ngày 1', NOW()
-FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '61 days', NOW() + INTERVAL '61 days 8 hours', 'SCHEDULED', 'Ngày 2', NOW()
-FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
-
--- CỔ NGHỆ KIÊU HÙNG (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '50 days', NOW() + INTERVAL '50 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '51 days', NOW() + INTERVAL '51 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
-
--- NEO-LUMINANCE: The Echo of Indochine (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '75 days', NOW() + INTERVAL '75 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '76 days', NOW() + INTERVAL '76 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
-
--- Sắc Lam: The Indigo Echo (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '35 days', NOW() + INTERVAL '35 days 5 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '36 days', NOW() + INTERVAL '36 days 5 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
-
--- CRYSTAL REALM: The Neon Garden (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '55 days', NOW() + INTERVAL '55 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '56 days', NOW() + INTERVAL '56 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
-
--- SẮT & SON (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '40 days', NOW() + INTERVAL '40 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'SẮT & SON';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '41 days', NOW() + INTERVAL '41 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'SẮT & SON';
-
--- Techno-Sorcery: The Zenith of AI & Robotics (1 session)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '25 days', NOW() + INTERVAL '25 days 8 hours', 'SCHEDULED', 'Hội thảo chính', NOW()
-FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
-
--- Vũ Trụ Cận Thị (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '38 days', NOW() + INTERVAL '38 days 5 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '39 days', NOW() + INTERVAL '39 days 5 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
-
--- THE DREAMCATCHER ARCHIPELAGO (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '65 days', NOW() + INTERVAL '65 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '66 days', NOW() + INTERVAL '66 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
-
--- KAIZEN: The Art of Precision (1 session – intimate)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '28 days', NOW() + INTERVAL '28 days 3 hours', 'SCHEDULED', 'Buổi chiều', NOW()
-FROM public.events WHERE name = 'KAIZEN: The Art of Precision';
-
--- LUVIA: The Echo of Highlands (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '70 days', NOW() + INTERVAL '70 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '71 days', NOW() + INTERVAL '71 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
-
--- Scent of the Soul: The Echoes of Vietnam (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '48 days', NOW() + INTERVAL '48 days 5 hours', 'SCHEDULED', 'Ngày 1', NOW()
-FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '49 days', NOW() + INTERVAL '49 days 5 hours', 'SCHEDULED', 'Ngày 2', NOW()
-FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
-
--- Âm Sắc Việt - THE RESONANCE (2 sessions)
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '20 days', NOW() + INTERVAL '20 days 6 hours', 'SCHEDULED', 'Đêm 1', NOW()
-FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
-
-INSERT INTO public.event_sessions (id, event_id, start_date, end_date, status, name, created_at)
-SELECT uuidv7(), id, NOW() + INTERVAL '21 days', NOW() + INTERVAL '21 days 6 hours', 'SCHEDULED', 'Đêm 2', NOW()
-FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+INSERT INTO public.event_sessions(id, start_date, end_date, status, name, created_at, event_id) VALUES
+(uuidv7(), '2026-04-15T18:00:00+07', '2026-04-15T23:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'V-Glow: The Cyber-Heritage Night'           )),
+(uuidv7(), '2026-04-18T17:00:00+07', '2026-04-18T22:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'The Echo of An Nam'                         )),
+(uuidv7(), '2026-04-19T14:00:00+07', '2026-04-20T02:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    )),
+(uuidv7(), '2026-04-25T16:00:00+07', '2026-04-25T22:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'CỔ NGHỆ KIÊU HÙNG'                          )),
+(uuidv7(), '2026-04-26T18:00:00+07', '2026-04-27T02:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'NEO-LUMINANCE: The Echo of Indochine'       )),
+(uuidv7(), '2026-05-02T09:00:00+07', '2026-05-03T21:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'Sắc Lam: The Indigo Echo'                   )),
+(uuidv7(), '2026-05-09T15:00:00+07', '2026-05-09T23:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'CRYSTAL REALM: The Neon Garden'             )),
+(uuidv7(), '2026-05-10T17:00:00+07', '2026-05-10T23:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'SẮT & SON'                                  )),
+(uuidv7(), '2026-05-16T09:00:00+07', '2026-05-16T18:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'Techno-Sorcery: The Zenith of AI & Robotics')),
+(uuidv7(), '2026-05-17T19:30:00+07', '2026-05-17T22:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'Vũ Trụ Cận Thị'                             )),
+(uuidv7(), '2026-05-23T16:00:00+07', '2026-05-23T23:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'THE DREAMCATCHER ARCHIPELAGO'               )),
+(uuidv7(), '2026-05-24T18:00:00+07', '2026-05-24T22:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'KAIZEN: The Art of Precision'               )),
+(uuidv7(), '2026-05-30T17:00:00+07', '2026-05-30T21:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'LUVIA: The Echo of Highlands'               )),
+(uuidv7(), '2026-05-31T19:00:00+07', '2026-05-31T22:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'Scent of the Soul: The Echoes of Vietnam'   )),
+(uuidv7(), '2026-06-06T18:00:00+07', '2026-06-06T23:00:00+07', 'SELLING', 'session', now(), (select id from public.events where name = 'Âm Sắc Việt - THE RESONANCE'                ));
 
 
--- 5. Zones
--- =============================================================================
--- ZONES  –  all 15 events
--- Pattern: one INSERT per zone per event (applies to ALL sessions via JOIN)
--- Venue zone → event zone mapping mirrors old data's zoneLinks logic
--- =============================================================================
-
+-- 6. Zones
 -- =============================================================================
 -- V-Glow: The Cyber-Heritage Night  (Khu đô thị Vạn Phúc)
 -- Venue zones: SVIP | VIP Left | VIP Right | GA Left | GA Early Bird
@@ -601,9 +316,17 @@ FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'V-Glow: The Cyber-Heritage Night';
 
 INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'VIP', true, 300, 4, 1500000,
-       'Khu vực VIP đứng gần sân khấu với tầm nhìn tuyệt vời và vòng tay check-in đặc biệt.',
-       'VIP standing area near the stage with great views and special check-in wristband.',
+SELECT uuidv7(), es.id, 'VIP Left', true, 150, 4, 1500000,
+       'Khu vực VIP trái đứng gần sân khấu với tầm nhìn tuyệt vời và vòng tay check-in đặc biệt.',
+       'VIP Left standing area near the stage with great views and special check-in wristband.',
+       NULL, '["Vòng tay VIP","Poster sự kiện"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'V-Glow: The Cyber-Heritage Night';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'VIP Right', true, 150, 4, 1500000,
+       'Khu vực VIP phải đứng gần sân khấu với tầm nhìn tuyệt vời và vòng tay check-in đặc biệt.',
+       'VIP Right standing area near the stage with great views and special check-in wristband.',
        NULL, '["Vòng tay VIP","Poster sự kiện"]'::jsonb, NOW(), NULL
 FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'V-Glow: The Cyber-Heritage Night';
@@ -937,9 +660,17 @@ FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO';
 
 INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at, updated_at)
-SELECT uuidv7(), es.id, 'VIP', true, 500, 4, 1500000,
-       'Khu VIP đứng với tầm nhìn tốt và vòng tay phát sáng đặc biệt.',
-       'VIP standing with great views and special glow wristband.',
+SELECT uuidv7(), es.id, 'VIP Left', true, 250, 4, 1500000,
+       'Khu VIP trái đứng với tầm nhìn tốt và vòng tay phát sáng đặc biệt.',
+       'VIP Left standing with great views and special glow wristband.',
+       NULL, '["Vòng tay phát sáng","Poster sự kiện"]'::jsonb, NOW(), NULL
+FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
+WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO';
+
+INSERT INTO public.zones (id, session_id, name, is_standing, capacity, purchase_limit, price, description_vi, description_en, gift_image_url, perks, created_at, updated_at)
+SELECT uuidv7(), es.id, 'VIP Right', true, 250, 4, 1500000,
+       'Khu VIP phải đứng với tầm nhìn tốt và vòng tay phát sáng đặc biệt.',
+       'VIP Right standing with great views and special glow wristband.',
        NULL, '["Vòng tay phát sáng","Poster sự kiện"]'::jsonb, NOW(), NULL
 FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO';
@@ -1112,7 +843,8 @@ SELECT uuidv7(), es.id, 'Upper Bowl', false, 500, 4, 350000,
        NULL, NULL, NOW(), NULL
 FROM public.event_sessions es JOIN public.events e ON es.event_id = e.id
 WHERE e.name = 'Âm Sắc Việt - THE RESONANCE';
--- 6.Seats
+
+-- 7. Seats
 -- V-Glow: SVIP  (8 rows × 10 cols = 80)
 INSERT INTO public.seats (id, zone_id, name, row_name, col_name, seat_code)
 SELECT uuidv7(), z.id, 'Ghế ' || chr(64+r) || c, chr(64+r), c::text, chr(64+r) || c
@@ -1386,8 +1118,180 @@ WHERE z.name = 'Upper Bowl'
   AND e.name = 'Âm Sắc Việt - THE RESONANCE';
 
 
--- 7. Layout zone links (venueMode)
+-- 8. Venue layouts
+-- CIS Arena  –  zones: VIP Floor | Lower Bowl Left | Lower Bowl Right | GA Pit | Lower Bowl Back | Upper Bowl
+UPDATE public.venues SET layout = '{
+  "floors": [
+    {
+      "floor_name": "Floor Level", "floor_order": 1, "global_seat_size": 10,
+      "stage": { "x1": -0.22, "y1": -0.96, "x2": 0.22, "y2": -0.8 }, "stage_shapes": [],
+      "zones": [
+        { "zone_name": "VIP Floor",        "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.28,"y":-0.78}, "corner2": {"x": 0.28,"y":-0.78}, "corner3": {"x": 0.28,"y":-0.3 }, "corner4": {"x":-0.28,"y":-0.3 } },
+        { "zone_name": "Lower Bowl Left",  "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.78}, "corner2": {"x":-0.3, "y":-0.78}, "corner3": {"x":-0.3, "y": 0.3 }, "corner4": {"x":-0.97,"y": 0.3 } },
+        { "zone_name": "Lower Bowl Right", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.3, "y":-0.78}, "corner2": {"x": 0.97,"y":-0.78}, "corner3": {"x": 0.97,"y": 0.3 }, "corner4": {"x": 0.3, "y": 0.3 } },
+        { "zone_name": "GA Pit",           "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.28,"y":-0.28}, "corner2": {"x": 0.28,"y":-0.28}, "corner3": {"x": 0.28,"y": 0.3 }, "corner4": {"x":-0.28,"y": 0.3 } },
+        { "zone_name": "Lower Bowl Back",  "zone_type": "standing", "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.32}, "corner2": {"x": 0.97,"y": 0.32}, "corner3": {"x": 0.97,"y": 0.72}, "corner4": {"x":-0.97,"y": 0.72} }
+      ]
+    },
+    {
+      "floor_name": "Upper Bowl", "floor_order": 2, "global_seat_size": 9,
+      "stage": { "x1": -0.22, "y1": -0.96, "x2": 0.22, "y2": -0.8 }, "stage_shapes": [],
+      "zones": [
+        { "zone_name": "Upper Bowl", "zone_type": "standing", "color": "#8b5cf6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.6}, "corner2": {"x": 0.97,"y":-0.6}, "corner3": {"x": 0.97,"y": 0.6}, "corner4": {"x":-0.97,"y": 0.6} }
+      ]
+    }
+  ]
+}'::jsonb WHERE name = 'CIS Arena';
 
+-- Nhà Hát Bến Thành  –  zones (F1): Orchestra | Box Left | Box Right | Mezzanine  (F2): Balcony
+UPDATE public.venues SET layout = '{
+  "floors": [
+    {
+      "floor_name": "Orchestra", "floor_order": 1, "global_seat_size": 13,
+      "stage": { "x1": -0.6, "y1": -0.96, "x2": 0.6, "y2": -0.72 }, "stage_shapes": [],
+      "zones": [
+        { "zone_name": "Orchestra", "zone_type": "sitting", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.7, "y":-0.7 }, "corner2": {"x": 0.7, "y":-0.7 }, "corner3": {"x": 0.7, "y": 0.3 }, "corner4": {"x":-0.7, "y": 0.3 } },
+        { "zone_name": "Box Left",  "zone_type": "sitting", "color": "#ec4899", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.7 }, "corner2": {"x":-0.72,"y":-0.7 }, "corner3": {"x":-0.72,"y": 0.1 }, "corner4": {"x":-0.97,"y": 0.1 } },
+        { "zone_name": "Box Right", "zone_type": "sitting", "color": "#ec4899", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.72,"y":-0.7 }, "corner2": {"x": 0.97,"y":-0.7 }, "corner3": {"x": 0.97,"y": 0.1 }, "corner4": {"x": 0.72,"y": 0.1 } },
+        { "zone_name": "Mezzanine", "zone_type": "sitting", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.7, "y": 0.32}, "corner2": {"x": 0.7, "y": 0.32}, "corner3": {"x": 0.7, "y": 0.72}, "corner4": {"x":-0.7, "y": 0.72} }
+      ]
+    },
+    {
+      "floor_name": "Balcony", "floor_order": 2, "global_seat_size": 11,
+      "stage": { "x1": -0.6, "y1": -0.96, "x2": 0.6, "y2": -0.72 }, "stage_shapes": [],
+      "zones": [
+        { "zone_name": "Balcony", "zone_type": "sitting", "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.5}, "corner2": {"x": 0.85,"y":-0.5}, "corner3": {"x": 0.85,"y": 0.5}, "corner4": {"x":-0.85,"y": 0.5} }
+      ]
+    }
+  ]
+}'::jsonb WHERE name = 'Nhà Hát Bến Thành';
+
+-- Mây in The Nest  –  zones: VIP | Zone A | Zone B | Standing
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Main Area", "floor_order": 1, "global_seat_size": 16,
+    "stage": { "x1": -0.4, "y1": -0.96, "x2": 0.4, "y2": -0.74 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "VIP",      "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.72}, "corner2": {"x": 0.4, "y":-0.72}, "corner3": {"x": 0.4, "y":-0.1 }, "corner4": {"x":-0.4, "y":-0.1 } },
+      { "zone_name": "Zone A",   "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.72}, "corner2": {"x":-0.42,"y":-0.72}, "corner3": {"x":-0.42,"y": 0.4 }, "corner4": {"x":-0.97,"y": 0.4 } },
+      { "zone_name": "Zone B",   "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.72}, "corner2": {"x": 0.97,"y":-0.72}, "corner3": {"x": 0.97,"y": 0.4 }, "corner4": {"x": 0.42,"y": 0.4 } },
+      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.42}, "corner2": {"x": 0.97,"y": 0.42}, "corner3": {"x": 0.97,"y": 0.95}, "corner4": {"x":-0.97,"y": 0.95} }
+    ]
+  }]
+}'::jsonb WHERE name = 'Mây in The Nest';
+
+-- GEM Center  –  zones: VIP | Zone A | Zone B | Zone C | Standing
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Main Hall", "floor_order": 1, "global_seat_size": 12,
+    "stage": { "x1": -0.28, "y1": -0.96, "x2": 0.28, "y2": -0.78 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "VIP",      "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.32,"y":-0.76}, "corner2": {"x": 0.32,"y":-0.76}, "corner3": {"x": 0.32,"y":-0.38}, "corner4": {"x":-0.32,"y":-0.38} },
+      { "zone_name": "Zone A",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y":-0.76}, "corner2": {"x":-0.34,"y":-0.76}, "corner3": {"x":-0.34,"y": 0.2 }, "corner4": {"x":-0.95,"y": 0.2 } },
+      { "zone_name": "Zone B",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.34,"y":-0.76}, "corner2": {"x": 0.95,"y":-0.76}, "corner3": {"x": 0.95,"y": 0.2 }, "corner4": {"x": 0.34,"y": 0.2 } },
+      { "zone_name": "Zone C",   "zone_type": "sitting",  "color": "#3b82f6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y": 0.22}, "corner2": {"x": 0.95,"y": 0.22}, "corner3": {"x": 0.95,"y": 0.62}, "corner4": {"x":-0.95,"y": 0.62} },
+      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.95,"y": 0.64}, "corner2": {"x": 0.95,"y": 0.64}, "corner3": {"x": 0.95,"y": 0.95}, "corner4": {"x":-0.95,"y": 0.95} }
+    ]
+  }]
+}'::jsonb WHERE name = 'GEM Center';
+
+-- Tinh Tế Cafe  –  zones: Seated | Standing
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Main Floor", "floor_order": 1, "global_seat_size": 18,
+    "stage": { "x1": -0.5, "y1": -0.96, "x2": 0.5, "y2": -0.68 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "Seated",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.65}, "corner2": {"x": 0.85,"y":-0.65}, "corner3": {"x": 0.85,"y": 0.3 }, "corner4": {"x":-0.85,"y": 0.3 } },
+      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y": 0.35}, "corner2": {"x": 0.85,"y": 0.35}, "corner3": {"x": 0.85,"y": 0.92}, "corner4": {"x":-0.85,"y": 0.92} }
+    ]
+  }]
+}'::jsonb WHERE name = 'Tinh Tế Cafe';
+
+-- Dreamplex Điện Biên Phủ  –  zones: Zone A | Zone B | Standing
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Event Space", "floor_order": 1, "global_seat_size": 14,
+    "stage": { "x1": -0.35, "y1": -0.96, "x2": 0.35, "y2": -0.76 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "Zone A",   "zone_type": "sitting",  "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.74}, "corner2": {"x": 0.85,"y":-0.74}, "corner3": {"x": 0.85,"y":-0.08}, "corner4": {"x":-0.85,"y":-0.08} },
+      { "zone_name": "Zone B",   "zone_type": "sitting",  "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y":-0.06}, "corner2": {"x": 0.85,"y":-0.06}, "corner3": {"x": 0.85,"y": 0.55}, "corner4": {"x":-0.85,"y": 0.55} },
+      { "zone_name": "Standing", "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.85,"y": 0.57}, "corner2": {"x": 0.85,"y": 0.57}, "corner3": {"x": 0.85,"y": 0.95}, "corner4": {"x":-0.85,"y": 0.95} }
+    ]
+  }]
+}'::jsonb WHERE name = 'Dreamplex Điện Biên Phủ';
+
+-- Gigamall Thủ Đức  –  zones: VIP | GA
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Exhibition Space", "floor_order": 1, "global_seat_size": 20,
+    "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "VIP", "zone_type": "standing", "color": "#7c3aed", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.8 }, "corner2": {"x": 0.9,"y":-0.8 }, "corner3": {"x": 0.9,"y":-0.2 }, "corner4": {"x":-0.9,"y":-0.2 } },
+      { "zone_name": "GA",  "zone_type": "standing", "color": "#5b21b6", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.15}, "corner2": {"x": 0.9,"y":-0.15}, "corner3": {"x": 0.9,"y": 0.9 }, "corner4": {"x":-0.9,"y": 0.9 } }
+    ]
+  }]
+}'::jsonb WHERE name = 'Gigamall Thủ Đức';
+
+-- Sân Lễ Hội Đền Vua Đinh - Vua Lê  –  zones: VVIP | VIP | GA Standing
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Grounds", "floor_order": 1, "global_seat_size": 14,
+    "stage": { "x1": -0.4, "y1": -1.0, "x2": 0.4, "y2": -0.85 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "VVIP",       "zone_type": "standing", "color": "#dc2626", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.8 }, "corner2": {"x": 0.9,"y":-0.8 }, "corner3": {"x": 0.9,"y":-0.35}, "corner4": {"x":-0.9,"y":-0.35} },
+      { "zone_name": "VIP",        "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y":-0.3 }, "corner2": {"x": 0.9,"y":-0.3 }, "corner3": {"x": 0.9,"y": 0.2 }, "corner4": {"x":-0.9,"y": 0.2 } },
+      { "zone_name": "GA Standing","zone_type": "standing", "color": "#2563eb", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.9,"y": 0.25}, "corner2": {"x": 0.9,"y": 0.25}, "corner3": {"x": 0.9,"y": 0.9 }, "corner4": {"x":-0.9,"y": 0.9 } }
+    ]
+  }]
+}'::jsonb WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê';
+
+-- Công viên Yên Sở  –  zones: VIP | Zone A | Zone B | GA
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Main Stage Area", "floor_order": 1, "global_seat_size": 12,
+    "stage": { "x1": -0.35, "y1": -1.0, "x2": 0.35, "y2": -0.76 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "VIP",    "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.74}, "corner2": {"x": 0.4, "y":-0.74}, "corner3": {"x": 0.4, "y":-0.2 }, "corner4": {"x":-0.4, "y":-0.2 } },
+      { "zone_name": "Zone A", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.74}, "corner2": {"x":-0.42,"y":-0.74}, "corner3": {"x":-0.42,"y": 0.35}, "corner4": {"x":-0.97,"y": 0.35} },
+      { "zone_name": "Zone B", "zone_type": "standing", "color": "#6366f1", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.74}, "corner2": {"x": 0.97,"y":-0.74}, "corner3": {"x": 0.97,"y": 0.35}, "corner4": {"x": 0.42,"y": 0.35} },
+      { "zone_name": "GA",     "zone_type": "standing", "color": "#22c55e", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y": 0.37}, "corner2": {"x": 0.97,"y": 0.37}, "corner3": {"x": 0.97,"y": 0.97}, "corner4": {"x":-0.97,"y": 0.97} }
+    ]
+  }]
+}'::jsonb WHERE name = 'Công viên Yên Sở';
+
+-- Khu đô thị Vạn Phúc  –  zones: SVIP | VIP Left | VIP Right | GA Left | GA Early Bird
+UPDATE public.venues SET layout = '{
+  "floors": [{
+    "floor_name": "Main Stage", "floor_order": 1, "global_seat_size": 12,
+    "stage": { "x1": -0.32, "y1": -1.0, "x2": 0.32, "y2": -0.76 }, "stage_shapes": [],
+    "zones": [
+      { "zone_name": "SVIP",          "zone_type": "standing", "color": "#dc2626", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.4, "y":-0.74}, "corner2": {"x": 0.4, "y":-0.74}, "corner3": {"x": 0.4, "y":-0.18}, "corner4": {"x":-0.4, "y":-0.18} },
+      { "zone_name": "VIP Left",      "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.74}, "corner2": {"x":-0.42,"y":-0.74}, "corner3": {"x":-0.42,"y":-0.18}, "corner4": {"x":-0.97,"y":-0.18} },
+      { "zone_name": "VIP Right",     "zone_type": "standing", "color": "#f59e0b", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.42,"y":-0.74}, "corner2": {"x": 0.97,"y":-0.74}, "corner3": {"x": 0.97,"y":-0.18}, "corner4": {"x": 0.42,"y":-0.18} },
+      { "zone_name": "GA Left",       "zone_type": "standing", "color": "#2563eb", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x":-0.97,"y":-0.15}, "corner2": {"x":-0.05,"y":-0.15}, "corner3": {"x":-0.05,"y": 0.9 }, "corner4": {"x":-0.97,"y": 0.9 } },
+      { "zone_name": "GA Early Bird", "zone_type": "standing", "color": "#1d4ed8", "rotation": 0, "accessible": true, "shape_type": "rect", "corner1": {"x": 0.05,"y":-0.15}, "corner2": {"x": 0.97,"y":-0.15}, "corner3": {"x": 0.97,"y": 0.9 }, "corner4": {"x": 0.05,"y": 0.9 } }
+    ]
+  }]
+}'::jsonb WHERE name = 'Khu đô thị Vạn Phúc';
+
+-- 9. Venue links
+-- Events that uses custom layout will leave the venue_id NULL
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'V-Glow: The Cyber-Heritage Night';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê') WHERE name = 'The Echo of An Nam';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Gigamall Thủ Đức')             WHERE name = 'Sắc Lam: The Indigo Echo';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'CRYSTAL REALM: The Neon Garden';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Sân Lễ Hội Đền Vua Đinh - Vua Lê') WHERE name = 'SẮT & SON';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'GEM Center')                   WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Khu đô thị Vạn Phúc')          WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'Công viên Yên Sở')             WHERE name = 'LUVIA: The Echo of Highlands';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'GEM Center')                   WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+UPDATE public.events SET venue_id = (SELECT id FROM public.venues WHERE name = 'CIS Arena')                    WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+
+-- 10. Layout zone links
+-- This is for events that uses venue layout.
 -- V-Glow: The Cyber-Heritage Night
 -- Venue: Khu đô thị Vạn Phúc
 -- Venue zones: SVIP | VIP Left | VIP Right | GA Left | GA Early Bird
@@ -1398,8 +1302,8 @@ SET layout = jsonb_build_object(
         'venueMode', true,
         'zoneLinks', jsonb_build_object(
                 'SVIP',          (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'SVIP Lounge'   LIMIT 1),
-                'VIP Left',      (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'VIP'          LIMIT 1),
-                'VIP Right',     (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'VIP'          LIMIT 1),
+                'VIP Left',      (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'VIP Left'     LIMIT 1),
+                'VIP Right',     (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'VIP Right'    LIMIT 1),
                 'GA Left',       (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'GA'           LIMIT 1),
                 'GA Early Bird', (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'V-Glow: The Cyber-Heritage Night' AND z.name = 'GA Early Bird' LIMIT 1)
                      )
@@ -1551,8 +1455,8 @@ SET layout = jsonb_build_object(
         'venueMode', true,
         'zoneLinks', jsonb_build_object(
                 'SVIP',          (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'SVIP Dream'    LIMIT 1),
-                'VIP Left',      (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'VIP'          LIMIT 1),
-                'VIP Right',     (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'VIP'          LIMIT 1),
+                'VIP Left',      (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'VIP Left'     LIMIT 1),
+                'VIP Right',     (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'VIP Right'    LIMIT 1),
                 'GA Left',       (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'GA'           LIMIT 1),
                 'GA Early Bird', (SELECT z.id FROM public.zones z JOIN public.event_sessions es ON z.session_id = es.id JOIN public.events e ON es.event_id = e.id WHERE e.name = 'THE DREAMCATCHER ARCHIPELAGO' AND z.name = 'GA Early Bird' LIMIT 1)
                      )
@@ -1615,7 +1519,7 @@ SET layout = jsonb_build_object(
 WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
 
--- 8. Custom Layout
+-- 11. Custom Layout
 
 -- Vũ Trụ Cận Thị  (Mây in The Nest – intimate indie concert, Đà Lạt)
 -- Zones: VVIP Intimate (front, sitting, 20), Seated Standard (back, sitting, 80)

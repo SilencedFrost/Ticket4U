@@ -161,12 +161,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
       <div class="d-flex justify-content-between align-items-center">
         <span class="small">{{ t('common.currency.free') }}</span>
         <div class="form-check form-switch m-0">
-          <input
-            id="free-event-only"
-            class="form-check-input bg-reactive-gray"
-            type="checkbox"
-            role="switch"
-          />
+          <input id="free-event-only" class="form-check-input bg-reactive-gray" type="checkbox" />
         </div>
       </div>
     </div>
@@ -215,6 +210,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
           <button
             type="button"
             class="border-0 border-start border-light border-opacity-25 bg-transparent text-white d-inline-flex align-items-center justify-content-center px-2 flex-shrink-0"
+            aria-label="Remove category"
             @click="removeCategory(cat.id)"
           >
             <i class="bi bi-x-lg small"></i>

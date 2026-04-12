@@ -50,7 +50,7 @@ const options: AppearanceOption[] = [
         >
           <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :data-bs-theme="option.value">
             <span class="appearance-card-preview-frame d-block mx-auto">
-              <span class="ratio ratio-16x9">
+              <span class="ratio ratio-16x9 d-block">
                 <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
                   <span class="appearance-card-preview-toolbar d-flex align-items-center gap-1 px-2 py-1 border-bottom border-reactive-subtle bg-reactive-primary">
                     <i class="bi bi-dot text-reactive-secondary"></i>

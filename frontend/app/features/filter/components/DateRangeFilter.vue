@@ -41,12 +41,12 @@ const filterOptions = [
 
     <div class="row g-3 mb-3">
       <div class="col-12 col-sm-6">
-        <label class="form-label small">{{ $t('common.date.from_date') }}</label>
-        <input type="date" class="form-control" />
+        <label for="fromDate" class="form-label small">{{ $t('common.date.from_date') }}</label>
+        <input id="fromDate" type="date" class="form-control" />
       </div>
       <div class="col-12 col-sm-6">
-        <label class="form-label small">{{ $t('common.date.to_date') }}</label>
-        <input type="date" class="form-control" />
+        <label for="toDate" class="form-label small">{{ $t('common.date.to_date') }}</label>
+        <input id="toDate" type="date" class="form-control" />
       </div>
     </div>
 

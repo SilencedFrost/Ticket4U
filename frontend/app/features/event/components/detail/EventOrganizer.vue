@@ -30,30 +30,32 @@ onMounted(() => {
 <template>
   <section
     id="organizer-section"
-    class="card bg-reactive-secondary overflow-hidden m-3 mx-auto mw-100"
+    class="card p-3 bg-reactive-secondary overflow-hidden mx-auto mw-100"
   >
-    <div class="d-flex flex-column p-3 gap-2 mb-3 p-md-4">
+    <div class="mb-3 p-3">
       <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
         {{ $t('event_detail.label.organizer') }}
       </h5>
-    </div>
-    <div class="p-3 d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4">
-      <div class="flex-shrink-0 text-center">
-        <img
-          v-img-fallback="[400, 400]"
-          :src="organizer?.logo_url"
-          alt="Organizer"
-          class="img-fluid w-75 rounded-3 border shadow-sm"
-        />
-      </div>
+      <div
+        class="d-flex flex-column flex-md-row align-items-center pt-3 align-items-md-start gap-3 w-100"
+      >
+        <div class="flex-shrink-0 text-center w-md-auto">
+          <img
+            v-img-fallback="[400, 400]"
+            :src="organizer?.logo_url"
+            alt="Organizer"
+            class="img-fluid rounded-3 border shadow-sm w-100"
+          />
+        </div>
 
-      <div class="flex-grow-1 text-center text-md-start">
-        <h4 class="text-reactive-primary fw-bold mb-2 fs-5">
-          {{ organizer?.name }}
-        </h4>
-        <p class="text-reactive-primary lh-base small mb-0">
-          {{ organizer?.description }}
-        </p>
+        <div class="flex-grow-1 text-md-start">
+          <h4 class="text-reactive-primary fw-bold mb-2 fs-5">
+            {{ organizer?.name }}
+          </h4>
+          <p class="text-reactive-primary lh-base small mb-0">
+            {{ organizer?.description }}
+          </p>
+        </div>
       </div>
     </div>
   </section>

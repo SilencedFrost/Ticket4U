@@ -190,6 +190,14 @@ const trackStyle = computed(() => ({
   '--animation-duration': `${props.animationDuration}ms`,
   '--step': `${33.333 / props.visibleCount}%`,
 }));
+
+watch(maxIndex, (newMax) => {
+  if (!props.wrapAround && currentIndex.value > newMax) {
+    const safeIndex = Math.max(0, newMax);
+    currentIndex.value = safeIndex;
+    displayedIndex.value = safeIndex;
+  }
+});
 </script>
 
 <template>

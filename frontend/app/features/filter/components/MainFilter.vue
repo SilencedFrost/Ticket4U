@@ -98,7 +98,7 @@ function getStatusTitle() {
 }
 
 function selectItem(item: CategorySummary) {
-  if (!selectedCategories.value.find((cat) => cat.id === item.id)) {
+  if (!selectedCategories.value.some((cat) => cat.id === item.id)) {
     selectedCategories.value.push(item);
   }
   searchQuery.value = '';

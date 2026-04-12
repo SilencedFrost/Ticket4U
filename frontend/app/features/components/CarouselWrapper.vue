@@ -2,8 +2,8 @@
 import { useSwipe } from '@vueuse/core';
 
 interface ChevronConfig {
+  height?: number;
   offset?: number;
-  size?: number;
   inset?: number;
   opacity?: number;
 }
@@ -28,8 +28,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const chevronDefaults = {
+  height: 55,
   offset: 0,
-  size: 27,
   inset: 10,
   opacity: 50,
 };
@@ -37,8 +37,8 @@ const chevronDefaults = {
 // props.chevronOptions is the external props name, chevronConfig is the sanitized internal use name
 const chevronConfig = computed(() => {
   return {
-    offset: props.chevronOptions?.offset ?? chevronDefaults.offset,
-    size: props.chevronOptions?.size ?? chevronDefaults.size,
+    height: props.chevronOptions?.height ?? chevronDefaults.height,
+    offset: Math.min(100, Math.max(-100, props.chevronOptions?.offset ?? chevronDefaults.offset)),
     inset: props.chevronOptions?.inset ?? chevronDefaults.inset,
     opacity: props.chevronOptions?.opacity ?? chevronDefaults.opacity,
   };
@@ -203,15 +203,18 @@ const trackStyle = computed(() => ({
       class="arrow-container"
       :style="{
         marginRight: `-${chevronConfig.inset}px`,
-        paddingBottom: chevronConfig.offset > 0 ? `${chevronConfig.offset}px` : 0,
-        paddingTop: chevronConfig.offset < 0 ? `${chevronConfig.offset * -1}px` : '',
         visibility: currentIndex <= 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
         opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
-        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronConfig.size}pt` }"
+        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary d-flex align-items-center"
+        :style="{
+          fontSize: `${chevronConfig.height - 22}px`,
+          position: `relative`,
+          height: `${chevronConfig.height}px`,
+          top: `calc(${(100 - chevronConfig.offset) / 2}% + ${(chevronConfig.height * chevronConfig.offset) / 200}px)`,
+        }"
         @click="prev()"
       />
     </div>
@@ -281,16 +284,19 @@ const trackStyle = computed(() => ({
       class="arrow-container"
       :style="{
         marginLeft: `-${chevronConfig.inset}px`,
-        paddingBottom: chevronConfig.offset > 0 ? `${chevronConfig.offset}px` : 0,
-        paddingTop: chevronConfig.offset < 0 ? `${chevronConfig.offset * -1}px` : '',
         visibility:
           currentIndex >= maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
         opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
-        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronConfig.size}pt` }"
+        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary d-flex align-items-center"
+        :style="{
+          fontSize: `${chevronConfig.height - 22}px`,
+          position: `relative`,
+          height: `${chevronConfig.height}px`,
+          top: `calc(${(100 - chevronConfig.offset) / 2}% + ${(chevronConfig.height * chevronConfig.offset) / 200}px)`,
+        }"
         @click="next()"
       />
     </div>
@@ -308,15 +314,17 @@ const trackStyle = computed(() => ({
 
 <style scoped>
 .arrow-container {
-  display: flex;
-  align-items: center;
   position: relative;
   z-index: 2;
   transition: opacity 0.3s ease;
-}
 
-.arrow-container:hover {
-  opacity: 100% !important;
+  i {
+    transform: translateY(-50%);
+  }
+
+  &:hover {
+    opacity: 100% !important;
+  }
 }
 
 .carousel-viewport {

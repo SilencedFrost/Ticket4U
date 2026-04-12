@@ -6,6 +6,7 @@ interface AppearanceOption {
   icon: string;
   titleKey: string;
   subtitleKey: string;
+  vars : Record<string, string>;
 }
 
 const model = defineModel<ThemePreference>({ required: true });
@@ -16,12 +17,28 @@ const options: AppearanceOption[] = [
     icon: 'bi bi-brightness-high-fill',
     titleKey: 'settings.preferences.appearance.light_mode.title',
     subtitleKey: 'settings.preferences.appearance.light_mode.subtitle',
+    vars: {
+      '--bg-reactive-primary': 'var(--bg-primary-light)',
+      '--bg-reactive-secondary': 'var(--bg-secondary-light)',
+      '--bg-reactive-gray': '#c7c7c7',
+      '--text-reactive-primary': 'var(--text-primary-light)',
+      '--text-reactive-secondary': 'var(--text-secondary-light)',
+      '--border-reactive-subtle': 'rgba(var(--bs-secondary-rgb), 0.2)',
+    }
   },
   {
     value: 'dark',
     icon: 'bi bi-moon-fill',
     titleKey: 'settings.preferences.appearance.dark_mode.title',
     subtitleKey: 'settings.preferences.appearance.dark_mode.subtitle',
+    vars: {
+      '--bg-reactive-primary': 'var(--bg-primary-dark)',
+      '--bg-reactive-secondary': 'var(--bg-secondary-dark)',
+      '--bg-reactive-gray': '#5e5e5e',
+      '--text-reactive-primary': 'var(--text-primary-dark)',
+      '--text-reactive-secondary': 'var(--text-secondary-dark)',
+      '--border-reactive-subtle': 'rgba(var(--bs-secondary-rgb), 0.35)',
+    }
   },
 ];
 </script>
@@ -48,7 +65,7 @@ const options: AppearanceOption[] = [
           :aria-label="$t(option.titleKey)"
           @click="model = option.value"
         >
-          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :data-bs-theme="option.value">
+          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :style="option.vars">
             <span class="appearance-card-preview-frame d-block mx-auto">
               <span class="ratio ratio-16x9 d-block">
                 <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
@@ -95,24 +112,6 @@ const options: AppearanceOption[] = [
 
 .appearance-card:hover {
   transform: translateY(-1px);
-}
-
-.appearance-card-preview[data-bs-theme='light'] {
-  --bg-reactive-primary: var(--bg-primary-light);
-  --bg-reactive-secondary: var(--bg-secondary-light);
-  --bg-reactive-gray: #c7c7c7;
-  --text-reactive-primary: var(--text-primary-light);
-  --text-reactive-secondary: var(--text-secondary-light);
-  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.2);
-}
-
-.appearance-card-preview[data-bs-theme='dark'] {
-  --bg-reactive-primary: var(--bg-primary-dark);
-  --bg-reactive-secondary: var(--bg-secondary-dark);
-  --bg-reactive-gray: #5e5e5e;
-  --text-reactive-primary: var(--text-primary-dark);
-  --text-reactive-secondary: var(--text-secondary-dark);
-  --border-reactive-subtle: rgba(var(--bs-secondary-rgb), 0.35);
 }
 
 .border-reactive-subtle {

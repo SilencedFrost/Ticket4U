@@ -1,27 +1,48 @@
 <script setup lang="ts" generic="T">
 import { useSwipe } from '@vueuse/core';
 
-const props = withDefaults(
-  defineProps<{
-    items: T[];
-    mode?: 'page' | 'carousel';
-    wrapAround?: boolean;
-    visibleCount?: number;
-    chevronOffset?: number;
-    chevronSize?: number;
-    chevronInset?: number;
-    animationDuration?: number;
-  }>(),
-  {
-    visibleCount: 1,
-    mode: 'carousel',
-    wrapAround: true,
-    chevronOffset: 100,
-    chevronSize: 27,
-    chevronInset: 10,
-    animationDuration: 150,
-  },
-);
+interface ChevronConfig {
+  height?: number;
+  offset?: number;
+  inset?: number;
+  opacity?: number;
+}
+
+interface Props {
+  items: T[];
+  mode?: 'page' | 'carousel';
+  wrapAround?: boolean;
+  visibleCount?: number;
+  animationDuration?: number;
+  defaultHeight?: number;
+  chevronOptions?: ChevronConfig;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  visibleCount: 1,
+  mode: 'carousel',
+  wrapAround: true,
+  animationDuration: 150,
+  defaultHeight: 200,
+  chevronOptions: () => ({}),
+});
+
+const chevronDefaults = {
+  height: 55,
+  offset: 0,
+  inset: 10,
+  opacity: 50,
+};
+
+// props.chevronOptions is the external props name, chevronConfig is the sanitized internal use name
+const chevronConfig = computed(() => {
+  return {
+    height: props.chevronOptions?.height ?? chevronDefaults.height,
+    offset: Math.min(100, Math.max(-100, props.chevronOptions?.offset ?? chevronDefaults.offset)),
+    inset: props.chevronOptions?.inset ?? chevronDefaults.inset,
+    opacity: props.chevronOptions?.opacity ?? chevronDefaults.opacity,
+  };
+});
 
 defineSlots<{
   item(props: { item: T }): VNode[];
@@ -169,11 +190,19 @@ const trackStyle = computed(() => ({
   '--animation-duration': `${props.animationDuration}ms`,
   '--step': `${33.333 / props.visibleCount}%`,
 }));
+
+watch(maxIndex, (newMax) => {
+  if (!props.wrapAround && currentIndex.value > newMax) {
+    const safeIndex = Math.max(0, newMax);
+    currentIndex.value = safeIndex;
+    displayedIndex.value = safeIndex;
+  }
+});
 </script>
 
 <template>
   <div
-    v-if="items.length"
+    v-if="items && items.length > 0"
     ref="container"
     class="carousel-container d-flex"
     style="overflow: hidden"
@@ -181,15 +210,19 @@ const trackStyle = computed(() => ({
     <div
       class="arrow-container"
       :style="{
-        marginRight: `-${chevronInset}px`,
-        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
-        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        marginRight: `-${chevronConfig.inset}px`,
         visibility: currentIndex <= 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+        opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
-        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronSize}pt` }"
+        class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary d-flex align-items-center"
+        :style="{
+          fontSize: `${chevronConfig.height - 22}px`,
+          position: `relative`,
+          height: `${chevronConfig.height}px`,
+          top: `calc(${(100 - chevronConfig.offset) / 2}% + ${(chevronConfig.height * chevronConfig.offset) / 200}px)`,
+        }"
         @click="prev()"
       />
     </div>
@@ -258,36 +291,48 @@ const trackStyle = computed(() => ({
     <div
       class="arrow-container"
       :style="{
-        marginLeft: `-${chevronInset}px`,
-        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
-        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        marginLeft: `-${chevronConfig.inset}px`,
         visibility:
           currentIndex >= maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+        opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
-        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronSize}pt` }"
+        class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary d-flex align-items-center"
+        :style="{
+          fontSize: `${chevronConfig.height - 22}px`,
+          position: `relative`,
+          height: `${chevronConfig.height}px`,
+          top: `calc(${(100 - chevronConfig.offset) / 2}% + ${(chevronConfig.height * chevronConfig.offset) / 200}px)`,
+        }"
         @click="next()"
       />
     </div>
   </div>
 
-  <div v-else class="alternate-message"></div>
+  <div
+    v-else
+    class="alternate-message text-center text-reactive-secondary pt-5"
+    :style="{ minHeight: `${defaultHeight}px` }"
+  >
+    <i class="bi bi-box2-fill" style="font-size: 80px" />
+    <h2>Nothing here</h2>
+  </div>
 </template>
 
 <style scoped>
 .arrow-container {
-  display: flex;
-  align-items: center;
   position: relative;
   z-index: 2;
-  opacity: 50%;
   transition: opacity 0.3s ease;
-}
 
-.arrow-container:hover {
-  opacity: 100%;
+  i {
+    transform: translateY(-50%);
+  }
+
+  &:hover {
+    opacity: 100% !important;
+  }
 }
 
 .carousel-viewport {

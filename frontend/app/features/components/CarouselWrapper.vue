@@ -89,7 +89,7 @@ const prevItems = computed<T[]>(() => {
   const result: T[] = [];
   const len = props.items.length;
 
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= Math.min(2, props.visibleCount); i++) {
     const idx = displayedIndex.value - i;
 
     let item;
@@ -114,7 +114,7 @@ const nextItems = computed<T[]>(() => {
   const result: T[] = [];
   const len = props.items.length;
 
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= Math.min(2, props.visibleCount); i++) {
     const idx = displayedIndex.value + props.visibleCount + (i - 1);
 
     let item;

@@ -25,7 +25,7 @@ const model = defineModel<string>({ required: true });
 
     <select
       v-model="model"
-      class="form-select preferences-language-select bg-reactive-primary text-reactive-primary border-secondary-subtle"
+      class="form-select bg-reactive-primary text-reactive-primary border-secondary-subtle"
       :aria-label="$t('settings.preferences.language.title')"
     >
       <option v-for="option in options" :key="option.value" :value="option.value">
@@ -34,9 +34,3 @@ const model = defineModel<string>({ required: true });
     </select>
   </section>
 </template>
-
-<style scoped>
-.preferences-language-select {
-  min-height: 58px;
-}
-</style>

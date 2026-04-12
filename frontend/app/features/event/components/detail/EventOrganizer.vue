@@ -29,6 +29,7 @@ onMounted(() => {
 
 <template>
   <section
+    v-if="organizer"
     id="organizer-section"
     class="card p-3 bg-reactive-secondary overflow-hidden mx-auto mw-100"
   >

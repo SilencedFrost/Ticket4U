@@ -35,7 +35,7 @@ onMounted(() => getEvent());
 
 <template>
   <div v-if="isLoading" class="h-auto overflow-x-hidden mw-100">
-    <section class="pt-4" role="status" aria-live="polite" aria-label="Đang tải dữ liệu sự kiện">
+    <section class="pt-4">
       <div class="container-xxl">
         <div class="card border-0 shadow-sm overflow-hidden">
           <div class="row g-0">

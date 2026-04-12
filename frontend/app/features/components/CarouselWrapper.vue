@@ -14,6 +14,7 @@ interface Props {
   wrapAround?: boolean;
   visibleCount?: number;
   animationDuration?: number;
+  defaultHeight?: number;
   chevronOptions?: ChevronConfig;
 }
 
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'carousel',
   wrapAround: true,
   animationDuration: 150,
+  defaultHeight: 200,
   chevronOptions: () => ({}),
 });
 
@@ -192,7 +194,7 @@ const trackStyle = computed(() => ({
 
 <template>
   <div
-    v-if="items.length"
+    v-if="items && items.length > 0"
     ref="container"
     class="carousel-container d-flex"
     style="overflow: hidden"
@@ -294,7 +296,14 @@ const trackStyle = computed(() => ({
     </div>
   </div>
 
-  <div v-else class="alternate-message"></div>
+  <div
+    v-else
+    class="alternate-message text-center text-reactive-secondary pt-5"
+    :style="{ minHeight: `${defaultHeight}px` }"
+  >
+    <i class="bi bi-box2-fill" style="font-size: 80px" />
+    <h2>Nothing here</h2>
+  </div>
 </template>
 
 <style scoped>

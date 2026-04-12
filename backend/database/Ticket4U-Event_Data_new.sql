@@ -91,127 +91,127 @@ UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v177539
 
 -- Descriptions
 
-UPDATE public.events SET
-about_vi = 'V-Glow 2026 là lễ hội âm nhạc và công nghệ đột phá tại TP.HCM, kết hợp giữa nét đẹp Trung Thu truyền thống và phong cách Cyberpunk tương lai. Với sự góp mặt của các ngôi sao V-Pop hàng đầu, triển lãm nghệ thuật AR và diễu hành lồng đèn số, đây là điểm đến không thể bỏ qua cho cộng đồng fan Gen Z.',
-about_en = 'V-Glow 2026 is a revolutionary fan-fest in Ho Chi Minh City, merging Vietnamese traditional mid-autumn heritage with futuristic Cyberpunk aesthetics. Featuring top V-Pop idols, immersive AR art, and a digital lantern parade, it''s the ultimate cultural-tech experience for the Gen Z fanbase.'
+UPDATE public.events SET 
+about_vi = 'V-Glow 2026 là lễ hội âm nhạc và công nghệ đột phá tại TP.HCM, kết hợp giữa nét đẹp Trung Thu truyền thống và phong cách Cyberpunk tương lai. Với sự góp mặt của các ngôi sao V-Pop hàng đầu, triển lãm nghệ thuật AR và diễu hành lồng đèn số, đây là điểm đến không thể bỏ qua cho cộng đồng fan Gen Z.', 
+about_en = 'V-Glow 2026 is a revolutionary fan-fest in Ho Chi Minh City, merging Vietnamese traditional mid-autumn heritage with futuristic Cyberpunk aesthetics. Featuring top V-Pop idols, immersive AR art, and a digital lantern parade, it''s the ultimate cultural-tech experience for the Gen Z fanbase.' 
 where name = 'V-Glow: The Cyber-Heritage Night';
 
-UPDATE public.events SET
-about_vi = '"Tiếng Vọng An Nam" là lễ hội đêm quy mô lớn tại TP.HCM năm 2026, kết hợp giữa di sản truyền thống và công nghệ tương lai. Với sự góp mặt của các nghệ sĩ hàng đầu như Gemini Hùng Huỳnh và nghệ thuật số đa giác quan, đây là sự kiện văn hóa - công nghệ không thể bỏ lỡ.',
-about_en = '"The Echo of An Nam" is a premier 2026 night festival in Ho Chi Minh City blending traditional Vietnamese heritage with futuristic tech. Featuring top artists like Gemini Hung Huynh and immersive digital art, it''s the ultimate cultural-tech crossover for the modern fanbase.'
+UPDATE public.events SET 
+about_vi = '"Tiếng Vọng An Nam" là lễ hội đêm quy mô lớn tại TP.HCM năm 2026, kết hợp giữa di sản truyền thống và công nghệ tương lai. Với sự góp mặt của các nghệ sĩ hàng đầu như Gemini Hùng Huỳnh và nghệ thuật số đa giác quan, đây là sự kiện văn hóa - công nghệ không thể bỏ lỡ.', 
+about_en = '"The Echo of An Nam" is a premier 2026 night festival in Ho Chi Minh City blending traditional Vietnamese heritage with futuristic tech. Featuring top artists like Gemini Hung Huynh and immersive digital art, it''s the ultimate cultural-tech crossover for the modern fanbase.' 
 where name = 'The Echo of An Nam';
 
-UPDATE public.events SET
-about_vi = 'Trải nghiệm lễ hội âm nhạc và công nghệ đỉnh cao tại Sài Gòn Neon Beats 2026. Một sự kiện bùng nổ kết hợp giữa âm thanh EDM sôi động, trình diễn Drone Light Show và không gian tương tác ảo (AR) tại "Trung tâm mới" Global City. Đừng bỏ lỡ cơ hội gặp gỡ các nghệ sĩ hàng đầu và đắm mình trong kỷ nguyên số.',
-about_en = 'Experience the ultimate music and technology festival at Saigon Neon Beats 2026. An explosive event blending high-energy EDM, Drone Light Shows, and AR interactive zones at the "New City Center" - Global City. Don''t miss the chance to meet top artists and immerse yourself in the digital era.'
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm lễ hội âm nhạc và công nghệ đỉnh cao tại Sài Gòn Neon Beats 2026. Một sự kiện bùng nổ kết hợp giữa âm thanh EDM sôi động, trình diễn Drone Light Show và không gian tương tác ảo (AR) tại "Trung tâm mới" Global City. Đừng bỏ lỡ cơ hội gặp gỡ các nghệ sĩ hàng đầu và đắm mình trong kỷ nguyên số.', 
+about_en = 'Experience the ultimate music and technology festival at Saigon Neon Beats 2026. An explosive event blending high-energy EDM, Drone Light Shows, and AR interactive zones at the "New City Center" - Global City. Don''t miss the chance to meet top artists and immerse yourself in the digital era.' 
 where name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 
-UPDATE public.events SET
-about_vi = 'Đắm mình trong sự giao thoa giữa di sản nghìn năm và tư duy sáng tạo hiện đại tại "Cổ Nghệ Kiêu Hùng." Diễn ra tại Văn Miếu - Quốc Tử Giám, sự kiện mang đến những trải nghiệm trình diễn nghề thủ công trực tiếp, nhạc indie-folk và sàn diễn "Cổ phục" độc bản từ các nghệ nhân và nhà thiết kế trẻ hàng đầu.',
-about_en = 'Experience the fusion of Vietnam''s 1,000-year-old heritage and modern creative flair at "The Antique Alchemy." Join us at Hanoi''s historic Temple of Literature for a night of live traditional craftsmanship, indie-folk music, and an exclusive "Antique Runway" featuring the country''s top artisans and Gen-Z designers.'
+UPDATE public.events SET 
+about_vi = 'Đắm mình trong sự giao thoa giữa di sản nghìn năm và tư duy sáng tạo hiện đại tại "Cổ Nghệ Kiêu Hùng." Diễn ra tại Văn Miếu - Quốc Tử Giám, sự kiện mang đến những trải nghiệm trình diễn nghề thủ công trực tiếp, nhạc indie-folk và sàn diễn "Cổ phục" độc bản từ các nghệ nhân và nhà thiết kế trẻ hàng đầu.', 
+about_en = 'Experience the fusion of Vietnam''s 1,000-year-old heritage and modern creative flair at "The Antique Alchemy." Join us at Hanoi''s historic Temple of Literature for a night of live traditional craftsmanship, indie-folk music, and an exclusive "Antique Runway" featuring the country''s top artisans and Gen-Z designers.' 
 where name = 'CỔ NGHỆ KIÊU HÙNG';
 
-UPDATE public.events SET
-about_vi = 'Khám phá NEO-LUMINANCE 2026, lễ hội âm nhạc điện tử và đa dòng nhạc ngoài trời quy mô lớn nhất tại TP.HCM. Với sự góp mặt của DJ/Nhà sản xuất nổi tiếng thế giới cùng các nghệ sĩ hàng đầu Việt Nam, sự kiện là sự giao thoa độc đáo giữa phong cách tương lai Cyberpunk và họa tiết Đông Dương truyền thống. Hãy cùng 25,000 khán giả tại SECC trải nghiệm một đêm hội ánh sáng công nghệ cao và những màn trình diễn âm nhạc bùng nổ.',
-about_en = 'Experience NEO-LUMINANCE 2026, Vietnam''s premier outdoor electronic and fusion music festival in Ho Chi Minh City. Featuring a headline performance by a world-renowned European DJ/Producer (unveiled soon) and top-tier local artists, this event blends futuristic cyberpunk aesthetics with traditional Indochine motifs. Join 25,000 fans at SECC for a night of high-tech light shows, immersive art, and the next wave of Asian-European musical synergy.'
+UPDATE public.events SET 
+about_vi = 'Khám phá NEO-LUMINANCE 2026, lễ hội âm nhạc điện tử và đa dòng nhạc ngoài trời quy mô lớn nhất tại TP.HCM. Với sự góp mặt của DJ/Nhà sản xuất nổi tiếng thế giới cùng các nghệ sĩ hàng đầu Việt Nam, sự kiện là sự giao thoa độc đáo giữa phong cách tương lai Cyberpunk và họa tiết Đông Dương truyền thống. Hãy cùng 25,000 khán giả tại SECC trải nghiệm một đêm hội ánh sáng công nghệ cao và những màn trình diễn âm nhạc bùng nổ.', 
+about_en = 'Experience NEO-LUMINANCE 2026, Vietnam''s premier outdoor electronic and fusion music festival in Ho Chi Minh City. Featuring a headline performance by a world-renowned European DJ/Producer (unveiled soon) and top-tier local artists, this event blends futuristic cyberpunk aesthetics with traditional Indochine motifs. Join 25,000 fans at SECC for a night of high-tech light shows, immersive art, and the next wave of Asian-European musical synergy.' 
 where name = 'NEO-LUMINANCE: The Echo of Indochine';
 
-UPDATE public.events SET
-about_vi = 'Sắc Lam: The Indigo Echo là triển lãm nghệ thuật đa giác quan kết hợp giữa kỹ thuật nhuộm chàm truyền thống của Việt Nam và công nghệ trình chiếu ánh sáng hiện đại. Cùng khám phá linh hồn của vùng cao qua lăng kính đương đại ngay giữa lòng Sài Gòn.',
-about_en = 'Sắc Lam: The Indigo Echo is a premier immersive art expo blending traditional Vietnamese natural dyeing techniques with cutting-edge digital projection. Experience the soul of the highlands through a modern lens in the heart of Saigon.'
+UPDATE public.events SET 
+about_vi = 'Sắc Lam: The Indigo Echo là triển lãm nghệ thuật đa giác quan kết hợp giữa kỹ thuật nhuộm chàm truyền thống của Việt Nam và công nghệ trình chiếu ánh sáng hiện đại. Cùng khám phá linh hồn của vùng cao qua lăng kính đương đại ngay giữa lòng Sài Gòn.', 
+about_en = 'Sắc Lam: The Indigo Echo is a premier immersive art expo blending traditional Vietnamese natural dyeing techniques with cutting-edge digital projection. Experience the soul of the highlands through a modern lens in the heart of Saigon.' 
 where name = 'Sắc Lam: The Indigo Echo';
 
-UPDATE public.events SET
-about_vi = 'Crystal Realm: Vườn Neon Huyền Ảo là lễ hội cosplay ngoài trời cao cấp ngay tại trung tâm TP.HCM. Với sân khấu LED khổng lồ, các khu vực chụp ảnh chuyên nghiệp và dàn khách mời là những cosplayer quốc tế hàng đầu, sự kiện là sự kết hợp hoàn mỹ giữa vẻ đẹp thiên nhiên và phong cách cyberpunk tương lai.',
-about_en = 'Crystal Realm: The Neon Garden is a premium outdoor cosplay festival in the heart of Ho Chi Minh City. Featuring a massive LED-integrated stage, professional photo zones, and a guest lineup of top-tier international cosplayers, this event blends the beauty of nature with futuristic cyberpunk aesthetics.'
+UPDATE public.events SET 
+about_vi = 'Crystal Realm: Vườn Neon Huyền Ảo là lễ hội cosplay ngoài trời cao cấp ngay tại trung tâm TP.HCM. Với sân khấu LED khổng lồ, các khu vực chụp ảnh chuyên nghiệp và dàn khách mời là những cosplayer quốc tế hàng đầu, sự kiện là sự kết hợp hoàn mỹ giữa vẻ đẹp thiên nhiên và phong cách cyberpunk tương lai.', 
+about_en = 'Crystal Realm: The Neon Garden is a premium outdoor cosplay festival in the heart of Ho Chi Minh City. Featuring a massive LED-integrated stage, professional photo zones, and a guest lineup of top-tier international cosplayers, this event blends the beauty of nature with futuristic cyberpunk aesthetics.' 
 where name = 'CRYSTAL REALM: The Neon Garden';
 
-UPDATE public.events SET
-about_vi = 'SẮT & SON là lễ hội âm nhạc Rock lớn nhất năm 2026 tại Sài Gòn, quy tụ những biểu tượng Rock huyền thoại và các ban nhạc Indie đầy nổi loạn. Với không gian công nghiệp gai góc hòa quyện cùng nét văn hóa truyền thống, sự kiện hứa hẹn mang đến những màn trình diễn rực lửa, đánh thức bản lĩnh và đam mê tự do của thế hệ trẻ Việt Nam.',
-about_en = 'SẮT & SON is the premier Rock festival of 2026 in Saigon, bringing together legendary rock icons and rebellious indie bands. Set in a gritty industrial atmosphere infused with traditional cultural motifs, the event promises high-octane performances that ignite the spirit of freedom and raw passion within Vietnam''s youth.'
+UPDATE public.events SET 
+about_vi = 'SẮT & SON là lễ hội âm nhạc Rock lớn nhất năm 2026 tại Sài Gòn, quy tụ những biểu tượng Rock huyền thoại và các ban nhạc Indie đầy nổi loạn. Với không gian công nghiệp gai góc hòa quyện cùng nét văn hóa truyền thống, sự kiện hứa hẹn mang đến những màn trình diễn rực lửa, đánh thức bản lĩnh và đam mê tự do của thế hệ trẻ Việt Nam.', 
+about_en = 'SẮT & SON is the premier Rock festival of 2026 in Saigon, bringing together legendary rock icons and rebellious indie bands. Set in a gritty industrial atmosphere infused with traditional cultural motifs, the event promises high-octane performances that ignite the spirit of freedom and raw passion within Vietnam''s youth.' 
 where name = 'SẮT & SON';
 
-UPDATE public.events SET
-about_vi = 'Khám phá sự giao thoa giữa huyền bí cổ xưa và đổi mới tương lai tại Techno-Sorcery. Lễ hội duy nhất trong đêm hội tụ "phép thuật đen" của AI tiên tiến và robot hiệu suất cao, đặt trong không gian kiến trúc độc đáo của Bảo tàng Hà Nội. Hãy chứng kiến những cỗ máy biết tư duy và những khối thép chuyển động đầy linh hồn.',
-about_en = 'Experience the fusion of ancient mysticism and futuristic innovation at Techno-Sorcery. This one-night-only festival showcases the "dark magic" of advanced AI and high-performance robotics, set against the iconic architecture of the Hanoi Museum. Witness machines that think and steel that moves with a soul.'
+UPDATE public.events SET 
+about_vi = 'Khám phá sự giao thoa giữa huyền bí cổ xưa và đổi mới tương lai tại Techno-Sorcery. Lễ hội duy nhất trong đêm hội tụ "phép thuật đen" của AI tiên tiến và robot hiệu suất cao, đặt trong không gian kiến trúc độc đáo của Bảo tàng Hà Nội. Hãy chứng kiến những cỗ máy biết tư duy và những khối thép chuyển động đầy linh hồn.', 
+about_en = 'Experience the fusion of ancient mysticism and futuristic innovation at Techno-Sorcery. This one-night-only festival showcases the "dark magic" of advanced AI and high-performance robotics, set against the iconic architecture of the Hanoi Museum. Witness machines that think and steel that moves with a soul.' 
 where name = 'Techno-Sorcery: The Zenith of AI & Robotics';
 
-UPDATE public.events SET
-about_vi = 'Buổi ra mắt thân mật của "Lặng" – ban nhạc Indie-Dream Pop mới nổi. Một hành trình đa giác quan kết hợp giữa âm nhạc và nghệ thuật thị giác trừu tượng trong không gian biệt thự cổ kính giữa lòng Hà Nội.',
-about_en = 'An intimate, low-fidelity debut showcase for "Lặng," an emerging indie-dream pop band. Experience a sensory journey where music meets abstract visual art in one of Hanoi''s most iconic colonial villas.'
+UPDATE public.events SET 
+about_vi = 'Buổi ra mắt thân mật của "Lặng" – ban nhạc Indie-Dream Pop mới nổi. Một hành trình đa giác quan kết hợp giữa âm nhạc và nghệ thuật thị giác trừu tượng trong không gian biệt thự cổ kính giữa lòng Hà Nội.', 
+about_en = 'An intimate, low-fidelity debut showcase for "Lặng," an emerging indie-dream pop band. Experience a sensory journey where music meets abstract visual art in one of Hanoi''s most iconic colonial villas.' 
 where name = 'Vũ Trụ Cận Thị';
 
-UPDATE public.events SET
-about_vi = 'Đắm chìm trong Đảo Quốc Mộng Mơ, lễ hội âm nhạc và nghệ thuật kỳ ảo tại The Global City, TP.HCM. Trải nghiệm không gian thần tiên mang phong cách Disneyland nhưng đậm chất tâm hồn Việt với sen neon khổng lồ, sân khấu mây bồng bềnh và những nghệ sĩ hàng đầu.',
-about_en = 'Step into The Dreamcatcher Archipelago, an immersive whimsical festival at The Global City, HCMC. Experience a "Disneyland-style" magic reimagined with Vietnamese soul, featuring floating neon lotuses, cloud-shrouded stages, and top-tier musical acts.'
+UPDATE public.events SET 
+about_vi = 'Đắm chìm trong Đảo Quốc Mộng Mơ, lễ hội âm nhạc và nghệ thuật kỳ ảo tại The Global City, TP.HCM. Trải nghiệm không gian thần tiên mang phong cách Disneyland nhưng đậm chất tâm hồn Việt với sen neon khổng lồ, sân khấu mây bồng bềnh và những nghệ sĩ hàng đầu.', 
+about_en = 'Step into The Dreamcatcher Archipelago, an immersive whimsical festival at The Global City, HCMC. Experience a "Disneyland-style" magic reimagined with Vietnamese soul, featuring floating neon lotuses, cloud-shrouded stages, and top-tier musical acts.' 
 where name = 'THE DREAMCATCHER ARCHIPELAGO';
 
-UPDATE public.events SET
-about_vi = 'Trải nghiệm Omakase cao cấp độc bản, kết hợp giữa kỹ nghệ truyền thống Nhật Bản và tinh hoa nguyên liệu mùa hè Việt Nam. Sự kiện giới hạn chỉ 24 khách cho một hành trình ẩm thực đầy cảm xúc.',
-about_en = 'An ultra-exclusive, high-end Omakase experience merging traditional Japanese craftsmanship with local Vietnamese seasonal treasures. Limited to 24 seats for an intimate journey of culinary storytelling.'
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm Omakase cao cấp độc bản, kết hợp giữa kỹ nghệ truyền thống Nhật Bản và tinh hoa nguyên liệu mùa hè Việt Nam. Sự kiện giới hạn chỉ 24 khách cho một hành trình ẩm thực đầy cảm xúc.', 
+about_en = 'An ultra-exclusive, high-end Omakase experience merging traditional Japanese craftsmanship with local Vietnamese seasonal treasures. Limited to 24 seats for an intimate journey of culinary storytelling.' 
 where name = 'KAIZEN: The Art of Precision';
 
-UPDATE public.events SET
-about_vi = 'LUVIA: The Echo of Highlands là một trải nghiệm âm thanh đa giác quan độc bản, kết hợp giữa âm nhạc ambient, tiếng vang của đại ngàn và nghệ thuật ánh sáng tại cao nguyên Mộc Châu. Diễn ra tại cây cầu kính Bạch Long kỷ lục, sự kiện mời gọi khán giả cùng "chạm" vào thiên nhiên qua những giai điệu bản địa được tái hiện bằng công nghệ âm thanh 360 độ, mang lại cảm giác thư thái và kết nối tâm hồn tuyệt đối.',
-about_en = 'LUVIA: The Echo of Highlands is a unique multi-sensory auditory experience blending ambient music, forest echoes, and light art in the heart of Moc Chau. Set against the backdrop of the record-breaking Bach Long Glass Bridge, this event invites guests to "touch" nature through indigenous melodies reimagined with 360-degree sound technology, offering ultimate relaxation and spiritual reconnection.'
+UPDATE public.events SET 
+about_vi = 'LUVIA: The Echo of Highlands là một trải nghiệm âm thanh đa giác quan độc bản, kết hợp giữa âm nhạc ambient, tiếng vang của đại ngàn và nghệ thuật ánh sáng tại cao nguyên Mộc Châu. Diễn ra tại cây cầu kính Bạch Long kỷ lục, sự kiện mời gọi khán giả cùng "chạm" vào thiên nhiên qua những giai điệu bản địa được tái hiện bằng công nghệ âm thanh 360 độ, mang lại cảm giác thư thái và kết nối tâm hồn tuyệt đối.', 
+about_en = 'LUVIA: The Echo of Highlands is a unique multi-sensory auditory experience blending ambient music, forest echoes, and light art in the heart of Moc Chau. Set against the backdrop of the record-breaking Bach Long Glass Bridge, this event invites guests to "touch" nature through indigenous melodies reimagined with 360-degree sound technology, offering ultimate relaxation and spiritual reconnection.' 
 where name = 'LUVIA: The Echo of Highlands';
 
-UPDATE public.events SET
-about_vi = 'Trải nghiệm "Hương Sắc Linh Hồn," buổi hòa nhạc 6D đa giác quan đầu tiên tại Việt Nam. Sự kết hợp giữa âm thanh vòm sống động và công nghệ kích hoạt mùi hương đồng bộ sẽ đưa người hâm mộ hành trình qua những vùng ký ức đặc trưng—từ rừng thông sương mù Đà Lạt đến hơi thở mặn mòi của Vịnh Hạ Long—trong khi thưởng thức các màn trình diễn trực tiếp từ những nghệ sĩ indie và dàn nhạc hàng đầu.',
-about_en = 'Experience "Scent of the Soul," Vietnam''s first 6D olfactory-immersive indoor concert. Melding high-fidelity spatial audio with synchronized scent-triggering technology, this event transports fans through the aromatic landscapes of Vietnam—from the misty pine forests of Da Lat to the salty breeze of Ha Long Bay—all while enjoying live performances from top local indie and orchestral artists.'
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm "Hương Sắc Linh Hồn," buổi hòa nhạc 6D đa giác quan đầu tiên tại Việt Nam. Sự kết hợp giữa âm thanh vòm sống động và công nghệ kích hoạt mùi hương đồng bộ sẽ đưa người hâm mộ hành trình qua những vùng ký ức đặc trưng—từ rừng thông sương mù Đà Lạt đến hơi thở mặn mòi của Vịnh Hạ Long—trong khi thưởng thức các màn trình diễn trực tiếp từ những nghệ sĩ indie và dàn nhạc hàng đầu.', 
+about_en = 'Experience "Scent of the Soul," Vietnam''s first 6D olfactory-immersive indoor concert. Melding high-fidelity spatial audio with synchronized scent-triggering technology, this event transports fans through the aromatic landscapes of Vietnam—from the misty pine forests of Da Lat to the salty breeze of Ha Long Bay—all while enjoying live performances from top local indie and orchestral artists.' 
 where name = 'Scent of the Soul: The Echoes of Vietnam';
 
-UPDATE public.events SET
-about_vi = 'Khám phá sức mạnh của tiếng Việt thông qua âm nhạc tại Âm Sắc Việt - THE RESONANCE. Một đêm nhạc tương tác đa giác quan, nơi ranh giới giữa nghệ sĩ và khán giả bị xóa nhòa bởi những thử thách ngôn ngữ, ứng biến giai điệu và công nghệ trình diễn ánh sáng hiện đại ngay tại trái tim Sài Gòn.',
-about_en = 'Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows in the heart of Saigon.'
+UPDATE public.events SET 
+about_vi = 'Khám phá sức mạnh của tiếng Việt thông qua âm nhạc tại Âm Sắc Việt - THE RESONANCE. Một đêm nhạc tương tác đa giác quan, nơi ranh giới giữa nghệ sĩ và khán giả bị xóa nhòa bởi những thử thách ngôn ngữ, ứng biến giai điệu và công nghệ trình diễn ánh sáng hiện đại ngay tại trái tim Sài Gòn.', 
+about_en = 'Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows in the heart of Saigon.' 
 where name = 'Âm Sắc Việt - THE RESONANCE';
 
 
 -- Terms and Conditions
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực. Trang phục tự do.'
-                     WHERE name='V-Glow: The Cyber-Heritage Night';
+WHERE name='V-Glow: The Cyber-Heritage Night';
 
 UPDATE public.events SET terms_and_conditions='Vui lòng mang theo CCCD khi check-in. Không gây rối trật tự.'
-                     WHERE name='The Echo of An Nam';
+WHERE name='The Echo of An Nam';
 
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.'
-                     WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 
 UPDATE public.events SET terms_and_conditions='Vui lòng mang theo CCCD. Trang phục cổ phục được khuyến khích.'
-                     WHERE name='CỔ NGHỆ KIÊU HÙNG';
+WHERE name='CỔ NGHỆ KIÊU HÙNG';
 
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực.'
-                     WHERE name='NEO-LUMINANCE: The Echo of Indochine';
+WHERE name='NEO-LUMINANCE: The Echo of Indochine';
 
 UPDATE public.events SET terms_and_conditions='Mỗi lượt tham quan tối đa 90 phút. Không chụp ảnh flash.'
-                     WHERE name='Sắc Lam: The Indigo Echo';
+WHERE name='Sắc Lam: The Indigo Echo';
 
 UPDATE public.events SET terms_and_conditions='Trang phục cosplay được khuyến khích. Cấm trẻ em dưới 12 tuổi vào ban đêm.'
-                     WHERE name='CRYSTAL REALM: The Neon Garden';
+WHERE name='CRYSTAL REALM: The Neon Garden';
 
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.'
-                     WHERE name='SẮT & SON';
+WHERE name='SẮT & SON';
 
 UPDATE public.events SET terms_and_conditions='Khuyến khích mang theo laptop. Phù hợp mọi lứa tuổi.'
-                     WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
+WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
 
 UPDATE public.events SET terms_and_conditions='Sức chứa có hạn. Vui lòng đến đúng giờ. Không quay phim trong buổi diễn.'
-                     WHERE name='Vũ Trụ Cận Thị';
+WHERE name='Vũ Trụ Cận Thị';
 
 UPDATE public.events SET terms_and_conditions='Phù hợp mọi lứa tuổi. Trẻ em dưới 12 tuổi cần có người lớn đi kèm.'
-                     WHERE name='THE DREAMCATCHER ARCHIPELAGO';
+WHERE name='THE DREAMCATCHER ARCHIPELAGO';
 
 UPDATE public.events SET terms_and_conditions='Sự kiện giới hạn 24 khách. Dress code: smart casual. Đúng giờ tuyệt đối.'
-                     WHERE name='KAIZEN: The Art of Precision';
+WHERE name='KAIZEN: The Art of Precision';
 
 UPDATE public.events SET terms_and_conditions='Trang phục thoải mái. Khuyến khích mang theo áo khoác.'
-                     WHERE name='LUVIA: The Echo of Highlands';
+WHERE name='LUVIA: The Echo of Highlands';
 
 UPDATE public.events SET terms_and_conditions='Phù hợp mọi lứa tuổi. Không phù hợp với người dị ứng mùi hương mạnh.'
-                     WHERE name='Scent of the Soul: The Echoes of Vietnam';
+WHERE name='Scent of the Soul: The Echoes of Vietnam';
 
 UPDATE public.events SET terms_and_conditions='Vui lòng mang theo CCCD khi check-in. Không ảnh hưởng đến khán giả xung quanh.'
-                     WHERE name='Âm Sắc Việt - THE RESONANCE';
+WHERE name='Âm Sắc Việt - THE RESONANCE';
 
 -- Refund Policy
 UPDATE public.events SET policy_refund='Hoàn tiền 50% nếu hủy trước 7 ngày diễn ra sự kiện.' WHERE name='V-Glow: The Cyber-Heritage Night';

@@ -185,7 +185,7 @@
     },
     "preferences": {
       "title": "Preferences",
-      "subtitle": "Configure your workspace environment and notification protocols.",
+      "subtitle": "Customize your workspace environment.",  
       "appearance": {
         "title": "Appearance",
         "subtitle": "Customize how the application looks.",

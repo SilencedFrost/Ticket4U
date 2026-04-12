@@ -46,12 +46,13 @@ export interface Event {
 }
 
 export enum EventStatus {
-  EDITING = 'EDITING',
-  SCHEDULED = 'SCHEDULED',
   PREMIERE = 'PREMIERE',
+  SCHEDULED = 'SCHEDULED',
   SELLING = 'SELLING',
-  PAUSED = 'PAUSED',
   ONGOING = 'ONGOING',
   FINISHED = 'FINISHED',
   CANCELLED = 'CANCELLED',
+  EDITING = 'EDITING',
+  PAUSED = 'PAUSED',
+  SOLD = 'SOLD',
 }

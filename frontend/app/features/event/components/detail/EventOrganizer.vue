@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OrganizerSummary } from '~/features/Organizer';
+import type { OrganizerSummary } from '~/features/types/Organizer';
 
 const props = defineProps<{
   organizerId: string | null;

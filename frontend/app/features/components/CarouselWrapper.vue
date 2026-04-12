@@ -1,27 +1,46 @@
 <script setup lang="ts" generic="T">
 import { useSwipe } from '@vueuse/core';
 
-const props = withDefaults(
-  defineProps<{
-    items: T[];
-    mode?: 'page' | 'carousel';
-    wrapAround?: boolean;
-    visibleCount?: number;
-    chevronOffset?: number;
-    chevronSize?: number;
-    chevronInset?: number;
-    animationDuration?: number;
-  }>(),
-  {
-    visibleCount: 1,
-    mode: 'carousel',
-    wrapAround: true,
-    chevronOffset: 100,
-    chevronSize: 27,
-    chevronInset: 10,
-    animationDuration: 150,
-  },
-);
+interface ChevronConfig {
+  offset?: number;
+  size?: number;
+  inset?: number;
+  opacity?: number;
+}
+
+interface Props {
+  items: T[];
+  mode?: 'page' | 'carousel';
+  wrapAround?: boolean;
+  visibleCount?: number;
+  animationDuration?: number;
+  chevronOptions?: ChevronConfig;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  visibleCount: 1,
+  mode: 'carousel',
+  wrapAround: true,
+  animationDuration: 150,
+  chevronOptions: () => ({}),
+});
+
+const chevronDefaults = {
+  offset: 0,
+  size: 27,
+  inset: 10,
+  opacity: 50,
+};
+
+// props.chevronOptions is the external props name, chevronConfig is the sanitized internal use name
+const chevronConfig = computed(() => {
+  return {
+    offset: props.chevronOptions?.offset ?? chevronDefaults.offset,
+    size: props.chevronOptions?.size ?? chevronDefaults.size,
+    inset: props.chevronOptions?.inset ?? chevronDefaults.inset,
+    opacity: props.chevronOptions?.opacity ?? chevronDefaults.opacity,
+  };
+});
 
 defineSlots<{
   item(props: { item: T }): VNode[];
@@ -181,15 +200,16 @@ const trackStyle = computed(() => ({
     <div
       class="arrow-container"
       :style="{
-        marginRight: `-${chevronInset}px`,
-        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
-        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        marginRight: `-${chevronConfig.inset}px`,
+        paddingBottom: chevronConfig.offset > 0 ? `${chevronConfig.offset}px` : 0,
+        paddingTop: chevronConfig.offset < 0 ? `${chevronConfig.offset * -1}px` : '',
         visibility: currentIndex <= 0 && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+        opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
         class="bi bi-chevron-left shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronSize}pt` }"
+        :style="{ fontSize: `${chevronConfig.size}pt` }"
         @click="prev()"
       />
     </div>
@@ -258,16 +278,17 @@ const trackStyle = computed(() => ({
     <div
       class="arrow-container"
       :style="{
-        marginLeft: `-${chevronInset}px`,
-        paddingBottom: chevronOffset > 0 ? `${chevronOffset}px` : 0,
-        paddingTop: chevronOffset < 0 ? `${chevronOffset * -1}px` : '',
+        marginLeft: `-${chevronConfig.inset}px`,
+        paddingBottom: chevronConfig.offset > 0 ? `${chevronConfig.offset}px` : 0,
+        paddingTop: chevronConfig.offset < 0 ? `${chevronConfig.offset * -1}px` : '',
         visibility:
           currentIndex >= maxIndex && (!wrapAround || mode === 'page') ? 'hidden' : 'visible',
+        opacity: `${chevronConfig.opacity}%`,
       }"
     >
       <i
         class="bi bi-chevron-right shadow-sm bg-reactive-primary rounded-pill text-clickable text-reactive-primary"
-        :style="{ fontSize: `${chevronSize}pt` }"
+        :style="{ fontSize: `${chevronConfig.size}pt` }"
         @click="next()"
       />
     </div>
@@ -282,12 +303,11 @@ const trackStyle = computed(() => ({
   align-items: center;
   position: relative;
   z-index: 2;
-  opacity: 50%;
   transition: opacity 0.3s ease;
 }
 
 .arrow-container:hover {
-  opacity: 100%;
+  opacity: 100% !important;
 }
 
 .carousel-viewport {

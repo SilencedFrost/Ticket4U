@@ -89,111 +89,144 @@ UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v177538
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390582/echov-wide_paluak.png", "square": "https://cdn.ticket4u.uk/v1775390593/echov-sqre_huj7ep.png", "tall": "https://cdn.ticket4u.uk/v1775390592/echov-tall_tyfbot.png"}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390591/reson-wide_aossid.png", "square": "https://cdn.ticket4u.uk/v1775390583/reson-sqre_igosvf.png", "tall": "https://cdn.ticket4u.uk/v1775390583/reson-tall_segvto.png"}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
 
--- Descriptions + terms + refund policy
+-- Descriptions
 UPDATE public.events SET
                          about_vi='V-Glow 2026 là lễ hội âm nhạc và công nghệ đột phá tại TP.HCM, kết hợp giữa nét đẹp Trung Thu truyền thống và phong cách Cyberpunk tương lai. Với sự góp mặt của các ngôi sao V-Pop hàng đầu, triển lãm nghệ thuật AR và diễu hành lồng đèn số, đây là điểm đến không thể bỏ qua cho cộng đồng fan Gen Z.',
-                         about_en='V-Glow 2026 is a revolutionary fan-fest in Ho Chi Minh City, merging Vietnamese traditional mid-autumn heritage with futuristic Cyberpunk aesthetics. Featuring top V-Pop idols, immersive AR art, and a digital lantern parade, it''s the ultimate cultural-tech experience for the Gen Z fanbase.',
-                         terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực. Trang phục tự do.</p>',
-                         policy_refund='<p>Hoàn tiền 50% nếu hủy trước 7 ngày diễn ra sự kiện.</p>'
-WHERE name='V-Glow: The Cyber-Heritage Night';
+                         about_en='V-Glow 2026 is a revolutionary fan-fest in Ho Chi Minh City, merging Vietnamese traditional mid-autumn heritage with futuristic Cyberpunk aesthetics. Featuring top V-Pop idols, immersive AR art, and a digital lantern parade, it''s the ultimate cultural-tech experience for the Gen Z fanbase.'
+                     WHERE name='V-Glow: The Cyber-Heritage Night';
 
 UPDATE public.events SET
                          about_vi='"Tiếng Vọng An Nam" là lễ hội đêm quy mô lớn năm 2026, kết hợp giữa di sản truyền thống và công nghệ tương lai. Với sự góp mặt của các nghệ sĩ hàng đầu như Gemini Hùng Huỳnh và nghệ thuật số đa giác quan, đây là sự kiện văn hóa - công nghệ không thể bỏ lỡ.',
-                         about_en='"The Echo of An Nam" is a premier 2026 night festival blending traditional Vietnamese heritage with futuristic tech. Featuring top artists like Gemini Hung Huynh and immersive digital art, it''s the ultimate cultural-tech crossover for the modern fanbase.',
-                         terms_and_conditions='<p>Vui lòng mang theo CCCD khi check-in. Không gây rối trật tự.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'
-WHERE name='The Echo of An Nam';
+                         about_en='"The Echo of An Nam" is a premier 2026 night festival blending traditional Vietnamese heritage with futuristic tech. Featuring top artists like Gemini Hung Huynh and immersive digital art, it''s the ultimate cultural-tech crossover for the modern fanbase.'
+                     WHERE name='The Echo of An Nam';
 
 UPDATE public.events SET
                          about_vi='Trải nghiệm lễ hội âm nhạc và công nghệ đỉnh cao tại Sài Gòn Neon Beats 2026. Một sự kiện bùng nổ kết hợp giữa âm thanh EDM sôi động, trình diễn Drone Light Show và không gian tương tác ảo (AR) tại Global City.',
-                         about_en='Experience the ultimate music and technology festival at Saigon Neon Beats 2026. An explosive event blending high-energy EDM, Drone Light Shows, and AR interactive zones at Global City. Don''t miss the chance to meet top artists and immerse yourself in the digital era.',
-                         terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.</p>',
-                         policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'
-WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+                         about_en='Experience the ultimate music and technology festival at Saigon Neon Beats 2026. An explosive event blending high-energy EDM, Drone Light Shows, and AR interactive zones at Global City. Don''t miss the chance to meet top artists and immerse yourself in the digital era.'
+                     WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 
 UPDATE public.events SET
                          about_vi='Đắm mình trong sự giao thoa giữa di sản nghìn năm và tư duy sáng tạo hiện đại tại "Cổ Nghệ Kiêu Hùng." Sự kiện mang đến những trải nghiệm trình diễn nghề thủ công trực tiếp, nhạc indie-folk và sàn diễn "Cổ phục" độc bản.',
-                         about_en='Experience the fusion of Vietnam''s 1,000-year-old heritage and modern creative flair at "The Antique Alchemy." A night of live traditional craftsmanship, indie-folk music, and an exclusive "Antique Runway" featuring top artisans and Gen-Z designers.',
-                         terms_and_conditions='<p>Vui lòng mang theo CCCD. Trang phục cổ phục được khuyến khích.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'
-WHERE name='CỔ NGHỆ KIÊU HÙNG';
+                         about_en='Experience the fusion of Vietnam''s 1,000-year-old heritage and modern creative flair at "The Antique Alchemy." A night of live traditional craftsmanship, indie-folk music, and an exclusive "Antique Runway" featuring top artisans and Gen-Z designers.'
+                     WHERE name='CỔ NGHỆ KIÊU HÙNG';
 
 UPDATE public.events SET
                          about_vi='Khám phá NEO-LUMINANCE 2026, lễ hội âm nhạc điện tử và đa dòng nhạc ngoài trời quy mô lớn nhất tại TP.HCM. Sự kiện là sự giao thoa độc đáo giữa phong cách tương lai Cyberpunk và họa tiết Đông Dương truyền thống.',
-                         about_en='Experience NEO-LUMINANCE 2026, Vietnam''s premier outdoor electronic and fusion music festival in Ho Chi Minh City. This event blends futuristic cyberpunk aesthetics with traditional Indochine motifs. Join 25,000 fans for a night of high-tech light shows and explosive music.',
-                         terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực.</p>',
-                         policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'
-WHERE name='NEO-LUMINANCE: The Echo of Indochine';
+                         about_en='Experience NEO-LUMINANCE 2026, Vietnam''s premier outdoor electronic and fusion music festival in Ho Chi Minh City. This event blends futuristic cyberpunk aesthetics with traditional Indochine motifs. Join 25,000 fans for a night of high-tech light shows and explosive music.'
+                     WHERE name='NEO-LUMINANCE: The Echo of Indochine';
 
 UPDATE public.events SET
                          about_vi='Sắc Lam: The Indigo Echo là triển lãm nghệ thuật đa giác quan kết hợp giữa kỹ thuật nhuộm chàm truyền thống của Việt Nam và công nghệ trình chiếu ánh sáng hiện đại. Cùng khám phá linh hồn của vùng cao qua lăng kính đương đại ngay giữa lòng Sài Gòn.',
-                         about_en='Sắc Lam: The Indigo Echo is a premier immersive art expo blending traditional Vietnamese natural dyeing techniques with cutting-edge digital projection. Experience the soul of the highlands through a modern lens in the heart of Saigon.',
-                         terms_and_conditions='<p>Mỗi lượt tham quan tối đa 90 phút. Không chụp ảnh flash.</p>',
-                         policy_refund='<p>Không hỗ trợ hoàn tiền.</p>'
-WHERE name='Sắc Lam: The Indigo Echo';
+                         about_en='Sắc Lam: The Indigo Echo is a premier immersive art expo blending traditional Vietnamese natural dyeing techniques with cutting-edge digital projection. Experience the soul of the highlands through a modern lens in the heart of Saigon.'
+                     WHERE name='Sắc Lam: The Indigo Echo';
 
 UPDATE public.events SET
                          about_vi='Crystal Realm: Vườn Neon Huyền Ảo là lễ hội cosplay ngoài trời cao cấp tại Công viên Yên Sở, Hà Nội. Với sân khấu LED khổng lồ, các khu vực chụp ảnh chuyên nghiệp và dàn khách mời là những cosplayer quốc tế hàng đầu.',
-                         about_en='Crystal Realm: The Neon Garden is a premium outdoor cosplay festival at Yen So Park, Hanoi. Featuring a massive LED-integrated stage, professional photo zones, and a guest lineup of top-tier international cosplayers blending nature with futuristic cyberpunk aesthetics.',
-                         terms_and_conditions='<p>Trang phục cosplay được khuyến khích. Cấm trẻ em dưới 12 tuổi vào ban đêm.</p>',
-                         policy_refund='<p>Hoàn tiền 50% trước 5 ngày diễn ra.</p>'
-WHERE name='CRYSTAL REALM: The Neon Garden';
+                         about_en='Crystal Realm: The Neon Garden is a premium outdoor cosplay festival at Yen So Park, Hanoi. Featuring a massive LED-integrated stage, professional photo zones, and a guest lineup of top-tier international cosplayers blending nature with futuristic cyberpunk aesthetics.'
+                     WHERE name='CRYSTAL REALM: The Neon Garden';
 
 UPDATE public.events SET
                          about_vi='SẮT & SON là lễ hội âm nhạc Rock lớn nhất năm 2026 tại Ninh Bình, quy tụ những biểu tượng Rock huyền thoại và các ban nhạc Indie đầy nổi loạn. Không gian công nghiệp gai góc hòa quyện cùng nét văn hóa truyền thống.',
-                         about_en='SẮT & SON is the premier Rock festival of 2026 in Ninh Binh, bringing together legendary rock icons and rebellious indie bands. Set in a gritty industrial atmosphere infused with traditional cultural motifs, the event promises high-octane performances.',
-                         terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'
-WHERE name='SẮT & SON';
+                         about_en='SẮT & SON is the premier Rock festival of 2026 in Ninh Binh, bringing together legendary rock icons and rebellious indie bands. Set in a gritty industrial atmosphere infused with traditional cultural motifs, the event promises high-octane performances.'
+                     WHERE name='SẮT & SON';
 
 UPDATE public.events SET
                          about_vi='Khám phá sự giao thoa giữa huyền bí cổ xưa và đổi mới tương lai tại Techno-Sorcery. Lễ hội duy nhất trong đêm hội tụ "phép thuật đen" của AI tiên tiến và robot hiệu suất cao, đặt trong không gian GEM Center.',
-                         about_en='Experience the fusion of ancient mysticism and futuristic innovation at Techno-Sorcery. This one-night-only festival showcases the "dark magic" of advanced AI and high-performance robotics at GEM Center. Witness machines that think and steel that moves with a soul.',
-                         terms_and_conditions='<p>Khuyến khích mang theo laptop. Phù hợp mọi lứa tuổi.</p>',
-                         policy_refund='<p>Hoàn tiền 50% nếu hủy trước 5 ngày.</p>'
-WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
+                         about_en='Experience the fusion of ancient mysticism and futuristic innovation at Techno-Sorcery. This one-night-only festival showcases the "dark magic" of advanced AI and high-performance robotics at GEM Center. Witness machines that think and steel that moves with a soul.'
+                     WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
 
 UPDATE public.events SET
                          about_vi='Buổi ra mắt thân mật của "Lặng" – ban nhạc Indie-Dream Pop mới nổi. Một hành trình đa giác quan kết hợp giữa âm nhạc và nghệ thuật thị giác trừu tượng trong không gian lãng mạn của Đà Lạt.',
-                         about_en='An intimate debut showcase for "Lặng," an emerging indie-dream pop band. Experience a sensory journey where music meets abstract visual art in the romantic setting of Da Lat.',
-                         terms_and_conditions='<p>Sức chứa có hạn. Vui lòng đến đúng giờ. Không quay phim trong buổi diễn.</p>',
-                         policy_refund='<p>Không hoàn tiền vé.</p>'
-WHERE name='Vũ Trụ Cận Thị';
+                         about_en='An intimate debut showcase for "Lặng," an emerging indie-dream pop band. Experience a sensory journey where music meets abstract visual art in the romantic setting of Da Lat.'
+                     WHERE name='Vũ Trụ Cận Thị';
 
 UPDATE public.events SET
                          about_vi='Đắm chìm trong Đảo Quốc Mộng Mơ, lễ hội âm nhạc và nghệ thuật kỳ ảo tại Khu đô thị Vạn Phúc, TP.HCM. Trải nghiệm không gian thần tiên với sen neon khổng lồ, sân khấu mây bồng bềnh và những nghệ sĩ hàng đầu.',
-                         about_en='Step into The Dreamcatcher Archipelago, an immersive whimsical festival at Van Phuc Urban Area, HCMC. Experience magic reimagined with Vietnamese soul, featuring floating neon lotuses, cloud-shrouded stages, and top-tier musical acts.',
-                         terms_and_conditions='<p>Phù hợp mọi lứa tuổi. Trẻ em dưới 12 tuổi cần có người lớn đi kèm.</p>',
-                         policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'
-WHERE name='THE DREAMCATCHER ARCHIPELAGO';
+                         about_en='Step into The Dreamcatcher Archipelago, an immersive whimsical festival at Van Phuc Urban Area, HCMC. Experience magic reimagined with Vietnamese soul, featuring floating neon lotuses, cloud-shrouded stages, and top-tier musical acts.'
+                     WHERE name='THE DREAMCATCHER ARCHIPELAGO';
 
 UPDATE public.events SET
                          about_vi='Trải nghiệm Omakase cao cấp độc bản, kết hợp giữa kỹ nghệ truyền thống Nhật Bản và tinh hoa nguyên liệu mùa hè Việt Nam. Sự kiện giới hạn chỉ 24 khách cho một hành trình ẩm thực đầy cảm xúc.',
-                         about_en='An ultra-exclusive, high-end Omakase experience merging traditional Japanese craftsmanship with local Vietnamese seasonal treasures. Limited to 24 seats for an intimate journey of culinary storytelling.',
-                         terms_and_conditions='<p>Sự kiện giới hạn 24 khách. Dress code: smart casual. Đúng giờ tuyệt đối.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi xác nhận đặt chỗ.</p>'
-WHERE name='KAIZEN: The Art of Precision';
+                         about_en='An ultra-exclusive, high-end Omakase experience merging traditional Japanese craftsmanship with local Vietnamese seasonal treasures. Limited to 24 seats for an intimate journey of culinary storytelling.'
+                     WHERE name='KAIZEN: The Art of Precision';
 
 UPDATE public.events SET
                          about_vi='LUVIA: The Echo of Highlands là một trải nghiệm âm thanh đa giác quan độc bản, kết hợp giữa âm nhạc ambient, tiếng vang của đại ngàn và nghệ thuật ánh sáng tại Công viên Yên Sở. Âm thanh 360 độ mang lại cảm giác thư thái và kết nối tâm hồn tuyệt đối.',
-                         about_en='LUVIA: The Echo of Highlands is a unique multi-sensory auditory experience blending ambient music, forest echoes, and light art at Yen So Park. 360-degree sound technology offers ultimate relaxation and spiritual reconnection.',
-                         terms_and_conditions='<p>Trang phục thoải mái. Khuyến khích mang theo áo khoác.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'
-WHERE name='LUVIA: The Echo of Highlands';
+                         about_en='LUVIA: The Echo of Highlands is a unique multi-sensory auditory experience blending ambient music, forest echoes, and light art at Yen So Park. 360-degree sound technology offers ultimate relaxation and spiritual reconnection.'
+                     WHERE name='LUVIA: The Echo of Highlands';
 
 UPDATE public.events SET
                          about_vi='Trải nghiệm "Hương Sắc Linh Hồn," buổi hòa nhạc 6D đa giác quan đầu tiên tại Việt Nam. Sự kết hợp giữa âm thanh vòm sống động và công nghệ kích hoạt mùi hương đồng bộ sẽ đưa người hâm mộ hành trình qua những vùng ký ức đặc trưng của Việt Nam.',
-                         about_en='Experience "Scent of the Soul," Vietnam''s first 6D olfactory-immersive indoor concert. Melding high-fidelity spatial audio with synchronized scent-triggering technology, this event transports fans through the aromatic landscapes of Vietnam.',
-                         terms_and_conditions='<p>Phù hợp mọi lứa tuổi. Không phù hợp với người dị ứng mùi hương mạnh.</p>',
-                         policy_refund='<p>Hoàn tiền 50% nếu hủy trước 5 ngày.</p>'
-WHERE name='Scent of the Soul: The Echoes of Vietnam';
+                         about_en='Experience "Scent of the Soul," Vietnam''s first 6D olfactory-immersive indoor concert. Melding high-fidelity spatial audio with synchronized scent-triggering technology, this event transports fans through the aromatic landscapes of Vietnam.'
+                     WHERE name='Scent of the Soul: The Echoes of Vietnam';
 
 UPDATE public.events SET
                          about_vi='Khám phá sức mạnh của tiếng Việt thông qua âm nhạc tại Âm Sắc Việt - THE RESONANCE. Một đêm nhạc tương tác đa giác quan, nơi ranh giới giữa nghệ sĩ và khán giả bị xóa nhòa bởi những thử thách ngôn ngữ và ứng biến giai điệu.',
-                         about_en='Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows.',
-                         terms_and_conditions='<p>Vui lòng mang theo CCCD khi check-in. Không ảnh hưởng đến khán giả xung quanh.</p>',
-                         policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'
-WHERE name='Âm Sắc Việt - THE RESONANCE';
+                         about_en='Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows.'
+                     WHERE name='Âm Sắc Việt - THE RESONANCE';
+
+-- Terms and Conditions
+UPDATE public.events SET terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực. Trang phục tự do.</p>'
+                     WHERE name='V-Glow: The Cyber-Heritage Night';
+
+UPDATE public.events SET terms_and_conditions='<p>Vui lòng mang theo CCCD khi check-in. Không gây rối trật tự.</p>'
+                     WHERE name='The Echo of An Nam';
+
+UPDATE public.events SET terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.</p>'
+                     WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+
+UPDATE public.events SET terms_and_conditions='<p>Vui lòng mang theo CCCD. Trang phục cổ phục được khuyến khích.</p>'
+                     WHERE name='CỔ NGHỆ KIÊU HÙNG';
+
+UPDATE public.events SET terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực.</p>'
+                     WHERE name='NEO-LUMINANCE: The Echo of Indochine';
+
+UPDATE public.events SET terms_and_conditions='<p>Mỗi lượt tham quan tối đa 90 phút. Không chụp ảnh flash.</p>'
+                     WHERE name='Sắc Lam: The Indigo Echo';
+
+UPDATE public.events SET terms_and_conditions='<p>Trang phục cosplay được khuyến khích. Cấm trẻ em dưới 12 tuổi vào ban đêm.</p>'
+                     WHERE name='CRYSTAL REALM: The Neon Garden';
+
+UPDATE public.events SET terms_and_conditions='<p>Cấm trẻ em dưới 16 tuổi. Không mang chất cấm. Trang phục tự do.</p>'
+                     WHERE name='SẮT & SON';
+
+UPDATE public.events SET terms_and_conditions='<p>Khuyến khích mang theo laptop. Phù hợp mọi lứa tuổi.</p>'
+                     WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
+
+UPDATE public.events SET terms_and_conditions='<p>Sức chứa có hạn. Vui lòng đến đúng giờ. Không quay phim trong buổi diễn.</p>'
+                     WHERE name='Vũ Trụ Cận Thị';
+
+UPDATE public.events SET terms_and_conditions='<p>Phù hợp mọi lứa tuổi. Trẻ em dưới 12 tuổi cần có người lớn đi kèm.</p>'
+                     WHERE name='THE DREAMCATCHER ARCHIPELAGO';
+
+UPDATE public.events SET terms_and_conditions='<p>Sự kiện giới hạn 24 khách. Dress code: smart casual. Đúng giờ tuyệt đối.</p>'
+                     WHERE name='KAIZEN: The Art of Precision';
+
+UPDATE public.events SET terms_and_conditions='<p>Trang phục thoải mái. Khuyến khích mang theo áo khoác.</p>'
+                     WHERE name='LUVIA: The Echo of Highlands';
+
+UPDATE public.events SET terms_and_conditions='<p>Phù hợp mọi lứa tuổi. Không phù hợp với người dị ứng mùi hương mạnh.</p>'
+                     WHERE name='Scent of the Soul: The Echoes of Vietnam';
+
+UPDATE public.events SET terms_and_conditions='<p>Vui lòng mang theo CCCD khi check-in. Không ảnh hưởng đến khán giả xung quanh.</p>'
+                     WHERE name='Âm Sắc Việt - THE RESONANCE';
+
+-- Refund Policy
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% nếu hủy trước 7 ngày diễn ra sự kiện.</p>' WHERE name='V-Glow: The Cyber-Heritage Night';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'                      WHERE name='The Echo of An Nam';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'                  WHERE name='SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'                      WHERE name='CỔ NGHỆ KIÊU HÙNG';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'                  WHERE name='NEO-LUMINANCE: The Echo of Indochine';
+UPDATE public.events SET policy_refund='<p>Không hỗ trợ hoàn tiền.</p>'                              WHERE name='Sắc Lam: The Indigo Echo';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% trước 5 ngày diễn ra.</p>'                  WHERE name='CRYSTAL REALM: The Neon Garden';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'                      WHERE name='SẮT & SON';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% nếu hủy trước 5 ngày.</p>'                  WHERE name='Techno-Sorcery: The Zenith of AI & Robotics';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền vé.</p>'                                  WHERE name='Vũ Trụ Cận Thị';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% trước 7 ngày diễn ra.</p>'                  WHERE name='THE DREAMCATCHER ARCHIPELAGO';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi xác nhận đặt chỗ.</p>'            WHERE name='KAIZEN: The Art of Precision';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'                      WHERE name='LUVIA: The Echo of Highlands';
+UPDATE public.events SET policy_refund='<p>Hoàn tiền 50% nếu hủy trước 5 ngày.</p>'                  WHERE name='Scent of the Soul: The Echoes of Vietnam';
+UPDATE public.events SET policy_refund='<p>Không hoàn tiền sau khi mua vé.</p>'                      WHERE name='Âm Sắc Việt - THE RESONANCE';
 
 
 

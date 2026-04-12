@@ -32,8 +32,8 @@ onMounted(() => {
     id="organizer-section"
     class="card bg-reactive-secondary overflow-hidden m-3 mx-auto mw-100"
   >
-    <div class="bg-reactive-gray w-100 p-2 d-flex justify-content-center align-items-center">
-      <h5 class="text-reactive-primary fw-bold mb-0">
+    <div class="d-flex flex-column p-3 gap-2 mb-3 p-md-4">
+      <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
         {{ $t('event_detail.label.organizer') }}
       </h5>
     </div>

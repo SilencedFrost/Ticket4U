@@ -8,14 +8,11 @@ defineProps<{
 
 <template>
   <section id="schedule-section" class="card m-3 mx-auto overflow-hidden mw-100 pb-4">
-    <div class="bg-reactive-gray w-100 p-2 d-flex justify-content-center align-items-center">
-      <h5 class="text-reactive-primary fw-bold mb-0">
+    <div class="d-flex flex-column p-3 gap-2 mb-3 p-md-4">
+      <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
         {{ $t('event_detail.section.schedule') }}
       </h5>
-    </div>
-
-    <div class="d-flex flex-column p-3 gap-2 mb-3 p-md-4">
-      <h6 class="text-reactive-primary mb-1">{{ event.name }}</h6>
+      <h6 class="text-reactive-primary mb-1 pt-2">{{ event.name }}</h6>
       <p class="text-reactive-secondary mb-2 small">{{ event.addressLine }}</p>
     </div>
 

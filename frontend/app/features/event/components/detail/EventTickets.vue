@@ -39,32 +39,46 @@ const hasZoneDetails = (zone: Zone) => {
 </script>
 
 <template>
-  <section id="tickets-section" class="card bg-reactive-secondary m-3 mx-auto mw-100">
-    <div class="p-3 p-md-4 mx-3">
-      <h3 class="text-reactive-primary fw-bold mb-3 mb-md-4 h4">
-        {{ $t('event_detail.section.ticket_info') }}
-      </h3>
+  <section id="tickets-section" class="card bg-reactive-secondary mx-auto mw-100">
+    <div class="p-3 p-md-4 mb-3">
+      <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
+        {{ $t('event_detail.section.schedule') }}
+      </h5>
 
-      <div v-for="(schedule, dateIdx) in sessions" :key="dateIdx" class="mb-3">
+      <div v-for="(schedule, dateIdx) in sessions" :key="dateIdx" class="mt-3">
         <div class="card-border mb-3">
           <button
-            class="btn w-100 text-start p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center border-0 bg-transparent gap-3"
+            class="btn w-100 text-start p-3 p-md-3 d-flex flex-row justify-content-between align-items-center border-0 bg-transparent gap-2"
             type="button"
             @click="toggleTicketDate(schedule.id)"
           >
-            <div
-              class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 flex-grow-1"
-            >
-              <i class="bi bi-calendar-event text-info fs-5" />
-              <span class="text-reactive-primary fw-semibold small"
-                >{{ $d(new Date(schedule.startDate), { hour: '2-digit', minute: '2-digit' }) }},
-                {{ $d(new Date(schedule.startDate), 'short') }}</span
-              >
+            <div class="d-flex flex-column align-items-start gap-1 flex-grow-1">
+              <div class="d-flex flex-column">
+                <span class="text-reactive-primary fw-semibold small mb-0">
+                  {{
+                    $d(new Date(schedule.startDate), {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      weekday: 'short',
+                    })
+                  }}
+                </span>
+                <span class="text-primary fw-bold small mb-0 d-flex align-items-center gap-1">
+                  {{
+                    $d(new Date(schedule.startDate), {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  }}
+                </span>
+              </div>
             </div>
-            <div
-              class="d-flex align-items-center justify-content-between justify-content-md-end gap-2 gap-md-3 w-100 w-md-auto"
-            >
-              <button class="btn btn-primary fw-bold" @click.stop="emit('buyClick')">
+            <div class="d-flex align-items-center justify-content-end gap-2 flex-shrink-0">
+              <button
+                class="btn btn-primary fw-bold small py-1 px-2 py-md-2 px-md-3"
+                @click.stop="emit('buyClick')"
+              >
                 {{ $t('common.action.buy') }}
               </button>
               <i
@@ -86,15 +100,15 @@ const hasZoneDetails = (zone: Zone) => {
               :key="zoneIdx"
               class="card-border overflow-hidden"
             >
-              <div class="p-3 p-md-4">
+              <div class="p-3 p-md-3">
                 <div
-                  class="d-flex flex-row flex-md-row justify-content-between align-items-start align-items-md-center gap-2 gap-md-0"
+                  class="d-flex flex-row flex-md-row justify-content-between align-items-center gap-2 gap-md-0"
                 >
                   <div
-                    class="d-flex flex-column flex-md-row flex-grow-1 gap-2 gap-md-3 align-items-start align-items-md-center w-100"
+                    class="d-flex flex-row justify-content-between align-items-center w-100 gap-2"
                   >
-                    <div class="order-2 order-md-1 flex-grow-1 flex-shrink-1">
-                      <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2 fs-6">
+                    <div class="flex-grow-1 flex-shrink-1 pe-2">
+                      <h6 class="text-reactive-primary fw-bold mb-1 mb-md-2 small fs-md-6">
                         {{ zone.name }}
                       </h6>
                       <div
@@ -107,8 +121,10 @@ const hasZoneDetails = (zone: Zone) => {
                         {{ zone.capacity }} {{ $t('event_detail.label.available') }}
                       </p>
                     </div>
-                    <div class="order-1 order-md-2 flex-shrink-0">
-                      <p class="text-primary fw-bold fs-6 fs-md-5 mb-0 text-nowrap">
+                    <div
+                      class="flex-shrink-0 mx-1 d-flex align-items-center justify-content-center justify-content-md-end text-center text-md-end"
+                    >
+                      <p class="text-primary fw-bold mb-0 text-nowrap small fs-md-5">
                         {{ formatPrice(zone.price) }}
                       </p>
                     </div>

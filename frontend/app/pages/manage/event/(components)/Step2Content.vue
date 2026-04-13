@@ -40,7 +40,7 @@ function setRefund(val: string) {
 
 <template>
   <div>
-    <div class="card bg-reactive-primary border-0 p-4 mb-4">
+    <div class="card border-0 p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-4">
         <i class="bi bi-file-text me-2 text-primary"/>{{ $t('organizer.event_form.step2.title') }}
       </h5>

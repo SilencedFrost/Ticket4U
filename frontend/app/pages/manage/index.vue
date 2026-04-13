@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 p-md-5">
+  <div class="p-3 p-md-4 p-lg-5">
     <div class="mb-5">
       <h2 class="fw-bold text-reactive-primary mb-1">
         {{ $t('organizer.home.greeting', { name: mockProfile.name }) }} 👋
@@ -10,7 +10,7 @@
     <!-- Quick stats -->
     <div class="row g-4 mb-5">
       <div v-for="stat in stats" :key="stat.label" class="col-sm-6 col-xl-3">
-        <div class="card bg-reactive-primary p-4 h-100 border-0">
+        <div class="card p-4 h-100 border-0">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <span class="text-reactive-secondary small">{{ stat.label }}</span>
             <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" :style="{ background: stat.color + '22' }">
@@ -42,7 +42,7 @@
     <!-- Recent events -->
     <div>
       <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.events.title') }}</h5>
-      <div class="card bg-reactive-primary border-0 overflow-hidden">
+      <div class="card border-0 overflow-hidden">
         <div class="table-responsive">
           <table class="table table-hover mb-0 organizer-table">
             <thead>

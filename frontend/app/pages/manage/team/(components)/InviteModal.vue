@@ -42,7 +42,7 @@ function submit() {
 <template>
   <Teleport to="body">
     <div v-if="show" class="modal-backdrop-custom" @click.self="$emit('close')">
-      <div class="modal-box card bg-reactive-secondary border-0 p-4 shadow-lg">
+      <div class="modal-box card border-0 p-4 shadow-lg">
 
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h5 class="fw-bold text-reactive-primary mb-0">

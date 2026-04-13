@@ -74,7 +74,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
       <span>{{ $t('organizer.event_form.step4.no_zones_warning') }}</span>
     </div>
 
-    <div class="card bg-reactive-primary border-0 p-4 mb-4">
+    <div class="card border-0 p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-3">
         <i class="bi bi-layers me-2 text-primary"/>{{ $t('organizer.event_form.step4.title') }}
       </h5>
@@ -104,7 +104,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
           <label class="form-label small fw-semibold text-reactive-secondary">
             {{ $t('organizer.event_form.step4.venue') }} <span class="text-danger">*</span>
           </label>
-          <select v-model="form.venueId" class="form-select bg-reactive-secondary border-0 text-reactive-primary">
+          <select v-model="form.venueId" class="form-select bg-reactive-primary border-0 text-reactive-primary">
             <option value="">— {{ $t('organizer.event_form.step4.venue') }} —</option>
             <option v-for="v in mockVenues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
           </select>
@@ -120,7 +120,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
           <div class="col-lg-7">
             <div class="fw-semibold text-reactive-primary mb-2">{{ selectedVenue.name }}</div>
             <LayoutPreview v-if="mappedLayout" :layout="mappedLayout" />
-            <div v-else class="layout-preview-placeholder bg-reactive-secondary rounded d-flex align-items-center justify-content-center" style="height:340px;">
+            <div v-else class="layout-preview-placeholder bg-reactive-primary rounded d-flex align-items-center justify-content-center" style="height:340px;">
               <div class="text-center text-reactive-secondary">
                 <i class="bi bi-grid-3x3 fs-1 d-block mb-3 opacity-25"/>
                 <small class="opacity-50">{{ $t('organizer.event_form.step4.venue_no_layout') }}</small>
@@ -141,7 +141,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
               <div v-for="vz in getVenueZoneNames(selectedVenue)" :key="vz" class="d-flex align-items-center gap-2 mb-2">
                 <small class="text-reactive-primary fw-semibold text-truncate" style="min-width:130px;">{{ vz }}</small>
                 <i class="bi bi-arrow-right text-reactive-secondary flex-shrink-0"/>
-                <select v-model="zoneMapping[vz]" class="form-select form-select-sm bg-reactive-secondary border-0 text-reactive-primary flex-grow-1">
+                <select v-model="zoneMapping[vz]" class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary flex-grow-1">
                   <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
                   <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
                     <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>
@@ -175,7 +175,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
         </div>
 
         <div
-          class="canvas-placeholder bg-reactive-secondary rounded position-relative overflow-hidden"
+          class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
           style="height:600px;"
         >
           <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">

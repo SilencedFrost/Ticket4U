@@ -80,7 +80,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-4 p-md-5">
+  <div class="p-3 p-md-4 p-lg-5">
 
     <!-- Header -->
     <div class="d-flex align-items-center gap-3 mb-4">

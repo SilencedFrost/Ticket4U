@@ -99,15 +99,31 @@
       "deny": "Deny",
       "buy": "Buy tickets now",
       "view": "View",
-      "remove": "Remove"
+      "remove": "Remove",
+      "reset": "Reset",
+      "apply": "Apply",
+      "filter": "Filter"
     },
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
+    "status": "Status",
+    "price": "Price",
+    "category": "Category",
     "currency": {
       "from": "From",
       "free": "Free"
+    },
+    "date": {
+      "all_dates": "All dates",
+      "short": "Date",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "this_weekend": "This weekend",
+      "this_month": "This month",
+      "from_date": "From date",
+      "to_date": "To date"
     }
   },
   "permissions": {
@@ -121,11 +137,24 @@
     "motto": "Customer-first ticketing platform"
   },
   "placeholder": {
-    "search": "Search events, artists..."
+    "search": "Search events, artists...",
+    "category": "Search categories"
   },
   "theme": {
     "light": "Light mode",
     "dark": "Dark mode"
+  },
+  "event": {
+    "status_options": {
+      "premiere": "Premiere",
+      "selling": "Selling",
+      "ongoing": "Ongoing",
+      "finished": "Finished",
+      "canceled": "Canceled",
+      "editing": "Editing",
+      "paused": "Stopped selling",
+      "sold_out": "Sold out"
+    }
   },
   "event_detail": {
     "label": {

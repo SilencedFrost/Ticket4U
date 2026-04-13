@@ -87,16 +87,6 @@ function getShouldShowOverlay() {
   return isCategoryInputFocused.value && filteredList.value.length > 0;
 }
 
-const statusTitle = computed(getStatusTitle);
-
-function getStatusTitle() {
-  if (te('common.status.title')) {
-    return t('common.status.title');
-  }
-
-  return 'Status';
-}
-
 function selectItem(item: CategorySummary) {
   if (!selectedCategories.value.some((cat) => cat.id === item.id)) {
     selectedCategories.value.push(item);
@@ -169,7 +159,7 @@ watch(showCategorySection, handleCategorySectionVisibility, { immediate: true })
     <hr v-if="showPriceSection && (showCategorySection || showStatusSection)" class="my-3" />
 
     <div v-if="showStatusSection" class="mb-3">
-      <h6 class="fw-bold mb-3 small">{{ statusTitle }}</h6>
+      <h6 class="fw-bold mb-3 small">{{ t('common.status.title') }}</h6>
       <slot name="status" :options="props.statusOptions">
         <div class="d-flex flex-wrap gap-2">
           <button

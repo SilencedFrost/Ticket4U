@@ -90,8 +90,8 @@ function getShouldShowOverlay() {
 const statusTitle = computed(getStatusTitle);
 
 function getStatusTitle() {
-  if (te('common.status')) {
-    return t('common.status');
+  if (te('common.status.title')) {
+    return t('common.status.title');
   }
 
   return 'Status';

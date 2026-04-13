@@ -52,7 +52,7 @@ function hasZoneDetails(zone: Zone) {
   <section id="tickets-section" class="card bg-reactive-secondary mx-auto mw-100">
     <div class="p-3 p-md-4 mb-3">
       <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
-        {{ $t('event_detail.section.schedule') }}
+        {{ $t('event_detail.section.ticket_info') }}
       </h5>
 
       <div v-for="schedule in sessions" :key="schedule.id" class="mt-3">
@@ -122,13 +122,13 @@ function hasZoneDetails(zone: Zone) {
                         {{ zone.name }}
                       </h6>
                       <div
-                        v-if="zone.capacity === 0"
+                        v-if="zone.capacity === null"
                         class="badge rounded-pill bg-danger-subtle text-danger fw-bold px-3 py-2 small"
                       >
-                        {{ $t('event_detail.label.sold_out') }}
+                        {{ $t('event.status_options.sold_out') }}
                       </div>
                       <p v-else class="text-reactive-primary mb-0 small">
-                        {{ zone.capacity }} {{ $t('event_detail.label.available') }}
+                        {{ zone.capacity }} {{ $t('common.status.available') }}
                       </p>
                     </div>
                     <div

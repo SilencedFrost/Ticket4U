@@ -84,5 +84,10 @@ const options: AppearanceOption[] = [
   transform: translateY(-1px);
 }
 
+.appearance-card-preview {
+  display: block;
+  aspect-ratio: 16 / 8; /* chỉnh số sau để giảm height */
+  overflow: hidden;
+}
 
 </style>

@@ -4,6 +4,7 @@ import EventHero from '../../../../features/event/components/detail/EventHero.vu
 import EventNav from '../../../../features/event/components/detail/EventNav.vue';
 import EventAbout from '../../../../features/event/components/detail/EventAbout.vue';
 import EventSchedule from '../../../../features/event/components/detail/EventSchedule.vue';
+import EventTickets from '../../../../features/event/components/detail/EventTickets.vue';
 import EventOrganizer from '../../../../features/event/components/detail/EventOrganizer.vue';
 import EventRelated from '../../../../features/event/components/detail/EventRelated.vue';
 const config = useRuntimeConfig();
@@ -94,7 +95,7 @@ onMounted(() => getEvent());
       <div class="col-lg-12">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
-        <!-- To do: Add event ticket section here -->
+        <event-tickets :sessions="event.sessions" />
         <event-organizer v-if="event.organizerId" :organizer-id="event.organizerId" />
       </div>
     </div>

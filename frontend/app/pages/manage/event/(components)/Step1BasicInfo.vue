@@ -30,7 +30,7 @@ function toggleCategory(id: number) {
 
 <template>
   <div>
-    <div class="card bg-reactive-secondary border-0 p-4 mb-4">
+    <div class="card bg-reactive-primary border-0 p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-4">
         <i class="bi bi-info-circle me-2 text-primary"/>{{ $t('organizer.event_form.step1.title') }}
       </h5>
@@ -43,7 +43,7 @@ function toggleCategory(id: number) {
           <input
             v-model="form.name"
             type="text"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control bg-reactive-secondary border-0 text-reactive-primary"
             :class="{ 'is-invalid': errors.name }"
             :placeholder="$t('organizer.event_form.step1.name_placeholder')"
           />
@@ -72,7 +72,7 @@ function toggleCategory(id: number) {
           <label class="form-label small fw-semibold text-reactive-secondary">
             {{ $t('organizer.event_form.step1.status') }}
           </label>
-          <select v-model="form.status" class="form-select bg-reactive-primary border-0 text-reactive-primary">
+          <select v-model="form.status" class="form-select bg-reactive-secondary border-0 text-reactive-primary">
             <option value="EDITING">{{ $t('organizer.events.status.editing') }}</option>
             <option value="SCHEDULED">{{ $t('organizer.events.status.premier') }}</option>
             <option value="PREMIERE">{{ $t('organizer.events.status.premier') }}</option>
@@ -97,7 +97,7 @@ function toggleCategory(id: number) {
           <input
             v-model="form.startDate"
             type="datetime-local"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control bg-reactive-secondary border-0 text-reactive-primary"
             :class="{ 'is-invalid': errors.startDate }"
           />
           <div class="invalid-feedback">{{ errors.startDate }}</div>
@@ -110,7 +110,7 @@ function toggleCategory(id: number) {
           <input
             v-model="form.endDate"
             type="datetime-local"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control bg-reactive-secondary border-0 text-reactive-primary"
             :class="{ 'is-invalid': errors.endDate }"
           />
           <div class="invalid-feedback">{{ errors.endDate }}</div>
@@ -123,7 +123,7 @@ function toggleCategory(id: number) {
           <input
             v-model="form.addressLine"
             type="text"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control bg-reactive-secondary border-0 text-reactive-primary"
             :class="{ 'is-invalid': errors.addressLine }"
             :placeholder="$t('organizer.event_form.step1.address_placeholder')"
           />
@@ -140,7 +140,7 @@ function toggleCategory(id: number) {
               <input
                 v-model="form.bannerUrl.wide"
                 type="url"
-                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                class="form-control bg-reactive-secondary border-0 text-reactive-primary"
                 :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.wide" class="mt-2">
@@ -152,7 +152,7 @@ function toggleCategory(id: number) {
               <input
                 v-model="form.bannerUrl.square"
                 type="url"
-                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                class="form-control bg-reactive-secondary border-0 text-reactive-primary"
                 :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.square" class="mt-2">
@@ -164,7 +164,7 @@ function toggleCategory(id: number) {
               <input
                 v-model="form.bannerUrl.tall"
                 type="url"
-                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                class="form-control bg-reactive-secondary border-0 text-reactive-primary"
                 :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.tall" class="mt-2">

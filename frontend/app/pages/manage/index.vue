@@ -10,7 +10,7 @@
     <!-- Quick stats -->
     <div class="row g-4 mb-5">
       <div v-for="stat in stats" :key="stat.label" class="col-sm-6 col-xl-3">
-        <div class="card bg-reactive-secondary p-4 h-100 border-0">
+        <div class="card bg-reactive-primary p-4 h-100 border-0">
           <div class="d-flex align-items-center justify-content-between mb-3">
             <span class="text-reactive-secondary small">{{ stat.label }}</span>
             <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" :style="{ background: stat.color + '22' }">
@@ -33,7 +33,7 @@
         <NuxtLink :to="localePath('/manage/dashboard/events')" class="btn btn-outline-secondary px-4">
           <i class="bi bi-calendar-event me-2"/>{{ $t('organizer.home.view_events') }}
         </NuxtLink>
-        <NuxtLink :to="localePath('/organizer/reports')" class="btn btn-outline-secondary px-4">
+        <NuxtLink :to="localePath('/manage/reports')" class="btn btn-outline-secondary px-4">
           <i class="bi bi-bar-chart me-2"/>{{ $t('organizer.home.view_reports') }}
         </NuxtLink>
       </div>
@@ -42,7 +42,7 @@
     <!-- Recent events -->
     <div>
       <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.events.title') }}</h5>
-      <div class="card bg-reactive-secondary border-0 overflow-hidden">
+      <div class="card bg-reactive-primary border-0 overflow-hidden">
         <div class="table-responsive">
           <table class="table table-hover mb-0 organizer-table">
             <thead>

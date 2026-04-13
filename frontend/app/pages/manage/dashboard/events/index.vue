@@ -108,25 +108,25 @@ const doDelete = () => {
     </div>
 
     <!-- Filters -->
-    <div class="card bg-reactive-secondary border-0 p-3 mb-4">
+    <div class="card bg-reactive-primary border-0 p-3 mb-4">
       <div class="row g-3 align-items-end">
         <div class="col-md-5">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.search') }}</label>
           <div class="input-group">
-            <span class="input-group-text bg-reactive-primary border-0">
+            <span class="input-group-text bg-reactive-secondary border-0">
               <i class="bi bi-search text-reactive-secondary"/>
             </span>
             <input
                 v-model="searchQuery"
                 type="text"
-                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                class="form-control bg-reactive-secondary border-0 text-reactive-primary"
                 :placeholder="$t('organizer.events.search_placeholder')"
             />
           </div>
         </div>
         <div class="col-md-3">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.filter_status') }}</label>
-          <select v-model="statusFilter" class="form-select bg-reactive-primary border-0 text-reactive-primary">
+          <select v-model="statusFilter" class="form-select bg-reactive-secondary border-0 text-reactive-primary">
             <option value="">{{ $t('organizer.events.all_statuses') }}</option>
             <option v-for="s in statusOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
           </select>
@@ -152,7 +152,7 @@ const doDelete = () => {
     </div>
 
     <!-- Events Table -->
-    <div v-else class="card bg-reactive-secondary border-0 overflow-hidden">
+    <div v-else class="card bg-reactive-primary border-0 overflow-hidden">
       <div class="table-responsive">
         <table class="table table-hover mb-0 organizer-table">
           <thead>
@@ -215,7 +215,7 @@ const doDelete = () => {
 
     <!-- Delete Confirm Modal -->
     <div v-if="deleteTarget" class="modal-backdrop-custom" @click.self="deleteTarget = null">
-      <div class="modal-box bg-reactive-secondary p-4 rounded-3 shadow-lg">
+      <div class="modal-box bg-reactive-primary p-4 rounded-3 shadow-lg">
         <h5 class="text-reactive-primary fw-bold mb-2">
           <i class="bi bi-exclamation-triangle text-danger me-2"/>{{ $t('organizer.events.delete.title') }}
         </h5>

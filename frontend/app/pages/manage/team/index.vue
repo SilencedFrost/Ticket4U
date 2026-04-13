@@ -92,7 +92,7 @@ function confirmRemoveMember() {
     <!-- Role stats -->
     <div class="row g-3 mb-4">
       <div v-for="stat in stats" :key="stat.id" class="col-6 col-md-3">
-        <div class="card bg-reactive-secondary border-0 p-3 h-100">
+        <div class="card bg-reactive-primary border-0 p-3 h-100">
           <div class="d-flex align-items-center justify-content-between mb-2">
             <small class="text-reactive-secondary">{{ $t('organizer.team.roles.' + stat.key) }}</small>
             <div
@@ -108,25 +108,25 @@ function confirmRemoveMember() {
     </div>
 
     <!-- Filters -->
-    <div class="card bg-reactive-secondary border-0 p-3 mb-4">
+    <div class="card bg-reactive-primary border-0 p-3 mb-4">
       <div class="row g-3 align-items-end">
         <div class="col-md-5">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.search') }}</label>
           <div class="input-group">
-            <span class="input-group-text bg-reactive-primary border-0">
+            <span class="input-group-text bg-reactive-secondary border-0">
               <i class="bi bi-search text-reactive-secondary"/>
             </span>
             <input
               v-model="searchQuery"
               type="text"
-              class="form-control bg-reactive-primary border-0 text-reactive-primary"
+              class="form-control bg-reactive-secondary border-0 text-reactive-primary"
               :placeholder="$t('organizer.team.search_placeholder')"
             />
           </div>
         </div>
         <div class="col-md-3">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.team.filter_role') }}</label>
-          <select v-model="filterRole" class="form-select bg-reactive-primary border-0 text-reactive-primary">
+          <select v-model="filterRole" class="form-select bg-reactive-secondary border-0 text-reactive-primary">
             <option value="">{{ $t('organizer.team.all_roles') }}</option>
             <option v-for="r in ASSIGNABLE_ROLES" :key="r.id" :value="r.id">
               {{ $t('organizer.team.roles.' + r.key) }}
@@ -142,7 +142,7 @@ function confirmRemoveMember() {
     </div>
 
     <!-- Staff table -->
-    <div class="card bg-reactive-secondary border-0 overflow-hidden">
+    <div class="card bg-reactive-primary border-0 overflow-hidden">
 
       <div v-if="filteredStaff.length === 0" class="text-center py-5 text-reactive-secondary">
         <i class="bi bi-people fs-1 d-block mb-3 opacity-25"/>
@@ -187,7 +187,7 @@ function confirmRemoveMember() {
                   <div class="d-flex align-items-center gap-2">
                     <select
                       v-model="newRoleId"
-                      class="form-select form-select-sm bg-reactive-primary border-0 text-reactive-primary"
+                      class="form-select form-select-sm bg-reactive-secondary border-0 text-reactive-primary"
                       style="max-width: 160px;"
                     >
                       <option v-for="r in ASSIGNABLE_ROLES" :key="r.id" :value="r.id">
@@ -271,7 +271,7 @@ function confirmRemoveMember() {
     <!-- Remove confirm modal -->
     <Teleport to="body">
       <div v-if="confirmRemove" class="modal-backdrop-custom" @click.self="confirmRemove = null">
-        <div class="modal-box card bg-reactive-secondary border-0 p-4 shadow-lg">
+        <div class="modal-box card bg-reactive-primary border-0 p-4 shadow-lg">
           <h5 class="fw-bold text-reactive-primary mb-3">
             <i class="bi bi-exclamation-triangle-fill text-danger me-2"/>
             {{ $t('organizer.team.remove_confirm.title') }}

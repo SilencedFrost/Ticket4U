@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { getStatusI18nKey } from '../mock.data'
-import { useEventForm } from '../composables/use-event-form'
+import { useEventForm } from '../composables/useEventForm'
 import Step1BasicInfo from '~/pages/manage/event/(components)/Step1BasicInfo.vue'
 import Step2Content   from '~/pages/manage/event/(components)/Step2Content.vue'
 import Step3Zones     from '~/pages/manage/event/(components)/Step3Zones.vue'

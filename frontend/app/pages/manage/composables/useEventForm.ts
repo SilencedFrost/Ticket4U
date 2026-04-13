@@ -19,7 +19,7 @@ export function useEventForm() {
     addressLine:         '',
     startDate:           '',
     endDate:             '',
-    bannerUrl:           '',
+    bannerUrl:           { wide: '', square: '', tall: '' },
     venueId:             '',
     longitude:           null,
     latitude:            null,

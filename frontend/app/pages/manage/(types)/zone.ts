@@ -30,6 +30,7 @@ export interface ZoneFormState {
   purchaseLimit: number | null
   descriptionVi: string
   descriptionEn: string
+  giftImageUrl:  string | null
   perks:         string[]
   gridRows:      number
   gridCols:      number

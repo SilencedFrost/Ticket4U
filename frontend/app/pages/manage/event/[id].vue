@@ -84,7 +84,7 @@ onMounted(() => {
 
     <!-- Header -->
     <div class="d-flex align-items-center gap-3 mb-4">
-      <NuxtLink :to="localePath('/organizer/events')" class="btn btn-sm btn-outline-secondary">
+      <NuxtLink :to="localePath('/manage/dashboard/events')" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-arrow-left"/>
       </NuxtLink>
       <div>

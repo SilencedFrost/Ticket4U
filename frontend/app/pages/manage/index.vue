@@ -27,10 +27,10 @@
     <div class="mb-5">
       <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.home.quick_actions') }}</h5>
       <div class="d-flex flex-wrap gap-3">
-        <NuxtLink :to="localePath('/organizer/events/new')" class="btn btn-primary px-4">
+        <NuxtLink :to="localePath('/manage/event/new')" class="btn btn-primary px-4">
           <i class="bi bi-plus-lg me-2"/>{{ $t('organizer.events.create') }}
         </NuxtLink>
-        <NuxtLink :to="localePath('/organizer/events')" class="btn btn-outline-secondary px-4">
+        <NuxtLink :to="localePath('/manage/dashboard/events')" class="btn btn-outline-secondary px-4">
           <i class="bi bi-calendar-event me-2"/>{{ $t('organizer.home.view_events') }}
         </NuxtLink>
         <NuxtLink :to="localePath('/organizer/reports')" class="btn btn-outline-secondary px-4">
@@ -58,7 +58,7 @@
             <tr v-for="event in recentEvents" :key="event.id">
               <td class="ps-4 py-3">
                 <div class="d-flex align-items-center gap-3">
-                  <img :src="event.bannerUrl" class="event-thumb rounded" alt=""/>
+                  <img :src="event.bannerUrl.wide" class="event-thumb rounded" alt=""/>
                   <div>
                     <div class="fw-semibold text-reactive-primary">{{ event.name }}</div>
                     <small class="text-reactive-secondary">

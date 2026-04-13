@@ -10,33 +10,27 @@ import EventRelated from '../../../../features/event/components/detail/EventRela
 const config = useRuntimeConfig();
 const route = useRoute();
 
-const event = ref<Event | null>(null);
-const isLoading = ref(true);
-
-async function getEvent() {
-  isLoading.value = true;
-
-  try {
-    event.value = await $fetch(
-      `${config.public.eventServiceUrl}/public/events/${route.params.id}`,
-      {
-        method: 'GET',
-      },
-    );
-  } catch (e) {
-    console.log(e);
-    event.value = null;
-  } finally {
-    isLoading.value = false;
-  }
-}
+const { data: event, pending: isLoading } = await useFetch<Event>(
+  () => `/public/events/${route.params.id}`,
+  {
+    baseURL: config.public.eventServiceUrl,
+    key: `event-detail-${route.params.id}`,
+    lazy: true,
+    onResponseError() {
+      event.value = undefined;
+    },
+  },
+);
 
 useHead({
   title: () => event.value?.name || 'Loading Event...',
-  titleTemplate: (title) => `${title}`,
+  meta: [
+    {
+      name: 'description',
+      content: () => event.value?.aboutVi?.substring(0, 160) || 'Thông tin sự kiện',
+    },
+  ],
 });
-
-onMounted(() => getEvent());
 </script>
 
 <template>

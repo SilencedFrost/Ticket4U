@@ -31,6 +31,11 @@ async function getEvent() {
   }
 }
 
+useHead({
+  title: () => event.value?.name || 'Loading Event...',
+  titleTemplate: (title) => `${title}`,
+});
+
 onMounted(() => getEvent());
 </script>
 

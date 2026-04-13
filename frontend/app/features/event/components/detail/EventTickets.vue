@@ -15,27 +15,37 @@ const emit = defineEmits(['buyClick']);
 const expandedTickets = ref<{ [key: string]: boolean }>({});
 const expandedSeatDetails = ref<{ [key: string]: boolean }>({});
 
-const toggleTicketDate = (scheduleId: string) => {
+function toggleTicketDate(scheduleId: string) {
   expandedTickets.value[scheduleId] = !expandedTickets.value[scheduleId];
-};
+}
 
-const toggleSeatDetail = (scheduleId: string, seatName: string) => {
-  const key = `${scheduleId}-${seatName}`;
+function toggleSeatDetail(scheduleId: string, zoneId: string) {
+  const key = `${scheduleId}-${zoneId}`;
   expandedSeatDetails.value[key] = !expandedSeatDetails.value[key];
-};
+}
 
-const getZoneDescription = (zone: Zone) => {
+function sortZonesByPriceDesc(zones: Zone[]) {
+  return [...zones].sort((a, b) => {
+    if (b.price !== a.price) {
+      return b.price - a.price;
+    }
+
+    return a.name.localeCompare(b.name, undefined, { numeric: true });
+  });
+}
+
+function getZoneDescription(zone: Zone) {
   return locale.value === 'vi' ? zone.descriptionVi : zone.descriptionEn;
-};
+}
 
-const hasZoneDetails = (zone: Zone) => {
+function hasZoneDetails(zone: Zone) {
   return (
     zone.descriptionVi ||
     zone.descriptionEn ||
     zone.giftImageUrl ||
     (zone.perks && zone.perks.length > 0)
   );
-};
+}
 </script>
 
 <template>
@@ -45,7 +55,7 @@ const hasZoneDetails = (zone: Zone) => {
         {{ $t('event_detail.section.schedule') }}
       </h5>
 
-      <div v-for="(schedule, dateIdx) in sessions" :key="dateIdx" class="mt-3">
+      <div v-for="schedule in sessions" :key="schedule.id" class="mt-3">
         <div class="card-border mb-3">
           <button
             class="btn w-100 text-start p-3 p-md-3 d-flex flex-row justify-content-between align-items-center border-0 bg-transparent gap-2"
@@ -96,8 +106,8 @@ const hasZoneDetails = (zone: Zone) => {
 
           <div class="d-flex flex-column gap-2 gap-md-3">
             <div
-              v-for="(zone, zoneIdx) in schedule.zones"
-              :key="zoneIdx"
+              v-for="zone in sortZonesByPriceDesc(schedule.zones)"
+              :key="zone.id"
               class="card-border overflow-hidden"
             >
               <div class="p-3 p-md-3">
@@ -134,12 +144,12 @@ const hasZoneDetails = (zone: Zone) => {
                       v-if="hasZoneDetails(zone)"
                       class="btn btn-link text-reactive-primary p-0"
                       aria-label="Toggle seat details"
-                      @click="toggleSeatDetail(schedule.id, zone.name)"
+                      @click="toggleSeatDetail(schedule.id, zone.id)"
                     >
                       <i
                         class="bi fs-5"
                         :class="
-                          expandedSeatDetails[`${schedule.id}-${zone.name}`]
+                          expandedSeatDetails[`${schedule.id}-${zone.id}`]
                             ? 'bi-chevron-up'
                             : 'bi-chevron-down'
                         "
@@ -148,7 +158,7 @@ const hasZoneDetails = (zone: Zone) => {
                   </div>
                 </div>
                 <div
-                  v-if="expandedSeatDetails[`${schedule.id}-${zone.name}`] && hasZoneDetails(zone)"
+                  v-if="expandedSeatDetails[`${schedule.id}-${zone.id}`] && hasZoneDetails(zone)"
                   class="mt-2 mt-md-3 pt-2 pt-md-3 border-top"
                 >
                   <p v-if="getZoneDescription(zone)" class="text-reactive-primary mb-3 small">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ThemePreview from '~/features/settings/preferences/components/ThemePreview.vue';
+
 type ThemePreference = 'light' | 'dark';
 
 interface AppearanceOption {
@@ -6,7 +8,6 @@ interface AppearanceOption {
   icon: string;
   titleKey: string;
   subtitleKey: string;
-  vars : Record<string, string>;
 }
 
 const model = defineModel<ThemePreference>({ required: true });
@@ -16,29 +17,13 @@ const options: AppearanceOption[] = [
     value: 'light',
     icon: 'bi bi-brightness-high-fill',
     titleKey: 'settings.preferences.appearance.light_mode.title',
-    subtitleKey: 'settings.preferences.appearance.light_mode.subtitle',
-    vars: {
-      '--bg-reactive-primary': 'var(--bg-primary-light)',
-      '--bg-reactive-secondary': 'var(--bg-secondary-light)',
-      '--bg-reactive-gray': '#c7c7c7',
-      '--text-reactive-primary': 'var(--text-primary-light)',
-      '--text-reactive-secondary': 'var(--text-secondary-light)',
-      '--border-reactive-subtle': 'rgba(var(--bs-secondary-rgb), 0.2)',
-    }
+    subtitleKey: 'settings.preferences.appearance.light_mode.subtitle'
   },
   {
     value: 'dark',
     icon: 'bi bi-moon-fill',
     titleKey: 'settings.preferences.appearance.dark_mode.title',
-    subtitleKey: 'settings.preferences.appearance.dark_mode.subtitle',
-    vars: {
-      '--bg-reactive-primary': 'var(--bg-primary-dark)',
-      '--bg-reactive-secondary': 'var(--bg-secondary-dark)',
-      '--bg-reactive-gray': '#5e5e5e',
-      '--text-reactive-primary': 'var(--text-primary-dark)',
-      '--text-reactive-secondary': 'var(--text-secondary-dark)',
-      '--border-reactive-subtle': 'rgba(var(--bs-secondary-rgb), 0.35)',
-    }
+    subtitleKey: 'settings.preferences.appearance.dark_mode.subtitle'
   },
 ];
 </script>
@@ -65,23 +50,8 @@ const options: AppearanceOption[] = [
           :aria-label="$t(option.titleKey)"
           @click="model = option.value"
         >
-          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2 bg-reactive-secondary" :style="option.vars">
-            <span class="appearance-card-preview-frame d-block mx-auto">
-              <span class="ratio ratio-16x9 d-block">
-                <span class="appearance-card-preview-window d-block rounded-2 overflow-hidden border border-reactive-subtle bg-reactive-primary">
-                  <span class="appearance-card-preview-toolbar d-flex align-items-center gap-1 px-2 py-1 border-bottom border-reactive-subtle bg-reactive-primary">
-                    <i class="bi bi-dot text-reactive-secondary"></i>
-                    <i class="bi bi-dot text-reactive-secondary"></i>
-                    <i class="bi bi-dot text-reactive-secondary"></i>
-                  </span>
-                  <span class="d-flex flex-column gap-1 px-2 py-2 bg-reactive-primary">
-                    <span class="appearance-card-line d-block rounded-pill w-75 bg-primary opacity-75"></span>
-                    <span class="appearance-card-line d-block rounded-pill w-50 bg-reactive-gray"></span>
-                    <span class="appearance-card-line d-block rounded-pill w-100 bg-reactive-gray"></span>
-                  </span>
-                </span>
-              </span>
-            </span>
+          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2">
+            <ThemePreview :theme="option.value" />
           </span>
 
           <span class="d-flex align-items-start justify-content-between gap-2 px-3 py-2">
@@ -114,23 +84,5 @@ const options: AppearanceOption[] = [
   transform: translateY(-1px);
 }
 
-.border-reactive-subtle {
-  border-color: var(--border-reactive-subtle, rgba(var(--bs-secondary-rgb), 0.2)) !important;
-}
 
-.appearance-card-preview-frame {
-  width: 100%;
-}
-
-@media (min-width: 992px) {
-  .appearance-card-preview-frame {
-    max-height: 152px;
-    aspect-ratio: 16 / 9;
-    width: auto;
-  }
-}
-
-.appearance-card-line {
-  height: 6px;
-}
 </style>

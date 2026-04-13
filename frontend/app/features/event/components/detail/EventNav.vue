@@ -33,7 +33,7 @@ const scrollToSection = (id: string) => {
           class="btn btn-link text-reactive-primary fw-semibold p-0 text-decoration-none small text-nowrap flex-shrink-0"
           @click="scrollToSection('organizer-section')"
         >
-          {{ $t('event_detail.label.organizer') }}
+          {{ $t('common.organizer') }}
         </button>
       </div>
     </div>

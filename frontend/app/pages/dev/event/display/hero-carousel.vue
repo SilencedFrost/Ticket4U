@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { EventSummary } from '~/features/event/types/Event';
-import EventCarousel from '~/features/event/components/layout/EventCarousel.vue';
+import EventHeroCarousel from '~/features/event/components/layout/EventHeroCarousel.vue';
 
 const config = useRuntimeConfig();
 const eventList = ref<EventSummary[]>([]);
@@ -25,7 +25,7 @@ onMounted(() => getFeaturedEvents());
   <div>
     <input v-model="wrapAround" type="checkbox" />Wrap around?
     <div class="p-3">
-      <event-carousel :events="eventList" :wrap-around="wrapAround" />
+      <event-hero-carousel :events="eventList" />
     </div>
   </div>
 </template>

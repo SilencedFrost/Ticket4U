@@ -76,28 +76,30 @@ useResizeObserver(priceRef, () => {
         class="bi bi-person-circle text-reactive-secondary me-2 d-none d-md-block"
         style="font-size: 35px"
       />
-      <div class="d-flex flex-column" :style="{ fontSize: `${isSm ? 12 : 10}pt` }">
-        <span ref="nameRef" class="text-reactive-primary text-truncate-2">
-          {{ event.name }}
-        </span>
-        <span ref="priceRef" class="text-primary fw-bold text-truncate-2">
-          {{
-            event.minPrice === 0
-              ? $t('common.currency.free')
-              : `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}`
-          }}
-        </span>
-        <span class="text-reactive-secondary d-flex align-items-center gap-1 small">
-          <i class="bi bi-calendar-event"></i>
-          <span class="text-truncate-1">{{ $d(event.startDate, 'short') }}</span>
-        </span>
-        <span v-if="nameLineCount <= 1" style="visibility: hidden; user-select: none"
-          >Padding text</span
-        >
-        <span v-if="priceLineCount <= 1" style="visibility: hidden; user-select: none"
-          >Padding text</span
-        >
-      </div>
+      <client-only>
+        <div class="d-flex flex-column" :style="{ fontSize: `${isSm ? 12 : 10}pt` }">
+          <span ref="nameRef" class="text-reactive-primary text-truncate-2">
+            {{ event.name }}
+          </span>
+          <span ref="priceRef" class="text-primary fw-bold text-truncate-2">
+            {{
+              event.minPrice === 0
+                ? $t('common.currency.free')
+                : `${$t('common.currency.from')}: ${formatter.formatPrice(event.minPrice)}`
+            }}
+          </span>
+          <span class="text-reactive-secondary d-flex align-items-center gap-1 small">
+            <i class="bi bi-calendar-event"></i>
+            <span class="text-truncate-1">{{ $d(event.startDate, 'short') }}</span>
+          </span>
+          <span v-if="nameLineCount <= 1" style="visibility: hidden; user-select: none"
+            >Padding text</span
+          >
+          <span v-if="priceLineCount <= 1" style="visibility: hidden; user-select: none"
+            >Padding text</span
+          >
+        </div>
+      </client-only>
     </div>
   </div>
 </template>

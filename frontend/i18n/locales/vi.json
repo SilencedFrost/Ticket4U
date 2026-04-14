@@ -475,6 +475,35 @@
         "load_saved": "Tải sơ đồ đã lưu",
         "no_saved_layout": "Chưa có sơ đồ được lưu"
       }
+    },
+    "revenue": {
+      "title": "Doanh Thu Sự Kiện",
+      "subtitle": "Thống kê doanh thu và bán vé",
+      "back": "Quay lại Danh sách",
+      "not_found": "Không tìm thấy sự kiện",
+      "stats": {
+        "total_revenue": "Tổng Doanh Thu",
+        "tickets_sold": "Vé Đã Bán",
+        "total_capacity": "Tổng Sức Chứa",
+        "sold_rate": "Đã Bán",
+        "checked_in": "Đã Check-in"
+      },
+      "session": "Buổi diễn",
+      "sessions_title": "Chi Tiết Theo Buổi Diễn",
+      "zone_table": {
+        "zone": "Khu Vực",
+        "type": "Loại",
+        "price": "Giá / Vé",
+        "capacity": "Sức Chứa",
+        "tickets": "Vé",
+        "sold": "Đã Bán",
+        "revenue": "Doanh Thu"
+      },
+      "type": {
+        "seated": "Có Ghế",
+        "standing": "Đứng"
+      },
+      "no_zones": "Buổi diễn này chưa có khu vực vé"
     }
   }
 }

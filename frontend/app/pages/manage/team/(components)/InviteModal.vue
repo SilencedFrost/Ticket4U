@@ -42,7 +42,7 @@ function submit() {
 <template>
   <Teleport to="body">
     <div v-if="show" class="modal-backdrop-custom" @click.self="$emit('close')">
-      <div class="modal-box card border-0 p-4 shadow-lg">
+      <div class="modal-box card shadow p-4">
 
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h5 class="fw-bold text-reactive-primary mb-0">
@@ -59,7 +59,7 @@ function submit() {
           <input
             v-model="email"
             type="email"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control"
             :class="{ 'is-invalid': errors.email }"
             :placeholder="$t('organizer.team.invite_modal.email_placeholder')"
           />
@@ -73,7 +73,7 @@ function submit() {
           </label>
           <select
             v-model="roleId"
-            class="form-select bg-reactive-primary border-0 text-reactive-primary"
+            class="form-select"
             :class="{ 'is-invalid': errors.roleId }"
           >
             <option value="">{{ $t('organizer.team.invite_modal.select_role') }}</option>

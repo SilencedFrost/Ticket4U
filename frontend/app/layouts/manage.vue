@@ -12,7 +12,7 @@
 
     <!-- Sidebar -->
     <aside
-      class="manage-sidebar bg-reactive-secondary d-flex flex-column"
+      class="manage-sidebar bg-reactive-primary d-flex flex-column"
       :class="{ collapsed: sidebarCollapsed, 'mobile-open': mobileOpen }"
     >
       <!-- Org Info -->
@@ -81,7 +81,7 @@
     <div class="manage-body d-flex flex-column flex-grow-1 overflow-hidden">
 
       <!-- Topbar -->
-      <header class="manage-topbar bg-reactive-secondary border-bottom d-flex align-items-center gap-2 px-3 flex-shrink-0">
+      <header class="manage-topbar bg-reactive-primary border-bottom d-flex align-items-center gap-2 px-3 flex-shrink-0">
 
         <!-- Hamburger (mobile only) -->
         <button class="topbar-btn d-flex d-lg-none align-items-center me-1" @click="mobileOpen = true">
@@ -136,7 +136,7 @@
       </header>
 
       <!-- Page content -->
-      <main class="flex-grow-1 overflow-auto bg-reactive-primary">
+      <main class="flex-grow-1 overflow-auto bg-reactive-secondary">
         <slot />
       </main>
     </div>
@@ -261,6 +261,11 @@ const handleLogout = async () => {
   transition: background 0.15s, color 0.15s;
 }
 .topbar-btn:hover { background: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); }
+
+/* ── Dark mode: flip main canvas so cards (secondary) float above it (primary) ── */
+[data-bs-theme='dark'] .manage-body > main {
+  background-color: var(--bg-reactive-primary);
+}
 
 /* ── Fade text transition ────────────────── */
 .fade-text-enter-active { transition: opacity 0.15s ease 0.1s; }

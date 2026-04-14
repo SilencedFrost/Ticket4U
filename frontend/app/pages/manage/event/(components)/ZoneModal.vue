@@ -105,7 +105,7 @@ onMounted(() => {
 
 <template>
   <div class="modal-backdrop-custom" @click.self="$emit('close')">
-    <div class="modal-box card border-0 p-4 rounded-3 shadow-lg">
+    <div class="modal-box card shadow p-4 rounded-3">
 
       <h5 class="text-reactive-primary fw-bold mb-4">
         {{ zone?.id ? $t('organizer.event_form.step3.edit_zone') : $t('organizer.event_form.step3.add_zone') }}
@@ -116,14 +116,14 @@ onMounted(() => {
         <!-- Name -->
         <div class="col-12">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.zone_name') }} *</label>
-          <input v-model="form.name" type="text" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.name }"/>
+          <input v-model="form.name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"/>
           <div class="invalid-feedback">{{ errors.name }}</div>
         </div>
 
         <!-- Type -->
         <div class="col-12">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.type') }}</label>
-          <select v-model="form.isStanding" class="form-select bg-reactive-primary border-0 text-reactive-primary">
+          <select v-model="form.isStanding" class="form-select">
             <option :value="false">{{ $t('organizer.event_form.step3.seated') }}</option>
             <option :value="true">{{ $t('organizer.event_form.step3.standing') }}</option>
           </select>
@@ -141,7 +141,7 @@ onMounted(() => {
                   <label class="form-label small text-reactive-secondary">Rows *</label>
                   <div class="d-flex align-items-center gap-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary px-2" @click="form.gridRows = Math.max(1, form.gridRows - 1)">−</button>
-                    <input v-model.number="form.gridRows" type="number" min="1" max="52" class="form-control bg-reactive-primary border-0 text-reactive-primary text-center" :class="{ 'is-invalid': errors.gridRows }"/>
+                    <input v-model.number="form.gridRows" type="number" min="1" max="52" class="form-control text-center" :class="{ 'is-invalid': errors.gridRows }"/>
                     <button type="button" class="btn btn-sm btn-outline-secondary px-2" @click="form.gridRows = Math.min(52, form.gridRows + 1)">+</button>
                   </div>
                   <div class="invalid-feedback">{{ errors.gridRows }}</div>
@@ -150,7 +150,7 @@ onMounted(() => {
                   <label class="form-label small text-reactive-secondary">Seats per row *</label>
                   <div class="d-flex align-items-center gap-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary px-2" @click="form.gridCols = Math.max(1, form.gridCols - 1)">−</button>
-                    <input v-model.number="form.gridCols" type="number" min="1" max="200" class="form-control bg-reactive-primary border-0 text-reactive-primary text-center" :class="{ 'is-invalid': errors.gridCols }"/>
+                    <input v-model.number="form.gridCols" type="number" min="1" max="200" class="form-control text-center" :class="{ 'is-invalid': errors.gridCols }"/>
                     <button type="button" class="btn btn-sm btn-outline-secondary px-2" @click="form.gridCols = Math.min(200, form.gridCols + 1)">+</button>
                   </div>
                   <div class="invalid-feedback">{{ errors.gridCols }}</div>
@@ -190,7 +190,7 @@ onMounted(() => {
         <template v-else>
           <div class="col-12">
             <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.capacity') }} *</label>
-            <input v-model.number="form.capacity" type="number" min="1" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.capacity }"/>
+            <input v-model.number="form.capacity" type="number" min="1" class="form-control" :class="{ 'is-invalid': errors.capacity }"/>
             <div class="invalid-feedback">{{ errors.capacity }}</div>
           </div>
         </template>
@@ -199,14 +199,14 @@ onMounted(() => {
         <div class="col-md-6">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.price') }} *</label>
           <div class="input-group">
-            <input v-model.number="form.price" type="number" min="0" class="form-control bg-reactive-primary border-0 text-reactive-primary" :class="{ 'is-invalid': errors.price }"/>
-            <span class="input-group-text bg-reactive-primary border-0 text-reactive-secondary">₫</span>
+            <input v-model.number="form.price" type="number" min="0" class="form-control" :class="{ 'is-invalid': errors.price }"/>
+            <span class="input-group-text text-reactive-secondary">₫</span>
           </div>
           <div class="invalid-feedback">{{ errors.price }}</div>
         </div>
         <div class="col-md-6">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.purchase_limit') }}</label>
-          <input v-model.number="form.purchaseLimit" type="number" min="1" class="form-control bg-reactive-primary border-0 text-reactive-primary"/>
+          <input v-model.number="form.purchaseLimit" type="number" min="1" class="form-control"/>
         </div>
 
         <!-- Description bilingual -->
@@ -224,8 +224,8 @@ onMounted(() => {
               </button>
             </li>
           </ul>
-          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
-          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
+          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
+          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
         </div>
 
         <!-- Gift Image URL -->
@@ -234,7 +234,7 @@ onMounted(() => {
           <input
             v-model="form.giftImageUrl"
             type="url"
-            class="form-control bg-reactive-primary border-0 text-reactive-primary"
+            class="form-control"
             placeholder="https://..."
           />
           <div v-if="form.giftImageUrl" class="mt-2">
@@ -246,7 +246,7 @@ onMounted(() => {
         <div class="col-12">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.perks') }}</label>
           <div class="d-flex gap-2 mb-2">
-            <input v-model="newPerk" type="text" class="form-control bg-reactive-primary border-0 text-reactive-primary" :placeholder="$t('organizer.event_form.step3.perk_placeholder')" @keyup.enter="addPerk"/>
+            <input v-model="newPerk" type="text" class="form-control" :placeholder="$t('organizer.event_form.step3.perk_placeholder')" @keyup.enter="addPerk"/>
             <button type="button" class="btn btn-outline-primary btn-sm" @click="addPerk"><i class="bi bi-plus-lg"/></button>
           </div>
           <div class="d-flex flex-wrap gap-1">

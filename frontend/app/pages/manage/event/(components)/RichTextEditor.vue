@@ -245,7 +245,7 @@ onBeforeUnmount(function () { editor.value?.destroy() })
 
     <!-- Link modal -->
     <div v-if="showLinkModal" class="editor-modal-backdrop" @click.self="showLinkModal = false">
-      <div class="editor-modal card border-0 p-4 rounded-3 shadow-lg">
+      <div class="editor-modal card shadow p-4 rounded-3">
         <div class="fw-semibold text-reactive-primary mb-3">
           <i class="bi bi-link-45deg me-2 text-primary"/>Insert Link
         </div>
@@ -253,7 +253,7 @@ onBeforeUnmount(function () { editor.value?.destroy() })
           ref="linkInputRef"
           v-model="linkUrl"
           type="url"
-          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
+          class="form-control mb-3"
           placeholder="https://..."
           @keyup.enter="confirmLink"
         />
@@ -266,7 +266,7 @@ onBeforeUnmount(function () { editor.value?.destroy() })
 
     <!-- Image modal -->
     <div v-if="showImageModal" class="editor-modal-backdrop" @click.self="showImageModal = false">
-      <div class="editor-modal card border-0 p-4 rounded-3 shadow-lg">
+      <div class="editor-modal card shadow p-4 rounded-3">
         <div class="fw-semibold text-reactive-primary mb-3">
           <i class="bi bi-image me-2 text-primary"/>Insert Image
         </div>
@@ -276,7 +276,7 @@ onBeforeUnmount(function () { editor.value?.destroy() })
           ref="imageInputRef"
           v-model="imageUrl"
           type="url"
-          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
+          class="form-control mb-3"
           placeholder="https://example.com/image.jpg"
           @keyup.enter="confirmImage"
         />
@@ -290,7 +290,7 @@ onBeforeUnmount(function () { editor.value?.destroy() })
         <input
           v-model="imageAlt"
           type="text"
-          class="form-control bg-reactive-primary border-0 text-reactive-primary mb-3"
+          class="form-control mb-3"
           placeholder="Describe the image..."
         />
 

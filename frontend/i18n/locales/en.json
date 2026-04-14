@@ -475,6 +475,35 @@
         "load_saved": "Load Saved Layout",
         "no_saved_layout": "No saved layout available"
       }
+    },
+    "revenue": {
+      "title": "Event Revenue",
+      "subtitle": "Revenue and ticket sales breakdown",
+      "back": "Back to Events",
+      "not_found": "Event not found",
+      "stats": {
+        "total_revenue": "Total Revenue",
+        "tickets_sold": "Tickets Sold",
+        "total_capacity": "Total Capacity",
+        "sold_rate": "Sold",
+        "checked_in": "Checked-in"
+      },
+      "session": "Session",
+      "sessions_title": "Sessions Breakdown",
+      "zone_table": {
+        "zone": "Zone",
+        "type": "Type",
+        "price": "Price / Ticket",
+        "capacity": "Capacity",
+        "tickets": "Tickets",
+        "sold": "Sold",
+        "revenue": "Revenue"
+      },
+      "type": {
+        "seated": "Seated",
+        "standing": "Standing"
+      },
+      "no_zones": "No zones defined for this session"
     }
   }
 }

@@ -108,25 +108,25 @@ const doDelete = () => {
     </div>
 
     <!-- Filters -->
-    <div class="card border-0 p-3 mb-4">
+    <div class="card shadow-sm p-3 mb-4">
       <div class="row g-3 align-items-end">
         <div class="col-md-5">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.search') }}</label>
           <div class="input-group">
-            <span class="input-group-text bg-reactive-primary border-0">
+            <span class="input-group-text">
               <i class="bi bi-search text-reactive-secondary"/>
             </span>
             <input
                 v-model="searchQuery"
                 type="text"
-                class="form-control bg-reactive-primary border-0 text-reactive-primary"
+                class="form-control"
                 :placeholder="$t('organizer.events.search_placeholder')"
             />
           </div>
         </div>
         <div class="col-md-3">
           <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.filter_status') }}</label>
-          <select v-model="statusFilter" class="form-select bg-reactive-primary border-0 text-reactive-primary">
+          <select v-model="statusFilter" class="form-select">
             <option value="">{{ $t('organizer.events.all_statuses') }}</option>
             <option v-for="s in statusOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
           </select>
@@ -152,7 +152,7 @@ const doDelete = () => {
     </div>
 
     <!-- Events Table -->
-    <div v-else class="card border-0 overflow-hidden">
+    <div v-else class="card shadow-sm overflow-hidden">
       <div class="table-responsive">
         <table class="table table-hover mb-0 organizer-table">
           <thead>
@@ -166,7 +166,7 @@ const doDelete = () => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="event in filteredEvents" :key="event.id">
+          <tr v-for="event in filteredEvents" :key="event.id" class="event-row" style="cursor:pointer" @click="navigateTo(localePath(`/manage/dashboard/event/${event.id}`))">
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
                 <img :src="event.bannerUrl.wide" class="event-thumb rounded" alt=""/>
@@ -194,7 +194,7 @@ const doDelete = () => {
             <td class="py-3">
               <div class="text-reactive-primary small fw-semibold">{{ formatPrice(getRevenue(event)) }}</div>
             </td>
-            <td class="py-3 pe-4 text-end">
+            <td class="py-3 pe-4 text-end" @click.stop>
               <div class="d-flex justify-content-end gap-2">
                 <NuxtLink :to="localePath(`/manage/event/${event.id}`)" class="btn btn-sm btn-outline-primary" :title="$t('organizer.events.action.edit')">
                   <i class="bi bi-pencil"/>
@@ -215,7 +215,7 @@ const doDelete = () => {
 
     <!-- Delete Confirm Modal -->
     <div v-if="deleteTarget" class="modal-backdrop-custom" @click.self="deleteTarget = null">
-      <div class="modal-box card border-0 p-4 rounded-3 shadow-lg">
+      <div class="modal-box card shadow p-4 rounded-3">
         <h5 class="text-reactive-primary fw-bold mb-2">
           <i class="bi bi-exclamation-triangle text-danger me-2"/>{{ $t('organizer.events.delete.title') }}
         </h5>

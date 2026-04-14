@@ -2,7 +2,7 @@
 import type { EventSummary } from '../../types/Event';
 import CarouselWrapper from '~/components/CarouselWrapper.vue';
 import EventCard from '../core/EventCard.vue';
-import { breakpointsBootstrapV5, useBreakpoints, useWindowSize } from '@vueuse/core';
+import { breakpointsBootstrapV5, useBreakpoints, useResizeObserver } from '@vueuse/core';
 
 interface Props {
   events: EventSummary[];
@@ -13,30 +13,58 @@ withDefaults(defineProps<Props>(), {
   wrapAround: true,
 });
 
-const interpolatePoints = ref([
-  { x: 320, y: 62 },
-  { x: 480, y: 40 },
-  { x: 540, y: 40 },
-  // md
-  { x: 767, y: 28 },
-  { x: 768, y: 40 },
-  // lg
-  { x: 991, y: 30 },
-  { x: 992, y: 50 },
-  //xxl
-  { x: 1399, y: 35 },
-  { x: 1400, y: 47 },
-  // really big?
-  { x: 2000, y: 30 },
-  { x: 3000, y: 22 },
-]);
-
 const breakpoints = useBreakpoints(breakpointsBootstrapV5);
-const { interpolate } = useInterpolation(interpolatePoints);
-const { width } = useWindowSize();
 
+const carouselEl = ref<HTMLElement | null>(null);
+const componentWidth = ref(0);
 const isXxl = breakpoints.greaterOrEqual('xxl');
+const isLg = breakpoints.greaterOrEqual('lg');
 const isMd = breakpoints.greaterOrEqual('md');
+
+// < 768
+const smInterpolateMap = [
+  { x: 300, y: 62 },
+  { x: 325, y: 58 },
+  { x: 350, y: 54 },
+  { x: 500, y: 41 },
+  { x: 600, y: 35.5 },
+  { x: 767, y: 28.5 },
+];
+
+// >= 768
+const mdInterpolateMap = [
+  { x: 450, y: 65 },
+  { x: 500, y: 58.5 },
+  { x: 600, y: 51 },
+  { x: 750, y: 42 },
+  { x: 991, y: 33 },
+];
+
+// >= 992
+const lgInterpolateMap = [
+  { x: 450, y: 90 },
+  { x: 750, y: 63 },
+  { x: 1000, y: 50.5 },
+  { x: 1399, y: 40 },
+];
+
+// >= 1400
+const xxlInterpolateMap = [
+  { x: 600, y: 87 },
+  { x: 1000, y: 63 },
+  { x: 1500, y: 46 },
+  { x: 2000, y: 37 },
+  { x: 3000, y: 26 },
+];
+
+const activeInpolationMap = computed(() => {
+  if (isXxl.value) return xxlInterpolateMap;
+  if (isLg.value) return lgInterpolateMap;
+  if (isMd.value) return mdInterpolateMap;
+  return smInterpolateMap;
+});
+
+const { interpolate } = useInterpolation(activeInpolationMap);
 
 const visibleCount = computed(() => {
   if (isXxl.value) return 4;
@@ -44,21 +72,28 @@ const visibleCount = computed(() => {
   return 2;
 });
 
-const offset = computed(() => interpolate(width.value));
+useResizeObserver(carouselEl, (entries) => {
+  if (!entries[0]) return;
+  componentWidth.value = entries[0].contentRect.width;
+});
+
+const offset = computed(() => interpolate(componentWidth.value));
 </script>
 
 <template>
   <client-only>
-    <carousel-wrapper
-      :items="events"
-      :visible-count="visibleCount"
-      mode="carousel"
-      :wrap-around="wrapAround"
-      :chevron-options="{ offset, height: isMd ? 55 : 50 }"
-    >
-      <template #item="{ item }">
-        <event-card :event="item" />
-      </template>
-    </carousel-wrapper>
+    <div ref="carouselEl">
+      <carousel-wrapper
+        :items="events"
+        :visible-count="visibleCount"
+        mode="carousel"
+        :wrap-around="wrapAround"
+        :chevron-options="{ offset, height: isMd ? 55 : 50 }"
+      >
+        <template #item="{ item }">
+          <event-card :event="item" />
+        </template>
+      </carousel-wrapper>
+    </div>
   </client-only>
 </template>

@@ -148,6 +148,20 @@
     "light": "Light mode",
     "dark": "Dark mode"
   },
+  "event_detail": {
+    "label": {
+      "price_from": "From",
+      "available": "available",
+      "organizer": "Organizer",
+      "sold_out": "Sold Out"
+    },
+    "section": {
+      "schedule": "Event Schedule",
+      "about": "About the event",
+      "ticket_info": "Ticket Information",
+      "related": "You May Also Like"
+    }
+  },
   "event": {
     "status_options": {
       "premiere": "Premiere",
@@ -158,14 +172,6 @@
       "editing": "Editing",
       "paused": "Stopped selling",
       "sold_out": "Sold out"
-    }
-  },
-  "event_detail": {
-    "section": {
-      "schedule": "Event Schedule",
-      "about": "About the event",
-      "ticket_info": "Ticket Information",
-      "related": "You May Also Like"
     }
   },
   "select_ticket": {

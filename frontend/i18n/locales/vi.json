@@ -148,6 +148,18 @@
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
   },
+  "event": {
+    "status_options": {
+      "premiere": "Ra mắt",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Ngừng bán vé",
+      "sold_out": "Hết vé"
+    }
+  },
   "event_detail": {
     "label": {
       "price_from": "Từ",
@@ -160,18 +172,6 @@
       "about": "Về sự kiện",
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
-    }
-  },
-  "event": {
-    "status_options": {
-      "premiere": "Ra mắt",
-      "selling": "Đang mở bán",
-      "ongoing": "Đang diễn ra",
-      "finished": "Đã kết thúc",
-      "canceled": "Đã hủy",
-      "editing": "Đang chỉnh sửa",
-      "paused": "Ngừng bán vé",
-      "sold_out": "Hết vé"
     }
   },
   "select_ticket": {

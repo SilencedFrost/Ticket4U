@@ -19,7 +19,6 @@ defineProps<{
     <div class="mb-4 w-100 d-flex justify-content-center">
       <template v-if="event.seatingPlanImageUrl">
         <img
-          v-img-fallback="[900, 1000]"
           :src="event.seatingPlanImageUrl"
           alt="Sơ đồ chỗ ngồi"
           class="w-75 rounded-2 object-fit-cover img-fluid mh-100"

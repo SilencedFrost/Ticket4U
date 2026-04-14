@@ -31,7 +31,6 @@ const { data: organizer } = await useFetch<OrganizerSummary>(
       >
         <div class="flex-shrink-0 text-center w-md-auto">
           <img
-            v-img-fallback="[400, 400]"
             :src="organizer?.logo_url"
             alt="Organizer"
             class="img-fluid rounded-3 border shadow-sm w-100"

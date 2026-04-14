@@ -13,7 +13,6 @@ const emit = defineEmits(['buyClick']);
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
       <img
-        v-img-fallback="[1200, 600]"
         :src="event.bannerUrl.wide"
         :alt="event.name"
         class="w-100 h-100 object-fit-cover hero-bg-blur"
@@ -72,7 +71,6 @@ const emit = defineEmits(['buyClick']);
                 </div>
               </div>
               <img
-                v-img-fallback="[1200, 600]"
                 :src="event.bannerUrl.wide"
                 :alt="event.name"
                 class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"

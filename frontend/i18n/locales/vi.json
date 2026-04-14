@@ -90,6 +90,7 @@
     "settings": "Cài đặt",
     "ticket": "Vé",
     "tickets": "Vé",
+    "organizer": "Ban tổ chức",
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -99,15 +100,34 @@
       "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "reset": "Thiết lập lại",
+      "apply": "Áp dụng",
+      "filter": "Bộ lọc"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
     "last_name": "Họ",
     "phone": "Số điện thoại",
+    "price": "Giá tiền",
+    "category": "Thể loại",
     "currency": {
       "from": "Từ",
       "free": "Miễn phí"
+    },
+    "date": {
+      "all_dates": "Tất cả các ngày",
+      "short": "Ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "this_weekend": "Cuối tuần này",
+      "this_month": "Tháng này",
+      "from_date": "Từ ngày",
+      "to_date": "Đến ngày"
+    },
+    "status": {
+      "title": "Trạng thái",
+      "available": "còn lại"
     }
   },
   "permissions": {
@@ -121,7 +141,8 @@
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
   "placeholder": {
-    "search": "Tìm kiếm sự kiện, nghệ sĩ..."
+    "search": "Tìm kiếm sự kiện, nghệ sĩ...",
+    "category": "Tìm kiếm thể loại"
   },
   "theme": {
     "light": "Chế độ sáng",
@@ -139,6 +160,18 @@
       "about": "Về sự kiện",
       "ticket_info": "Thông tin vé",
       "related": "Bạn có thể thích"
+    }
+  },
+  "event": {
+    "status_options": {
+      "premiere": "Ra mắt",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Ngừng bán vé",
+      "sold_out": "Hết vé"
     }
   },
   "select_ticket": {

@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { breakpointsBootstrapV5, onClickOutside, useBreakpoints } from '@vueuse/core';
+
+const props = withDefaults(
+  defineProps<{
+    summaryClass: string;
+    summaryIconClass: string;
+    summaryLabel: string;
+    summaryMobileLabel?: string;
+    panelClass?: string;
+    panelStyle?: Record<string, string | number>;
+    panelName?: string;
+  }>(),
+  {
+    summaryMobileLabel: '',
+    panelClass: '',
+    panelStyle: () => ({}),
+    panelName: 'dev-event-filter-group',
+  },
+);
+
+const isPanelOpen = ref(false);
+const detailsRef = ref<HTMLDetailsElement | null>(null);
+const breakpoints = useBreakpoints(breakpointsBootstrapV5);
+const isDesktop = breakpoints.greaterOrEqual('md');
+const panelInlineStyle = computed(getPanelInlineStyle);
+const detailsPositionClass = computed(getDetailsPositionClass);
+const panelPositionClass = computed(getPanelPositionClass);
+
+function getPanelInlineStyle() {
+  return props.panelStyle;
+}
+
+function getDetailsPositionClass() {
+  return isDesktop.value ? 'position-relative' : 'position-static';
+}
+
+function getPanelPositionClass() {
+  return isDesktop.value
+    ? 'position-absolute top-100 start-0 mt-2'
+    : 'position-absolute top-100 start-50 translate-middle-x mt-2';
+}
+
+function handleDetailsToggle(event: Event) {
+  const details = event.target as HTMLDetailsElement;
+  isPanelOpen.value = details.open;
+}
+
+function closePanel() {
+  isPanelOpen.value = false;
+}
+
+function handlePanelOutsideClick() {
+  if (isPanelOpen.value) {
+    closePanel();
+  }
+}
+
+onClickOutside(detailsRef, handlePanelOutsideClick);
+</script>
+
+<template>
+  <details
+    ref="detailsRef"
+    :open="isPanelOpen"
+    :name="props.panelName"
+    class="d-inline-block"
+    :class="detailsPositionClass"
+    @toggle="handleDetailsToggle"
+  >
+    <summary :class="[props.summaryClass, 'd-inline-flex align-items-center gap-2 text-nowrap']">
+      <i :class="props.summaryIconClass"></i>
+      <template v-if="props.summaryMobileLabel">
+        <span class="d-none d-sm-inline">{{ props.summaryLabel }}</span>
+        <span class="d-sm-none">{{ props.summaryMobileLabel }}</span>
+      </template>
+      <template v-else>
+        <span>{{ props.summaryLabel }}</span>
+      </template>
+      <i class="bi bi-chevron-down ms-auto"></i>
+    </summary>
+
+    <div
+      class="card-border p-3 bg-reactive-primary z-3"
+      :class="[panelPositionClass, props.panelClass]"
+      :style="panelInlineStyle"
+    >
+      <slot />
+    </div>
+  </details>
+</template>

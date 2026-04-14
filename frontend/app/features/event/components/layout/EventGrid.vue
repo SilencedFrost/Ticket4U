@@ -3,6 +3,9 @@ import type { EventSummary } from '~/features/event/types/Event';
 import EventCard from '../core/EventCard.vue';
 
 defineProps<{ events: EventSummary[] }>();
+defineEmits<{
+  'event-click': [id: string];
+}>();
 </script>
 
 <template>
@@ -12,7 +15,7 @@ defineProps<{ events: EventSummary[] }>();
   </div>
   <div v-else class="row g-2">
     <div v-for="event in events" :key="event.id" class="col-6 col-md-4 col-xxl-3">
-      <event-card :event="event" />
+      <event-card :event="event" @event-click="$emit('event-click', event.id)" />
     </div>
   </div>
 </template>

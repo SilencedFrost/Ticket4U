@@ -90,6 +90,7 @@
     "settings": "Cài đặt",
     "ticket": "Vé",
     "tickets": "Vé",
+    "organizer": "Ban tổ chức",
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -108,7 +109,6 @@
     "first_name": "Tên",
     "last_name": "Họ",
     "phone": "Số điện thoại",
-    "status": "Trạng thái",
     "price": "Giá tiền",
     "category": "Thể loại",
     "currency": {
@@ -124,6 +124,10 @@
       "this_month": "Tháng này",
       "from_date": "Từ ngày",
       "to_date": "Đến ngày"
+    },
+    "status": {
+      "title": "Trạng thái",
+      "available": "còn lại"
     }
   },
   "permissions": {
@@ -145,12 +149,6 @@
     "dark": "Chế độ tối"
   },
   "event_detail": {
-    "label": {
-      "price_from": "Giá từ",
-      "available": "còn lại",
-      "organizer": "Ban tổ chức",
-      "sold_out": "Hết vé"
-    },
     "section": {
       "schedule": "Lịch trình sự kiện",
       "about": "Về sự kiện",

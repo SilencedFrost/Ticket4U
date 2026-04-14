@@ -4,26 +4,19 @@ import EventGrid from '@/features/event/components/layout/EventGrid.vue';
 
 const route = useRoute();
 const config = useRuntimeConfig();
-
-const eventList = ref<EventSummary[]>([]);
-
-async function getFeaturedEvents() {
-  try {
-    eventList.value = await $fetch(
-      `${config.public.eventServiceUrl}/public/events/${route.params.id}/related`,
-      {
-        method: 'GET',
-      },
-    );
-  } catch (e) {
-    console.log(e);
-    eventList.value = [];
-  }
-}
-
-onMounted(() => getFeaturedEvents());
-
 const localePath = useLocalePath();
+
+const { data: eventList } = await useFetch<EventSummary[]>(
+  () => `/public/events/${route.params.id}/related`,
+  {
+    baseURL: config.public.eventServiceUrl,
+    key: `related-events-${route.params.id}`,
+    default: () => [],
+    onResponseError({ error }) {
+      console.error('Error loading related events:', error);
+    },
+  },
+);
 
 const handleEventClick = (eventId: string) => {
   navigateTo(localePath(`/dev/event/detail/${eventId}`));

@@ -73,10 +73,4 @@ public class AuthExceptionHandler {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(Map.of("message", e.getMessage()));
     }
-
-    @ExceptionHandler(EmailAlreadyInUseException.class)
-    public ResponseEntity<?> handleEmailAlreadyInUse(EmailAlreadyInUseException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("message", e.getMessage()));
-    }
 }

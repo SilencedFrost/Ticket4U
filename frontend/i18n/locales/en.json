@@ -173,7 +173,8 @@
     "subtitle": "Manage account",
     "nav": {
       "personal_information": "Personal Information",
-      "security": "Password and Security"
+      "security": "Password and Security",
+      "preferences": "Preferences"
     },
     "personal_information": {
       "title": "Personal Information",
@@ -207,6 +208,46 @@
           "last_access": "Last Access"
         },
         "unknown_device": "Unknown device"
+      }
+    },
+    "preferences": {
+      "title": "Preferences",
+      "subtitle": "Customize your workspace environment.",  
+      "appearance": {
+        "title": "Appearance",
+        "subtitle": "Customize how the application looks.",
+        "dark_mode": {
+          "title": "Dark Mode",
+          "subtitle": "Easy on the eyes"
+        },
+        "light_mode": {
+          "title": "Light Mode",
+          "subtitle": "High contrast clarity"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "subtitle": "Choose your preferred language.",
+        "options": {
+          "en": "English (United States)",
+          "vi": "Vietnamese"
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Manage your notification settings.",
+        "email": {
+          "title": "Email Notifications",
+          "subtitle": "Receive security alerts and system updates"
+        },
+        "marketing": {
+          "title": "Marketing Emails",
+          "subtitle": "New features and exclusive product news"
+        }
+      },
+      "actions": {
+        "discard": "Discard",
+        "save": "Save Changes"
       }
     }
   },

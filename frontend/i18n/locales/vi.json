@@ -173,7 +173,8 @@
     "subtitle": "Quản lý tài khoản",
     "nav": {
       "personal_information": "Thông tin cá nhân",
-      "security": "Mật khẩu và bảo mật"
+      "security": "Mật khẩu và bảo mật",
+      "preferences": "Tùy chọn"
     },
     "personal_information": {
       "title": "Thông tin cá nhân",
@@ -207,6 +208,46 @@
           "last_access": "Lần truy cập cuối"
         },
         "unknown_device": "Thiết bị không xác định"
+      }
+    },
+    "preferences": {
+      "title": "Tùy chọn",
+      "subtitle": "Tùy chỉnh môi trường làm việc của bạn.",
+      "appearance": {
+        "title": "Giao diện",
+        "subtitle": "Tùy chỉnh cách hiển thị của ứng dụng.",
+        "dark_mode": {
+          "title": "Chế độ tối",
+          "subtitle": "Dịu mắt hơn"
+        },
+        "light_mode": {
+          "title": "Chế độ sáng",
+          "subtitle": "Độ tương phản rõ ràng"
+        }
+      },
+      "language": {
+        "title": "Ngôn ngữ",
+        "subtitle": "Chọn ngôn ngữ bạn muốn sử dụng.",
+        "options": {
+          "en": "Tiếng Anh (Hoa Kỳ)",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "notifications": {
+        "title": "Thông báo",
+        "subtitle": "Quản lý thiết lập thông báo của bạn.",
+        "email": {
+          "title": "Thông báo Email",
+          "subtitle": "Nhận cảnh báo bảo mật và cập nhật hệ thống"
+        },
+        "marketing": {
+          "title": "Email Tiếp thị",
+          "subtitle": "Tính năng mới và tin tức sản phẩm độc quyền"
+        }
+      },
+      "actions": {
+        "discard": "Hủy thay đổi",
+        "save": "Lưu thay đổi"
       }
     }
   },

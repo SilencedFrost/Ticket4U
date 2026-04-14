@@ -45,6 +45,19 @@ public class MailServiceClient {
         ), true);
     }
 
+    public void sendEmailChangeVerification(String to, String userName, String verificationLink, int expiryHours) {
+        sendMail(to, "Xác nhận thay đổi email - Ticket4U", "EMAIL_VERIFICATION", Map.of(
+                "userName", userName,
+                "title", "Xác nhận thay đổi email - Ticket4U",
+                "introText", "Chúng tôi nhận được yêu cầu thay đổi email cho tài khoản Ticket4U của bạn.",
+                "actionText", "Xác nhận email mới",
+                "actionLink", verificationLink,
+                "expiryHours", String.valueOf(expiryHours),
+                "expiryLabel", "Link xác nhận sẽ hết hạn sau",
+                "ignoreText", "Nếu bạn không yêu cầu thay đổi email, vui lòng bỏ qua email này."
+        ), true);
+    }
+
     private void sendMail(String to, String subject, String templateCode, Map<String, String> templateData, boolean async) {
         Map<String, Object> body = Map.of(
                 "to", to,

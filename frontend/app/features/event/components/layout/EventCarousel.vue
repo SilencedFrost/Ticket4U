@@ -48,15 +48,17 @@ const offset = computed(() => interpolate(width.value));
 </script>
 
 <template>
-  <carousel-wrapper
-    :items="events"
-    :visible-count="visibleCount"
-    mode="carousel"
-    :wrap-around="wrapAround"
-    :chevron-options="{ offset, height: isMd ? 55 : 50 }"
-  >
-    <template #item="{ item }">
-      <event-card :event="item" />
-    </template>
-  </carousel-wrapper>
+  <client-only>
+    <carousel-wrapper
+      :items="events"
+      :visible-count="visibleCount"
+      mode="carousel"
+      :wrap-around="wrapAround"
+      :chevron-options="{ offset, height: isMd ? 55 : 50 }"
+    >
+      <template #item="{ item }">
+        <event-card :event="item" />
+      </template>
+    </carousel-wrapper>
+  </client-only>
 </template>

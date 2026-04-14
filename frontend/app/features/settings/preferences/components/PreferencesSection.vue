@@ -64,6 +64,8 @@ function initializePreferences() {
 
 // Auto-save khi theme thay đổi
 watch(() => formData.theme, (newTheme) => {
+	  /* TODO: Khi useTheme hỗ trợ chọn theme cụ thể (vd: setTheme(theme)),
+	   thay thế việc gán trực tiếp bằng method đó.*/
 	currentTheme.value = newTheme;
 });
 

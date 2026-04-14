@@ -3,7 +3,6 @@ import { onClickOutside } from '@vueuse/core';
 import AccountDropDown from './menus/AccountDropDown.vue';
 import BurgerDropDown from './menus/BurgerDropDown.vue';
 import LanguageSwitcherDropDown from './menus/LanguageSwitcherDropDown.vue';
-import SearchOverlay from './SearchOverlay.vue';
 
 const { locale } = useI18n();
 const currentMenuKey = ref('none');

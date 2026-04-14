@@ -7,24 +7,13 @@ const props = defineProps<{
 
 const config = useRuntimeConfig();
 
-const organizer = ref<OrganizerSummary | null>(null);
-
-async function fetchOrganizer(id: string) {
-  try {
-    organizer.value = await $fetch<OrganizerSummary>(
-      `${config.public.userServiceUrl}/public/organizers/${id}`,
-    );
-  } catch (err) {
-    console.warn(err);
-    organizer.value = null;
-  }
-}
-
-onMounted(() => {
-  if (props.organizerId) {
-    fetchOrganizer(props.organizerId);
-  }
-});
+const { data: organizer } = await useFetch<OrganizerSummary>(
+  () => `/public/organizers/${props.organizerId}`,
+  {
+    baseURL: config.public.userServiceUrl,
+    key: `organizer-${props.organizerId}`,
+  },
+);
 </script>
 
 <template>
@@ -35,7 +24,7 @@ onMounted(() => {
   >
     <div class="mb-3 p-3">
       <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
-        {{ $t('event_detail.label.organizer') }}
+        {{ $t('common.organizer') }}
       </h5>
       <div
         class="d-flex flex-column flex-md-row align-items-center pt-3 align-items-md-start gap-3 w-100"

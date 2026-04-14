@@ -4,33 +4,33 @@ import EventHero from '../../../../features/event/components/detail/EventHero.vu
 import EventNav from '../../../../features/event/components/detail/EventNav.vue';
 import EventAbout from '../../../../features/event/components/detail/EventAbout.vue';
 import EventSchedule from '../../../../features/event/components/detail/EventSchedule.vue';
+import EventTickets from '../../../../features/event/components/detail/EventTickets.vue';
 import EventOrganizer from '../../../../features/event/components/detail/EventOrganizer.vue';
 import EventRelated from '../../../../features/event/components/detail/EventRelated.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
 
-const event = ref<Event | null>(null);
-const isLoading = ref(true);
+const { data: event, pending: isLoading } = await useFetch<Event>(
+  () => `/public/events/${route.params.id}`,
+  {
+    baseURL: config.public.eventServiceUrl,
+    key: `event-detail-${route.params.id}`,
+    lazy: true,
+    onResponseError() {
+      event.value = undefined;
+    },
+  },
+);
 
-async function getEvent() {
-  isLoading.value = true;
-
-  try {
-    event.value = await $fetch(
-      `${config.public.eventServiceUrl}/public/events/${route.params.id}`,
-      {
-        method: 'GET',
-      },
-    );
-  } catch (e) {
-    console.log(e);
-    event.value = null;
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-onMounted(() => getEvent());
+useHead({
+  title: () => event.value?.name || 'Loading Event...',
+  meta: [
+    {
+      name: 'description',
+      content: () => event.value?.aboutVi?.substring(0, 160) || 'Thông tin sự kiện',
+    },
+  ],
+});
 </script>
 
 <template>
@@ -94,7 +94,7 @@ onMounted(() => getEvent());
       <div class="col-lg-12">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
-        <!-- To do: Add event ticket section here -->
+        <event-tickets :sessions="event.sessions" />
         <event-organizer v-if="event.organizerId" :organizer-id="event.organizerId" />
       </div>
     </div>

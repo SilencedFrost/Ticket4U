@@ -90,6 +90,7 @@
     "settings": "Settings",
     "ticket": "Ticket",
     "tickets": "Tickets",
+    "organizer": "Organizer",
     "see": {
       "more": "See more",
       "less": "See less"
@@ -108,7 +109,6 @@
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
-    "status": "Status",
     "price": "Price",
     "category": "Category",
     "currency": {
@@ -124,6 +124,10 @@
       "this_month": "This month",
       "from_date": "From date",
       "to_date": "To date"
+    },
+    "status": {
+      "title": "Status",
+      "available": "available"
     }
   },
   "permissions": {
@@ -157,12 +161,6 @@
     }
   },
   "event_detail": {
-    "label": {
-      "price_from": "From",
-      "available": "available",
-      "organizer": "Organizer",
-      "sold_out": "Sold Out"
-    },
     "section": {
       "schedule": "Event Schedule",
       "about": "About the event",

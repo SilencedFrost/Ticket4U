@@ -282,5 +282,11 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Popular",
+      "near_you": "Near you"
+    }
   }
 }

@@ -282,5 +282,11 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Phổ biến",
+      "near_you": "Gần bạn"
+    }
   }
 }

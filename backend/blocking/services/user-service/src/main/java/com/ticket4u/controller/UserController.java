@@ -1,9 +1,11 @@
 package com.ticket4u.controller;
 
+import com.ticket4u.dto.user.ChangeEmailRequest;
 import com.ticket4u.dto.user.ChangeInfoRequest;
 import com.ticket4u.dto.user.ChangePasswordRequest;
 import com.ticket4u.dto.user.UserSummaryResponse;
 import com.ticket4u.entity.CustomUserDetails;
+import com.ticket4u.service.EmailChangeService;
 import com.ticket4u.service.UserService;
 import com.ticket4u.util.AuthPrincipalUtil;
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final EmailChangeService emailChangeService;
 
     /**
      * GET /api/v1/users
@@ -70,5 +73,23 @@ public class UserController {
         UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
         userService.changePassword(currentUserId, request);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * PATCH /api/v1/users/email
+     * Initiate email change — sends verification link to the new email address.
+     * Always returns 202 to avoid enumerable attack.
+     *
+     * @param principal the authenticated user's details, injected by Spring Security
+     * @param request   contains new email and current password for verification
+     */
+    @PatchMapping("/email")
+    public ResponseEntity<Void> changeEmail(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @RequestBody @Valid ChangeEmailRequest request
+    ) {
+        UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
+        emailChangeService.initiateEmailChange(currentUserId, request);
+        return ResponseEntity.accepted().build();
     }
 }

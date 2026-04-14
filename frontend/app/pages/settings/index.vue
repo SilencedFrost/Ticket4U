@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SettingsLayout from './components/SettingsLayout.vue';
+import SettingsLayout from '../../features/settings/components/SettingsLayout.vue';
 import { breakpointsBootstrapV5 } from '@vueuse/core';
 
 const localePath = useLocalePath();

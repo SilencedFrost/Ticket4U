@@ -38,6 +38,9 @@ public class VerificationToken {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
+    @Column(length = 254)
+    private String pendingEmail;  // lưu email mới khi đang chờ xác nhận
+
     @Column(nullable = false)
     private OffsetDateTime expiresAt;
 

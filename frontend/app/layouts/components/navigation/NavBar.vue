@@ -19,7 +19,6 @@ watch(
     if (newQuery === undefined) {
       searchQuery.value = '';
     } else {
-      // Ngược lại nếu có dữ liệu thì mới gán vào
       searchQuery.value = String(newQuery);
     }
   },

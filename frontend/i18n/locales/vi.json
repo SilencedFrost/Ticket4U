@@ -142,12 +142,6 @@
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
-  "navbar": {
-    "menu": {
-      "events": "Sự kiện",
-      "contact": "Liên hệ"
-    }
-  },
   "search": {
     "results_for": "Kết quả cho",
     "no_results": "Không tìm thấy kết quả"

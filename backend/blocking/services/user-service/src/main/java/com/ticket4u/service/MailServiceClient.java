@@ -61,7 +61,7 @@ public class MailServiceClient {
     }
 
     public void sendEmailInUseAlert(String to, String userName) {
-        sendMail(to, "Cảnh báo bảo mật - Ticket4U", "SECURITY_ALERT", Map.of(
+        sendMail(to, "Cảnh báo bảo mật - Ticket4U", "EMAIL_VERIFICATION", Map.of(
                 "userName", userName,
                 "title", "Cảnh báo bảo mật - Ticket4U",
                 "introText", "Ai đó vừa cố gắng dùng địa chỉ email này để thay đổi tài khoản Ticket4U.",

@@ -9,6 +9,10 @@ type SettingsNavItem = {
 };
 
 const navItems = computed(() => {
+  // TODO: Không disable tab account/security cho khách. Khi người dùng bấm vào,
+  // hiển thị modal "Để sử dụng tính năng này bạn cần đăng nhập" với 2 nút
+  // "Quay lại" và "Đăng nhập"; nếu chọn "Đăng nhập" thì chuyển tới trang login
+  // và sau khi đăng nhập xong quay lại đúng tab đã chọn.
   const items: SettingsNavItem[] = [
     {
       to: '/settings/account',

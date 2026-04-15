@@ -22,6 +22,10 @@ const previousPageUrl = ref<string | null>(null);
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
 const tabs = computed<SettingsTabItem[]>(() => {
+  // TODO: Không disable tab account/security cho khách. Khi bấm tab,
+  // hiển thị modal xác nhận đăng nhập với thông báo "Để sử dụng tính năng này bạn cần đăng nhập"
+  // và 2 nút "Quay lại" + "Đăng nhập" để tránh chuyển trang ngoài ý muốn.
+  // Nếu chọn "Đăng nhập", chuyển sang login kèm redirect để quay lại đúng tab sau khi đăng nhập.
   const items = [
     { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information', guestRestricted: true },
     { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security', guestRestricted: true },

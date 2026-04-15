@@ -160,14 +160,6 @@
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
   },
-  "event_detail": {
-    "section": {
-      "schedule": "Lịch trình sự kiện",
-      "about": "Về sự kiện",
-      "ticket_info": "Thông tin vé",
-      "related": "Bạn có thể thích"
-    }
-  },
   "event": {
     "status_options": {
       "premiere": "Ra mắt",
@@ -180,12 +172,21 @@
       "sold_out": "Hết vé"
     }
   },
+  "event_detail": {
+    "section": {
+      "schedule": "Lịch trình sự kiện",
+      "about": "Về sự kiện",
+      "ticket_info": "Thông tin vé",
+      "related": "Bạn có thể thích"
+    }
+  },
   "settings": {
     "title": "Cài đặt",
     "subtitle": "Quản lý tài khoản",
     "nav": {
       "personal_information": "Thông tin cá nhân",
-      "security": "Mật khẩu và bảo mật"
+      "security": "Mật khẩu và bảo mật",
+      "preferences": "Tùy chọn"
     },
     "personal_information": {
       "title": "Thông tin cá nhân",
@@ -220,6 +221,46 @@
         },
         "unknown_device": "Thiết bị không xác định"
       }
+    },
+    "preferences": {
+      "title": "Tùy chọn",
+      "subtitle": "Tùy chỉnh môi trường làm việc của bạn.",
+      "appearance": {
+        "title": "Giao diện",
+        "subtitle": "Tùy chỉnh cách hiển thị của ứng dụng.",
+        "dark_mode": {
+          "title": "Chế độ tối",
+          "subtitle": "Dịu mắt hơn"
+        },
+        "light_mode": {
+          "title": "Chế độ sáng",
+          "subtitle": "Độ tương phản rõ ràng"
+        }
+      },
+      "language": {
+        "title": "Ngôn ngữ",
+        "subtitle": "Chọn ngôn ngữ bạn muốn sử dụng.",
+        "options": {
+          "en": "Tiếng Anh (Hoa Kỳ)",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "notifications": {
+        "title": "Thông báo",
+        "subtitle": "Quản lý thiết lập thông báo của bạn.",
+        "email": {
+          "title": "Thông báo Email",
+          "subtitle": "Nhận cảnh báo bảo mật và cập nhật hệ thống"
+        },
+        "marketing": {
+          "title": "Email Tiếp thị",
+          "subtitle": "Tính năng mới và tin tức sản phẩm độc quyền"
+        }
+      },
+      "actions": {
+        "discard": "Hủy thay đổi",
+        "save": "Lưu thay đổi"
+      }
     }
   },
   "categories": {
@@ -253,5 +294,11 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Phổ biến",
+      "near_you": "Gần bạn"
+    }
   }
 }

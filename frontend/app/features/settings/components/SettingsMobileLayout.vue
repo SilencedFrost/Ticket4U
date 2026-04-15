@@ -3,7 +3,7 @@ import '../style/settings.css';
 
 const { currentTheme } = useTheme();
 
-type SettingsTab = 'account' | 'security';
+type SettingsTab = 'account' | 'security' | 'preferences';
 
 const route = useRoute();
 const router = useRouter();
@@ -16,6 +16,7 @@ const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null
 const tabs = [
   { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information' },
   { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security' },
+  { key: 'preferences' as const, icon: 'bi bi-palette', labelKey: 'settings.nav.preferences' },
 ];
 
 const normalizedPath = computed(() => {
@@ -27,12 +28,15 @@ const normalizedPath = computed(() => {
 watch(normalizedPath, (path) => {
   if (path.startsWith('/settings/account')) { activeTab.value = 'account'; return; }
   if (path.startsWith('/settings/security')) { activeTab.value = 'security'; return; }
+  if (path.startsWith('/settings/preferences')) { activeTab.value = 'preferences'; return; }
   if (path === '/settings') activeTab.value = null;
 }, { immediate: true });
 
-const activeTabTitle = computed(() =>
-  activeTab.value === 'security' ? 'settings.nav.security' : 'settings.nav.personal_information'
-);
+const activeTabTitle = computed(() => {
+  if (activeTab.value === 'security') return 'settings.nav.security';
+  if (activeTab.value === 'preferences') return 'settings.nav.preferences';
+  return 'settings.nav.personal_information';
+});
 
 const mobileTrackClass = computed(() => ({
   'is-menu': activeTab.value === null,

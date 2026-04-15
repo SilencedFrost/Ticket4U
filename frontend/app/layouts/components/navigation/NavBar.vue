@@ -11,17 +11,25 @@ const menuContainer = ref<HTMLElement | null>(null);
 const useUser = useUserStore();
 const searchQuery = ref('');
 const localePath = useLocalePath();
+const route = useRoute();
+
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    if (newQuery === undefined) {
+      searchQuery.value = '';
+    } else {
+      // Ngược lại nếu có dữ liệu thì mới gán vào
+      searchQuery.value = String(newQuery);
+    }
+  },
+  { immediate: true },
+);
 
 const { currentTheme } = useTheme();
 
 function focusSearch() {
   searchInput.value?.focus();
-}
-
-function clearSearch() {
-  if (searchInput.value) {
-    searchInput.value.value = '';
-  }
 }
 
 function toggleMenu(targetKey = 'none') {
@@ -39,7 +47,6 @@ function handleSearch() {
     });
 
     searchInput.value?.blur();
-
     currentMenuKey.value = 'none';
   }
 }
@@ -79,7 +86,6 @@ onClickOutside(menuContainer, () => {
             class="search-field text-reactive-primary input-underline"
             :placeholder="$t('placeholder.search')"
             @keyup.enter="handleSearch()"
-            @blur="clearSearch()"
           />
         </div>
         <!-- Function buttons -->

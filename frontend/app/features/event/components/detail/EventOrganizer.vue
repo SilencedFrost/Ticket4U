@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OrganizerSummary } from '~/types/organizer';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 
 const props = defineProps<{
   organizerId: string | null;
@@ -27,10 +28,10 @@ const { data: organizer } = await useFetch<OrganizerSummary>(
         {{ $t('common.organizer') }}
       </h5>
       <div
-        class="d-flex flex-column flex-md-row align-items-center pt-3 align-items-md-start gap-3 w-100"
+        class="d-flex flex-column flex-md-row align-items-start pt-3 align-items-md-start gap-3 w-100"
       >
-        <div class="flex-shrink-0 text-center w-md-auto">
-          <img
+        <div class="flex-shrink-0 text-start w-md-auto">
+          <shimmer-img
             :src="organizer?.logo_url"
             alt="Organizer"
             class="img-fluid rounded-3 border shadow-sm w-100"

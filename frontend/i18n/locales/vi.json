@@ -161,12 +161,6 @@
     }
   },
   "event_detail": {
-    "label": {
-      "price_from": "Từ",
-      "available": "còn lại",
-      "organizer": "Ban tổ chức",
-      "sold_out": "Hết vé"
-    },
     "section": {
       "schedule": "Lịch trình sự kiện",
       "about": "Về sự kiện",

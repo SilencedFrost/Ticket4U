@@ -2,6 +2,7 @@
 import type { EventSessionSummary } from '@/features/event/types/EventSession';
 import type { Zone } from '@/features/event/types/Zone';
 import { useFormatter } from '@/composables/useFormatter';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 
 const { formatPrice } = useFormatter();
 const { locale } = useI18n();
@@ -49,7 +50,7 @@ function hasZoneDetails(zone: Zone) {
 </script>
 
 <template>
-  <section id="tickets-section" class="card bg-reactive-secondary mx-auto mw-100">
+  <section id="tickets-section" class="card m-3 mx-auto overflow-hidden mw-100 pb-4">
     <div class="p-3 p-md-4 mb-3">
       <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
         {{ $t('event_detail.section.ticket_info') }}
@@ -86,7 +87,7 @@ function hasZoneDetails(zone: Zone) {
             </div>
             <div class="d-flex align-items-center justify-content-end gap-2 flex-shrink-0">
               <button
-                class="btn btn-primary fw-bold small py-1 px-2 py-md-2 px-md-3"
+                class="btn btn-primary fw-bold small py-1 px-2 py-md-2"
                 @click.stop="emit('buyClick')"
               >
                 {{ $t('common.action.buy') }}
@@ -166,10 +167,9 @@ function hasZoneDetails(zone: Zone) {
                   </p>
                   <div class="row g-3">
                     <div v-if="zone.giftImageUrl" class="col-12 col-md-4">
-                      <img
+                      <shimmer-img
                         :src="zone.giftImageUrl"
                         class="img-fluid rounded object-fit-cover w-100"
-                        style="max-height: 150px"
                         alt="Ticket thumbnail"
                       />
                     </div>

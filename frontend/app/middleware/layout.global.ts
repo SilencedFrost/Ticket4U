@@ -3,12 +3,13 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (routeName.startsWith('auth')) setPageLayout('auth');
   if (routeName.startsWith('settings')) to.meta.hideFooter = true;
-  
+
   const protectedRoutes = ['settings-account', 'settings-security'];
   if (protectedRoutes.includes(routeName)) {
     const { isLoggedIn } = storeToRefs(useUserStore());
     if (!isLoggedIn.value) {
-      return navigateTo('/auth/login');
+      const localePath = useLocalePath();
+      return navigateTo(localePath('/settings/preferences'));
     }
   }
 });

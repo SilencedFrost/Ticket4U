@@ -83,7 +83,7 @@ public class EmailChangeServiceImpl implements EmailChangeService {
         // Race condition: email có thể bị đăng ký trong lúc user chờ confirm
         if (userRepository.existsByNormalizedEmail(normalizedNewEmail)) {
             verificationTokenService.deleteTokensByUserAndType(user.getId(), TokenType.EMAIL_CHANGE);
-            throw new InvalidPasswordException("auth.error.email.unavailable");
+            throw new RuntimeException("internal.server.error");
         }
 
         user.setEmail(newEmail);

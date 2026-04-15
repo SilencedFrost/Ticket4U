@@ -1,5 +1,6 @@
 package com.ticket4u.service;
 
+import com.ticket4u.config.VerificationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class MailServiceClient {
 
     private final RestClient mailServiceRestClient;
+    private final VerificationProperties verificationProperties;
 
     public void sendVerificationEmail(String to, String userName, String verificationLink, int expiryHours) {
         sendVerificationEmail(to, userName, verificationLink, expiryHours, true);
@@ -55,6 +57,17 @@ public class MailServiceClient {
                 "expiryHours", String.valueOf(expiryHours),
                 "expiryLabel", "Link xác nhận sẽ hết hạn sau",
                 "ignoreText", "Nếu bạn không yêu cầu thay đổi email, vui lòng bỏ qua email này."
+        ), true);
+    }
+
+    public void sendEmailInUseAlert(String to, String userName) {
+        sendMail(to, "Cảnh báo bảo mật - Ticket4U", "SECURITY_ALERT", Map.of(
+                "userName", userName,
+                "title", "Cảnh báo bảo mật - Ticket4U",
+                "introText", "Ai đó vừa cố gắng dùng địa chỉ email này để thay đổi tài khoản Ticket4U.",
+                "actionText", "Kiểm tra tài khoản",
+                "actionLink",  verificationProperties.getFrontendBaseUrl() + "/settings/security",
+                "ignoreText", "Nếu đây là bạn, vui lòng bỏ qua email này."
         ), true);
     }
 

@@ -41,6 +41,12 @@ public class EmailChangeServiceImpl implements EmailChangeService {
 
         // Tránh enumerable attack: không throw nếu email đã tồn tại, chỉ silent ignore
         if (userRepository.existsByNormalizedEmail(normalizedNewEmail)) {
+            verificationTokenService.runAfterCommit(() ->
+                    mailServiceClient.sendEmailInUseAlert(
+                            request.newEmail(),   // gửi cho bob@gmail.com
+                            "Someone tried to use your email address on Ticket4U"
+                    )
+            );
             return;
         }
 

@@ -144,13 +144,11 @@
     "menu": {
       "events": "Events",
       "contact": "Contact us"
-    },
-    "searchOverlay": {
-      "recentSearches": "Recent searches",
-      "browseByCategory": "Browse by Category",
-      "browseByCity": "Browse by City",
-      "noResult": "No matching events were found."
     }
+  },
+  "search": {
+    "results_for": "Results for",
+    "no_results": "Result not found"
   },
   "placeholder": {
     "search": "Search events, artists...",
@@ -253,11 +251,5 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
-  },
-  "cities": {
-    "hcmc": "Ho Chi Minh City",
-    "hanoi": "Ha Noi",
-    "dalat": "Da Lat",
-    "other": "Other locations"
   }
 }

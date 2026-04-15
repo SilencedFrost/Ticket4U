@@ -144,13 +144,11 @@
     "menu": {
       "events": "Sự kiện",
       "contact": "Liên hệ"
-    },
-    "searchOverlay": {
-      "recentSearches": "Tìm kiếm gần đây",
-      "browseByCategory": "Duyệt theo thể loại",
-      "browseByCity": "Duyệt theo thành phố",
-      "noResult": "Không tìm thấy sự kiện phù hợp."
     }
+  },
+  "search": {
+    "results_for": "Kết quả cho",
+    "no_results": "Không tìm thấy kết quả"
   },
   "placeholder": {
     "search": "Tìm kiếm sự kiện, nghệ sĩ...",
@@ -253,11 +251,5 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
-  },
-  "cities": {
-    "hcmc": "TP. Hồ Chí Minh",
-    "hanoi": "Hà Nội",
-    "dalat": "Đà Lạt",
-    "other": "Khu vực khác"
   }
 }

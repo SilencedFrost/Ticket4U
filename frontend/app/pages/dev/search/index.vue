@@ -54,14 +54,19 @@ const handleEventClick = (eventId: string) => {
 
 <template>
   <div class="p-3">
-    <div class="d-flex align-items-center gap-3">
-      <div>
-        <FilterBar :main-sections="mainSections" :status-options="statusOptions" />
+    <ClientOnly>
+      <div class="d-block d-md-flex align-items-md-center gap-2">
+        <div class="d-flex justify-content-end justify-content-md-start mb-md-0">
+          <FilterBar :main-sections="mainSections" :status-options="statusOptions" />
+        </div>
+
+        <div v-if="searchQuery" class="d-none d-md-flex flex-shrink-0">
+          <p class="fs-6 fw-bold text-reactive-primary">
+            {{ t('search.results_for') }}: <span class="text-primary">"{{ searchQuery }}"</span>
+          </p>
+        </div>
       </div>
-      <p v-if="searchQuery" class="fs-6 fw-bold d-none d-md-block">
-        {{ t('search.results_for') }}: <span class="text-primary">"{{ searchQuery }}"</span>
-      </p>
-    </div>
+    </ClientOnly>
 
     <div v-if="isLoading" class="text-center py-5">
       <div class="spinner-border text-primary"></div>

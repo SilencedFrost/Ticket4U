@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Event } from '@/features/event/types/Event';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 const { formatPrice } = useFormatter();
 
 defineProps<{
@@ -12,11 +13,9 @@ const emit = defineEmits(['buyClick']);
 <template>
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
-      <img
-        :src="event.bannerUrl.wide"
-        :alt="event.name"
-        class="w-100 h-100 object-fit-cover hero-bg-blur"
-      />
+      <div class="w-100 h-100 hero-bg-blur">
+        <shimmer-img :src="event.bannerUrl.wide" :alt="event.name" class="w-100 h-100" />
+      </div>
     </div>
     <div class="position-relative z-1">
       <div class="container-xxl pb-4">
@@ -70,11 +69,13 @@ const emit = defineEmits(['buyClick']);
                   </button>
                 </div>
               </div>
-              <img
-                :src="event.bannerUrl.wide"
-                :alt="event.name"
-                class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
-              />
+              <div class="order-1 order-lg-2 col-12 col-lg-9 shadow-lg my-dashed-line">
+                <shimmer-img
+                  :src="event.bannerUrl.wide"
+                  :alt="event.name"
+                  class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
+                />
+              </div>
             </div>
           </div>
         </div>

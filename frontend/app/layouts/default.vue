@@ -17,7 +17,7 @@ watch(
 
 <template>
   <div class="d-flex flex-column overflow-hidden h-100">
-    <header class="sticky-top">
+    <header class="sticky-top z-3">
       <nav-bar />
     </header>
     <div ref="scrollContainer" class="overflow-auto flex-fill">

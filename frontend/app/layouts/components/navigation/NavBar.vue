@@ -64,10 +64,10 @@ onClickOutside(menuContainer, () => {
         <!-- Hover buttons -->
         <div class="d-none d-md-flex ms-lg-5">
           <div class="nav-item">
-            <span>Events</span>
+            <span>{{ $t('common.events') }}</span>
           </div>
           <div class="nav-item">
-            <span>Contact us</span>
+            <span>{{ $t('common.contact') }}</span>
           </div>
         </div>
         <!-- Search bar -->

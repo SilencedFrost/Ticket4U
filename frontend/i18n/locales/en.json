@@ -89,8 +89,10 @@
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
+    "events": "Events",
     "tickets": "Tickets",
     "organizer": "Organizer",
+    "contact": "Contact us",
     "see": {
       "more": "See more",
       "less": "See less"
@@ -139,6 +141,10 @@
   "brand": {
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
+  },
+  "search": {
+    "results_for": "Results for",
+    "no_results": "Result not found"
   },
   "placeholder": {
     "search": "Search events, artists...",

@@ -55,7 +55,6 @@ public class EventDomainServiceImpl implements EventDomainService {
         // Resolve semantic service failure
         List<EventResponse> candidateEvents;
         if (!semanticMap.isEmpty()) {
-            log.info("Semantic map acquired: {}", semanticMap.toString());
             candidateEvents = filterPurchasable(eventRepository.findAllById(semanticMap.keySet())).stream().map(eventMapper::toDTO).toList();
         } else {
             log.info("Semantic search empty. Falling back to all purchasable events matching category for ranking.");
@@ -235,7 +234,7 @@ public class EventDomainServiceImpl implements EventDomainService {
     @Override
     public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
         // Get sorted IDs from AI service
-        List<UUID> eventIds = eventSemanticService.search(query, pageable);
+        List<UUID> eventIds = eventSemanticService.search(query, pageable, 0.05f);
         if (eventIds.isEmpty()) return List.of();
 
         // Fetch event data from the database

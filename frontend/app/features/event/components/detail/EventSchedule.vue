@@ -20,7 +20,7 @@ defineProps<{
     <div class="mb-4 w-100 d-flex justify-content-center">
       <template v-if="event.seatingPlanImageUrl">
         <div class="w-75 rounded-2 overflow-hidden mh-100">
-          <shimmer-img :src="event.seatingPlanImageUrl" alt="Sơ đồ chỗ ngồi" class="w-100 h-100" />
+          <shimmer-img :src="event.seatingPlanImageUrl" alt="Seating chart" class="w-100 h-100" />
         </div>
       </template>
 

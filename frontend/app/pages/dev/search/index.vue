@@ -18,14 +18,11 @@ const { data: events, pending: isLoading } = await useFetch<EventSummary[]>(
     params: {
       q: searchQuery,
       page: 0,
-      size: 10,
+      size: 50,
     },
     key: `search-page-${searchQuery.value}`,
     lazy: true,
     watch: [searchQuery],
-    onResponseError({ response }) {
-      console.error('Error:', response.status);
-    },
   },
 );
 

@@ -5,21 +5,43 @@ import BurgerDropDown from './menus/BurgerDropDown.vue';
 import LanguageSwitcherDropDown from './menus/LanguageSwitcherDropDown.vue';
 
 const { locale } = useI18n();
-const currentMenuKey = ref('none');
+const currentMenuKey = ref<string>('none');
 const searchInput = ref<HTMLInputElement | null>(null);
-const searchSemantic = ref<string>('');
 const menuContainer = ref<HTMLElement | null>(null);
 const useUser = useUserStore();
+const searchQuery = ref('');
+const localePath = useLocalePath();
 
 const { currentTheme } = useTheme();
 
-function openSearchOverlay() {
-  currentMenuKey.value = 'search';
+function focusSearch() {
   searchInput.value?.focus();
+}
+
+function clearSearch() {
+  if (searchInput.value) {
+    searchInput.value.value = '';
+  }
 }
 
 function toggleMenu(targetKey = 'none') {
   currentMenuKey.value = currentMenuKey.value === targetKey ? 'none' : targetKey;
+}
+
+function handleSearch() {
+  const query = searchQuery.value.trim();
+  if (query) {
+    const targetPath = localePath('/dev/search');
+
+    navigateTo({
+      path: targetPath,
+      query: { q: query },
+    });
+
+    searchInput.value?.blur();
+
+    currentMenuKey.value = 'none';
+  }
 }
 
 onClickOutside(menuContainer, () => {
@@ -27,7 +49,7 @@ onClickOutside(menuContainer, () => {
 });
 </script>
 <template>
-  <div ref="menuContainer" class="position-relative">
+  <div ref="menuContainer">
     <nav
       :class="['bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
       @click="toggleMenu()"
@@ -49,15 +71,15 @@ onClickOutside(menuContainer, () => {
           </div>
         </div>
         <!-- Search bar -->
-        <div class="nav-container position-absolute start-50 translate-middle-x" @click.stop>
-          <i class="bi bi-search text-clickable me-2" @click="toggleMenu('search')" /><input
+        <div class="nav-container position-absolute start-50 translate-middle-x">
+          <i class="bi bi-search text-clickable me-2" @click="focusSearch()" /><input
             ref="searchInput"
-            v-model="searchSemantic"
+            v-model="searchQuery"
             type="text"
             class="search-field text-reactive-primary input-underline"
             :placeholder="$t('placeholder.search')"
-            @focus="openSearchOverlay"
-            @input="openSearchOverlay"
+            @keyup.enter="handleSearch()"
+            @blur="clearSearch()"
           />
         </div>
         <!-- Function buttons -->
@@ -116,19 +138,6 @@ onClickOutside(menuContainer, () => {
         :parent-menu-open="currentMenuKey === 'burger'"
         @switched-lang="toggleMenu()"
       />
-    </div>
-
-    <div
-      v-if="currentMenuKey === 'search'"
-      class="position-absolute top-100 start-0 end-0 mt-2 px-2 pe-none"
-    >
-      <div class="container px-0">
-        <div class="row justify-content-center">
-          <div class="col-12 col-xl-8 pe-auto">
-            <search-overlay :query="searchSemantic" />
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>

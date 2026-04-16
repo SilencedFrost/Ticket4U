@@ -14,6 +14,7 @@ const props = defineProps<{
   sessions: EventSessionSummary[];
 }>();
 
+//TODO: update URL
 function handleBuyClick(sessionId: string) {
   emit('buyClick');
   router.push(localePath(`/event/${props.eventId}/book/seats/${sessionId}`));

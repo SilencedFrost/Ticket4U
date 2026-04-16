@@ -71,7 +71,6 @@ function startResize(e: MouseEvent) {
 <template>
   <div class="event-payment-wrapper container-fluid bg-reactive-primary text-reactive-primary vh-100 overflow-hidden p-0">
 
-    <!-- Loading -->
     <div v-if="loading" class="d-flex justify-content-center align-items-center vh-100">
       <div class="text-center text-reactive-secondary">
         <div class="spinner-border text-primary mb-3" role="status"/>
@@ -79,7 +78,6 @@ function startResize(e: MouseEvent) {
       </div>
     </div>
 
-    <!-- Error -->
     <div v-else-if="error" class="d-flex justify-content-center align-items-center vh-100">
       <div class="alert alert-danger text-center" style="max-width:400px;">
         <i class="bi bi-exclamation-triangle fs-3 mb-2 d-block"/>
@@ -90,10 +88,8 @@ function startResize(e: MouseEvent) {
       </div>
     </div>
 
-    <!-- Main -->
     <div v-else-if="event" class="h-100">
 
-      <!-- Desktop -->
       <div class="d-none d-lg-flex h-100">
         <div class="flex-grow-1 h-100 overflow-hidden" style="min-width:0">
           <SeatingMap
@@ -118,7 +114,6 @@ function startResize(e: MouseEvent) {
         </div>
       </div>
 
-      <!-- Mobile -->
       <div class="d-flex d-lg-none flex-column h-100 position-relative">
         <div class="flex-grow-1 overflow-hidden">
           <SeatingMap
@@ -126,7 +121,7 @@ function startResize(e: MouseEvent) {
               @back="handleBack" @add-ticket="handleAddTicket"/>
         </div>
         <transition name="fade">
-          <div v-if="drawerOpen" class="drawer-backdrop" @click="drawerOpen = false"/>
+          <div v-if="drawerOpen" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199;" @click="drawerOpen = false"/>
         </transition>
         <div class="bottom-drawer bg-reactive-secondary" :class="{ open: drawerOpen }">
           <div class="drawer-handle d-flex align-items-center justify-content-between px-3" @click="drawerOpen = !drawerOpen">
@@ -140,7 +135,7 @@ function startResize(e: MouseEvent) {
               <i class="bi fs-5 text-reactive-secondary" :class="drawerOpen ? 'bi-chevron-down' : 'bi-chevron-up'"/>
             </div>
           </div>
-          <div class="drawer-content px-3 pb-3">
+          <div class="px-3 pb-3" style="flex-grow:1;overflow-y:auto;-webkit-overflow-scrolling:touch;">
             <EventInfo :event="event"/>
             <CartSummary
                 :tickets="tickets" :cart="cart"
@@ -166,6 +161,4 @@ function startResize(e: MouseEvent) {
 .bottom-drawer.open { transform:translateY(0); }
 .drawer-handle { min-height:58px; cursor:pointer; border-radius:16px 16px 0 0; flex-shrink:0; position:relative; }
 .drawer-handle::before { content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; background:currentColor; border-radius:2px; opacity:0.2; }
-.drawer-content { flex-grow:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.drawer-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:199; }
 </style>

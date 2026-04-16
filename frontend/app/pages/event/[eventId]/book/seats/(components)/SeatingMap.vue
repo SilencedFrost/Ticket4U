@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { useWindowSize, useDark } from '@vueuse/core'
+import { useGesture } from '@vueuse/gesture'
 import type { Ticket, SelectedSeat } from '../(types)/ticket'
 import type { Floor, LayoutZone, LayoutSeat } from '../(types)/seatingLayout'
 import type { CartItem } from '../(types)/eventPayment'
@@ -34,6 +36,12 @@ const canvasSize      = ref({ width: 0, height: 0 })
 const CANVAS_W        = 900
 const CANVAS_H        = 520
 
+const { width: windowWidth, height: windowHeight } = useWindowSize()
+watch([windowWidth, windowHeight], () => updateSize())
+
+const isDark = useDark()
+watch(isDark, () => draw())
+
 function centeredPan(w: number, h: number) {
   return { x: (w - CANVAS_W) / 2, y: (h - CANVAS_H) / 2 }
 }
@@ -52,14 +60,9 @@ function onClickOutside() { floorDropdownOpen.value = false }
 
 onMounted(() => {
   updateSize()
-  window.addEventListener('resize', updateSize)
   globalThis.addEventListener('click', onClickOutside)
-  const observer = new MutationObserver(() => draw())
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-bs-theme'] })
-  onUnmounted(() => observer.disconnect())
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', updateSize)
   globalThis.removeEventListener('click', onClickOutside)
 })
 
@@ -71,52 +74,48 @@ function resetZoom() {
   draw()
 }
 
-let dragging = false; let dragStart = { x: 0, y: 0 }; let panStart = { x: 0, y: 0 }
+let wasDragging = false
 
-function onMouseDown(e: MouseEvent) {
-  if (e.button !== 0) return
-  dragging = true; dragStart = { x: e.clientX, y: e.clientY }; panStart = { ...pan.value }
-  if (canvasRef.value) canvasRef.value.style.cursor = 'grabbing'
-}
-function onMouseMove(e: MouseEvent) {
-  if (!dragging) return
-  pan.value = { x: panStart.x + e.clientX - dragStart.x, y: panStart.y + e.clientY - dragStart.y }
-  draw()
-}
-function onMouseUp() {
-  dragging = false
-  if (canvasRef.value) canvasRef.value.style.cursor = 'grab'
-}
-function handleWheel(e: WheelEvent) {
-  const rect     = canvasRef.value!.getBoundingClientRect()
-  const mx       = e.clientX - rect.left, my = e.clientY - rect.top
-  const dir      = e.deltaY > 0 ? -1 : 1
-  const oldScale = scale.value
-  const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, oldScale + dir * ZOOM_STEP))
-  pan.value      = { x: mx - (mx - pan.value.x) * (newScale / oldScale), y: my - (my - pan.value.y) * (newScale / oldScale) }
-  scale.value    = newScale; draw()
-}
-
-let lastTouchDist = 0
-function onTouchStart(e: TouchEvent) {
-  const t0 = e.touches[0]
-  if (e.touches.length === 1 && t0) { dragging = true; dragStart = { x: t0.clientX, y: t0.clientY }; panStart = { ...pan.value } }
-}
-function onTouchMove(e: TouchEvent) {
-  if (e.touches.length === 2) {
-    const t0 = e.touches[0], t1 = e.touches[1]
-    if (!t0 || !t1) return
-    const dx = t0.clientX - t1.clientX, dy = t0.clientY - t1.clientY
-    const dist = Math.hypot(dx, dy)
-    if (lastTouchDist > 0) { scale.value = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale.value * dist / lastTouchDist)); draw() }
-    lastTouchDist = dist
-  } else if (dragging && e.touches.length === 1) {
-    const t0 = e.touches[0]
-    if (!t0) return
-    pan.value = { x: panStart.x + t0.clientX - dragStart.x, y: panStart.y + t0.clientY - dragStart.y }; draw()
+useGesture(
+  {
+    onDrag({ movement: [mx, my], first, last, memo }) {
+      if (first) {
+        memo = { ...pan.value }
+        if (canvasRef.value) canvasRef.value.style.cursor = 'grabbing'
+      }
+      if (last) {
+        if (canvasRef.value) canvasRef.value.style.cursor = 'grab'
+        setTimeout(() => { wasDragging = false }, 0)
+      } else {
+        wasDragging = true
+      }
+      pan.value = { x: memo.x + mx, y: memo.y + my }
+      draw()
+      return memo
+    },
+    onPinch({ offset: [d], first, memo }) {
+      if (first) memo = scale.value
+      scale.value = Math.min(MAX_SCALE, Math.max(MIN_SCALE, memo * d))
+      draw()
+      return memo
+    },
+    onWheel({ delta: [, dy], event }) {
+      const rect     = canvasRef.value!.getBoundingClientRect()
+      const mx       = event.clientX - rect.left, my = event.clientY - rect.top
+      const dir      = dy > 0 ? -1 : 1
+      const oldScale = scale.value
+      const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, oldScale + dir * ZOOM_STEP))
+      pan.value      = { x: mx - (mx - pan.value.x) * (newScale / oldScale), y: my - (my - pan.value.y) * (newScale / oldScale) }
+      scale.value    = newScale
+      draw()
+    },
+  },
+  {
+    domTarget:    canvasRef,
+    eventOptions: { passive: false },
+    drag:         { filterTaps: true },
   }
-}
-function onTouchEnd() { dragging = false; lastTouchDist = 0 }
+)
 
 // Coordinate helpers
 function toCanvas(nx: number, ny: number) {
@@ -288,7 +287,7 @@ function findClickedZone(floor: Floor, nx: number, ny: number): LayoutZone | nul
 
 // Click handling
 function handleCanvasClick(e: MouseEvent) {
-  if (dragging) return
+  if (wasDragging) return
   const rect        = canvasRef.value!.getBoundingClientRect()
   const cx          = e.clientX - rect.left, cy = e.clientY - rect.top
   const { x: nx, y: ny } = toNorm(cx, cy)
@@ -422,9 +421,8 @@ function getZoneTicket(zone: LayoutZone): Ticket | undefined {
   return props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
 }
 
-// Theme-reactive: dark mode = white text, light mode = dark text
 function getTextColor(): string {
-  return document.documentElement.dataset.bsTheme === 'dark' ? '#ffffff' : '#111111'
+  return getComputedStyle(document.documentElement).getPropertyValue('--text-reactive-primary').trim()
 }
 
 function formatPrice(price: number): string {
@@ -445,7 +443,6 @@ watch(() => props.cart, (newCart) => {
 <template>
   <div class="seating-map-wrapper h-100 d-flex flex-column">
 
-    <!-- Toolbar: bg-reactive-primary = white in light (#fcfcfc), dark in dark (#111111) -->
     <div class="p-3 bg-reactive-primary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div class="d-flex align-items-center gap-2">
         <button class="btn btn-sm text-reactive-primary" @click="$emit('back')">
@@ -474,31 +471,26 @@ watch(() => props.cart, (newCart) => {
       </div>
     </div>
 
-    <!-- Canvas Area -->
     <div ref="canvasContainer" class="flex-grow-1 position-relative overflow-hidden bg-reactive-secondary">
-      <!-- Zoom controls — top left -->
       <div class="position-absolute d-flex flex-column gap-1" style="top:12px;left:12px;z-index:10;">
         <button class="btn btn-sm btn-primary" title="Zoom in" @click="zoomIn" ><i class="bi bi-plus-lg"/></button>
         <button class="btn btn-sm btn-primary" title="Zoom out" @click="zoomOut" ><i class="bi bi-dash-lg"/></button>
         <button class="btn btn-sm btn-primary" title="Reset zoom" @click="resetZoom" ><i class="bi bi-arrows-fullscreen"/></button>
       </div>
 
-      <!-- Floor selector — top right, only shown when floors exist -->
       <div v-if="floors.length > 0" class="position-absolute" style="top:12px;right:12px;z-index:10;">
-        <!-- Single floor: plain label -->
         <div v-if="floors.length === 1" class="floor-panel d-flex align-items-center gap-2 px-3 py-2">
           <i class="bi bi-layers text-reactive-secondary" style="font-size:0.85rem;"/>
-          <span class="text-reactive-primary small fw-semibold">{{ floors[0].floor_name }}</span>
+          <span class="text-reactive-primary small fw-semibold">{{floors[0].floor_name }}</span>
         </div>
 
-        <!-- Multiple floors: pure Vue dropdown, no Bootstrap JS dependency -->
-        <div v-else class="floor-dropdown-wrapper">
+        <div v-else style="position:relative;">
           <button class="floor-panel d-flex align-items-center gap-2 px-3 py-2" @click.stop="floorDropdownOpen = !floorDropdownOpen">
             <i class="bi bi-layers text-primary" style="font-size:0.85rem;"/>
             <span class="text-reactive-primary small fw-semibold">{{ activeFloor?.floor_name }}</span>
             <i class="bi text-reactive-secondary" :class="floorDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'" style="font-size:0.7rem;"/>
           </button>
-          <div v-if="floorDropdownOpen" class="floor-dropdown-menu">
+          <div v-if="floorDropdownOpen" style="position:absolute;top:calc(100% + 4px);right:0;min-width:160px;background:var(--bg-reactive-primary);border-radius:var(--bs-border-radius);box-shadow:0 4px 16px rgba(0,0,0,.18);overflow:hidden;z-index:20;">
             <button
                 v-for="floor in floors" :key="floor.id"
                 class="floor-dropdown-item d-flex align-items-center gap-2"
@@ -517,15 +509,7 @@ watch(() => props.cart, (newCart) => {
           :width="canvasSize.width"
           :height="canvasSize.height"
           style="position:absolute;top:0;left:0;cursor:grab;"
-          @wheel.prevent="handleWheel"
-          @mousedown="onMouseDown"
-          @mousemove="onMouseMove"
-          @mouseup="onMouseUp"
-          @mouseleave="onMouseUp"
           @click="handleCanvasClick"
-          @touchstart.prevent="onTouchStart"
-          @touchmove.prevent="onTouchMove"
-          @touchend="onTouchEnd"
       />
       <div v-else class="d-flex align-items-center justify-content-center h-100">
         <div class="spinner-border text-primary"/>
@@ -536,7 +520,6 @@ watch(() => props.cart, (newCart) => {
       </div>
     </div>
 
-    <!-- Standing Zone Panel -->
     <div
         v-if="selectedStandingZone"
         class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
@@ -590,7 +573,6 @@ watch(() => props.cart, (newCart) => {
       </div>
     </div>
 
-    <!-- Seated Selection Panel -->
     <div
         v-if="selectedSeats.length > 0 && !selectedStandingZone"
         class="selection-panel position-fixed bottom-0 start-0 end-0 p-4 bg-reactive-secondary border-top border-primary"
@@ -643,20 +625,6 @@ watch(() => props.cart, (newCart) => {
   border-radius: var(--bs-border-radius);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   cursor: pointer;
-}
-
-.floor-dropdown-wrapper { position: relative; }
-
-.floor-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  min-width: 160px;
-  background: var(--bg-reactive-primary);
-  border-radius: var(--bs-border-radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  overflow: hidden;
-  z-index: 20;
 }
 
 .floor-dropdown-item {

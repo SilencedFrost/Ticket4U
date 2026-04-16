@@ -50,16 +50,12 @@ function formatPrice(price: number): string {
 <template>
   <div class="cart-summary-wrapper">
 
-    <!-- Ticket Info -->
     <div class="mb-4">
       <h5 class="mb-3 text-reactive-primary">{{ $t('select_ticket.ticket_info.title') }}</h5>
 
-      <!-- plain .card: light=#fcfcfc, dark=#1a1a1a
-           gives lift over the #ececec/#111111 sidebar in both modes -->
       <div v-for="ticket in tickets" :key="ticket.id" class="card mb-2 overflow-hidden">
-        <div :class="{ 'opacity-60': ticket.soldOut }">
+        <div :style="{ opacity: ticket.soldOut ? 0.6 : undefined }">
 
-          <!-- Main row -->
           <div class="p-3">
             <div class="d-flex align-items-start gap-3">
               <div class="rounded flex-shrink-0 mt-1" :style="{ backgroundColor: ticket.color, width: '36px', height: '36px' }"/>
@@ -84,7 +80,6 @@ function formatPrice(price: number): string {
             </div>
           </div>
 
-          <!-- Details dropdown -->
           <div v-if="hasDetails(ticket)">
             <button
                 class="btn btn-sm w-100 d-flex align-items-center justify-content-between px-3 py-2 text-reactive-primary"
@@ -127,7 +122,6 @@ function formatPrice(price: number): string {
       </div>
     </div>
 
-    <!-- Cart -->
     <div class="mb-4">
       <h5 class="mb-3 text-reactive-primary">{{ $t('select_ticket.cart.title') }}</h5>
 
@@ -138,7 +132,6 @@ function formatPrice(price: number): string {
       </div>
 
       <div v-else>
-        <!-- plain .card — no bg-reactive-primary override so dark mode gets #1a1a1a lift correctly -->
         <div v-for="(item, index) in cart" :key="index" class="card p-3 mb-3">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div class="flex-grow-1 min-w-0">
@@ -171,7 +164,6 @@ function formatPrice(price: number): string {
           </div>
         </div>
 
-        <!-- Total -->
         <div class="card p-3 border-primary border-2">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="text-reactive-secondary">{{ $t('select_ticket.cart.total_tickets') }}</span>
@@ -189,8 +181,6 @@ function formatPrice(price: number): string {
 </template>
 
 <style scoped>
-.opacity-60 { opacity: 0.6; }
-
 .detail-expand-enter-active,
 .detail-expand-leave-active {
   transition: max-height 0.25s ease, opacity 0.2s ease;

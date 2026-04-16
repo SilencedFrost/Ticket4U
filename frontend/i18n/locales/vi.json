@@ -50,7 +50,11 @@
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ",
       "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế.",
-      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực."
+      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực.",
+      "token": {
+        "invalid": "Link đổi email không hợp lệ hoặc đã được sử dụng.",
+        "expired": "Link đổi email đã hết hạn. Vui lòng yêu cầu link mới."
+      }
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
@@ -82,6 +86,15 @@
       "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",
       "error_title": "Đặt lại thất bại",
       "request_again": "Yêu cầu link mới"
+    },
+    "verify_email_change": {
+      "page_title": "Xác thực đổi email",
+      "verifying": "Đang xác thực yêu cầu đổi email...",
+      "success_title": "Đổi email thành công",
+      "success_description": "Email của bạn đã được cập nhật. Bạn có thể tiếp tục quản lý thông tin tài khoản.",
+      "go_to_settings": "Đi đến cài đặt tài khoản",
+      "error_title": "Xác thực đổi email thất bại",
+      "try_again": "Thử đổi email lại"
     }
   },
   "common": {

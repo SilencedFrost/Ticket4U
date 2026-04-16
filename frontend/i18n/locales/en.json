@@ -50,7 +50,11 @@
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data",
       "google_unavailable": "Google Sign-In is unavailable. Please use email instead.",
-      "account_not_verified": "Your account is not verified. Please check your email for the verification link."
+      "account_not_verified": "Your account is not verified. Please check your email for the verification link.",
+      "token": {
+        "invalid": "Invalid or already used email change link.",
+        "expired": "This email change link has expired. Please request a new one."
+      }
     },
     "session": {
       "invalid": "Invalid session"
@@ -82,6 +86,15 @@
       "token_invalid": "Invalid password reset link.",
       "error_title": "Reset failed",
       "request_again": "Request new link"
+    },
+    "verify_email_change": {
+      "page_title": "Verify email change",
+      "verifying": "Verifying your email change...",
+      "success_title": "Email changed successfully",
+      "success_description": "Your email address has been updated. You can continue managing your account settings.",
+      "go_to_settings": "Go to account settings",
+      "error_title": "Email change verification failed",
+      "try_again": "Try email change again"
     }
   },
   "common": {

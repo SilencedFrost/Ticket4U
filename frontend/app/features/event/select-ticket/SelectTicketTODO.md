@@ -7,3 +7,5 @@ TODO:
 [ ] Mobile UI top bar fix
 [ ] Remove static html increment buttons from ticket count selector
 [ ] Properly check and resize seat map for mobile
+[ ] Refactor file location
+[ ] Hide system level errors from main UI

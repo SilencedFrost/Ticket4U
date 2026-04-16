@@ -105,7 +105,10 @@
       "remove": "Remove",
       "reset": "Reset",
       "apply": "Apply",
-      "filter": "Filter"
+      "filter": "Filter",
+      "change_email": "Change Email",
+      "save": "Save",
+      "cancel": "Cancel"
     },
     "full_name": "Full name",
     "first_name": "First Name",
@@ -191,6 +194,15 @@
       },
       "basic_info": {
         "section_title": "Basic Information"
+      },
+      "change_email": {
+        "title": "Change Email",
+        "current_email": "Current Email",
+        "new_email": "New Email",
+        "current_password": "Current Password",
+        "messages": {
+          "request_sent_success": "Email change request sent successfully."
+        }
       }
     },
     "security": {

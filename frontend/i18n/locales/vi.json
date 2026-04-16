@@ -105,7 +105,10 @@
       "remove": "Xóa",
       "reset": "Thiết lập lại",
       "apply": "Áp dụng",
-      "filter": "Bộ lọc"
+      "filter": "Bộ lọc",
+      "change_email": "Đổi email",
+      "save": "Lưu",
+      "cancel": "Hủy"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
@@ -191,6 +194,15 @@
       },
       "basic_info": {
         "section_title": "Thông tin cơ bản"
+      },
+      "change_email": {
+        "title": "Đổi email",
+        "current_email": "Email hiện tại",
+        "new_email": "Email mới",
+        "current_password": "Mật khẩu hiện tại",
+        "messages": {
+          "request_sent_success": "Yêu cầu đổi email đã được gửi thành công."
+        }
       }
     },
     "security": {

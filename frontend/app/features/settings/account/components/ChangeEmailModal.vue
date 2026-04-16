@@ -164,8 +164,8 @@ defineExpose({ open, close });
             :disabled="loading || !newEmail || !currentPassword"
             @click="submit"
           >
-            <span v-if="loading" class="spinner-border spinner-border-sm" role="status" />
-            {{ $t('common.action.save') }}
+            <span v-if="loading" class="spinner-border spinner-border-sm text-white" role="status" />
+            <i class="bi bi-floppy-fill text-white"></i>
           </button>
         </div>
 

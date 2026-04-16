@@ -4,12 +4,21 @@ import type { Zone } from '@/features/event/types/Zone';
 import { useFormatter } from '@/composables/useFormatter';
 import ShimmerImg from '~/components/ShimmerImg.vue';
 
+const router = useRouter();
+const localePath = useLocalePath();
 const { formatPrice } = useFormatter();
 const { locale } = useI18n();
 
-defineProps<{
+const props = defineProps<{
+  eventId: string;
   sessions: EventSessionSummary[];
 }>();
+
+//TODO: update URL
+function handleBuyClick(sessionId: string) {
+  emit('buyClick');
+  router.push(localePath(`/event/${props.eventId}/book/seats/${sessionId}`));
+}
 
 const emit = defineEmits(['buyClick']);
 
@@ -89,6 +98,7 @@ function hasZoneDetails(zone: Zone) {
               <button
                 class="btn btn-primary fw-bold small py-1 px-2 py-md-2"
                 @click.stop="emit('buyClick')"
+                @click="handleBuyClick(schedule.id)"
               >
                 {{ $t('common.action.buy') }}
               </button>

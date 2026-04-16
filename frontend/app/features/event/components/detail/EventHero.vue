@@ -2,12 +2,17 @@
 import type { Event } from '@/features/event/types/Event';
 import ShimmerImg from '~/components/ShimmerImg.vue';
 const { formatPrice } = useFormatter();
+const emit = defineEmits<{
+  buyClick: [];
+}>();
 
 defineProps<{
   event: Event;
 }>();
 
-const emit = defineEmits(['buyClick']);
+function handleHeroBuyClick() {
+  emit('buyClick');
+}
 </script>
 
 <template>
@@ -63,7 +68,7 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
                   <button
                     class="btn btn-primary fw-bold w-100 py-1 small"
-                    @click="emit('buyClick')"
+                    @click="handleHeroBuyClick()"
                   >
                     {{ $t('common.action.buy') }}
                   </button>

@@ -308,6 +308,78 @@
       }
     }
   },
+  "payment_mockup": {
+    "validation": {
+      "required_contact": "Please complete all required contact information",
+      "agree_policy": "Please agree to the organizer policy before payment"
+    },
+    "currency_suffix": "VND",
+    "event": {
+      "image_alt": "Event image",
+      "title": "Traditional Water Puppet Show",
+      "date": "14, 08/04",
+      "time": "18:30 - 19:15",
+      "address": "55B Nguyen Thi Minh Khai, Ben Thanh Ward, District 1, HCMC"
+    },
+    "receiver": {
+      "title": "Billing Information",
+      "subtitle": "Your invoice will be sent to the information below",
+      "full_name": "Full name",
+      "email": "Email",
+      "phone": "Phone number",
+      "optional": "(optional)",
+      "empty": "Not entered",
+      "note_line_1": "The invoice will be sent to the email above.",
+      "note_line_2": "Tickets are stored in",
+      "note_ticket_hub": "Your Tickets",
+      "note_line_3": "for the current account.",
+      "note_line_4": "At the gate, just present your electronic QR code."
+    },
+    "payment_method": {
+      "title": "Payment method",
+      "sepay_bank": "SePay - Bank transfer"
+    },
+    "timer": {
+      "title": "Ticket hold time remaining"
+    },
+    "policy": {
+      "title": "Organizer policy",
+      "content": "Purchased tickets are non-refundable, non-reschedulable, and cannot be modified under any circumstances."
+    },
+    "ticket_info": {
+      "title": "Ticket information ({count} tickets)",
+      "columns": {
+        "ticket_type": "TICKET TYPE",
+        "zone_name": "ZONE",
+        "seat_name": "SEAT",
+        "base_price": "BASE PRICE"
+      },
+      "promo_placeholder": "Promotion code",
+      "apply": "Apply"
+    },
+    "checkout": {
+      "total": "Total",
+      "agree_policy": "Agree to organizer policy",
+      "pay": "Pay"
+    },
+    "popup": {
+      "title": "Bank Transfer (SePay)",
+      "warning_line_1": "This account and QR are for this transaction only",
+      "warning_line_2": "Do not save or reuse this information",
+      "warning_line_3": "Order is confirmed only when you see successful status",
+      "qr_alt": "SePay QR",
+      "download_qr": "Download QR",
+      "bank": "Bank",
+      "cart_code": "Content",
+      "account_number": "Receiving account",
+      "receiver_name": "Receiver name",
+      "amount": "Amount",
+      "copy": "Copy",
+      "note_title": "Note:",
+      "note_line_1": "Please transfer the exact amount.",
+      "confirm_paid": "Confirm payment completed"
+    }
+  },
   "categories": {
     "concert": "Concert",
     "festival": "Festival",

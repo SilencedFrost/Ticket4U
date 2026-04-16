@@ -89,7 +89,10 @@
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
+    "events": "Sự kiện",
     "tickets": "Vé",
+    "organizer": "Ban tổ chức",
+    "contact": "Liên hệ",
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -99,15 +102,34 @@
       "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "reset": "Thiết lập lại",
+      "apply": "Áp dụng",
+      "filter": "Bộ lọc"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
     "last_name": "Họ",
     "phone": "Số điện thoại",
+    "price": "Giá tiền",
+    "category": "Thể loại",
     "currency": {
       "from": "Từ",
       "free": "Miễn phí"
+    },
+    "date": {
+      "all_dates": "Tất cả các ngày",
+      "short": "Ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "this_weekend": "Cuối tuần này",
+      "this_month": "Tháng này",
+      "from_date": "Từ ngày",
+      "to_date": "Đến ngày"
+    },
+    "status": {
+      "title": "Trạng thái",
+      "available": "còn lại"
     }
   },
   "permissions": {
@@ -120,20 +142,31 @@
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
+  "search": {
+    "results_for": "Kết quả cho",
+    "no_results": "Không tìm thấy kết quả"
+  },
   "placeholder": {
-    "search": "Tìm kiếm sự kiện, nghệ sĩ..."
+    "search": "Tìm kiếm sự kiện, nghệ sĩ...",
+    "category": "Tìm kiếm thể loại"
   },
   "theme": {
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
   },
-  "event_detail": {
-    "label": {
-      "price_from": "Giá từ",
-      "available": "còn lại",
-      "organizer": "Ban tổ chức",
+  "event": {
+    "status_options": {
+      "premiere": "Ra mắt",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Ngừng bán vé",
       "sold_out": "Hết vé"
-    },
+    }
+  },
+  "event_detail": {
     "section": {
       "schedule": "Lịch trình sự kiện",
       "about": "Về sự kiện",
@@ -146,7 +179,8 @@
     "subtitle": "Quản lý tài khoản",
     "nav": {
       "personal_information": "Thông tin cá nhân",
-      "security": "Mật khẩu và bảo mật"
+      "security": "Mật khẩu và bảo mật",
+      "preferences": "Tùy chọn"
     },
     "personal_information": {
       "title": "Thông tin cá nhân",
@@ -180,6 +214,46 @@
           "last_access": "Lần truy cập cuối"
         },
         "unknown_device": "Thiết bị không xác định"
+      }
+    },
+    "preferences": {
+      "title": "Tùy chọn",
+      "subtitle": "Tùy chỉnh môi trường làm việc của bạn.",
+      "appearance": {
+        "title": "Giao diện",
+        "subtitle": "Tùy chỉnh cách hiển thị của ứng dụng.",
+        "dark_mode": {
+          "title": "Chế độ tối",
+          "subtitle": "Dịu mắt hơn"
+        },
+        "light_mode": {
+          "title": "Chế độ sáng",
+          "subtitle": "Độ tương phản rõ ràng"
+        }
+      },
+      "language": {
+        "title": "Ngôn ngữ",
+        "subtitle": "Chọn ngôn ngữ bạn muốn sử dụng.",
+        "options": {
+          "en": "Tiếng Anh (Hoa Kỳ)",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "notifications": {
+        "title": "Thông báo",
+        "subtitle": "Quản lý thiết lập thông báo của bạn.",
+        "email": {
+          "title": "Thông báo Email",
+          "subtitle": "Nhận cảnh báo bảo mật và cập nhật hệ thống"
+        },
+        "marketing": {
+          "title": "Email Tiếp thị",
+          "subtitle": "Tính năng mới và tin tức sản phẩm độc quyền"
+        }
+      },
+      "actions": {
+        "discard": "Hủy thay đổi",
+        "save": "Lưu thay đổi"
       }
     }
   },
@@ -286,5 +360,11 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Phổ biến",
+      "near_you": "Gần bạn"
+    }
   }
 }

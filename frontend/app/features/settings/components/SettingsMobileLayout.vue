@@ -2,8 +2,16 @@
 import '../style/settings.css';
 
 const { currentTheme } = useTheme();
+const { isLoggedIn } = storeToRefs(useUserStore());
 
-type SettingsTab = 'account' | 'security';
+type SettingsTab = 'account' | 'security' | 'preferences';
+type SettingsTabItem = {
+  key: SettingsTab;
+  icon: string;
+  labelKey: string;
+  guestRestricted?: boolean;
+  disabled: boolean;
+};
 
 const route = useRoute();
 const router = useRouter();
@@ -13,10 +21,22 @@ const previousPageUrl = ref<string | null>(null);
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
-const tabs = [
-  { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information' },
-  { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security' },
-];
+const tabs = computed<SettingsTabItem[]>(() => {
+  // TODO: Không disable tab account/security cho khách. Khi bấm tab,
+  // hiển thị modal xác nhận đăng nhập với thông báo "Để sử dụng tính năng này bạn cần đăng nhập"
+  // và 2 nút "Quay lại" + "Đăng nhập" để tránh chuyển trang ngoài ý muốn.
+  // Nếu chọn "Đăng nhập", chuyển sang login kèm redirect để quay lại đúng tab sau khi đăng nhập.
+  const items = [
+    { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information', guestRestricted: true },
+    { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security', guestRestricted: true },
+    { key: 'preferences' as const, icon: 'bi bi-palette', labelKey: 'settings.nav.preferences' },
+  ];
+
+  return items.map((item) => ({
+    ...item,
+    disabled: Boolean(item.guestRestricted && !isLoggedIn.value),
+  }));
+});
 
 const normalizedPath = computed(() => {
   const path = route.path.replace(/^\/(en|vi)(?=\/|$)/, '');
@@ -27,12 +47,15 @@ const normalizedPath = computed(() => {
 watch(normalizedPath, (path) => {
   if (path.startsWith('/settings/account')) { activeTab.value = 'account'; return; }
   if (path.startsWith('/settings/security')) { activeTab.value = 'security'; return; }
+  if (path.startsWith('/settings/preferences')) { activeTab.value = 'preferences'; return; }
   if (path === '/settings') activeTab.value = null;
 }, { immediate: true });
 
-const activeTabTitle = computed(() =>
-  activeTab.value === 'security' ? 'settings.nav.security' : 'settings.nav.personal_information'
-);
+const activeTabTitle = computed(() => {
+  if (activeTab.value === 'security') return 'settings.nav.security';
+  if (activeTab.value === 'preferences') return 'settings.nav.preferences';
+  return 'settings.nav.personal_information';
+});
 
 const mobileTrackClass = computed(() => ({
   'is-menu': activeTab.value === null,
@@ -69,6 +92,11 @@ function openTab(tab: SettingsTab) {
   router.push(localePath(`/settings/${tab}`));
 }
 
+function handleTabClick(tab: SettingsTabItem) {
+  if (tab.disabled) return;
+  openTab(tab.key);
+}
+
 function goBackToMenu() { activeTab.value = null; }
 
 function goBackToPreviousPage() {
@@ -93,8 +121,17 @@ function goBackToPreviousPage() {
         <nav :aria-label="$t('settings.title')">
           <button
             v-for="tab in tabs" :key="tab.key" type="button"
-            :class="['settings-mobile-menu-item', 'text-reactive-primary', 'bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
-            @click="openTab(tab.key)"
+            :class="[
+              'settings-mobile-menu-item',
+              'text-reactive-primary',
+              'bg-reactive-primary',
+              'shadow-sm',
+              { 'border-bottom': currentTheme == 'dark' },
+              { 'is-disabled': tab.disabled },
+            ]"
+            :disabled="tab.disabled"
+            :aria-disabled="tab.disabled ? 'true' : 'false'"
+            @click="handleTabClick(tab)"
           >
             <span class="settings-mobile-menu-item-left">
               <i :class="[tab.icon, 'text-reactive-secondary']"></i>

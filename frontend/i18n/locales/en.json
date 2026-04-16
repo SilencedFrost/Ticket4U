@@ -89,7 +89,10 @@
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
+    "events": "Events",
     "tickets": "Tickets",
+    "organizer": "Organizer",
+    "contact": "Contact us",
     "see": {
       "more": "See more",
       "less": "See less"
@@ -99,15 +102,34 @@
       "deny": "Deny",
       "buy": "Buy tickets now",
       "view": "View",
-      "remove": "Remove"
+      "remove": "Remove",
+      "reset": "Reset",
+      "apply": "Apply",
+      "filter": "Filter"
     },
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
+    "price": "Price",
+    "category": "Category",
     "currency": {
       "from": "From",
       "free": "Free"
+    },
+    "date": {
+      "all_dates": "All dates",
+      "short": "Date",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "this_weekend": "This weekend",
+      "this_month": "This month",
+      "from_date": "From date",
+      "to_date": "To date"
+    },
+    "status": {
+      "title": "Status",
+      "available": "available"
     }
   },
   "permissions": {
@@ -120,20 +142,31 @@
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
   },
+  "search": {
+    "results_for": "Results for",
+    "no_results": "Result not found"
+  },
   "placeholder": {
-    "search": "Search events, artists..."
+    "search": "Search events, artists...",
+    "category": "Search categories"
   },
   "theme": {
     "light": "Light mode",
     "dark": "Dark mode"
   },
+  "event": {
+    "status_options": {
+      "premiere": "Premiere",
+      "selling": "Selling",
+      "ongoing": "Ongoing",
+      "finished": "Finished",
+      "canceled": "Canceled",
+      "editing": "Editing",
+      "paused": "Stopped selling",
+      "sold_out": "Sold out"
+    }
+  },
   "event_detail": {
-    "label": {
-      "price_from": "From",
-      "available": "available",
-      "organizer": "Organizer",
-      "sold_out": "Sold Out"
-    },
     "section": {
       "schedule": "Event Schedule",
       "about": "About the event",
@@ -146,7 +179,8 @@
     "subtitle": "Manage account",
     "nav": {
       "personal_information": "Personal Information",
-      "security": "Password and Security"
+      "security": "Password and Security",
+      "preferences": "Preferences"
     },
     "personal_information": {
       "title": "Personal Information",
@@ -180,6 +214,46 @@
           "last_access": "Last Access"
         },
         "unknown_device": "Unknown device"
+      }
+    },
+    "preferences": {
+      "title": "Preferences",
+      "subtitle": "Customize your workspace environment.",  
+      "appearance": {
+        "title": "Appearance",
+        "subtitle": "Customize how the application looks.",
+        "dark_mode": {
+          "title": "Dark Mode",
+          "subtitle": "Easy on the eyes"
+        },
+        "light_mode": {
+          "title": "Light Mode",
+          "subtitle": "High contrast clarity"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "subtitle": "Choose your preferred language.",
+        "options": {
+          "en": "English (United States)",
+          "vi": "Vietnamese"
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Manage your notification settings.",
+        "email": {
+          "title": "Email Notifications",
+          "subtitle": "Receive security alerts and system updates"
+        },
+        "marketing": {
+          "title": "Marketing Emails",
+          "subtitle": "New features and exclusive product news"
+        }
+      },
+      "actions": {
+        "discard": "Discard",
+        "save": "Save Changes"
       }
     }
   },
@@ -286,5 +360,11 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Popular",
+      "near_you": "Near you"
+    }
   }
 }

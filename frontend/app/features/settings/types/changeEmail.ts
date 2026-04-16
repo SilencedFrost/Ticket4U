@@ -1,4 +1,4 @@
-export interface changeEmail {
-  currentEmail: string;
+export interface ChangeEmail {
   newEmail: string;
+  currentPassword: string;
 }

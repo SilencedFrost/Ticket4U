@@ -7,7 +7,12 @@ defineProps<{
   event: Event;
 }>();
 
-const emit = defineEmits(['buyClick']);
+function handleHeroBuyClick() {
+  const ticketSection = document.getElementById('tickets-section');
+  if (ticketSection) {
+    ticketSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}
 </script>
 
 <template>
@@ -63,7 +68,7 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
                   <button
                     class="btn btn-primary fw-bold w-100 py-1 small"
-                    @click="emit('buyClick')"
+                    @click="handleHeroBuyClick()"
                   >
                     {{ $t('common.action.buy') }}
                   </button>

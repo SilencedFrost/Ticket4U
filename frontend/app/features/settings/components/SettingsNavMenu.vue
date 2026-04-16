@@ -1,27 +1,43 @@
 <script setup lang="ts">
+const { isLoggedIn } = storeToRefs(useUserStore());
 
-// TODO: khi thêm tab preferences - lọc navItems theo auth state
-// - chưa auth: ẩn tab account & security, hoặc bôi xám + tooltip "đăng nhập để cài đặt thêm"
-// - đã auth: hiện full
+type SettingsNavItem = {
+  to: string;
+  icon: string;
+  labelKey: string;
+  guestRestricted?: boolean;
+};
 
-const navItems = [
-  {
-    to: '/settings/account',
-    icon: 'bi bi-person-fill',
-    labelKey: 'settings.nav.personal_information',
-  },
-  {
-    to: '/settings/security',
-    icon: 'bi bi-shield-fill',
-    labelKey: 'settings.nav.security',
-  },
+const navItems = computed(() => {
+  // TODO: Không disable tab account/security cho khách. Khi người dùng bấm vào,
+  // hiển thị modal "Để sử dụng tính năng này bạn cần đăng nhập" với 2 nút
+  // "Quay lại" và "Đăng nhập"; nếu chọn "Đăng nhập" thì chuyển tới trang login
+  // và sau khi đăng nhập xong quay lại đúng tab đã chọn.
+  const items: SettingsNavItem[] = [
+    {
+      to: '/settings/account',
+      icon: 'bi bi-person-fill',
+      labelKey: 'settings.nav.personal_information',
+      guestRestricted: true,
+    },
+    {
+      to: '/settings/security',
+      icon: 'bi bi-shield-fill',
+      labelKey: 'settings.nav.security',
+      guestRestricted: true,
+    },
+    {
+      to: '/settings/preferences',
+      icon: 'bi bi-palette-fill',
+      labelKey: 'settings.nav.preferences',
+    },
+  ];
 
-  {
-    to: '/settings/preferences',
-    icon: 'bi bi-palette-fill',
-    labelKey: 'settings.nav.preferences',
-  },
-];
+  return items.map((item) => ({
+    ...item,
+    disabled: Boolean(item.guestRestricted && !isLoggedIn.value),
+  }));
+});
 </script>
 
 <template>
@@ -34,7 +50,14 @@ const navItems = [
     <nav class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <li v-for="item in navItems" :key="item.to">
-          <nuxt-link-locale :to="item.to" class="settings-nav__item" exact-active-class="active">
+          <button v-if="item.disabled" type="button" class="settings-nav__item is-disabled" disabled aria-disabled="true">
+            <span class="settings-nav__item-left d-inline-flex align-items-center">
+              <i :class="[item.icon, 'text-reactive-secondary']"></i>
+              <span>{{ $t(item.labelKey) }}</span>
+            </span>
+            <i class="bi bi-chevron-right text-reactive-secondary"></i>
+          </button>
+          <nuxt-link-locale v-else :to="item.to" class="settings-nav__item" exact-active-class="active">
             <span class="settings-nav__item-left d-inline-flex align-items-center">
               <i :class="[item.icon, 'text-reactive-secondary']"></i>
               <span>{{ $t(item.labelKey) }}</span>
@@ -90,5 +113,18 @@ const navItems = [
 .settings-nav__item.active .settings-nav__item-left>i,
 .settings-nav__item.active .settings-nav__chevron {
   color: var(--bs-primary);
+}
+
+.settings-nav__item.is-disabled {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  background-color: transparent;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-nav__item.is-disabled:hover {
+  background-color: transparent;
 }
 </style>

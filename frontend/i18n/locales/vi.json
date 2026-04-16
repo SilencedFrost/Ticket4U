@@ -257,6 +257,78 @@
       }
     }
   },
+  "payment_mockup": {
+    "validation": {
+      "required_contact": "Vui lòng điền đầy đủ thông tin bắt buộc",
+      "agree_policy": "Vui lòng đồng ý với chính sách của ban tổ chức trước khi thanh toán"
+    },
+    "currency_suffix": "đ",
+    "event": {
+      "image_alt": "Ảnh sự kiện",
+      "title": "Múa rối nước truyền thống",
+      "date": "14, 08/04",
+      "time": "18:30 - 19:15",
+      "address": "55B Nguyễn Thị Minh Khai, P. Bến Thành, Q.1, TP.HCM"
+    },
+    "receiver": {
+      "title": "Thông tin nhận hóa đơn",
+      "subtitle": "Hóa đơn của bạn sẽ được gửi tới thông tin bên dưới",
+      "full_name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "optional": "(không bắt buộc)",
+      "empty": "Chưa nhập",
+      "note_line_1": "Hóa đơn sẽ được gửi đến email ở trên.",
+      "note_line_2": "Vé được lưu trong mục",
+      "note_ticket_hub": "Vé của bạn",
+      "note_line_3": "của tài khoản hiện tại.",
+      "note_line_4": "Khi vào cổng, chỉ cần xuất trình mã QR điện tử."
+    },
+    "payment_method": {
+      "title": "Phương thức thanh toán",
+      "sepay_bank": "SePay - Chuyển khoản ngân hàng"
+    },
+    "timer": {
+      "title": "Thời gian giữ vé còn"
+    },
+    "policy": {
+      "title": "Chính sách ban tổ chức",
+      "content": "Vé đã mua sẽ không được hoàn trả, đổi ngày hay chỉnh sửa dưới bất kỳ trường hợp nào."
+    },
+    "ticket_info": {
+      "title": "Thông tin vé ({count} vé)",
+      "columns": {
+        "ticket_type": "LOẠI VÉ",
+        "zone_name": "KHU",
+        "seat_name": "GHẾ",
+        "base_price": "GIÁ GỐC"
+      },
+      "promo_placeholder": "Mã khuyến mại",
+      "apply": "Áp dụng"
+    },
+    "checkout": {
+      "total": "Tổng tiền",
+      "agree_policy": "Đồng ý với chính sách của ban tổ chức",
+      "pay": "Thanh toán"
+    },
+    "popup": {
+      "title": "Chuyển khoản ngân hàng (SePay)",
+      "warning_line_1": "Tài khoản và QR chỉ dùng cho giao dịch này",
+      "warning_line_2": "Không lưu hoặc sử dụng lại thông tin này",
+      "warning_line_3": "Đơn hàng chỉ được xác nhận khi bạn thấy trạng thái thành công",
+      "qr_alt": "QR SePay",
+      "download_qr": "Tải mã QR",
+      "bank": "Ngân hàng",
+      "cart_code": "Nội dung",
+      "account_number": "STK nhận tiền",
+      "receiver_name": "Tên người nhận",
+      "amount": "Số tiền",
+      "copy": "Sao chép",
+      "note_title": "Lưu ý:",
+      "note_line_1": "Vui lòng chuyển chính xác số tiền.",
+      "confirm_paid": "Xác nhận đã thanh toán"
+    }
+  },
   "categories": {
     "concert": "Buổi Hòa Nhạc",
     "festival": "Lễ Hội",

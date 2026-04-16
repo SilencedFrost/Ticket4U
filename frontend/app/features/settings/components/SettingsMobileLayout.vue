@@ -2,8 +2,16 @@
 import '../style/settings.css';
 
 const { currentTheme } = useTheme();
+const { isLoggedIn } = storeToRefs(useUserStore());
 
 type SettingsTab = 'account' | 'security' | 'preferences';
+type SettingsTabItem = {
+  key: SettingsTab;
+  icon: string;
+  labelKey: string;
+  guestRestricted?: boolean;
+  disabled: boolean;
+};
 
 const route = useRoute();
 const router = useRouter();
@@ -13,11 +21,22 @@ const previousPageUrl = ref<string | null>(null);
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
-const tabs = [
-  { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information' },
-  { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security' },
-  { key: 'preferences' as const, icon: 'bi bi-palette', labelKey: 'settings.nav.preferences' },
-];
+const tabs = computed<SettingsTabItem[]>(() => {
+  // TODO: Không disable tab account/security cho khách. Khi bấm tab,
+  // hiển thị modal xác nhận đăng nhập với thông báo "Để sử dụng tính năng này bạn cần đăng nhập"
+  // và 2 nút "Quay lại" + "Đăng nhập" để tránh chuyển trang ngoài ý muốn.
+  // Nếu chọn "Đăng nhập", chuyển sang login kèm redirect để quay lại đúng tab sau khi đăng nhập.
+  const items = [
+    { key: 'account' as const, icon: 'bi bi-person', labelKey: 'settings.nav.personal_information', guestRestricted: true },
+    { key: 'security' as const, icon: 'bi bi-shield-lock', labelKey: 'settings.nav.security', guestRestricted: true },
+    { key: 'preferences' as const, icon: 'bi bi-palette', labelKey: 'settings.nav.preferences' },
+  ];
+
+  return items.map((item) => ({
+    ...item,
+    disabled: Boolean(item.guestRestricted && !isLoggedIn.value),
+  }));
+});
 
 const normalizedPath = computed(() => {
   const path = route.path.replace(/^\/(en|vi)(?=\/|$)/, '');
@@ -73,6 +92,11 @@ function openTab(tab: SettingsTab) {
   router.push(localePath(`/settings/${tab}`));
 }
 
+function handleTabClick(tab: SettingsTabItem) {
+  if (tab.disabled) return;
+  openTab(tab.key);
+}
+
 function goBackToMenu() { activeTab.value = null; }
 
 function goBackToPreviousPage() {
@@ -97,8 +121,17 @@ function goBackToPreviousPage() {
         <nav :aria-label="$t('settings.title')">
           <button
             v-for="tab in tabs" :key="tab.key" type="button"
-            :class="['settings-mobile-menu-item', 'text-reactive-primary', 'bg-reactive-primary', 'shadow-sm', { 'border-bottom': currentTheme == 'dark' }]"
-            @click="openTab(tab.key)"
+            :class="[
+              'settings-mobile-menu-item',
+              'text-reactive-primary',
+              'bg-reactive-primary',
+              'shadow-sm',
+              { 'border-bottom': currentTheme == 'dark' },
+              { 'is-disabled': tab.disabled },
+            ]"
+            :disabled="tab.disabled"
+            :aria-disabled="tab.disabled ? 'true' : 'false'"
+            @click="handleTabClick(tab)"
           >
             <span class="settings-mobile-menu-item-left">
               <i :class="[tab.icon, 'text-reactive-secondary']"></i>

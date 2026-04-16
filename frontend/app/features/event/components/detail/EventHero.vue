@@ -2,16 +2,16 @@
 import type { Event } from '@/features/event/types/Event';
 import ShimmerImg from '~/components/ShimmerImg.vue';
 const { formatPrice } = useFormatter();
+const emit = defineEmits<{
+  buyClick: [];
+}>();
 
 defineProps<{
   event: Event;
 }>();
 
 function handleHeroBuyClick() {
-  const ticketSection = document.getElementById('tickets-section');
-  if (ticketSection) {
-    ticketSection.scrollIntoView({ behavior: 'smooth' });
-  }
+  emit('buyClick');
 }
 </script>
 

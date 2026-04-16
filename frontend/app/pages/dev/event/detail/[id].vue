@@ -9,6 +9,11 @@ import EventOrganizer from '../../../../features/event/components/detail/EventOr
 import EventRelated from '../../../../features/event/components/detail/EventRelated.vue';
 const config = useRuntimeConfig();
 const route = useRoute();
+const ticketsSectionRef = ref<HTMLElement | null>(null);
+
+function scrollToTicketsSection() {
+  ticketsSectionRef.value?.scrollIntoView({ behavior: 'smooth' });
+}
 
 const { data: event, pending: isLoading } = await useFetch<Event>(
   () => `/public/events/${route.params.id}`,
@@ -88,13 +93,15 @@ useHead({
   </div>
 
   <div v-else-if="event" class="h-auto overflow-x-hidden mw-100">
-    <event-hero :event="event" />
+    <event-hero :event="event" @buy-click="scrollToTicketsSection" />
     <event-nav />
     <div class="rowz m-0 container-xxl mx-auto flex-column flex-lg-row">
       <div class="col-lg-12">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
-        <event-tickets :event-id="event.id" :sessions="event.sessions" />
+        <div ref="ticketsSectionRef">
+          <event-tickets :event-id="event.id" :sessions="event.sessions" />
+        </div>
         <event-organizer v-if="event.organizerId" :organizer-id="event.organizerId" />
       </div>
     </div>

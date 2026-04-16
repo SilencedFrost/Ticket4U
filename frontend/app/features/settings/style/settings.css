@@ -89,6 +89,16 @@
   background-color: rgba(var(--bs-secondary-rgb), 0.16);
 }
 
+.settings-mobile-menu-item.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings-mobile-menu-item.is-disabled:hover,
+.settings-mobile-menu-item.is-disabled:active {
+  background-color: var(--bg-reactive-primary);
+}
+
 /* kept: compact row typography uses non-standard gap and size. */
 .settings-mobile-menu-item-left {
   display: inline-flex;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { usePhoneValidation } from '~/composables/usePhoneValidation';
 import { useSettingsApi } from '~/features/settings/composables/useSettingsApi';
+
+// TODO: Change url and make this page work for real
 
 const { formatPrice } = useFormatter();
 const { isEmailFormatValid } = useEmailValidation();

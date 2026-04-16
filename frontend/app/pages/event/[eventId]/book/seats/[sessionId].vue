@@ -155,10 +155,51 @@ function startResize(e: MouseEvent) {
 </template>
 
 <style scoped>
-.resize-handle { width:5px; cursor:col-resize; background:transparent; flex-shrink:0; transition:background 0.2s; z-index:10; }
-.resize-handle:hover, .resize-handle:active { background: var(--bs-primary); }
-.bottom-drawer { position:absolute; bottom:0; left:0; right:0; border-radius:16px 16px 0 0; box-shadow:0 -4px 24px rgba(0,0,0,.15); transition:transform 0.35s cubic-bezier(.4,0,.2,1); transform:translateY(calc(100% - 58px)); z-index:200; display:flex; flex-direction:column; max-height:85vh; }
-.bottom-drawer.open { transform:translateY(0); }
-.drawer-handle { min-height:58px; cursor:pointer; border-radius:16px 16px 0 0; flex-shrink:0; position:relative; }
-.drawer-handle::before { content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; background:currentColor; border-radius:2px; opacity:0.2; }
+.resize-handle {
+  width:5px;
+  cursor:col-resize;
+  background:transparent;
+  flex-shrink:0;
+  transition:background 0.2s;
+  z-index:10;
+}
+.resize-handle:hover, .resize-handle:active {
+  background: var(--bs-primary);
+}
+.bottom-drawer {
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  border-radius:16px 16px 0 0;
+  box-shadow:0 -4px 24px rgba(0,0,0,.15);
+  transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+  transform:translateY(calc(100% - 58px));
+  z-index:200;
+  display:flex;
+  flex-direction:column;
+  max-height:85vh;
+}
+.bottom-drawer.open {
+  transform:translateY(0);
+}
+.drawer-handle {
+  min-height:58px;
+  cursor:pointer;
+  border-radius:16px 16px 0 0;
+  flex-shrink:0;
+  position:relative;
+}
+.drawer-handle::before {
+  content:'';
+  position:absolute;
+  top:8px;
+  left:50%;
+  transform:translateX(-50%);
+  width:36px;
+  height:4px;
+  background:currentColor;
+  border-radius:2px;
+  opacity:0.2;
+}
 </style>

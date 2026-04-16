@@ -668,12 +668,25 @@ watch(() => props.cart, (newCart) => {
   transition: background 0.15s;
 }
 
-.floor-dropdown-item:hover { background: var(--bg-reactive-secondary); }
-.floor-dropdown-item.active { color: var(--bs-primary); font-weight: 600; }
+.floor-dropdown-item:hover {
+  background: var(--bg-reactive-secondary);
+}
+.floor-dropdown-item.active {
+  color: var(--bs-primary);
+  font-weight: 600;
+}
 
-.selection-panel { animation: slideUp 0.25s ease; }
+.selection-panel {
+  animation: slideUp 0.25s ease;
+}
 @keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to   {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>

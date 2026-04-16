@@ -9,6 +9,21 @@ const currentMenuKey = ref<string>('none');
 const searchInput = ref<HTMLInputElement | null>(null);
 const menuContainer = ref<HTMLElement | null>(null);
 const useUser = useUserStore();
+const searchQuery = ref('');
+const localePath = useLocalePath();
+const route = useRoute();
+
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    if (newQuery === undefined) {
+      searchQuery.value = '';
+    } else {
+      searchQuery.value = String(newQuery);
+    }
+  },
+  { immediate: true },
+);
 
 const { currentTheme } = useTheme();
 
@@ -16,14 +31,23 @@ function focusSearch() {
   searchInput.value?.focus();
 }
 
-function clearSearch() {
-  if (searchInput.value) {
-    searchInput.value.value = '';
-  }
-}
-
 function toggleMenu(targetKey = 'none') {
   currentMenuKey.value = currentMenuKey.value === targetKey ? 'none' : targetKey;
+}
+
+function handleSearch() {
+  const query = searchQuery.value.trim();
+  if (query) {
+    const targetPath = localePath('/dev/search');
+
+    navigateTo({
+      path: targetPath,
+      query: { q: query },
+    });
+
+    searchInput.value?.blur();
+    currentMenuKey.value = 'none';
+  }
 }
 
 onClickOutside(menuContainer, () => {
@@ -46,20 +70,21 @@ onClickOutside(menuContainer, () => {
         <!-- Hover buttons -->
         <div class="d-none d-md-flex ms-lg-5">
           <div class="nav-item">
-            <span>Events</span>
+            <span>{{ $t('common.events') }}</span>
           </div>
           <div class="nav-item">
-            <span>Contact us</span>
+            <span>{{ $t('common.contact') }}</span>
           </div>
         </div>
         <!-- Search bar -->
         <div class="nav-container position-absolute start-50 translate-middle-x">
           <i class="bi bi-search text-clickable me-2" @click="focusSearch()" /><input
             ref="searchInput"
+            v-model="searchQuery"
             type="text"
             class="search-field text-reactive-primary input-underline"
             :placeholder="$t('placeholder.search')"
-            @blur="clearSearch()"
+            @keyup.enter="handleSearch()"
           />
         </div>
         <!-- Function buttons -->

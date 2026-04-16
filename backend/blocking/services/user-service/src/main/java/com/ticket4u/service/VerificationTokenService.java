@@ -25,7 +25,7 @@ public class VerificationTokenService {
     private final VerificationProperties verificationProperties;
     private final VerificationTokenRepository tokenRepository;
 
-    public IssuedToken issueToken(User user, TokenType tokenType, String frontendPath) {
+    public IssuedToken issueToken(User user, TokenType tokenType, String frontendPath, String pendingEmail) {
         deleteTokensByUserAndType(user.getId(), tokenType);
 
         String plainToken = tokenUtil.generateToken();
@@ -35,10 +35,21 @@ public class VerificationTokenService {
         OffsetDateTime expiresAt = OffsetDateTime.now().plusHours(expiryHours);
 
         VerificationToken verificationToken = new VerificationToken(tokenHash, tokenType, user, expiresAt);
+
+        // Chỉ set nếu có giá trị (hỗ trợ tính năng đổi email)
+        if (pendingEmail != null) {
+            verificationToken.setPendingEmail(pendingEmail);
+        }
+
         tokenRepository.save(verificationToken);
 
         String link = verificationProperties.getFrontendBaseUrl() + frontendPath + "?token=" + plainToken;
         return new IssuedToken(plainToken, link, expiryHours);
+    }
+
+    //OVERLOAD: method issueToken for pending_email to prevent breaking existing implementations
+    public IssuedToken issueToken(User user, TokenType tokenType, String frontendPath) {
+        return issueToken(user, tokenType, frontendPath, null);
     }
 
     public VerificationToken getValidTokenOrThrow(

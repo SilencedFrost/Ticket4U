@@ -3,6 +3,7 @@ import SettingsLayout from '../../features/settings/components/SettingsLayout.vu
 import { breakpointsBootstrapV5 } from '@vueuse/core';
 
 const localePath = useLocalePath();
+const { isLoggedIn } = storeToRefs(useUserStore());
 let desktopMediaQuery: MediaQueryList | null = null;
 
 // Code to handle mobile/desktop layout change, changes on md breakpoint
@@ -13,13 +14,14 @@ const handleViewportChange = (event: MediaQueryListEvent) => {
 };
 
 function redirectToDefaultDesktopTab() {
-  navigateTo(localePath('/settings/account'), { replace: true });
+  const defaultPath = isLoggedIn.value ? '/settings/account' : '/settings/preferences';
+  navigateTo(localePath(defaultPath), { replace: true });
 }
 
 onMounted(() => {
   desktopMediaQuery = globalThis.window.matchMedia(`(min-width: ${breakpointsBootstrapV5.md}px)`);
 
-  if (desktopMediaQuery.matches) {
+  if (!isLoggedIn.value || desktopMediaQuery.matches) {
     redirectToDefaultDesktopTab();
   }
 

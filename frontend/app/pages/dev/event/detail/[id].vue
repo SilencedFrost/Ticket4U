@@ -94,7 +94,7 @@ useHead({
       <div class="col-lg-12">
         <event-schedule :event="event" />
         <event-about :about-vi="event.aboutVi" :about-en="event.aboutEn" />
-        <event-tickets :sessions="event.sessions" />
+        <event-tickets :event-id="event.id" :sessions="event.sessions" />
         <event-organizer v-if="event.organizerId" :organizer-id="event.organizerId" />
       </div>
     </div>

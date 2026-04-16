@@ -45,6 +45,12 @@ function getTicketColor(zoneId: string): string {
 function formatPrice(price: number): string {
   return new Intl.NumberFormat('vi-VN').format(price) + ' đ'
 }
+
+function getItemTotal(item: CartItem): number {
+  if (!item.isStanding && item.seats?.length)
+    return item.seats.reduce((s, seat) => s + seat.price, 0)
+  return item.price * item.quantity
+}
 </script>
 
 <template>
@@ -160,7 +166,7 @@ function formatPrice(price: number): string {
             </button>
           </div>
           <div class="text-end">
-            <span class="text-primary fw-bold fs-5">{{ formatPrice(item.price * item.quantity) }}</span>
+            <span class="text-primary fw-bold fs-5">{{ formatPrice(getItemTotal(item)) }}</span>
           </div>
         </div>
 

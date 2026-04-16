@@ -6,7 +6,11 @@ export const useEventPayment = () => {
   const cart = ref<CartItem[]>([])
 
   const totalPrice = computed(() =>
-    cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    cart.value.reduce((sum, item) => {
+      if (!item.isStanding && item.seats?.length)
+        return sum + item.seats.reduce((s, seat) => s + seat.price, 0)
+      return sum + item.price * item.quantity
+    }, 0)
   )
 
   const totalTickets = computed(() =>
@@ -26,7 +30,13 @@ export const useEventPayment = () => {
       if (existing) { existing.quantity += quantity }
       else { cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: true }) }
     } else {
-      cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: false, seats: seats ?? [] })
+      const existing = cart.value.find(item => item.zoneId === zoneId && !item.isStanding)
+      if (existing?.seats) {
+        existing.seats.push(...(seats ?? []))
+        existing.quantity = existing.seats.length
+      } else {
+        cart.value.push({ zoneId, name: zoneName, quantity, price, isStanding: false, seats: seats ?? [] })
+      }
     }
   }
 

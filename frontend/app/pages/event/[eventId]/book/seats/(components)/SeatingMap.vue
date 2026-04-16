@@ -86,9 +86,13 @@ useGesture(
       if (last) {
         if (canvasRef.value) canvasRef.value.style.cursor = 'grab'
         setTimeout(() => { wasDragging = false }, 0)
-      } else {
+      } else if (Math.abs(mx) > 3 || Math.abs(my) > 3) {
+        // Only mark as dragging once the pointer actually moves — prevents
+        // filterTaps end-events (first=false, last=false, memo=undefined) from
+        // permanently setting wasDragging and blocking all subsequent clicks
         wasDragging = true
       }
+      if (!memo) return memo  // tap end-event with no prior first — bail out safely
       pan.value = { x: memo.x + mx, y: memo.y + my }
       draw()
       return memo
@@ -350,7 +354,11 @@ function addStandingToCart() {
 // Seated selection — SelectedSeat already has all needed fields including price
 const selectedSeats           = ref<SelectedSeat[]>([])
 const cartSeats               = ref<Set<string>>(new Set())
-const selectedSeatsTotalPrice = computed(() => selectedSeats.value.reduce((s, seat) => s + seat.price, 0))
+const selectedSeatsTotalPrice = computed(() => {
+  let total = 0
+  for (const seat of selectedSeats.value) total += seat.price
+  return total
+})
 const seatLimitReached        = ref(false)
 const seatLimitMax            = ref(0)
 
@@ -363,11 +371,19 @@ function handleSeatClick(seat: LayoutSeat, zone: LayoutZone) {
   if (idx >= 0) {
     selectedSeats.value.splice(idx, 1); seatLimitReached.value = false
   } else {
-    const seatsInCart = props.cart.find(item => item.zoneId === zone.zone_uuid && !item.isStanding)?.seats?.length ?? 0
-    const cap         = zoneTicket.capacity ?? 0
+    let seatsInCart = 0
+    for (const item of props.cart) {
+      if (item.zoneId === zone.zone_uuid && !item.isStanding)
+        seatsInCart += item.seats?.length ?? 0
+    }
+    const cap = zoneTicket.capacity ?? 0
     // null means unlimited — use capacity as ceiling
     const max = Math.min(cap, zoneTicket.maxPerAccount ?? cap)
-    if (selectedSeats.value.filter(s => s.zoneUuid === zone.zone_uuid).length + seatsInCart >= max) {
+    let selectedInZone = 0
+    for (const s of selectedSeats.value) {
+      if (s.zoneUuid === zone.zone_uuid) selectedInZone++
+    }
+    if (selectedInZone + seatsInCart >= max) {
       seatLimitReached.value = true; seatLimitMax.value = max
       setTimeout(() => { seatLimitReached.value = false }, 2500)
       return
@@ -393,11 +409,12 @@ function deselectSeat(seatUuid: string) {
 
 function addSeatsToCart() {
   if (!selectedSeats.value.length) return
-  const byZone = selectedSeats.value.reduce((acc, s) => {
+  const byZone: Record<string, SelectedSeat[]> = {}
+  for (const s of selectedSeats.value) {
     const k = s.zoneUuid ?? s.zoneName
-    if (!acc[k]) acc[k] = []
-    acc[k]!.push(s); return acc
-  }, {} as Record<string, SelectedSeat[]>)
+    if (!byZone[k]) byZone[k] = []
+    byZone[k]!.push(s)
+  }
   for (const seats of Object.values(byZone)) {
     const f = seats[0]
     if (!f) continue
@@ -411,13 +428,20 @@ function addSeatsToCart() {
 }
 
 function syncCartSeats(items: CartItem[]) {
-  cartSeats.value = new Set(items.flatMap(item => item.seats?.map(s => s.seatUuid) ?? []))
+  const uuids = new Set<string>()
+  for (const item of items) {
+    if (item.seats) {
+      for (const s of item.seats) uuids.add(s.seatUuid)
+    }
+  }
+  cartSeats.value = uuids
   draw()
 }
 defineExpose({ syncCartSeats })
 
 // Helpers
-function getZoneTicket(zone: LayoutZone): Ticket | undefined {
+function getZoneTicket(zone: LayoutZone | null | undefined): Ticket | undefined {
+  if (!zone) return undefined
   return props.tickets.find(t => t.id === zone.zone_uuid || t.name === (zone.display_name ?? zone.zone_name))
 }
 
@@ -435,7 +459,13 @@ watch([() => props.floors, () => props.tickets, selectedSeats], () => nextTick((
 // mutates it — covers both removeFromCart and removeSeatFromCart without
 // relying on the parent explicitly calling syncCartSeats via ref
 watch(() => props.cart, (newCart) => {
-  cartSeats.value = new Set(newCart.flatMap(item => item.seats?.map(s => s.seatUuid) ?? []))
+  const uuids = new Set<string>()
+  for (const item of newCart) {
+    if (item.seats) {
+      for (const s of item.seats) uuids.add(s.seatUuid)
+    }
+  }
+  cartSeats.value = uuids
   draw()
 }, { deep: true })
 </script>
@@ -504,14 +534,13 @@ watch(() => props.cart, (newCart) => {
         </div>
       </div>
       <canvas
-          v-if="canvasSize.width > 0"
           ref="canvasRef"
-          :width="canvasSize.width"
-          :height="canvasSize.height"
+          :width="canvasSize.width || 1"
+          :height="canvasSize.height || 1"
           style="position:absolute;top:0;left:0;cursor:grab;"
           @click="handleCanvasClick"
       />
-      <div v-else class="d-flex align-items-center justify-content-center h-100">
+      <div v-if="canvasSize.width === 0" class="position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center h-100">
         <div class="spinner-border text-primary"/>
       </div>
       <div v-if="canvasSize.width > 0 && floors.length === 0" class="position-absolute top-50 start-50 translate-middle text-center text-reactive-secondary">
@@ -582,7 +611,7 @@ watch(() => props.cart, (newCart) => {
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div class="flex-grow-1">
             <h5 class="text-reactive-primary mb-1">
-              {{ getZoneTicket(activeFloor?.layout.zones.find(z => z.zone_uuid === selectedSeats[0]?.zoneUuid)!)?.name }}
+              {{ getZoneTicket(activeFloor?.layout.zones.find(z => z.zone_uuid === selectedSeats[0]?.zoneUuid))?.name }}
               <small class="text-reactive-secondary fw-normal ms-1">({{ selectedSeats[0]?.zoneName }})</small>
             </h5>
             <div class="d-flex flex-wrap gap-1 mt-1">

@@ -9,9 +9,12 @@ export interface VenueLayoutSeat {
 }
 
 export interface VenueLayoutZone {
+  zone_id?:     string
   zone_name:    string
   zone_type:    'sitting' | 'standing'
   color:        string
+  shape_type?:  string
+  rotation?:    number
   corner1:      { x: number; y: number }
   corner2:      { x: number; y: number }
   corner3:      { x: number; y: number }
@@ -30,8 +33,8 @@ export interface VenueLayoutStage {
 }
 
 export interface VenueLayout {
-  stage:      VenueLayoutStage
-  zones:      VenueLayoutZone[]
+  stage?:     VenueLayoutStage
+  zones?:     VenueLayoutZone[]
   seat_size?: number
   /** multi-floor format — optional */
   floors?:    VenueLayoutFloor[]
@@ -39,6 +42,7 @@ export interface VenueLayout {
 
 export interface VenueLayoutFloor {
   floor_name?:       string
+  floor_order?:      number
   stage?:            VenueLayoutStage
   stage_shapes?:     any[]
   zones:             VenueLayoutZone[]

@@ -124,7 +124,11 @@
       "this_month": "This month",
       "from_date": "From date",
       "to_date": "To date"
-    }
+    },
+    "showing": "Showing",
+    "of": "of",
+    "close": "Close",
+    "cancel": "Cancel"
   },
   "permissions": {
     "location": {
@@ -473,7 +477,10 @@
         "save_layout": "Save Layout",
         "save_close": "Save & Close",
         "load_saved": "Load Saved Layout",
-        "no_saved_layout": "No saved layout available"
+        "no_saved_layout": "No saved layout available",
+        "custom_layout": "Custom Layout",
+        "edit_layout": "Edit Layout",
+        "delete_layout": "Delete Layout"
       }
     },
     "revenue": {

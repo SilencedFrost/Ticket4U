@@ -60,6 +60,8 @@ export interface EventFormState {
   longitude?:  number | null
   latitude?:   number | null
   seatingPlanImageUrl?: string | null
+  /** Serialised layout JSONB — venue-mode or custom floors */
+  layout?:     string | null
 }
 
 // ── Content state (used in Step2) ────────────────────────────

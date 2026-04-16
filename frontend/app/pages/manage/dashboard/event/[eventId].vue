@@ -275,7 +275,8 @@ function fillColor(pct: number) {
 .revenue-table { color: inherit; }
 .revenue-table thead tr  { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
 .revenue-table tbody tr  { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
-.revenue-table tbody tr:last-child { border-bottom: none; }
+.revenue-table tbody tr:last-child > * { border-bottom-width: 0; }
 .revenue-table tbody tr:hover { background: rgba(var(--bs-primary-rgb), 0.04); }
 .revenue-table tfoot .session-total { border-top: 2px solid rgba(var(--bs-secondary-rgb), 0.25); }
+.revenue-table tfoot .session-total > * { border-bottom-width: 0; }
 </style>

@@ -32,6 +32,16 @@ const filteredStaff = computed(function () {
   })
 })
 
+const PAGE_SIZE   = 10
+const currentPage = ref(1)
+
+watch([searchQuery, filterRole], () => { currentPage.value = 1 })
+
+const totalPages = computed(() => Math.ceil(filteredStaff.value.length / PAGE_SIZE))
+const pagedStaff = computed(() =>
+  filteredStaff.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+)
+
 const stats = computed(function () {
   return ASSIGNABLE_ROLES.map(function (r) {
     return { ...r, count: staff.value.filter(function (s) { return s.roleId === r.id }).length }
@@ -162,7 +172,7 @@ function confirmRemoveMember() {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="member in filteredStaff" :key="member.id">
+            <tr v-for="member in pagedStaff" :key="member.id">
 
               <!-- Member -->
               <td class="ps-4 py-3">
@@ -263,6 +273,31 @@ function confirmRemoveMember() {
           </tbody>
         </table>
       </div>
+
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between px-3 py-2 border-top">
+        <small class="text-reactive-secondary">
+          {{ $t('common.showing') }}
+          {{ (currentPage - 1) * PAGE_SIZE + 1 }}–{{ Math.min(currentPage * PAGE_SIZE, filteredStaff.length) }}
+          {{ $t('common.of') }} {{ filteredStaff.length }}
+        </small>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="currentPage--">&#8249;</button>
+          </li>
+          <li
+            v-for="p in totalPages"
+            :key="p"
+            class="page-item"
+            :class="{ active: p === currentPage }"
+          >
+            <button class="page-link" @click="currentPage = p">{{ p }}</button>
+          </li>
+          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="currentPage++">&#8250;</button>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Invite modal -->
@@ -299,7 +334,7 @@ function confirmRemoveMember() {
 .team-table { color: inherit; }
 .team-table thead tr { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
 .team-table tbody tr { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
-.team-table tbody tr:last-child { border-bottom: none; }
+.team-table tbody tr:last-child > * { border-bottom-width: 0; }
 .team-table tbody tr:hover { background: rgba(var(--bs-primary-rgb), 0.04); }
 .stat-icon { width: 36px; height: 36px; font-size: 1rem; }
 .modal-backdrop-custom {

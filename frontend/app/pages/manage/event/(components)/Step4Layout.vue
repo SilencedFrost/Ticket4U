@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { mockVenues, getVenueZoneNames } from '../../mock.data'
 import LayoutPreview from './LayoutPreview.vue'
 import type { Zone } from '../../(types)/zone'
@@ -40,8 +40,43 @@ const standingZones = computed(() =>
 // ── Zone mapping: venue zone name → event zone id ('' = decorative) ──
 const zoneMapping = ref<Record<string, string>>({})
 
-// Reset mapping when venue changes
-watch(() => form.value.venueId, () => { zoneMapping.value = {} })
+// Flag to suppress the sync-back watch while we're loading from saved layout
+let _loading = false
+
+/** Populate zoneMapping (and layoutMode) from a saved layout JSON string */
+function applyLayoutToMapping(layoutJson: string | null | undefined) {
+  if (!layoutJson) return
+  try {
+    const parsed = JSON.parse(layoutJson)
+    if (parsed.venueMode && parsed.zoneLinks) {
+      layoutMode.value = 'venue'
+      _loading = true
+      zoneMapping.value = { ...parsed.zoneLinks }
+      _loading = false
+    } else if (parsed.floors) {
+      layoutMode.value = 'custom'
+    }
+  } catch { /* ignore malformed */ }
+}
+
+// Initialise from saved layout on mount
+onMounted(() => applyLayoutToMapping(form.value.layout))
+
+// Reset mapping when venue changes (user picks a different venue)
+watch(() => form.value.venueId, (newId, oldId) => {
+  if (newId !== oldId) zoneMapping.value = {}
+})
+
+// Sync zoneMapping changes → form.layout (venue-mode only)
+watch(zoneMapping, (newMapping) => {
+  if (_loading || layoutMode.value !== 'venue' || !form.value.venueId) return
+  const newLayout = {
+    venueId:   form.value.venueId,
+    venueMode: true,
+    zoneLinks: { ...newMapping },
+  }
+  form.value = { ...form.value, layout: JSON.stringify(newLayout) }
+}, { deep: true })
 
 // Derived layout with accessibility driven by zoneMapping
 const mappedLayout = computed<VenueLayout | null>(() => {
@@ -51,7 +86,7 @@ const mappedLayout = computed<VenueLayout | null>(() => {
   const applyMapping = (zones: VenueLayoutZone[]): VenueLayoutZone[] =>
     zones.map(z => ({
       ...z,
-      accessible: zoneMapping.value[z.zone_name] !== '' ? true : false,
+      accessible: !!zoneMapping.value[z.zone_name],
     }))
 
   if (layout.floors?.length) {
@@ -65,6 +100,42 @@ const mappedLayout = computed<VenueLayout | null>(() => {
   }
   return { ...layout, zones: applyMapping(layout.zones ?? []) }
 })
+
+/** Display name for a linked event zone id */
+function linkedZoneName(eventZoneId: string): string {
+  if (!eventZoneId) return ''
+  return props.zones.find(z => z.id === eventZoneId)?.name ?? eventZoneId
+}
+
+// ── Custom layout ─────────────────────────────────────────────
+
+/** Parsed custom layout from form.layout (floors-based, no venueMode flag) */
+const customLayout = computed<VenueLayout | null>(() => {
+  if (!form.value.layout) return null
+  try {
+    const parsed = JSON.parse(form.value.layout)
+    if (parsed.floors && !parsed.venueMode) return parsed as VenueLayout
+  } catch { /* ignore */ }
+  return null
+})
+
+/** true = showing editor canvas; false = showing read-only preview */
+const isEditingCustom = ref(false)
+
+// When entering custom mode, go straight to editor if no layout exists yet
+watch(layoutMode, (mode) => {
+  if (mode === 'custom') isEditingCustom.value = !customLayout.value
+})
+
+function deleteCustomLayout() {
+  form.value = { ...form.value, layout: null }
+  isEditingCustom.value = true
+}
+
+function saveCustomLayout() {
+  // TODO: serialize canvas state → form.layout when the real editor is wired up
+  isEditingCustom.value = false
+}
 </script>
 
 <template>
@@ -138,11 +209,24 @@ const mappedLayout = computed<VenueLayout | null>(() => {
             </div>
             <div v-else>
               <p class="small text-reactive-secondary mb-3">{{ $t('organizer.event_form.step4.link_description') }}</p>
-              <div v-for="vz in getVenueZoneNames(selectedVenue)" :key="vz" class="d-flex align-items-center gap-2 mb-2">
-                <small class="text-reactive-primary fw-semibold text-truncate" style="min-width:130px;">{{ vz }}</small>
-                <i class="bi bi-arrow-right text-reactive-secondary flex-shrink-0"/>
-                <select v-model="zoneMapping[vz]" class="form-select form-select-sm flex-grow-1">
-                  <option value="">{{ $t('organizer.event_form.step4.decorative') }}</option>
+              <div
+                v-for="vz in getVenueZoneNames(selectedVenue)" :key="vz"
+                class="zone-link-row rounded p-2 mb-2"
+                :class="zoneMapping[vz] ? 'linked' : 'unlinked'"
+              >
+                <div class="d-flex align-items-center gap-2">
+                  <!-- Venue zone pill -->
+                  <span class="badge venue-zone-pill text-truncate flex-shrink-0" style="max-width:130px;" :title="vz">{{ vz }}</span>
+                  <!-- Arrow + linked badge or "decorative" label -->
+                  <i class="bi bi-arrow-right text-reactive-secondary flex-shrink-0"/>
+                  <span v-if="zoneMapping[vz]" class="badge bg-primary text-white text-truncate flex-shrink-0" style="max-width:130px;" :title="linkedZoneName(zoneMapping[vz])">
+                    <i class="bi bi-check2 me-1"/>{{ linkedZoneName(zoneMapping[vz]) }}
+                  </span>
+                  <span v-else class="text-reactive-secondary small fst-italic flex-shrink-0">{{ $t('organizer.event_form.step4.decorative') }}</span>
+                </div>
+                <!-- Select (always visible so user can change) -->
+                <select v-model="zoneMapping[vz]" class="form-select form-select-sm mt-2">
+                  <option value="">— {{ $t('organizer.event_form.step4.decorative') }} —</option>
                   <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
                     <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>
                   </optgroup>
@@ -167,35 +251,67 @@ const mappedLayout = computed<VenueLayout | null>(() => {
 
       <!-- ── CUSTOM MODE ── -->
       <div v-else>
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <button class="btn btn-sm btn-primary">Floor 1</button>
-          <button class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step4.add_floor') }}
-          </button>
-        </div>
 
-        <div
-          class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
-          style="height:600px;"
-        >
-          <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">
-            <small class="fw-bold text-dark">{{ $t('organizer.event_form.step4.stage_screen') }}</small>
+        <!-- ── VIEW: existing custom layout ── -->
+        <template v-if="customLayout && !isEditingCustom">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="fw-semibold text-reactive-primary">
+              <i class="bi bi-grid-3x3 me-2 text-primary"/>{{ $t('organizer.event_form.step4.custom_layout') }}
+            </span>
+            <div class="ms-auto d-flex gap-2">
+              <button class="btn btn-sm btn-outline-primary" @click="isEditingCustom = true">
+                <i class="bi bi-pencil me-1"/>{{ $t('organizer.event_form.step4.edit_layout') }}
+              </button>
+              <button class="btn btn-sm btn-outline-danger" @click="deleteCustomLayout">
+                <i class="bi bi-trash me-1"/>{{ $t('organizer.event_form.step4.delete_layout') }}
+              </button>
+            </div>
           </div>
-          <div v-if="zones.length > 0" class="position-absolute bottom-0 start-0 end-0 p-3 d-flex gap-2 flex-wrap bg-reactive-primary bg-opacity-75">
-            <small class="text-reactive-secondary me-1 align-self-center">{{ $t('organizer.event_form.step4.place_zone') }}</small>
-            <span v-for="zone in zones" :key="zone.id" class="badge zone-palette-badge">{{ zone.name }}</span>
-          </div>
-          <div class="position-absolute top-50 start-50 translate-middle text-center text-reactive-secondary" style="pointer-events:none;">
-            <i class="bi bi-pencil-square fs-1 d-block mb-2 opacity-25"/>
-            <small class="opacity-50">{{ $t('organizer.event_form.step4.hint') }}</small>
-          </div>
-        </div>
+          <LayoutPreview :layout="customLayout" />
+        </template>
 
-        <div class="p-3 border-top border-secondary">
-          <small class="text-reactive-secondary">
-            <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step4.hint') }}
-          </small>
-        </div>
+        <!-- ── EDIT: canvas editor (placeholder until real editor is wired) ── -->
+        <template v-else>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <button class="btn btn-sm btn-primary">Floor 1</button>
+            <button class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step4.add_floor') }}
+            </button>
+          </div>
+
+          <div
+            class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
+            style="height:520px;"
+          >
+            <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">
+              <small class="fw-bold text-dark">{{ $t('organizer.event_form.step4.stage_screen') }}</small>
+            </div>
+            <div v-if="zones.length > 0" class="position-absolute bottom-0 start-0 end-0 p-3 d-flex gap-2 flex-wrap" style="background:rgba(0,0,0,0.35);">
+              <small class="text-white opacity-75 me-1 align-self-center">{{ $t('organizer.event_form.step4.place_zone') }}</small>
+              <span v-for="zone in zones" :key="zone.id" class="badge zone-palette-badge">{{ zone.name }}</span>
+            </div>
+            <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events:none;">
+              <i class="bi bi-pencil-square fs-1 d-block mb-2 text-white opacity-25"/>
+              <small class="text-white opacity-50">{{ $t('organizer.event_form.step4.hint') }}</small>
+            </div>
+          </div>
+
+          <!-- Editor action bar -->
+          <div class="d-flex align-items-center gap-2 mt-3 pt-3 border-top">
+            <small class="text-reactive-secondary">
+              <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step4.hint') }}
+            </small>
+            <div class="ms-auto d-flex gap-2">
+              <button v-if="customLayout" class="btn btn-sm btn-outline-secondary" @click="isEditingCustom = false">
+                <i class="bi bi-x-lg me-1"/>{{ $t('common.cancel') }}
+              </button>
+              <button class="btn btn-sm btn-primary" @click="saveCustomLayout">
+                <i class="bi bi-floppy me-1"/>{{ $t('organizer.event_form.step4.save_layout') }}
+              </button>
+            </div>
+          </div>
+        </template>
+
       </div>
 
     </div>
@@ -229,5 +345,25 @@ const mappedLayout = computed<VenueLayout | null>(() => {
   font-size: 0.8rem;
   color: var(--bs-secondary);
   cursor: default;
+}
+
+/* Zone link rows */
+.zone-link-row {
+  border: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
+  transition: border-color 0.15s, background 0.15s;
+}
+.zone-link-row.linked {
+  border-color: rgba(var(--bs-primary-rgb), 0.35);
+  background: rgba(var(--bs-primary-rgb), 0.04);
+}
+.zone-link-row.unlinked {
+  background: transparent;
+}
+
+/* Venue zone pill — solid so white text is legible in both modes */
+.venue-zone-pill {
+  background: rgba(var(--bs-secondary-rgb), 0.55);
+  color: #fff;
+  font-size: 0.78rem;
 }
 </style>

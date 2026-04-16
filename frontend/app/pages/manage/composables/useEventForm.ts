@@ -24,6 +24,7 @@ export function useEventForm() {
     longitude:           null,
     latitude:            null,
     seatingPlanImageUrl: null,
+    layout:              null,
   })
 
   const content = ref<EventContentState>({
@@ -58,6 +59,7 @@ export function useEventForm() {
       seatingPlanImageUrl: ev.seatingPlanImageUrl ?? null,
       startDate:           firstSession?.startDate.slice(0, 16) ?? '',
       endDate:             firstSession?.endDate.slice(0, 16)   ?? '',
+      layout:              ev.layout ?? null,
     }
 
     content.value = {

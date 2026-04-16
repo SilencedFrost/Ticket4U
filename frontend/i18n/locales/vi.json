@@ -124,7 +124,11 @@
       "this_month": "Tháng này",
       "from_date": "Từ ngày",
       "to_date": "Đến ngày"
-    }
+    },
+    "showing": "Hiển thị",
+    "of": "trong",
+    "close": "Đóng",
+    "cancel": "Hủy"
   },
   "permissions": {
     "location": {
@@ -473,7 +477,10 @@
         "save_layout": "Lưu sơ đồ",
         "save_close": "Lưu & Đóng",
         "load_saved": "Tải sơ đồ đã lưu",
-        "no_saved_layout": "Chưa có sơ đồ được lưu"
+        "no_saved_layout": "Chưa có sơ đồ được lưu",
+        "custom_layout": "Sơ đồ tuỳ chỉnh",
+        "edit_layout": "Chỉnh sửa sơ đồ",
+        "delete_layout": "Xoá sơ đồ"
       }
     },
     "revenue": {

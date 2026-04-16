@@ -44,6 +44,16 @@ const filteredEvents = computed(() =>
     })
 )
 
+const PAGE_SIZE   = 10
+const currentPage = ref(1)
+
+watch([searchQuery, statusFilter], () => { currentPage.value = 1 })
+
+const totalPages  = computed(() => Math.ceil(filteredEvents.value.length / PAGE_SIZE))
+const pagedEvents = computed(() =>
+  filteredEvents.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+)
+
 const resetFilters = () => { searchQuery.value = ''; statusFilter.value = '' }
 
 // ── Delete (mock — local state only) ──────────────────────
@@ -67,8 +77,8 @@ const doDelete = () => {
   transition: background 0.15s;
   border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
 }
-.organizer-table tbody tr:last-child {
-  border-bottom: none;
+.organizer-table tbody tr:last-child > * {
+  border-bottom-width: 0;
 }
 .organizer-table tbody tr:hover {
   background: rgba(var(--bs-primary-rgb), 0.04);
@@ -166,7 +176,7 @@ const doDelete = () => {
           </tr>
           </thead>
           <tbody>
-          <tr v-for="event in filteredEvents" :key="event.id" class="event-row" style="cursor:pointer" @click="navigateTo(localePath(`/manage/dashboard/event/${event.id}`))">
+          <tr v-for="event in pagedEvents" :key="event.id" class="event-row" style="cursor:pointer" @click="navigateTo(localePath(`/manage/dashboard/event/${event.id}`))">
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center gap-3">
                 <img :src="event.bannerUrl.wide" class="event-thumb rounded" alt=""/>
@@ -210,6 +220,31 @@ const doDelete = () => {
           </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between px-3 py-2 border-top">
+        <small class="text-reactive-secondary">
+          {{ $t('common.showing') }}
+          {{ (currentPage - 1) * PAGE_SIZE + 1 }}–{{ Math.min(currentPage * PAGE_SIZE, filteredEvents.length) }}
+          {{ $t('common.of') }} {{ filteredEvents.length }}
+        </small>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="currentPage--">&#8249;</button>
+          </li>
+          <li
+            v-for="p in totalPages"
+            :key="p"
+            class="page-item"
+            :class="{ active: p === currentPage }"
+          >
+            <button class="page-link" @click="currentPage = p">{{ p }}</button>
+          </li>
+          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="currentPage++">&#8250;</button>
+          </li>
+        </ul>
       </div>
     </div>
 

@@ -138,8 +138,8 @@ const stats = computed(() => {
 .organizer-table tbody tr {
   transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
 }
-.organizer-table tbody tr:last-child {
-  border-bottom: none;
+.organizer-table tbody tr:last-child > * {
+  border-bottom-width: 0;
 }
 .organizer-table tbody tr:hover {
   background: rgba(var(--bs-primary-rgb), 0.04);

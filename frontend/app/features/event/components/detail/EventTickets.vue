@@ -5,6 +5,7 @@ import { useFormatter } from '@/composables/useFormatter';
 import ShimmerImg from '~/components/ShimmerImg.vue';
 
 const router = useRouter();
+const localePath = useLocalePath();
 const { formatPrice } = useFormatter();
 const { locale } = useI18n();
 
@@ -13,10 +14,9 @@ const props = defineProps<{
   sessions: EventSessionSummary[];
 }>();
 
-//TODO: update URL
 function handleBuyClick(sessionId: string) {
   emit('buyClick');
-  router.push(`/event/${props.eventId}/book/seats/${sessionId}`);
+  router.push(localePath(`/event/${props.eventId}/book/seats/${sessionId}`));
 }
 
 const emit = defineEmits(['buyClick']);

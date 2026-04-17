@@ -10,7 +10,7 @@ import entities.data.UserAccount;
 public class LoginPage extends CorePageEntity {
 
     // Locators
-    private final By txtEmail = By.xpath("//div[@id='fullscreen-layout']//input[@id='email']");
+    private final By txtEmail = By.xpath("//div[@id='fullscreen-layout']//input[@id='identifier']");
     private final By txtPassword = By.xpath("//div[@id='fullscreen-layout']//input[@id='password']");
 
     private final By btnLogin = By.xpath("//div[@id='fullscreen-layout']//button[@id='submit-btn']");

@@ -34,7 +34,7 @@ application:
       allowed-origins: ${FRONTEND_URL}
   services:
     user: ${USER_SERVICE_URL:https://localhost:8080}
-    embedding: ${EMBEDDING_SERVICE_URL:http://localhost:8084/internal/embed}
+    embedding: ${EMBEDDING_SERVICE_URL:http://host.docker.internal:8084/internal/embed}
 
 # Logging
 logging:

@@ -28,3 +28,5 @@ application:
     # CORS
     cors:
       allowed-origins: https://localhost:3000
+  services:
+    embedding: http://localhost:8084/internal/embed

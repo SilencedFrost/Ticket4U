@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FieldErrors } from '../../types/fieldErrors';
 import type { ProfileForm } from '../../types/profileForm';
+import ChangeEmailModal from './ChangeEmailModal.vue';
 
 const model = defineModel<ProfileForm>({ required: true });
 
@@ -12,12 +13,23 @@ withDefaults(
   defineProps<{
     errors?: FieldErrors;
     disabled?: boolean;
+    emailLoading?: boolean;
+    emailErrors?: {
+      newEmail?: string;
+      password?: string;
+      generic?: string;
+    };
   }>(),
   {
     errors: () => ({}),
     disabled: false,
+    emailLoading: false,
+    emailErrors: () => ({}),
   },
 );
+const emit = defineEmits<{
+  (e: 'change-email', payload: { newEmail: string; password: string }): void;
+}>();
 
 function updateField(field: keyof ProfileForm, value: string) {
   model.value = {
@@ -25,6 +37,20 @@ function updateField(field: keyof ProfileForm, value: string) {
     [field]: value,
   };
 }
+
+const emailModalRef = ref<InstanceType<typeof ChangeEmailModal> | null>(null);
+
+function openEmailChangeModal() {
+  emailModalRef.value?.open();
+}
+
+// Gọi từ parent khi đổi email thành công
+function closeEmailModal() {
+  emailModalRef.value?.close();
+}
+
+defineExpose({ closeEmailModal });
+
 </script>
 
 <template>
@@ -68,7 +94,13 @@ function updateField(field: keyof ProfileForm, value: string) {
     <!-- Email -->
     <div class="col-12">
       <label for="email" class="form-label">{{ $t('common.email') }}</label>
-      <input id="email" type="email" class="form-control" :value="model.email" readonly />
+      <!-- <input id="email" type="email" class="form-control" :value="model.email" readonly /> -->
+      <div class="input-group">
+        <input id="email" type="email" class="form-control" :value="model.email" readonly />
+        <button type="button" class="btn btn-outline-primary" @click="openEmailChangeModal">
+          {{ $t('common.action.change_email') }}
+        </button>
+      </div>
     </div>
 
     <!-- Ngày sinh -->
@@ -106,5 +138,13 @@ function updateField(field: keyof ProfileForm, value: string) {
         {{ $t(errors.phoneNumber) }}
       </div>
     </div>
+
+    <ChangeEmailModal
+      ref="emailModalRef"
+      :current-email="model.email"
+      :loading="emailLoading"
+      :errors="emailErrors"
+      @submit="emit('change-email', $event)"
+    />
   </div>
 </template>

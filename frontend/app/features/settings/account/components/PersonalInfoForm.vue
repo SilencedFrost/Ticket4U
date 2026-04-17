@@ -11,6 +11,12 @@ withDefaults(
     genericError?: string;
     successMessage?: string;
     hasChanges?: boolean;
+    emailLoading?: boolean;
+    emailErrors?: {
+      newEmail?: string;
+      password?: string;
+      generic?: string;
+    };
   }>(),
   {
     errors: () => ({}),
@@ -19,6 +25,8 @@ withDefaults(
     genericError: '',
     successMessage: '',
     hasChanges: false,
+    emailLoading: false,
+    emailErrors: () => ({}),
   },
 );
 
@@ -26,11 +34,25 @@ const model = defineModel<ProfileForm>({ required: true });
 
 const emit = defineEmits<{
   (e: 'submit'): void;
+  (e: 'change-email', payload: { newEmail: string; password: string }): void;
 }>();
+
+const personalInfoFieldsRef = ref<InstanceType<typeof PersonalInfoFields> | null>(null);
 
 function handleSubmit() {
   emit('submit');
 }
+
+function handleChangeEmail(payload: { newEmail: string; password: string }) {
+  emit('change-email', payload);
+}
+
+function closeEmailModal() {
+  personalInfoFieldsRef.value?.closeEmailModal();
+}
+
+defineExpose({ closeEmailModal });
+
 </script>
 
 <template>
@@ -51,9 +73,13 @@ function handleSubmit() {
       </div>
 
       <personal-info-fields
+        ref="personalInfoFieldsRef"
         v-model="model"
         :errors="errors"
         :disabled="loading || loadingUser"
+        :email-loading="emailLoading"
+        :email-errors="emailErrors"
+        @change-email="handleChangeEmail"
       />
 
       <!-- Save button inside the card, bottom right -->

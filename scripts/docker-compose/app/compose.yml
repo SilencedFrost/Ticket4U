@@ -20,6 +20,22 @@ services:
       retries: 5
       start_period: 30s
 
+  event-service:
+    image: event-service:latest
+    container_name: ticket4u-service-event
+    env_file:
+      - .env.event-service
+      - .env.services
+    restart: unless-stopped
+    networks:
+      - ticket4u-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8083/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   mail-service:
     image: mail-service:latest
     container_name: ticket4u-service-mail

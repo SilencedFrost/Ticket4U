@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OrganizerSummary } from '~/types/organizer';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 
 const props = defineProps<{
   organizerId: string | null;
@@ -7,24 +8,13 @@ const props = defineProps<{
 
 const config = useRuntimeConfig();
 
-const organizer = ref<OrganizerSummary | null>(null);
-
-async function fetchOrganizer(id: string) {
-  try {
-    organizer.value = await $fetch<OrganizerSummary>(
-      `${config.public.userServiceUrl}/public/organizers/${id}`,
-    );
-  } catch (err) {
-    console.warn(err);
-    organizer.value = null;
-  }
-}
-
-onMounted(() => {
-  if (props.organizerId) {
-    fetchOrganizer(props.organizerId);
-  }
-});
+const { data: organizer } = await useFetch<OrganizerSummary>(
+  () => `/public/organizers/${props.organizerId}`,
+  {
+    baseURL: config.public.userServiceUrl,
+    key: `organizer-${props.organizerId}`,
+  },
+);
 </script>
 
 <template>
@@ -35,14 +25,13 @@ onMounted(() => {
   >
     <div class="mb-3 p-3">
       <h5 class="text-primary fw-bold mb-0 pb-2 border-bottom">
-        {{ $t('event_detail.label.organizer') }}
+        {{ $t('common.organizer') }}
       </h5>
       <div
-        class="d-flex flex-column flex-md-row align-items-center pt-3 align-items-md-start gap-3 w-100"
+        class="d-flex flex-column flex-md-row align-items-start pt-3 align-items-md-start gap-3 w-100"
       >
-        <div class="flex-shrink-0 text-center w-md-auto">
-          <img
-            v-img-fallback="[400, 400]"
+        <div class="flex-shrink-0 text-start w-md-auto">
+          <shimmer-img
             :src="organizer?.logo_url"
             alt="Organizer"
             class="img-fluid rounded-3 border shadow-sm w-100"

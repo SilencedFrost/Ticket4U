@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Event } from '@/features/event/types/Event';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 
 defineProps<{
   event: Event;
@@ -18,12 +19,9 @@ defineProps<{
 
     <div class="mb-4 w-100 d-flex justify-content-center">
       <template v-if="event.seatingPlanImageUrl">
-        <img
-          v-img-fallback="[900, 1000]"
-          :src="event.seatingPlanImageUrl"
-          alt="Sơ đồ chỗ ngồi"
-          class="w-75 rounded-2 object-fit-cover img-fluid mh-100"
-        />
+        <div class="w-75 rounded-2 overflow-hidden mh-100">
+          <shimmer-img :src="event.seatingPlanImageUrl" alt="Seating chart" class="w-100 h-100" />
+        </div>
       </template>
 
       <template v-else>

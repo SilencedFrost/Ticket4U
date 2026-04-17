@@ -1,23 +1,26 @@
 <script setup lang="ts">
 import type { Event } from '@/features/event/types/Event';
+import ShimmerImg from '~/components/ShimmerImg.vue';
 const { formatPrice } = useFormatter();
+const emit = defineEmits<{
+  buyClick: [];
+}>();
 
 defineProps<{
   event: Event;
 }>();
 
-const emit = defineEmits(['buyClick']);
+function handleHeroBuyClick() {
+  emit('buyClick');
+}
 </script>
 
 <template>
   <section class="pt-4 position-relative overflow-hidden min-vh-50">
     <div class="position-absolute top-0 h-100 start-0 end-0 overflow-hidden">
-      <img
-        v-img-fallback="[1200, 600]"
-        :src="event.bannerUrl.wide"
-        :alt="event.name"
-        class="w-100 h-100 object-fit-cover hero-bg-blur"
-      />
+      <div class="w-100 h-100 hero-bg-blur">
+        <shimmer-img :src="event.bannerUrl.wide" :alt="event.name" class="w-100 h-100" />
+      </div>
     </div>
     <div class="position-relative z-1">
       <div class="container-xxl pb-4">
@@ -65,18 +68,19 @@ const emit = defineEmits(['buyClick']);
                   <p class="text-primary fw-bold mb-2 fs-3">{{ formatPrice(event.minPrice) }}</p>
                   <button
                     class="btn btn-primary fw-bold w-100 py-1 small"
-                    @click="emit('buyClick')"
+                    @click="handleHeroBuyClick()"
                   >
                     {{ $t('common.action.buy') }}
                   </button>
                 </div>
               </div>
-              <img
-                v-img-fallback="[1200, 600]"
-                :src="event.bannerUrl.wide"
-                :alt="event.name"
-                class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
-              />
+              <div class="order-1 order-lg-2 col-12 col-lg-9 shadow-lg my-dashed-line">
+                <shimmer-img
+                  :src="event.bannerUrl.wide"
+                  :alt="event.name"
+                  class="order-1 order-lg-2 col-12 col-lg-9 object-fit-cover shadow-lg my-dashed-line"
+                />
+              </div>
             </div>
           </div>
         </div>

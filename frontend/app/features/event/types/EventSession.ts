@@ -1,9 +1,12 @@
+import type { Zone } from './Zone';
+
 export interface EventSessionSummary {
-  id: number;
+  id: string;
   startDate: string;
   endDate: string;
   status: SessionStatus;
   name: string;
+  zones: Zone[];
 }
 
 export enum SessionStatus {

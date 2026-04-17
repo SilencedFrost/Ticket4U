@@ -1,6 +1,7 @@
 # Database Configuration
 spring:
   datasource:
+    url: jdbc:postgresql://localhost:5432/Ticket4U-Event
     username: <<Username>>
     password: <<Password>>
     driver-class-name: org.postgresql.Driver
@@ -27,3 +28,5 @@ application:
     # CORS
     cors:
       allowed-origins: https://localhost:3000
+  services:
+    embedding: http://localhost:8084/internal/embed

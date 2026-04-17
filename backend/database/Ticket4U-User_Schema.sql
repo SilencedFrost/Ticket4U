@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS public.verification_token (
     token_hash char(64) NOT NULL,
     token_type varchar(32) NOT NULL, -- EMAIL_VERIFICATION, PASSWORD_RESET
     user_id uuid NOT NULL,
+	pending_email varchar(254),
     expires_at timestamptz NOT NULL,
     created_at timestamptz NOT NULL,
     CONSTRAINT vtoken_fk_user FOREIGN KEY (user_id) REFERENCES public.users (id) ON DELETE CASCADE,

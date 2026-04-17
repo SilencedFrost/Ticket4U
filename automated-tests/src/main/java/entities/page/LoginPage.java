@@ -9,6 +9,11 @@ import entities.data.UserAccount;
 
 public class LoginPage extends CorePageEntity {
 
+    public static class LOGIN_MODES {
+        public static final String EMAIL = "email";
+        public static final String PHONE = "phone";
+    }
+
     // Locators
     private final By txtEmail = By.xpath("//div[@id='fullscreen-layout']//input[@id='identifier']");
     private final By txtPassword = By.xpath("//div[@id='fullscreen-layout']//input[@id='password']");
@@ -41,8 +46,13 @@ public class LoginPage extends CorePageEntity {
         return this;
     }
 
+    public LoginPage login(UserAccount userAccount, String mode) {
+        String identifier = mode.equals("email") ? userAccount.getEmail() : mode.equals("phone") ? userAccount.getPhoneNumber() : "";
+        return this.login(identifier, userAccount.getPassword());
+    }
+
     public LoginPage login(UserAccount userAccount) {
-        return this.login(userAccount.getEmail(), userAccount.getPassword());
+        return this.login(userAccount, LOGIN_MODES.EMAIL);
     }
 
     public HomePage expectSuccess() {

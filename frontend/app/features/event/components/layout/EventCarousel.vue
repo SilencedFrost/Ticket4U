@@ -13,6 +13,10 @@ withDefaults(defineProps<Props>(), {
   wrapAround: true,
 });
 
+defineEmits<{
+  'event-click': [id: string];
+}>();
+
 const breakpoints = useBreakpoints(breakpointsBootstrapV5);
 
 const carouselEl = ref<HTMLElement | null>(null);
@@ -91,7 +95,7 @@ const offset = computed(() => interpolate(componentWidth.value));
         :chevron-options="{ offset, height: isMd ? 55 : 50 }"
       >
         <template #item="{ item }">
-          <event-card :event="item" />
+          <event-card :event="item" @event-click="$emit('event-click', item.id)" />
         </template>
       </carousel-wrapper>
     </div>

@@ -38,7 +38,7 @@ function toggleMenu(targetKey = 'none') {
 function handleSearch() {
   const query = searchQuery.value.trim();
   if (query) {
-    const targetPath = localePath('/dev/search');
+    const targetPath = localePath('/search');
 
     navigateTo({
       path: targetPath,

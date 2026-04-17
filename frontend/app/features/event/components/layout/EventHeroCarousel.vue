@@ -11,12 +11,15 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   wrapAround: true,
 });
+defineEmits<{
+  'event-click': [id: string];
+}>();
 </script>
 
 <template>
   <carousel-wrapper :items="events" :visible-count="1" mode="carousel" :wrap-around="true">
     <template #item="{ item }">
-      <event-hero :event="item" />
+      <event-hero :event="item" @event-click="$emit('event-click', $event)" />
     </template>
   </carousel-wrapper>
 </template>

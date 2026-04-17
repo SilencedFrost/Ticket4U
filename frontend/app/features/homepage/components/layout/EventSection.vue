@@ -5,10 +5,18 @@ import EventCarousel from '~/features/event/components/layout/EventCarousel.vue'
 withDefaults(defineProps<{ events: EventSummary[]; title: string; wrapAround?: boolean }>(), {
   wrapAround: true,
 });
+
+defineEmits<{
+  'event-click': [id: string];
+}>();
 </script>
 
 <template>
   <hr />
   <h3 class="fw-bold mb-3">{{ title }}</h3>
-  <event-carousel :events="events" :wrap-around="wrapAround" />
+  <event-carousel
+    :events="events"
+    :wrap-around="wrapAround"
+    @event-click="$emit('event-click', $event)"
+  />
 </template>

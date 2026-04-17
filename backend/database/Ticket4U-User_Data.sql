@@ -3,13 +3,13 @@
 TRUNCATE TABLE public.users CASCADE;
 
 insert into public.users(id, phone_number, email, normalized_email, role_id, username, password_hash, is_active, is_deleted, created_at) values
-(uuidv7(), "0812345678",  'customer@gmail.com'      , 'customer@gmail.com'      , 0 , 'Customer', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'eventManager@gmail.com'  , 'eventmanager@gmail.com'  , 1 , 'Event Manager', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'organizer@gmail.com'     , 'organizer@gmail.com'     , 2 , 'Organizer', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'admin@gmail.com'         , 'admin@gmail.com'         , 3 , 'Admin', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'systemAdmin@gmail.com'   , 'systemadmin@gmail.com'   , 4 , 'System Admin', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'gatekeeper@gmail.com'    , 'gatekeeper@gmail.com'    , 10, 'Gate keeper', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
-(uuidv7(), "0812345678",  'supportAgent@gmail.com'  , 'supportagent@gmail.com'  , 11, 'Support Agent', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345671",  'customer@gmail.com'      , 'customer@gmail.com'      , 0 , 'Customer', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345672",  'eventManager@gmail.com'  , 'eventmanager@gmail.com'  , 1 , 'Event Manager', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345673",  'organizer@gmail.com'     , 'organizer@gmail.com'     , 2 , 'Organizer', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345674",  'admin@gmail.com'         , 'admin@gmail.com'         , 3 , 'Admin', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345675",  'systemAdmin@gmail.com'   , 'systemadmin@gmail.com'   , 4 , 'System Admin', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345676",  'gatekeeper@gmail.com'    , 'gatekeeper@gmail.com'    , 10, 'Gate keeper', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
+(uuidv7(), "0812345677",  'supportAgent@gmail.com'  , 'supportagent@gmail.com'  , 11, 'Support Agent', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now()),
 (uuidv7(), "0812345678",  'financeManager@gmail.com', 'financemanager@gmail.com', 12, 'Finance Manager', '$argon2id$v=19$m=16384,t=2,p=1$NmYyQUZDaG9VcUZURXZ2bA$aQSvREKaeHY5EvoyEw1wiGhXrnVyA83OtaaHY/xvmr0', true, false, now());
 
 INSERT INTO public.users (id, email, normalized_email, role_id, username, password_hash, is_active, is_deleted, created_at)

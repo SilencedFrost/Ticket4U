@@ -50,21 +50,21 @@ const options: AppearanceOption[] = [
           :aria-label="$t(option.titleKey)"
           @click="model = option.value"
         >
-          <span class="appearance-card-preview border-bottom border-reactive-subtle p-2">
+          <div class="appearance-card-preview border-bottom border-reactive-subtle p-2">
             <ThemePreview :theme="option.value" />
-          </span>
+          </div>
 
-          <span class="d-flex align-items-start justify-content-between gap-2 px-3 py-2">
-            <span class="d-flex align-items-start gap-2">
+          <div class="d-flex align-items-center justify-content-between gap-2 px-3 py-2">
+            <div class="d-flex align-items-center gap-2">
               <i :class="[option.icon, model === option.value ? 'text-primary' : 'text-reactive-secondary']" />
-              <span class="d-flex flex-column">
+              <div class="d-flex flex-column">
                 <span class="fw-bold text-reactive-primary">{{ $t(option.titleKey) }}</span>
                 <span class="small text-reactive-secondary">{{ $t(option.subtitleKey) }}</span>
-              </span>
-            </span>
+              </div>
+            </div>
 
             <i :class="model === option.value ? 'bi bi-check-circle-fill text-primary' : 'bi bi-circle text-reactive-secondary'" />
-          </span>
+          </div>
         </button>
       </div>
     </div>
@@ -73,7 +73,10 @@ const options: AppearanceOption[] = [
 
 <style scoped>
 .appearance-card {
+  display: flex !important;
+  flex-direction: column;
   min-height: 170px;
+  touch-action: pan-y;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -86,6 +89,7 @@ const options: AppearanceOption[] = [
 
 .appearance-card-preview {
   display: block;
+  width: 100%;
   aspect-ratio: 16 / 8; /* chỉnh số sau để giảm height */
   overflow: hidden;
 }

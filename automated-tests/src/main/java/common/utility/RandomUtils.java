@@ -60,4 +60,22 @@ public class RandomUtils {
 
         return username + "@" + domain;
     }
+
+    public static String generateRandomPhoneNumber() {
+        return generateRandomPhoneNumber(10);
+    }
+
+    public static String generateRandomPhoneNumber(Integer length) {
+        if(length == null || length <= 0) return "";
+        String allowedPrefixes = "35789";
+        String phoneNumber = "0";
+
+        phoneNumber += generateRandomString(allowedPrefixes, 1);
+
+        if(length <= 2) return phoneNumber;
+
+        phoneNumber += generateRandomString(allowedPrefixes, length - 2);
+
+        return phoneNumber;
+    }
 }

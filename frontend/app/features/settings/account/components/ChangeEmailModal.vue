@@ -98,6 +98,8 @@ defineExpose({ open, close });
 <template>
   <div ref="modalRef" class="modal fade" tabindex="-1" aria-labelledby="changeEmailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
+      <!-- TODO: Thêm class "bg-reactive-secondary" — modal-content dùng màu nền Bootstrap mặc định.
+      Dùng bg-reactive-secondary cho đồng nhất với card/panel. -->
       <div class="modal-content">
 
         <div class="modal-header">
@@ -113,11 +115,13 @@ defineExpose({ open, close });
           </div>
 
           <div class="mb-3">
+            <!-- TODO: Thêm class "text-reactive-primary" vào label — hiện đang dùng màu text mặc định Bootstrap -->
             <label class="form-label">{{ $t('settings.personal_information.change_email.current_email') }}</label>
             <input type="email" class="form-control" :value="currentEmail" readonly />
           </div>
 
           <div class="mb-3">
+            <!-- TODO: Thêm class "text-reactive-primary" vào label -->
             <label for="new-email" class="form-label">
               {{ $t('settings.personal_information.change_email.new_email') }}
             </label>
@@ -136,6 +140,7 @@ defineExpose({ open, close });
           </div>
 
           <div class="mb-1">
+            <!-- TODO: Thêm class "text-reactive-primary" vào label -->
             <label for="confirm-password" class="form-label">
               {{ $t('settings.personal_information.change_email.current_password') }}
             </label>
@@ -155,6 +160,7 @@ defineExpose({ open, close });
         </div>
 
         <div class="modal-footer">
+          <!-- TODO: Đổi "btn-secondary" → "btn-reactive-gray" — btn-secondary dùng màu cứng của Bootstrap. -->
           <button type="button" class="btn btn-secondary" :disabled="loading" @click="close">
             {{ $t('common.action.cancel') }}
           </button>
@@ -164,7 +170,11 @@ defineExpose({ open, close });
             :disabled="loading || !newEmail || !currentPassword"
             @click="submit"
           >
+            <!-- TODO: Đổi "text-white" → "text-reactive-primary" — primary color là #08c7f7 (cyan nhạt),
+                 nền sáng nên chữ trắng sẽ thiếu contrast ở light mode. text-reactive-primary
+                 sẽ tự chuyển dark/light theo theme. -->
             <span v-if="loading" class="spinner-border spinner-border-sm text-white" role="status" />
+            <!-- TODO: Tương tự spinner, đổi "text-white" → "text-reactive-primary" cho icon -->
             <i class="bi bi-floppy-fill text-white"></i>
           </button>
         </div>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
+// TODO: refactor this as a sub-group of events
 @RequestMapping("/api/v1/public/sessions")
 @RequiredArgsConstructor
 public class SessionController {

@@ -190,6 +190,57 @@
       "related": "You May Also Like"
     }
   },
+  "select_ticket": {
+    "loading": "Loading event data...",
+    "retry": "Retry",
+    "header": {
+      "back": "Back",
+      "title": "Select Tickets",
+      "subtitle": "Click on a zone or seat to select"
+    },
+    "floor": {
+      "select": "Select Floor"
+    },
+    "legend": {
+      "available": "Available",
+      "selected": "Selected",
+      "unavailable": "Unavailable"
+    },
+    "no_layout": "No seating layout available for this event.",
+    "ticket_info": {
+      "title": "Ticket Information",
+      "available": "available",
+      "standing": "Standing",
+      "seated": "Seated",
+      "sold_out": "Sold Out",
+      "details": "Details",
+      "description": "Description",
+      "perks": "Includes"
+    },
+    "cart": {
+      "title": "Your Cart",
+      "empty": "Your cart is empty",
+      "empty_subtitle": "Select a zone or seat from the map to add tickets",
+      "total_tickets": "Total tickets",
+      "total_price": "Total"
+    },
+    "selection": {
+      "available": "available",
+      "quantity": "Quantity",
+      "total": "Total",
+      "add_to_cart": "Add to Cart",
+      "selected_seats": "Selected Seats",
+      "sold_out_message": "This zone is sold out."
+    },
+    "validation": {
+      "max_reached": "Maximum {max} tickets per person reached.",
+      "unlimited": "No purchase limit",
+      "max_per_account": "Max {max} per person"
+    },
+    "checkout": {
+      "button": "Proceed to Checkout"
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage account",

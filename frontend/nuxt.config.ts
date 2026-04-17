@@ -43,6 +43,12 @@ export default defineNuxtConfig({
         },
       },
     },
+    optimizeDeps: {
+      include: [
+        '@vueuse/core',
+        '@vueuse/gesture',
+      ]
+    },
   },
 
   runtimeConfig: {

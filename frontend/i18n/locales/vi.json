@@ -190,6 +190,57 @@
       "related": "Bạn có thể thích"
     }
   },
+  "select_ticket": {
+    "loading": "Đang tải thông tin sự kiện...",
+    "retry": "Thử lại",
+    "header": {
+      "back": "Quay lại",
+      "title": "Chọn vé",
+      "subtitle": "Nhấn vào khu vực hoặc ghế để chọn"
+    },
+    "floor": {
+      "select": "Chọn tầng"
+    },
+    "legend": {
+      "available": "Còn trống",
+      "selected": "Đã chọn",
+      "unavailable": "Không khả dụng"
+    },
+    "no_layout": "Sự kiện này chưa có sơ đồ chỗ ngồi.",
+    "ticket_info": {
+      "title": "Thông tin vé",
+      "available": "còn lại",
+      "standing": "Đứng",
+      "seated": "Có ghế",
+      "sold_out": "Hết vé",
+      "details": "Chi tiết",
+      "description": "Mô tả",
+      "perks": "Quyền lợi"
+    },
+    "cart": {
+      "title": "Giỏ vé",
+      "empty": "Giỏ vé trống",
+      "empty_subtitle": "Chọn khu vực hoặc ghế trên sơ đồ để thêm vé",
+      "total_tickets": "Tổng số vé",
+      "total_price": "Tổng tiền"
+    },
+    "selection": {
+      "available": "còn lại",
+      "quantity": "Số lượng",
+      "total": "Tổng tiền",
+      "add_to_cart": "Thêm vào giỏ",
+      "selected_seats": "Ghế đã chọn",
+      "sold_out_message": "Khu vực này đã hết vé."
+    },
+    "validation": {
+      "max_reached": "Đã đạt giới hạn tối đa {max} vé mỗi người.",
+      "unlimited": "Không giới hạn số lượng",
+      "max_per_account": "Tối đa {max} vé mỗi người"
+    },
+    "checkout": {
+      "button": "Tiến hành thanh toán"
+    }
+  },
   "settings": {
     "title": "Cài đặt",
     "subtitle": "Quản lý tài khoản",

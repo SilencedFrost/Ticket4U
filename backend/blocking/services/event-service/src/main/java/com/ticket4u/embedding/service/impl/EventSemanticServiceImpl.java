@@ -2,6 +2,7 @@ package com.ticket4u.embedding.service.impl;
 
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventResponse;
+import com.ticket4u.core.dto.VenueSummaryResponse;
 import com.ticket4u.core.service.EventService;
 import com.ticket4u.embedding.service.EmbeddingService;
 import com.ticket4u.embedding.service.EventSemanticService;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,19 +28,41 @@ public class EventSemanticServiceImpl implements EventSemanticService {
     private final EventService eventService;
     private final EmbeddingService embeddingService;
     private final QdrantService qdrantService;
-
     private static final String COLLECTION = "events";
-    private static final String PASSAGE_TEXT = "Event: %s | Categories: %s | Venue: %s | Description: %s";
+    // Self reference note: adding price data did not help with semantic retrieval
+    private static final String PASSAGE_TEXT = "%s is an event in the %s categories%s on %s. %s";
     private static final float SIMILARITY_THRESHOLD = 0.3f;
 
     private String createPassage(EventResponse event) {
+        String about = buildAboutPart(event.aboutEn(), event.aboutVi());
+        String locationPart = buildLocationPart(event.venue(), event.addressLine());
+
         return String.format(
                 PASSAGE_TEXT,
                 event.name(),
                 event.categories().stream().map(CategorySummaryResponse::name).collect(Collectors.joining(", ")),
-                event.addressLine(),
-                event.aboutEn().isEmpty() ? event.aboutVi() : event.aboutEn()
+                locationPart,
+                // TODO: add a helper to resolve date to weekday or weekend
+                event.startDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")),
+                about
         );
+    }
+
+    private String buildAboutPart(String aboutEn, String aboutVi) {
+        boolean hasEn = aboutEn != null && !aboutEn.isBlank();
+        boolean hasVi = aboutVi != null && !aboutVi.isBlank();
+
+        if (hasEn && hasVi) return aboutEn + " in Vietnamese: " + aboutVi;
+        if (hasEn) return aboutEn;
+        if (hasVi) return aboutVi;
+        return "";
+    }
+
+    private String buildLocationPart(VenueSummaryResponse venue, String addressLine) {
+        if (venue == null && (addressLine == null || addressLine.isBlank())) return "";
+        if (venue == null) return ", taking place at " + addressLine;
+        if (addressLine == null || addressLine.isBlank()) return ", taking place at " + venue.name();
+        return ", taking place at " + venue.name() + ", " + addressLine;
     }
 
     /**
@@ -63,6 +88,8 @@ public class EventSemanticServiceImpl implements EventSemanticService {
         }
     }
 
+    // TODO: add semantic versioning and removal of invalid data
+    // TODO: improve performance by getting event data outside of the map function
     @Override
     @Transactional(readOnly = true)
     public void storeEventVectors(List<UUID> ids, boolean override) {
@@ -180,7 +207,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UUID> search(String query, Pageable pageable) {
+    public List<UUID> search(String query, Pageable pageable, Float similarityThreshold) {
         if (query == null || query.isBlank()) { return Collections.emptyList(); }
 
         int limit = pageable.getPageSize();
@@ -198,7 +225,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
             List<Points.ScoredPoint> scoredPoints = qdrantService.search(
                     COLLECTION,
                     queryVector,
-                    SIMILARITY_THRESHOLD,
+                    similarityThreshold != null ? similarityThreshold : SIMILARITY_THRESHOLD,
                     fetchLimit
             );
 
@@ -214,4 +241,9 @@ public class EventSemanticServiceImpl implements EventSemanticService {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public List<UUID> search(String query, Pageable pageable) { {
+        return search(query, pageable, null);
+    }}
 }

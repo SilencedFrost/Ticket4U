@@ -2,6 +2,7 @@
 import type { FetchError } from 'ofetch';
 
 const { isEmailFormatValid } = useEmailValidation();
+const { isPhoneFormatValid } = usePhoneValidation();
 const { validatePasswordValue } = usePasswordValidation();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
@@ -34,8 +35,6 @@ async function handleGoogleCredential(idToken: string) {
 /**======================
  * Reused constants
  =======================*/
-
-const PHONE_REGEX = /^(0)?(3|5|7|8|9)\d{8}$/;
 
 /**===========
  * Interfaces
@@ -153,7 +152,7 @@ function validatePhone(): boolean {
     error.phoneNumber = 'auth.error.blank.phone';
     return false;
   }
-  if (!PHONE_REGEX.test(val)) {
+  if (!isPhoneFormatValid(val)) {
     error.phoneNumber = 'auth.error.format.phone';
     return false;
   }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import SettingsLayout from '../components/SettingsLayout.vue';
-import PersonalInfoSection from './components/PersonalInfoSection.vue';
 
-// TODO: move all components and types to ~/features/settings/
+import SettingsLayout from '../../../features/settings/components/SettingsLayout.vue';
+import PersonalInfoSection from '../../../features/settings/account/components/PersonalInfoSection.vue';
+
 </script>
 
 <template>

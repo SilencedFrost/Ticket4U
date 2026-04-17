@@ -50,7 +50,11 @@
       "registrationFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin",
       "validation": "Dữ liệu không hợp lệ",
       "google_unavailable": "Đăng nhập Google không khả dụng. Vui lòng dùng email thay thế.",
-      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực."
+      "account_not_verified": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để lấy link xác thực.",
+      "token": {
+        "invalid": "Link đổi email không hợp lệ hoặc đã được sử dụng.",
+        "expired": "Link đổi email đã hết hạn. Vui lòng yêu cầu link mới."
+      }
     },
     "session": {
       "invalid": "Phiên đăng nhập không hợp lệ"
@@ -82,6 +86,15 @@
       "token_invalid": "Link đặt lại mật khẩu không hợp lệ.",
       "error_title": "Đặt lại thất bại",
       "request_again": "Yêu cầu link mới"
+    },
+    "verify_email_change": {
+      "page_title": "Xác thực đổi email",
+      "verifying": "Đang xác thực yêu cầu đổi email...",
+      "success_title": "Đổi email thành công",
+      "success_description": "Email của bạn đã được cập nhật. Bạn có thể tiếp tục quản lý thông tin tài khoản.",
+      "go_to_settings": "Đi đến cài đặt tài khoản",
+      "error_title": "Xác thực đổi email thất bại",
+      "try_again": "Thử đổi email lại"
     }
   },
   "common": {
@@ -89,7 +102,10 @@
     "email": "Email",
     "settings": "Cài đặt",
     "ticket": "Vé",
+    "events": "Sự kiện",
     "tickets": "Vé",
+    "organizer": "Ban tổ chức",
+    "contact": "Liên hệ",
     "see": {
       "more": "Xem thêm",
       "less": "Ẩn bớt"
@@ -99,15 +115,37 @@
       "deny": "Để sau",
       "buy": "Mua vé ngay",
       "view": "Xem",
-      "remove": "Xóa"
+      "remove": "Xóa",
+      "reset": "Thiết lập lại",
+      "apply": "Áp dụng",
+      "filter": "Bộ lọc",
+      "change_email": "Đổi email",
+      "save": "Lưu",
+      "cancel": "Hủy"
     },
     "full_name": "Họ và tên",
     "first_name": "Tên",
     "last_name": "Họ",
     "phone": "Số điện thoại",
+    "price": "Giá tiền",
+    "category": "Thể loại",
     "currency": {
       "from": "Từ",
       "free": "Miễn phí"
+    },
+    "date": {
+      "all_dates": "Tất cả các ngày",
+      "short": "Ngày",
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "this_weekend": "Cuối tuần này",
+      "this_month": "Tháng này",
+      "from_date": "Từ ngày",
+      "to_date": "Đến ngày"
+    },
+    "status": {
+      "title": "Trạng thái",
+      "available": "còn lại"
     }
   },
   "permissions": {
@@ -120,20 +158,31 @@
     "name": "Ticket4U",
     "motto": "Nền tảng bán vé ưu tiên khách hàng"
   },
+  "search": {
+    "results_for": "Kết quả cho",
+    "no_results": "Không tìm thấy kết quả"
+  },
   "placeholder": {
-    "search": "Tìm kiếm sự kiện, nghệ sĩ..."
+    "search": "Tìm kiếm sự kiện, nghệ sĩ...",
+    "category": "Tìm kiếm thể loại"
   },
   "theme": {
     "light": "Chế độ sáng",
     "dark": "Chế độ tối"
   },
-  "event_detail": {
-    "label": {
-      "price_from": "Giá từ",
-      "available": "còn lại",
-      "organizer": "Ban tổ chức",
+  "event": {
+    "status_options": {
+      "premiere": "Ra mắt",
+      "selling": "Đang mở bán",
+      "ongoing": "Đang diễn ra",
+      "finished": "Đã kết thúc",
+      "canceled": "Đã hủy",
+      "editing": "Đang chỉnh sửa",
+      "paused": "Ngừng bán vé",
       "sold_out": "Hết vé"
-    },
+    }
+  },
+  "event_detail": {
     "section": {
       "schedule": "Lịch trình sự kiện",
       "about": "Về sự kiện",
@@ -141,12 +190,64 @@
       "related": "Bạn có thể thích"
     }
   },
+  "select_ticket": {
+    "loading": "Đang tải thông tin sự kiện...",
+    "retry": "Thử lại",
+    "header": {
+      "back": "Quay lại",
+      "title": "Chọn vé",
+      "subtitle": "Nhấn vào khu vực hoặc ghế để chọn"
+    },
+    "floor": {
+      "select": "Chọn tầng"
+    },
+    "legend": {
+      "available": "Còn trống",
+      "selected": "Đã chọn",
+      "unavailable": "Không khả dụng"
+    },
+    "no_layout": "Sự kiện này chưa có sơ đồ chỗ ngồi.",
+    "ticket_info": {
+      "title": "Thông tin vé",
+      "available": "còn lại",
+      "standing": "Đứng",
+      "seated": "Có ghế",
+      "sold_out": "Hết vé",
+      "details": "Chi tiết",
+      "description": "Mô tả",
+      "perks": "Quyền lợi"
+    },
+    "cart": {
+      "title": "Giỏ vé",
+      "empty": "Giỏ vé trống",
+      "empty_subtitle": "Chọn khu vực hoặc ghế trên sơ đồ để thêm vé",
+      "total_tickets": "Tổng số vé",
+      "total_price": "Tổng tiền"
+    },
+    "selection": {
+      "available": "còn lại",
+      "quantity": "Số lượng",
+      "total": "Tổng tiền",
+      "add_to_cart": "Thêm vào giỏ",
+      "selected_seats": "Ghế đã chọn",
+      "sold_out_message": "Khu vực này đã hết vé."
+    },
+    "validation": {
+      "max_reached": "Đã đạt giới hạn tối đa {max} vé mỗi người.",
+      "unlimited": "Không giới hạn số lượng",
+      "max_per_account": "Tối đa {max} vé mỗi người"
+    },
+    "checkout": {
+      "button": "Tiến hành thanh toán"
+    }
+  },
   "settings": {
     "title": "Cài đặt",
     "subtitle": "Quản lý tài khoản",
     "nav": {
       "personal_information": "Thông tin cá nhân",
-      "security": "Mật khẩu và bảo mật"
+      "security": "Mật khẩu và bảo mật",
+      "preferences": "Tùy chọn"
     },
     "personal_information": {
       "title": "Thông tin cá nhân",
@@ -157,6 +258,15 @@
       },
       "basic_info": {
         "section_title": "Thông tin cơ bản"
+      },
+      "change_email": {
+        "title": "Đổi email",
+        "current_email": "Email hiện tại",
+        "new_email": "Email mới",
+        "current_password": "Mật khẩu hiện tại",
+        "messages": {
+          "request_sent_success": "Yêu cầu đổi email đã được gửi thành công."
+        }
       }
     },
     "security": {
@@ -181,6 +291,118 @@
         },
         "unknown_device": "Thiết bị không xác định"
       }
+    },
+    "preferences": {
+      "title": "Tùy chọn",
+      "subtitle": "Tùy chỉnh môi trường làm việc của bạn.",
+      "appearance": {
+        "title": "Giao diện",
+        "subtitle": "Tùy chỉnh cách hiển thị của ứng dụng.",
+        "dark_mode": {
+          "title": "Chế độ tối",
+          "subtitle": "Dịu mắt hơn"
+        },
+        "light_mode": {
+          "title": "Chế độ sáng",
+          "subtitle": "Độ tương phản rõ ràng"
+        }
+      },
+      "language": {
+        "title": "Ngôn ngữ",
+        "subtitle": "Chọn ngôn ngữ bạn muốn sử dụng.",
+        "options": {
+          "en": "Tiếng Anh (Hoa Kỳ)",
+          "vi": "Tiếng Việt"
+        }
+      },
+      "notifications": {
+        "title": "Thông báo",
+        "subtitle": "Quản lý thiết lập thông báo của bạn.",
+        "email": {
+          "title": "Thông báo Email",
+          "subtitle": "Nhận cảnh báo bảo mật và cập nhật hệ thống"
+        },
+        "marketing": {
+          "title": "Email Tiếp thị",
+          "subtitle": "Tính năng mới và tin tức sản phẩm độc quyền"
+        }
+      },
+      "actions": {
+        "discard": "Hủy thay đổi",
+        "save": "Lưu thay đổi"
+      }
+    }
+  },
+  "payment_mockup": {
+    "validation": {
+      "required_contact": "Vui lòng điền đầy đủ thông tin bắt buộc",
+      "agree_policy": "Vui lòng đồng ý với chính sách của ban tổ chức trước khi thanh toán"
+    },
+    "currency_suffix": "đ",
+    "event": {
+      "image_alt": "Ảnh sự kiện",
+      "title": "Múa rối nước truyền thống",
+      "date": "14, 08/04",
+      "time": "18:30 - 19:15",
+      "address": "55B Nguyễn Thị Minh Khai, P. Bến Thành, Q.1, TP.HCM"
+    },
+    "receiver": {
+      "title": "Thông tin nhận hóa đơn",
+      "subtitle": "Hóa đơn của bạn sẽ được gửi tới thông tin bên dưới",
+      "full_name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "optional": "(không bắt buộc)",
+      "empty": "Chưa nhập",
+      "note_line_1": "Hóa đơn sẽ được gửi đến email ở trên.",
+      "note_line_2": "Vé được lưu trong mục",
+      "note_ticket_hub": "Vé của bạn",
+      "note_line_3": "của tài khoản hiện tại.",
+      "note_line_4": "Khi vào cổng, chỉ cần xuất trình mã QR điện tử."
+    },
+    "payment_method": {
+      "title": "Phương thức thanh toán",
+      "sepay_bank": "SePay - Chuyển khoản ngân hàng"
+    },
+    "timer": {
+      "title": "Thời gian giữ vé còn"
+    },
+    "policy": {
+      "title": "Chính sách ban tổ chức",
+      "content": "Vé đã mua sẽ không được hoàn trả, đổi ngày hay chỉnh sửa dưới bất kỳ trường hợp nào."
+    },
+    "ticket_info": {
+      "title": "Thông tin vé ({count} vé)",
+      "columns": {
+        "ticket_type": "LOẠI VÉ",
+        "zone_name": "KHU",
+        "seat_name": "GHẾ",
+        "base_price": "GIÁ GỐC"
+      },
+      "promo_placeholder": "Mã khuyến mại",
+      "apply": "Áp dụng"
+    },
+    "checkout": {
+      "total": "Tổng tiền",
+      "agree_policy": "Đồng ý với chính sách của ban tổ chức",
+      "pay": "Thanh toán"
+    },
+    "popup": {
+      "title": "Chuyển khoản ngân hàng (SePay)",
+      "warning_line_1": "Tài khoản và QR chỉ dùng cho giao dịch này",
+      "warning_line_2": "Không lưu hoặc sử dụng lại thông tin này",
+      "warning_line_3": "Đơn hàng chỉ được xác nhận khi bạn thấy trạng thái thành công",
+      "qr_alt": "QR SePay",
+      "download_qr": "Tải mã QR",
+      "bank": "Ngân hàng",
+      "cart_code": "Nội dung",
+      "account_number": "STK nhận tiền",
+      "receiver_name": "Tên người nhận",
+      "amount": "Số tiền",
+      "copy": "Sao chép",
+      "note_title": "Lưu ý:",
+      "note_line_1": "Vui lòng chuyển chính xác số tiền.",
+      "confirm_paid": "Xác nhận đã thanh toán"
     }
   },
   "categories": {
@@ -214,5 +436,11 @@
     "politics": "Chính Trị",
     "travel": "Du Lịch",
     "virtual": "Trực Tuyến"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Phổ biến",
+      "near_you": "Gần bạn"
+    }
   }
 }

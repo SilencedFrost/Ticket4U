@@ -1,5 +1,6 @@
 const THEME_COOKIE_KEY = 'user-theme-preference';
 type Theme = 'light' | 'dark';
+// TODO: Extend Theme to include an "auto" mode synced with system preference.
 
 export function useTheme() {
   const themeCookie = useCookie<Theme | null>(THEME_COOKIE_KEY, {
@@ -36,9 +37,11 @@ export function useTheme() {
   });
 
   const toggleTheme = () => {
+    // TODO: When "auto" is supported, update toggle logic and provide explicit mode selection.
     currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
   };
 
+  // TODO: Add a future Appearance UI option/menu item for selecting "auto" mode.
   const nextTheme = computed(() => (currentTheme.value === 'light' ? 'dark' : 'light'));
 
   return {

@@ -19,7 +19,7 @@ const { data: eventList } = await useFetch<EventSummary[]>(
 );
 
 const handleEventClick = (eventId: string) => {
-  navigateTo(localePath(`/dev/event/detail/${eventId}`));
+  navigateTo(localePath(`/event/${eventId}`));
 };
 </script>
 

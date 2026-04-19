@@ -72,8 +72,7 @@ async function login() {
   loading.value = true;
   noticeMessage.value = '';
   Object.assign(error, { identifier: '', password: '', generic: '' });
-  // TODO: Hỗ trợ query redirect để sau khi đăng nhập thành công,
-  // người dùng được quay về lại tab settings đã chọn thay vì luôn về trang chủ.
+  
   try {
     await useUser.login(formData.identifier, formData.password, formData.rememberMe);
     router.push(redirectAfterLogin ? localePath(redirectAfterLogin) : localePath('/'));

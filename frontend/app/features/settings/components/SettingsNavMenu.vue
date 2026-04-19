@@ -2,6 +2,7 @@
 import LoginRequireModal from './LoginRequireModal.vue';
 
 const { isLoggedIn } = storeToRefs(useUserStore());
+const route = useRoute();
 
 type SettingsNavItem = {
   to: string;
@@ -46,6 +47,15 @@ function handleRestrictedClick(path: string) {
   pendingPath.value = path;
   showLoginModal.value = true;
 }
+
+onMounted(() => {
+  const loginRequired = route.query.loginRequired;
+  if (loginRequired && typeof loginRequired === 'string') {
+    pendingPath.value = loginRequired;
+    showLoginModal.value = true;
+  }
+});
+
 </script>
 
 <template>

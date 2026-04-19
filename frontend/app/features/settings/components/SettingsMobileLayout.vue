@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import '../style/settings.css';
+import LoginRequireModal from './LoginRequireModal.vue';
 
 const { currentTheme } = useTheme();
 const { isLoggedIn } = storeToRefs(useUserStore());
@@ -18,6 +19,10 @@ const router = useRouter();
 const localePath = useLocalePath();
 const { locales } = useI18n();
 const previousPageUrl = ref<string | null>(null);
+
+//model state
+const showLoginModal = ref(false);
+const pendingPath = ref('');
 
 const activeTab = useState<SettingsTab | null>('settings-active-tab', () => null);
 
@@ -93,7 +98,11 @@ function openTab(tab: SettingsTab) {
 }
 
 function handleTabClick(tab: SettingsTabItem) {
-  if (tab.disabled) return;
+  if (tab.guestRestricted && !isLoggedIn.value) {
+    pendingPath.value = `/settings/${tab.key}`;
+    showLoginModal.value = true;
+    return;
+  }
   openTab(tab.key);
 }
 
@@ -129,8 +138,6 @@ function goBackToPreviousPage() {
               { 'border-bottom': currentTheme == 'dark' },
               { 'is-disabled': tab.disabled },
             ]"
-            :disabled="tab.disabled"
-            :aria-disabled="tab.disabled ? 'true' : 'false'"
             @click="handleTabClick(tab)"
           >
             <span class="settings-mobile-menu-item-left">
@@ -155,4 +162,11 @@ function goBackToPreviousPage() {
       </section>
     </div>
   </div>
+
+  <login-require-modal
+    :show="showLoginModal"
+    :target-path="pendingPath"
+    @close="showLoginModal = false"
+  />
+
 </template>

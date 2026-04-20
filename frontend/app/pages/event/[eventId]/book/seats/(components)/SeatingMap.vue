@@ -319,7 +319,7 @@ function isPointInZone(x: number, y: number, zone: LayoutZone): boolean {
 function handleZoneClick(zone: LayoutZone) {
   const zoneTicket = getZoneTicket(zone)
   if (!zoneTicket || zoneTicket.soldOut) return
-  if (zone.zone_type === 'standing') { selectedStandingZone.value = zone; standingQuantity.value = 1 }
+  if (zone.zone_type === 'standing') { selectedSeats.value = []; selectedStandingZone.value = zone; standingQuantity.value = 1 }
 }
 
 // Standing selection

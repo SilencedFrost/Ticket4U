@@ -330,16 +330,17 @@ const maxStandingAllowed = computed(() => {
   if (!selectedStandingZone.value) return 0
   const t   = getZoneTicket(selectedStandingZone.value); if (!t) return 0
   const cap = t.capacity ?? 0
-  const inCart = props.cart
-      .find(item => item.zoneId === selectedStandingZone.value?.zone_uuid && item.isStanding)
-      ?.quantity ?? 0
-  // null means unlimited — use capacity as ceiling
-  const max = Math.min(cap, t.maxPerAccount ?? cap)
-  return Math.max(0, max - inCart)
+  return Math.min(cap, t.maxPerAccount ?? cap)
 })
-watch(maxStandingAllowed, (newMax) => {
-  if (newMax === 0) standingQuantity.value = 0
-  else if (standingQuantity.value > newMax) standingQuantity.value = newMax
+
+const standingInCart = computed(() =>
+  props.cart.find(item => item.zoneId === selectedStandingZone.value?.zone_uuid && item.isStanding)?.quantity ?? 0
+)
+
+watch(standingInCart, (inCart) => {
+  const remaining = maxStandingAllowed.value - inCart
+  if (remaining <= 0) standingQuantity.value = 0
+  else if (standingQuantity.value > remaining) standingQuantity.value = remaining
 })
 
 function addStandingToCart() {
@@ -572,7 +573,7 @@ watch(() => props.cart, (newCart) => {
           <i class="bi bi-exclamation-triangle me-2"/>{{ $t('select_ticket.selection.sold_out_message') }}
         </div>
         <div v-else class="row g-3">
-          <div v-if="standingQuantity >= maxStandingAllowed" class="col-12">
+          <div v-if="standingInCart + standingQuantity >= maxStandingAllowed" class="col-12">
             <div class="alert alert-warning mb-0 py-2">
               <i class="bi bi-exclamation-triangle me-2"/>{{ $t('select_ticket.validation.max_reached', { max: maxStandingAllowed }) }}
             </div>
@@ -586,7 +587,7 @@ watch(() => props.cart, (newCart) => {
                   class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
                   @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 1 : v }"
               />
-              <button class="btn btn-outline-secondary" :disabled="standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed, standingQuantity + 1)"><i class="bi bi-plus"/></button>
+              <button class="btn btn-outline-secondary" :disabled="standingInCart + standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed - standingInCart, standingQuantity + 1)"><i class="bi bi-plus"/></button>
             </div>
           </div>
           <div class="col-md-6">
@@ -594,7 +595,7 @@ watch(() => props.cart, (newCart) => {
             <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
           </div>
           <div class="col-12">
-            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || maxStandingAllowed === 0" @click="addStandingToCart">
+            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || standingInCart >= maxStandingAllowed" @click="addStandingToCart">
               <i class="bi bi-cart-plus me-2"/>{{ $t('select_ticket.selection.add_to_cart') }}
             </button>
           </div>

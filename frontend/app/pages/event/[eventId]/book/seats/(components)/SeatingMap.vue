@@ -581,13 +581,13 @@ watch(() => props.cart, (newCart) => {
           <div class="col-md-6">
             <label class="form-label text-reactive-primary fw-semibold small">{{ $t('select_ticket.selection.quantity') }}</label>
             <div class="d-flex gap-2">
-              <button class="btn btn-outline-secondary" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
+              <button type="button" class="btn btn-outline-secondary" :disabled="standingQuantity <= 1" @click="standingQuantity = Math.max(1, standingQuantity - 1)"><i class="bi bi-dash"/></button>
               <input
                   v-model.number="standingQuantity" type="number" min="1" :max="maxStandingAllowed"
                   class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
                   @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 1 : v }"
               />
-              <button class="btn btn-outline-secondary" :disabled="standingInCart + standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed - standingInCart, standingQuantity + 1)"><i class="bi bi-plus"/></button>
+              <button type="button" class="btn btn-outline-secondary" :disabled="standingInCart + standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed - standingInCart, standingQuantity + 1)"><i class="bi bi-plus"/></button>
             </div>
           </div>
           <div class="col-md-6">
@@ -647,6 +647,10 @@ watch(() => props.cart, (newCart) => {
 </template>
 
 <style scoped>
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
 .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
 .floor-panel {

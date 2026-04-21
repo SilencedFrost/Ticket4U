@@ -339,7 +339,7 @@ const standingInCart = computed(() =>
 
 watch(standingInCart, (inCart) => {
   const remaining = maxStandingAllowed.value - inCart
-  if (remaining <= 0) standingQuantity.value = 0
+  if (remaining <= 0) standingQuantity.value = 1
   else if (standingQuantity.value > remaining) standingQuantity.value = remaining
 })
 
@@ -581,11 +581,11 @@ watch(() => props.cart, (newCart) => {
           <div class="col-md-6">
             <label class="form-label text-reactive-primary fw-semibold small">{{ $t('select_ticket.selection.quantity') }}</label>
             <div class="d-flex gap-2">
-              <button type="button" class="btn btn-outline-secondary" :disabled="standingQuantity <= 1" @click="standingQuantity = Math.max(1, standingQuantity - 1)"><i class="bi bi-dash"/></button>
+              <button type="button" class="btn btn-outline-secondary" :disabled="standingQuantity <= 0" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
               <input
-                  v-model.number="standingQuantity" type="number" min="1" :max="maxStandingAllowed"
+                  v-model.number="standingQuantity" type="number" min="0" :max="maxStandingAllowed"
                   class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
-                  @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 1 : v }"
+                  @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 0 : v }"
               />
               <button type="button" class="btn btn-outline-secondary" :disabled="standingInCart + standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed - standingInCart, standingQuantity + 1)"><i class="bi bi-plus"/></button>
             </div>
@@ -595,7 +595,7 @@ watch(() => props.cart, (newCart) => {
             <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
           </div>
           <div class="col-12">
-            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || standingInCart >= maxStandingAllowed" @click="addStandingToCart">
+            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || standingInCart + standingQuantity > maxStandingAllowed" @click="addStandingToCart">
               <i class="bi bi-cart-plus me-2"/>{{ $t('select_ticket.selection.add_to_cart') }}
             </button>
           </div>

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,6 +81,11 @@ public class EventController {
     // TODO implement event suggestion using ML and user behavior analysis
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
         return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<EventSummaryResponse>> getNearbyEvents(@RequestParam BigDecimal lat, @RequestParam BigDecimal lon) {
+        return ResponseEntity.ok(eventDomainService.getNearbyEvents(lat, lon));
     }
 
     /**

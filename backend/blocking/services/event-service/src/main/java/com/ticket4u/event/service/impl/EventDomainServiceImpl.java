@@ -251,4 +251,11 @@ public class EventDomainServiceImpl implements EventDomainService {
                 .map(eventMapper::toSummaryDTO)
                 .toList();
     }
+
+    @Override
+    public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon,  Pageable pageable) {
+        List<Event> event = eventRepository.findAll();
+
+        return List.of();
+    }
 }

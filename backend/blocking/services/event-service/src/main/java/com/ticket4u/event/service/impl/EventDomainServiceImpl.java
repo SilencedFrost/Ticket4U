@@ -254,14 +254,25 @@ public class EventDomainServiceImpl implements EventDomainService {
                 .toList();
     }
 
+    /**
+     * Get a list of events near a specific location.
+     * @param lat The latitude of the current location
+     * @param lon The longitude of the current location
+     * @return A list of events found within the nearby area
+     */
     @Override
     public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon) {
-        return eventRepository.findAllPurchasable().stream()
-                .map(e -> Map.entry(e, calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
+        List<UUID> nearbyIds = eventRepository.findAllPurchasableCoordinates().stream()
+                .filter(e -> e.getLatitude() != null && e.getLongitude() != null)
+                .map(e -> Map.entry(e.getId(), calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
                 .filter(entry -> entry.getValue() <= LOCATION_CUTOFF)
                 .sorted(Map.Entry.comparingByValue())
                 .limit(50)
-                .map(entry -> eventMapper.toSummaryDTO(entry.getKey()))
+                .map(Map.Entry::getKey)
+                .toList();
+
+        return eventRepository.findAllById(nearbyIds).stream()
+                .map(eventMapper::toSummaryDTO)
                 .toList();
     }
 }

@@ -65,10 +65,10 @@ public class EventController {
     // TODO: implement event suggestion based on location
     @GetMapping("/locational")
     public ResponseEntity<List<EventSummaryResponse>> getLocationalEvents(
-            @RequestParam(required = false) Double longitude,
-            @RequestParam(required = false) Double latitude
+            @RequestParam(required = false) BigDecimal longitude,
+            @RequestParam(required = false) BigDecimal latitude
     ) {
-        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+        return ResponseEntity.ok(eventDomainService.getNearbyEvents(latitude, longitude));
     }
 
     @GetMapping("/trending")
@@ -81,11 +81,6 @@ public class EventController {
     // TODO implement event suggestion using ML and user behavior analysis
     public ResponseEntity<List<EventSummaryResponse>> getSuggestedEvents() {
         return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
-    }
-
-    @GetMapping("/nearby")
-    public ResponseEntity<List<EventSummaryResponse>> getNearbyEvents(@RequestParam BigDecimal lat, @RequestParam BigDecimal lon) {
-        return ResponseEntity.ok(eventDomainService.getNearbyEvents(lat, lon));
     }
 
     /**

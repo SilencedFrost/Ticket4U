@@ -776,14 +776,14 @@ export function getStatusClass(status: string): string {
 
 export function getStatusI18nKey(status: string): string {
   return ({
-    EDITING:   'organizer.events.status.editing',
-    SCHEDULED: 'organizer.events.status.premier',
-    PREMIERE:  'organizer.events.status.premier',
-    SELLING:   'organizer.events.status.selling',
-    PAUSED:    'organizer.events.status.paused',
-    ONGOING:   'organizer.events.status.ongoing',
-    FINISHED:  'organizer.events.status.finished',
-    CANCELLED: 'organizer.events.status.cancelled',
+    EDITING:   'manage.events.status.editing',
+    SCHEDULED: 'manage.events.status.premier',
+    PREMIERE:  'manage.events.status.premier',
+    SELLING:   'manage.events.status.selling',
+    PAUSED:    'manage.events.status.paused',
+    ONGOING:   'manage.events.status.ongoing',
+    FINISHED:  'manage.events.status.finished',
+    CANCELLED: 'manage.events.status.cancelled',
   } as Record<string, string>)[status] ?? status
 }
 

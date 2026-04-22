@@ -46,7 +46,7 @@ function submit() {
 
         <div class="d-flex align-items-center justify-content-between mb-4">
           <h5 class="fw-bold text-reactive-primary mb-0">
-            <i class="bi bi-person-plus me-2 text-primary"/>{{ $t('organizer.team.invite_modal.title') }}
+            <i class="bi bi-person-plus me-2 text-primary"/>{{ $t('manage.team.invite_modal.title') }}
           </h5>
           <button class="btn-close btn-close-white opacity-50" @click="$emit('close')"/>
         </div>
@@ -54,14 +54,14 @@ function submit() {
         <!-- Email -->
         <div class="mb-3">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.team.invite_modal.email') }} <span class="text-danger">*</span>
+            {{ $t('manage.team.invite_modal.email') }} <span class="text-danger">*</span>
           </label>
           <input
             v-model="email"
             type="email"
             class="form-control"
             :class="{ 'is-invalid': errors.email }"
-            :placeholder="$t('organizer.team.invite_modal.email_placeholder')"
+            :placeholder="$t('manage.team.invite_modal.email_placeholder')"
           />
           <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
         </div>
@@ -69,16 +69,16 @@ function submit() {
         <!-- Role -->
         <div class="mb-4">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.team.invite_modal.role') }} <span class="text-danger">*</span>
+            {{ $t('manage.team.invite_modal.role') }} <span class="text-danger">*</span>
           </label>
           <select
             v-model="roleId"
             class="form-select"
             :class="{ 'is-invalid': errors.roleId }"
           >
-            <option value="">{{ $t('organizer.team.invite_modal.select_role') }}</option>
+            <option value="">{{ $t('manage.team.invite_modal.select_role') }}</option>
             <option v-for="r in ASSIGNABLE_ROLES" :key="r.id" :value="r.id">
-              {{ $t('organizer.team.roles.' + r.key) }}
+              {{ $t('manage.team.roles.' + r.key) }}
             </option>
           </select>
           <div v-if="errors.roleId" class="invalid-feedback">{{ errors.roleId }}</div>
@@ -87,16 +87,16 @@ function submit() {
         <!-- Role hint -->
         <div v-if="roleId" class="alert alert-info py-2 small mb-4">
           <i class="bi bi-info-circle me-1"/>
-          {{ $t('organizer.team.roles.' + (ASSIGNABLE_ROLES.find(r => r.id === Number(roleId))?.key ?? '')) }}
-          — {{ $t('organizer.team.role_hint.' + (ASSIGNABLE_ROLES.find(r => r.id === Number(roleId))?.key ?? '')) }}
+          {{ $t('manage.team.roles.' + (ASSIGNABLE_ROLES.find(r => r.id === Number(roleId))?.key ?? '')) }}
+          — {{ $t('manage.team.role_hint.' + (ASSIGNABLE_ROLES.find(r => r.id === Number(roleId))?.key ?? '')) }}
         </div>
 
         <div class="d-flex justify-content-end gap-2">
           <button class="btn btn-outline-secondary px-4" @click="$emit('close')">
-            {{ $t('organizer.team.invite_modal.cancel') }}
+            {{ $t('manage.team.invite_modal.cancel') }}
           </button>
           <button class="btn btn-primary px-4" @click="submit">
-            <i class="bi bi-send me-2"/>{{ $t('organizer.team.invite_modal.submit') }}
+            <i class="bi bi-send me-2"/>{{ $t('manage.team.invite_modal.submit') }}
           </button>
         </div>
 

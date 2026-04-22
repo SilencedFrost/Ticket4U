@@ -42,7 +42,7 @@ function setRefund(val: string) {
   <div>
     <div class="card shadow-sm p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-4">
-        <i class="bi bi-file-text me-2 text-primary"/>{{ $t('organizer.event_form.step2.title') }}
+        <i class="bi bi-file-text me-2 text-primary"/>{{ $t('manage.event_form.step2.title') }}
       </h5>
 
       <div class="row g-4">
@@ -50,7 +50,7 @@ function setRefund(val: string) {
         <!-- About (bilingual) -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
-            {{ $t('organizer.event_form.step2.about') }}
+            {{ $t('manage.event_form.step2.about') }}
           </label>
 
           <ul class="nav nav-tabs mb-3 border-0">
@@ -69,14 +69,14 @@ function setRefund(val: string) {
           <RichTextEditor
             v-if="contentLang === 'vi'"
             :model-value="content.aboutVi"
-            :placeholder="$t('organizer.event_form.step2.about_vi_placeholder')"
+            :placeholder="$t('manage.event_form.step2.about_vi_placeholder')"
             :min-height="220"
             @update:model-value="setAboutVi"
           />
           <RichTextEditor
             v-else
             :model-value="content.aboutEn"
-            :placeholder="$t('organizer.event_form.step2.about_en_placeholder')"
+            :placeholder="$t('manage.event_form.step2.about_en_placeholder')"
             :min-height="220"
             @update:model-value="setAboutEn"
           />
@@ -85,11 +85,11 @@ function setRefund(val: string) {
         <!-- Terms & Conditions -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
-            {{ $t('organizer.event_form.step2.terms') }}
+            {{ $t('manage.event_form.step2.terms') }}
           </label>
           <RichTextEditor
             :model-value="content.termsAndConditions"
-            :placeholder="$t('organizer.event_form.step2.terms_placeholder')"
+            :placeholder="$t('manage.event_form.step2.terms_placeholder')"
             :min-height="160"
             @update:model-value="setTerms"
           />
@@ -98,11 +98,11 @@ function setRefund(val: string) {
         <!-- Refund Policy -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary mb-2">
-            {{ $t('organizer.event_form.step2.refund') }}
+            {{ $t('manage.event_form.step2.refund') }}
           </label>
           <RichTextEditor
             :model-value="content.policyRefund"
-            :placeholder="$t('organizer.event_form.step2.refund_placeholder')"
+            :placeholder="$t('manage.event_form.step2.refund_placeholder')"
             :min-height="140"
             @update:model-value="setRefund"
           />
@@ -113,11 +113,11 @@ function setRefund(val: string) {
 
     <div class="d-flex justify-content-between gap-2">
       <button class="btn btn-outline-secondary px-4" @click="$emit('back')">
-        <i class="bi bi-arrow-left me-1"/>{{ $t('organizer.event_form.back') }}
+        <i class="bi bi-arrow-left me-1"/>{{ $t('manage.event_form.back') }}
       </button>
       <button class="btn btn-primary px-4" :disabled="saving" @click="$emit('save')">
         <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
-        {{ $t('organizer.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
+        {{ $t('manage.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
       </button>
     </div>
   </div>

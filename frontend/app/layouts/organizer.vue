@@ -51,7 +51,7 @@
         >
           <i :class="['bi', sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left', 'fs-5', 'flex-shrink-0']"/>
           <transition name="fade-text">
-            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">{{ $t('organizer.nav.collapse') }}</span>
+            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">{{ $t('manage.nav.collapse') }}</span>
           </transition>
         </button>
         <button
@@ -60,7 +60,7 @@
         >
           <i class="bi bi-box-arrow-left fs-5 flex-shrink-0 text-danger"/>
           <transition name="fade-text">
-            <span v-if="!sidebarCollapsed" class="text-danger">{{ $t('organizer.nav.logout') }}</span>
+            <span v-if="!sidebarCollapsed" class="text-danger">{{ $t('manage.nav.logout') }}</span>
           </transition>
         </button>
       </div>
@@ -99,11 +99,11 @@ const roleLabel = computed(() => {
 
 // ── Nav items ──────────────────────────────────────────────
 const navItems = computed(() => [
-  { to: localePath('/organizer'),                 label: $t('organizer.nav.home'),     icon: 'bi-house'          },
-  { to: localePath('/organizer/events'),          label: $t('organizer.nav.events'),   icon: 'bi-calendar-event' },
-  { to: localePath('/organizer/team'),            label: $t('organizer.nav.team'),     icon: 'bi-people'         },
-  { to: localePath('/organizer/reports'),         label: $t('organizer.nav.reports'),  icon: 'bi-bar-chart'      },
-  { to: localePath('/organizer/events/archived'), label: $t('organizer.nav.archived'), icon: 'bi-archive'        },
+  { to: localePath('/organizer'),                 label: $t('manage.nav.home'),     icon: 'bi-house'          },
+  { to: localePath('/organizer/events'),          label: $t('manage.nav.events'),   icon: 'bi-calendar-event' },
+  { to: localePath('/organizer/team'),            label: $t('manage.nav.team'),     icon: 'bi-people'         },
+  { to: localePath('/organizer/reports'),         label: $t('manage.nav.reports'),  icon: 'bi-bar-chart'      },
+  { to: localePath('/organizer/events/archived'), label: $t('manage.nav.archived'), icon: 'bi-archive'        },
 ])
 
 const isActive = (to: string) => {

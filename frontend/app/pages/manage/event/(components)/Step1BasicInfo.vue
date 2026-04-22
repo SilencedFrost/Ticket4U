@@ -32,20 +32,20 @@ function toggleCategory(id: number) {
   <div>
     <div class="card shadow-sm p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-4">
-        <i class="bi bi-info-circle me-2 text-primary"/>{{ $t('organizer.event_form.step1.title') }}
+        <i class="bi bi-info-circle me-2 text-primary"/>{{ $t('manage.event_form.step1.title') }}
       </h5>
       <div class="row g-4">
 
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.name') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step1.name') }} <span class="text-danger">*</span>
           </label>
           <input
             v-model="form.name"
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors.name }"
-            :placeholder="$t('organizer.event_form.step1.name_placeholder')"
+            :placeholder="$t('manage.event_form.step1.name_placeholder')"
           />
           <div class="invalid-feedback">{{ errors.name }}</div>
         </div>
@@ -53,7 +53,7 @@ function toggleCategory(id: number) {
         <!-- Categories: multi-select via toggle badges -->
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.category') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step1.category') }} <span class="text-danger">*</span>
           </label>
           <div class="d-flex flex-wrap gap-2 mt-1" :class="{ 'is-invalid': errors.categoryIds }">
             <button
@@ -70,29 +70,29 @@ function toggleCategory(id: number) {
 
         <div class="col-md-6">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.status') }}
+            {{ $t('manage.event_form.step1.status') }}
           </label>
           <select v-model="form.status" class="form-select">
-            <option value="EDITING">{{ $t('organizer.events.status.editing') }}</option>
-            <option value="SCHEDULED">{{ $t('organizer.events.status.premier') }}</option>
-            <option value="PREMIERE">{{ $t('organizer.events.status.premier') }}</option>
-            <option value="SELLING">{{ $t('organizer.events.status.selling') }}</option>
-            <option value="PAUSED">{{ $t('organizer.events.status.paused') }}</option>
-            <option value="ONGOING">{{ $t('organizer.events.status.ongoing') }}</option>
-            <option value="FINISHED">{{ $t('organizer.events.status.finished') }}</option>
-            <option value="CANCELLED">{{ $t('organizer.events.status.cancelled') }}</option>
+            <option value="EDITING">{{ $t('manage.events.status.editing') }}</option>
+            <option value="SCHEDULED">{{ $t('manage.events.status.premier') }}</option>
+            <option value="PREMIERE">{{ $t('manage.events.status.premier') }}</option>
+            <option value="SELLING">{{ $t('manage.events.status.selling') }}</option>
+            <option value="PAUSED">{{ $t('manage.events.status.paused') }}</option>
+            <option value="ONGOING">{{ $t('manage.events.status.ongoing') }}</option>
+            <option value="FINISHED">{{ $t('manage.events.status.finished') }}</option>
+            <option value="CANCELLED">{{ $t('manage.events.status.cancelled') }}</option>
           </select>
         </div>
 
         <div class="col-12">
           <div class="alert alert-info py-2 small mb-0">
-            <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step1.session_hint') }}
+            <i class="bi bi-info-circle me-1"/>{{ $t('manage.event_form.step1.session_hint') }}
           </div>
         </div>
 
         <div class="col-md-6">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.start_date') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step1.start_date') }} <span class="text-danger">*</span>
           </label>
           <input
             v-model="form.startDate"
@@ -105,7 +105,7 @@ function toggleCategory(id: number) {
 
         <div class="col-md-6">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.end_date') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step1.end_date') }} <span class="text-danger">*</span>
           </label>
           <input
             v-model="form.endDate"
@@ -118,21 +118,21 @@ function toggleCategory(id: number) {
 
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.address') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step1.address') }} <span class="text-danger">*</span>
           </label>
           <input
             v-model="form.addressLine"
             type="text"
             class="form-control"
             :class="{ 'is-invalid': errors.addressLine }"
-            :placeholder="$t('organizer.event_form.step1.address_placeholder')"
+            :placeholder="$t('manage.event_form.step1.address_placeholder')"
           />
           <div class="invalid-feedback">{{ errors.addressLine }}</div>
         </div>
 
         <div class="col-12">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step1.banner_url') }}
+            {{ $t('manage.event_form.step1.banner_url') }}
           </label>
           <div class="row g-3">
             <div class="col-12">
@@ -141,7 +141,7 @@ function toggleCategory(id: number) {
                 v-model="form.bannerUrl.wide"
                 type="url"
                 class="form-control"
-                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+                :placeholder="$t('manage.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.wide" class="mt-2">
                 <img :src="form.bannerUrl.wide" class="rounded" style="max-height:120px;object-fit:cover;width:100%;"/>
@@ -153,7 +153,7 @@ function toggleCategory(id: number) {
                 v-model="form.bannerUrl.square"
                 type="url"
                 class="form-control"
-                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+                :placeholder="$t('manage.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.square" class="mt-2">
                 <img :src="form.bannerUrl.square" class="rounded" style="max-height:120px;object-fit:cover;width:100%;aspect-ratio:1;"/>
@@ -165,7 +165,7 @@ function toggleCategory(id: number) {
                 v-model="form.bannerUrl.tall"
                 type="url"
                 class="form-control"
-                :placeholder="$t('organizer.event_form.step1.banner_placeholder')"
+                :placeholder="$t('manage.event_form.step1.banner_placeholder')"
               />
               <div v-if="form.bannerUrl.tall" class="mt-2">
                 <img :src="form.bannerUrl.tall" class="rounded" style="max-height:120px;object-fit:cover;width:100%;"/>
@@ -180,7 +180,7 @@ function toggleCategory(id: number) {
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary px-4" :disabled="saving" @click="$emit('save')">
         <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
-        {{ $t('organizer.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
+        {{ $t('manage.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
       </button>
     </div>
   </div>

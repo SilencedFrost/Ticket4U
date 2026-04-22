@@ -2,9 +2,9 @@
   <div class="p-3 p-md-4 p-lg-5">
     <div class="mb-5">
       <h2 class="fw-bold text-reactive-primary mb-1">
-        {{ $t('organizer.home.greeting', { name: mockProfile.name }) }} 👋
+        {{ $t('manage.home.greeting', { name: mockProfile.name }) }} 👋
       </h2>
-      <p class="text-reactive-secondary">{{ $t('organizer.home.subtitle') }}</p>
+      <p class="text-reactive-secondary">{{ $t('manage.home.subtitle') }}</p>
     </div>
 
     <!-- Quick stats -->
@@ -25,33 +25,33 @@
 
     <!-- Quick actions -->
     <div class="mb-5">
-      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.home.quick_actions') }}</h5>
+      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('manage.home.quick_actions') }}</h5>
       <div class="d-flex flex-wrap gap-3">
         <NuxtLink :to="localePath('/manage/event/new')" class="btn btn-primary px-4">
-          <i class="bi bi-plus-lg me-2"/>{{ $t('organizer.events.create') }}
+          <i class="bi bi-plus-lg me-2"/>{{ $t('manage.events.create') }}
         </NuxtLink>
         <NuxtLink :to="localePath('/manage/dashboard/events')" class="btn btn-outline-secondary px-4">
-          <i class="bi bi-calendar-event me-2"/>{{ $t('organizer.home.view_events') }}
+          <i class="bi bi-calendar-event me-2"/>{{ $t('manage.home.view_events') }}
         </NuxtLink>
         <NuxtLink :to="localePath('/manage/reports')" class="btn btn-outline-secondary px-4">
-          <i class="bi bi-bar-chart me-2"/>{{ $t('organizer.home.view_reports') }}
+          <i class="bi bi-bar-chart me-2"/>{{ $t('manage.home.view_reports') }}
         </NuxtLink>
       </div>
     </div>
 
     <!-- Recent events -->
     <div>
-      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.events.title') }}</h5>
+      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('manage.events.title') }}</h5>
       <div class="card shadow-sm overflow-hidden">
         <div class="table-responsive">
           <table class="table table-hover mb-0 organizer-table">
             <thead>
             <tr>
-              <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('organizer.events.col.event') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.date') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.status') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.events.col.tickets') }}</th>
-              <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('organizer.events.col.revenue') }}</th>
+              <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('manage.events.col.event') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.events.col.date') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.events.col.status') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.events.col.tickets') }}</th>
+              <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('manage.events.col.revenue') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -119,10 +119,10 @@ const stats = computed(() => {
   const upcoming     = mockEvents.filter(e => ['PREMIERE', 'SELLING'].includes(e.status)).length
   const active       = mockEvents.filter(e => e.status === 'SELLING').length
   return [
-    { label: $t('organizer.home.stats.total_events'), value: String(mockEvents.length),         sub: $t('organizer.home.stats.upcoming', { n: upcoming }), icon: 'bi-calendar-event',    color: '#3b82f6' },
-    { label: $t('organizer.home.stats.tickets_sold'), value: totalSold.toLocaleString('vi-VN'), sub: $t('organizer.home.stats.this_month'),                icon: 'bi-ticket-perforated', color: '#22c55e' },
-    { label: $t('organizer.home.stats.revenue'),      value: formatPrice(totalRevenue),          sub: $t('organizer.home.stats.this_month'),                icon: 'bi-cash-stack',        color: '#f59e0b' },
-    { label: $t('organizer.events.status.selling'),   value: String(active),                    sub: $t('organizer.home.stats.upcoming', { n: active }),   icon: 'bi-star-fill',         color: '#ec4899' },
+    { label: $t('manage.home.stats.total_events'), value: String(mockEvents.length),         sub: $t('manage.home.stats.upcoming', { n: upcoming }), icon: 'bi-calendar-event',    color: '#3b82f6' },
+    { label: $t('manage.home.stats.tickets_sold'), value: totalSold.toLocaleString('vi-VN'), sub: $t('manage.home.stats.this_month'),                icon: 'bi-ticket-perforated', color: '#22c55e' },
+    { label: $t('manage.home.stats.revenue'),      value: formatPrice(totalRevenue),          sub: $t('manage.home.stats.this_month'),                icon: 'bi-cash-stack',        color: '#f59e0b' },
+    { label: $t('manage.events.status.selling'),   value: String(active),                    sub: $t('manage.home.stats.upcoming', { n: active }),   icon: 'bi-star-fill',         color: '#ec4899' },
   ]
 })
 </script>

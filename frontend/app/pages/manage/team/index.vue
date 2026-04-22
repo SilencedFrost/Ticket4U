@@ -91,11 +91,11 @@ function confirmRemoveMember() {
     <!-- Header -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
       <div>
-        <h2 class="fw-bold text-reactive-primary mb-1">{{ $t('organizer.team.title') }}</h2>
-        <p class="text-reactive-secondary mb-0">{{ $t('organizer.team.subtitle') }}</p>
+        <h2 class="fw-bold text-reactive-primary mb-1">{{ $t('manage.team.title') }}</h2>
+        <p class="text-reactive-secondary mb-0">{{ $t('manage.team.subtitle') }}</p>
       </div>
       <button class="btn btn-primary px-4" @click="showInvite = true">
-        <i class="bi bi-person-plus me-2"/>{{ $t('organizer.team.invite') }}
+        <i class="bi bi-person-plus me-2"/>{{ $t('manage.team.invite') }}
       </button>
     </div>
 
@@ -104,7 +104,7 @@ function confirmRemoveMember() {
       <div v-for="stat in stats" :key="stat.id" class="col-6 col-md-3">
         <div class="card shadow-sm p-3 h-100">
           <div class="d-flex align-items-center justify-content-between mb-2">
-            <small class="text-reactive-secondary">{{ $t('organizer.team.roles.' + stat.key) }}</small>
+            <small class="text-reactive-secondary">{{ $t('manage.team.roles.' + stat.key) }}</small>
             <div
               class="stat-icon rounded-circle d-flex align-items-center justify-content-center"
               :style="{ background: stat.color + '22' }"
@@ -121,7 +121,7 @@ function confirmRemoveMember() {
     <div class="card shadow-sm p-3 mb-4">
       <div class="row g-3 align-items-end">
         <div class="col-md-5">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.events.search') }}</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.events.search') }}</label>
           <div class="input-group">
             <span class="input-group-text">
               <i class="bi bi-search text-reactive-secondary"/>
@@ -130,22 +130,22 @@ function confirmRemoveMember() {
               v-model="searchQuery"
               type="text"
               class="form-control"
-              :placeholder="$t('organizer.team.search_placeholder')"
+              :placeholder="$t('manage.team.search_placeholder')"
             />
           </div>
         </div>
         <div class="col-md-3">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.team.filter_role') }}</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.team.filter_role') }}</label>
           <select v-model="filterRole" class="form-select">
-            <option value="">{{ $t('organizer.team.all_roles') }}</option>
+            <option value="">{{ $t('manage.team.all_roles') }}</option>
             <option v-for="r in ASSIGNABLE_ROLES" :key="r.id" :value="r.id">
-              {{ $t('organizer.team.roles.' + r.key) }}
+              {{ $t('manage.team.roles.' + r.key) }}
             </option>
           </select>
         </div>
         <div class="col-md-2">
           <button class="btn btn-outline-secondary w-100" @click="searchQuery = ''; filterRole = ''">
-            {{ $t('organizer.events.reset') }}
+            {{ $t('manage.events.reset') }}
           </button>
         </div>
       </div>
@@ -156,19 +156,19 @@ function confirmRemoveMember() {
 
       <div v-if="filteredStaff.length === 0" class="text-center py-5 text-reactive-secondary">
         <i class="bi bi-people fs-1 d-block mb-3 opacity-25"/>
-        <div class="fw-semibold mb-1">{{ $t('organizer.team.empty') }}</div>
-        <small class="opacity-75">{{ $t('organizer.team.empty_sub') }}</small>
+        <div class="fw-semibold mb-1">{{ $t('manage.team.empty') }}</div>
+        <small class="opacity-75">{{ $t('manage.team.empty_sub') }}</small>
       </div>
 
       <div v-else class="table-responsive">
         <table class="table table-hover mb-0 team-table">
           <thead>
             <tr>
-              <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('organizer.team.col.member') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.team.col.role') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.team.col.status') }}</th>
-              <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.team.col.invited') }}</th>
-              <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('organizer.team.col.actions') }}</th>
+              <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('manage.team.col.member') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.team.col.role') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.team.col.status') }}</th>
+              <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.team.col.invited') }}</th>
+              <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('manage.team.col.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -201,7 +201,7 @@ function confirmRemoveMember() {
                       style="max-width: 160px;"
                     >
                       <option v-for="r in ASSIGNABLE_ROLES" :key="r.id" :value="r.id">
-                        {{ $t('organizer.team.roles.' + r.key) }}
+                        {{ $t('manage.team.roles.' + r.key) }}
                       </option>
                     </select>
                     <button class="btn btn-sm btn-primary" @click="saveRole">
@@ -221,7 +221,7 @@ function confirmRemoveMember() {
                     }"
                   >
                     <i :class="['bi', getAssignableRole(member.roleId)?.icon ?? 'bi-person', 'me-1']"/>
-                    {{ $t('organizer.team.roles.' + (getAssignableRole(member.roleId)?.key ?? '')) }}
+                    {{ $t('manage.team.roles.' + (getAssignableRole(member.roleId)?.key ?? '')) }}
                   </span>
                 </template>
               </td>
@@ -232,7 +232,7 @@ function confirmRemoveMember() {
                   class="badge rounded-pill px-3 py-2"
                   :class="member.isActive ? 'bg-success bg-opacity-25 text-success' : 'bg-secondary bg-opacity-25 text-secondary'"
                 >
-                  {{ member.isActive ? $t('organizer.team.status.active') : $t('organizer.team.status.inactive') }}
+                  {{ member.isActive ? $t('manage.team.status.active') : $t('manage.team.status.inactive') }}
                 </span>
               </td>
 
@@ -246,7 +246,7 @@ function confirmRemoveMember() {
                 <div class="d-flex gap-2">
                   <button
                     class="btn btn-sm btn-outline-secondary"
-                    :title="$t('organizer.team.action.edit_role')"
+                    :title="$t('manage.team.action.edit_role')"
                     @click="openEditRole(member)"
                   >
                     <i class="bi bi-pencil"/>
@@ -254,14 +254,14 @@ function confirmRemoveMember() {
                   <button
                     class="btn btn-sm"
                     :class="member.isActive ? 'btn-outline-warning' : 'btn-outline-success'"
-                    :title="member.isActive ? $t('organizer.team.action.deactivate') : $t('organizer.team.action.activate')"
+                    :title="member.isActive ? $t('manage.team.action.deactivate') : $t('manage.team.action.activate')"
                     @click="toggleActive(member)"
                   >
                     <i :class="member.isActive ? 'bi bi-pause-fill' : 'bi bi-play-fill'"/>
                   </button>
                   <button
                     class="btn btn-sm btn-outline-danger"
-                    :title="$t('organizer.team.action.remove')"
+                    :title="$t('manage.team.action.remove')"
                     @click="confirmRemove = member"
                   >
                     <i class="bi bi-trash"/>
@@ -309,17 +309,17 @@ function confirmRemoveMember() {
         <div class="modal-box card shadow p-4">
           <h5 class="fw-bold text-reactive-primary mb-3">
             <i class="bi bi-exclamation-triangle-fill text-danger me-2"/>
-            {{ $t('organizer.team.remove_confirm.title') }}
+            {{ $t('manage.team.remove_confirm.title') }}
           </h5>
           <p class="text-reactive-secondary mb-4">
-            {{ $t('organizer.team.remove_confirm.confirm', { name: getStaffDisplayName(confirmRemove) }) }}
+            {{ $t('manage.team.remove_confirm.confirm', { name: getStaffDisplayName(confirmRemove) }) }}
           </p>
           <div class="d-flex justify-content-end gap-2">
             <button class="btn btn-outline-secondary px-4" @click="confirmRemove = null">
-              {{ $t('organizer.team.invite_modal.cancel') }}
+              {{ $t('manage.team.invite_modal.cancel') }}
             </button>
             <button class="btn btn-danger px-4" @click="confirmRemoveMember">
-              {{ $t('organizer.team.remove_confirm.confirm_btn') }}
+              {{ $t('manage.team.remove_confirm.confirm_btn') }}
             </button>
           </div>
         </div>

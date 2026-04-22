@@ -142,12 +142,12 @@ function saveCustomLayout() {
   <div>
     <div v-if="zones.length === 0" class="alert alert-warning d-flex align-items-center gap-2 mb-4">
       <i class="bi bi-exclamation-triangle-fill"/>
-      <span>{{ $t('organizer.event_form.step4.no_zones_warning') }}</span>
+      <span>{{ $t('manage.event_form.step4.no_zones_warning') }}</span>
     </div>
 
     <div class="card shadow-sm p-4 mb-4">
       <h5 class="fw-semibold text-reactive-primary mb-3">
-        <i class="bi bi-layers me-2 text-primary"/>{{ $t('organizer.event_form.step4.title') }}
+        <i class="bi bi-layers me-2 text-primary"/>{{ $t('manage.event_form.step4.title') }}
       </h5>
 
       <!-- Mode toggle -->
@@ -157,14 +157,14 @@ function saveCustomLayout() {
           :class="layoutMode === 'venue' ? 'btn-primary' : 'btn-outline-secondary'"
           @click="layoutMode = 'venue'"
         >
-          <i class="bi bi-building me-2"/>{{ $t('organizer.event_form.step4.venue_mode') }}
+          <i class="bi bi-building me-2"/>{{ $t('manage.event_form.step4.venue_mode') }}
         </button>
         <button
           class="btn"
           :class="layoutMode === 'custom' ? 'btn-primary' : 'btn-outline-secondary'"
           @click="layoutMode = 'custom'"
         >
-          <i class="bi bi-pencil-square me-2"/>{{ $t('organizer.event_form.step4.custom_mode') }}
+          <i class="bi bi-pencil-square me-2"/>{{ $t('manage.event_form.step4.custom_mode') }}
         </button>
       </div>
 
@@ -173,10 +173,10 @@ function saveCustomLayout() {
 
         <div class="mb-4">
           <label class="form-label small fw-semibold text-reactive-secondary">
-            {{ $t('organizer.event_form.step4.venue') }} <span class="text-danger">*</span>
+            {{ $t('manage.event_form.step4.venue') }} <span class="text-danger">*</span>
           </label>
           <select v-model="form.venueId" class="form-select">
-            <option value="">— {{ $t('organizer.event_form.step4.venue') }} —</option>
+            <option value="">— {{ $t('manage.event_form.step4.venue') }} —</option>
             <option v-for="v in mockVenues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
           </select>
           <div v-if="selectedVenue" class="mt-2 d-flex align-items-center gap-2">
@@ -194,7 +194,7 @@ function saveCustomLayout() {
             <div v-else class="layout-preview-placeholder bg-reactive-primary rounded d-flex align-items-center justify-content-center" style="height:340px;">
               <div class="text-center text-reactive-secondary">
                 <i class="bi bi-grid-3x3 fs-1 d-block mb-3 opacity-25"/>
-                <small class="opacity-50">{{ $t('organizer.event_form.step4.venue_no_layout') }}</small>
+                <small class="opacity-50">{{ $t('manage.event_form.step4.venue_no_layout') }}</small>
               </div>
             </div>
           </div>
@@ -202,13 +202,13 @@ function saveCustomLayout() {
           <!-- Zone linking -->
           <div class="col-lg-5">
             <div class="fw-semibold text-reactive-primary mb-3">
-              <i class="bi bi-link-45deg me-2 text-primary"/>{{ $t('organizer.event_form.step4.link_zones') }}
+              <i class="bi bi-link-45deg me-2 text-primary"/>{{ $t('manage.event_form.step4.link_zones') }}
             </div>
             <div v-if="zones.length === 0" class="alert alert-warning py-2 small">
-              <i class="bi bi-exclamation-triangle me-1"/>{{ $t('organizer.event_form.step4.no_zones_link') }}
+              <i class="bi bi-exclamation-triangle me-1"/>{{ $t('manage.event_form.step4.no_zones_link') }}
             </div>
             <div v-else>
-              <p class="small text-reactive-secondary mb-3">{{ $t('organizer.event_form.step4.link_description') }}</p>
+              <p class="small text-reactive-secondary mb-3">{{ $t('manage.event_form.step4.link_description') }}</p>
               <div
                 v-for="vz in getVenueZoneNames(selectedVenue)" :key="vz"
                 class="zone-link-row rounded p-2 mb-2"
@@ -222,21 +222,21 @@ function saveCustomLayout() {
                   <span v-if="zoneMapping[vz]" class="badge bg-primary text-white text-truncate flex-shrink-0" style="max-width:130px;" :title="linkedZoneName(zoneMapping[vz])">
                     <i class="bi bi-check2 me-1"/>{{ linkedZoneName(zoneMapping[vz]) }}
                   </span>
-                  <span v-else class="text-reactive-secondary small fst-italic flex-shrink-0">{{ $t('organizer.event_form.step4.decorative') }}</span>
+                  <span v-else class="text-reactive-secondary small fst-italic flex-shrink-0">{{ $t('manage.event_form.step4.decorative') }}</span>
                 </div>
                 <!-- Select (always visible so user can change) -->
                 <select v-model="zoneMapping[vz]" class="form-select form-select-sm mt-2">
-                  <option value="">— {{ $t('organizer.event_form.step4.decorative') }} —</option>
-                  <optgroup :label="$t('organizer.event_form.step4.seated_zones')">
+                  <option value="">— {{ $t('manage.event_form.step4.decorative') }} —</option>
+                  <optgroup :label="$t('manage.event_form.step4.seated_zones')">
                     <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>
                   </optgroup>
-                  <optgroup :label="$t('organizer.event_form.step4.standing_zones')">
+                  <optgroup :label="$t('manage.event_form.step4.standing_zones')">
                     <option v-for="z in standingZones" :key="z.id" :value="z.id">{{ z.name }}</option>
                   </optgroup>
                 </select>
               </div>
               <div class="alert alert-info py-2 small mt-3 mb-0">
-                <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step4.link_hint') }}
+                <i class="bi bi-info-circle me-1"/>{{ $t('manage.event_form.step4.link_hint') }}
               </div>
             </div>
           </div>
@@ -244,7 +244,7 @@ function saveCustomLayout() {
         </div>
 
         <div v-else class="alert alert-warning py-2 small">
-          <i class="bi bi-exclamation-triangle me-1"/>{{ $t('organizer.event_form.step4.no_venue') }}
+          <i class="bi bi-exclamation-triangle me-1"/>{{ $t('manage.event_form.step4.no_venue') }}
         </div>
 
       </div>
@@ -256,14 +256,14 @@ function saveCustomLayout() {
         <template v-if="customLayout && !isEditingCustom">
           <div class="d-flex align-items-center gap-2 mb-3">
             <span class="fw-semibold text-reactive-primary">
-              <i class="bi bi-grid-3x3 me-2 text-primary"/>{{ $t('organizer.event_form.step4.custom_layout') }}
+              <i class="bi bi-grid-3x3 me-2 text-primary"/>{{ $t('manage.event_form.step4.custom_layout') }}
             </span>
             <div class="ms-auto d-flex gap-2">
               <button class="btn btn-sm btn-outline-primary" @click="isEditingCustom = true">
-                <i class="bi bi-pencil me-1"/>{{ $t('organizer.event_form.step4.edit_layout') }}
+                <i class="bi bi-pencil me-1"/>{{ $t('manage.event_form.step4.edit_layout') }}
               </button>
               <button class="btn btn-sm btn-outline-danger" @click="deleteCustomLayout">
-                <i class="bi bi-trash me-1"/>{{ $t('organizer.event_form.step4.delete_layout') }}
+                <i class="bi bi-trash me-1"/>{{ $t('manage.event_form.step4.delete_layout') }}
               </button>
             </div>
           </div>
@@ -275,7 +275,7 @@ function saveCustomLayout() {
           <div class="d-flex align-items-center gap-2 mb-3">
             <button class="btn btn-sm btn-primary">Floor 1</button>
             <button class="btn btn-sm btn-outline-primary">
-              <i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step4.add_floor') }}
+              <i class="bi bi-plus-lg me-1"/>{{ $t('manage.event_form.step4.add_floor') }}
             </button>
           </div>
 
@@ -284,29 +284,29 @@ function saveCustomLayout() {
             style="height:520px;"
           >
             <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">
-              <small class="fw-bold text-dark">{{ $t('organizer.event_form.step4.stage_screen') }}</small>
+              <small class="fw-bold text-dark">{{ $t('manage.event_form.step4.stage_screen') }}</small>
             </div>
             <div v-if="zones.length > 0" class="position-absolute bottom-0 start-0 end-0 p-3 d-flex gap-2 flex-wrap" style="background:rgba(0,0,0,0.35);">
-              <small class="text-white opacity-75 me-1 align-self-center">{{ $t('organizer.event_form.step4.place_zone') }}</small>
+              <small class="text-white opacity-75 me-1 align-self-center">{{ $t('manage.event_form.step4.place_zone') }}</small>
               <span v-for="zone in zones" :key="zone.id" class="badge zone-palette-badge">{{ zone.name }}</span>
             </div>
             <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events:none;">
               <i class="bi bi-pencil-square fs-1 d-block mb-2 text-white opacity-25"/>
-              <small class="text-white opacity-50">{{ $t('organizer.event_form.step4.hint') }}</small>
+              <small class="text-white opacity-50">{{ $t('manage.event_form.step4.hint') }}</small>
             </div>
           </div>
 
           <!-- Editor action bar -->
           <div class="d-flex align-items-center gap-2 mt-3 pt-3 border-top">
             <small class="text-reactive-secondary">
-              <i class="bi bi-info-circle me-1"/>{{ $t('organizer.event_form.step4.hint') }}
+              <i class="bi bi-info-circle me-1"/>{{ $t('manage.event_form.step4.hint') }}
             </small>
             <div class="ms-auto d-flex gap-2">
               <button v-if="customLayout" class="btn btn-sm btn-outline-secondary" @click="isEditingCustom = false">
                 <i class="bi bi-x-lg me-1"/>{{ $t('common.cancel') }}
               </button>
               <button class="btn btn-sm btn-primary" @click="saveCustomLayout">
-                <i class="bi bi-floppy me-1"/>{{ $t('organizer.event_form.step4.save_layout') }}
+                <i class="bi bi-floppy me-1"/>{{ $t('manage.event_form.step4.save_layout') }}
               </button>
             </div>
           </div>
@@ -318,15 +318,15 @@ function saveCustomLayout() {
 
     <div class="d-flex justify-content-between gap-2 mt-2">
       <button class="btn btn-outline-secondary px-4" @click="$emit('back')">
-        <i class="bi bi-arrow-left me-1"/>{{ $t('organizer.event_form.back') }}
+        <i class="bi bi-arrow-left me-1"/>{{ $t('manage.event_form.back') }}
       </button>
       <div class="d-flex gap-2">
         <button class="btn btn-primary px-4" :disabled="saving" @click="$emit('save')">
           <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
-          <i v-else class="bi bi-floppy me-2"/>{{ $t('organizer.event_form.step4.save_layout') }}
+          <i v-else class="bi bi-floppy me-2"/>{{ $t('manage.event_form.step4.save_layout') }}
         </button>
         <NuxtLink :to="useLocalePath()('/manage/dashboard/events')" class="btn btn-success px-4">
-          <i class="bi bi-check2 me-2"/>{{ $t('organizer.event_form.step4.save_close') }}
+          <i class="bi bi-check2 me-2"/>{{ $t('manage.event_form.step4.save_close') }}
         </NuxtLink>
       </div>
     </div>

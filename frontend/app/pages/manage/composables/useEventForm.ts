@@ -75,15 +75,15 @@ export function useEventForm() {
   function validateStep1(): boolean {
     errors.value = {}
     if (!form.value.name.trim())
-      errors.value.name = $t('organizer.event_form.step1.name') + ' is required'
+      errors.value.name = $t('manage.event_form.step1.name') + ' is required'
     if (!form.value.categoryIds.length)
-      errors.value.categoryIds = $t('organizer.event_form.step1.category') + ' is required'
+      errors.value.categoryIds = $t('manage.event_form.step1.category') + ' is required'
     if (!form.value.addressLine.trim())
-      errors.value.addressLine = $t('organizer.event_form.step1.address') + ' is required'
+      errors.value.addressLine = $t('manage.event_form.step1.address') + ' is required'
     if (!form.value.startDate)
-      errors.value.startDate = $t('organizer.event_form.step1.start_date') + ' is required'
+      errors.value.startDate = $t('manage.event_form.step1.start_date') + ' is required'
     if (!form.value.endDate)
-      errors.value.endDate = $t('organizer.event_form.step1.end_date') + ' is required'
+      errors.value.endDate = $t('manage.event_form.step1.end_date') + ' is required'
     if (form.value.startDate && form.value.endDate && form.value.endDate <= form.value.startDate)
       errors.value.endDate = 'End date must be after start date'
     return Object.keys(errors.value).length === 0

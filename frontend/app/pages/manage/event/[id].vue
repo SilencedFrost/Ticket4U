@@ -40,10 +40,10 @@ const zones = computed({
 })
 
 const steps = computed(() => [
-  $t('organizer.event_form.step1.title'),
-  $t('organizer.event_form.step2.title'),
-  $t('organizer.event_form.step3.title'),
-  $t('organizer.event_form.step4.title'),
+  $t('manage.event_form.step1.title'),
+  $t('manage.event_form.step2.title'),
+  $t('manage.event_form.step3.title'),
+  $t('manage.event_form.step4.title'),
 ])
 
 const statusBadgeClass = computed(() => ({
@@ -89,7 +89,7 @@ onMounted(() => {
       </NuxtLink>
       <div>
         <h2 class="fw-bold text-reactive-primary mb-0">
-          {{ isNew ? $t('organizer.event_form.create_title') : $t('organizer.event_form.edit_title') }}
+          {{ isNew ? $t('manage.event_form.create_title') : $t('manage.event_form.edit_title') }}
         </h2>
         <small v-if="!isNew" class="text-reactive-secondary">ID: {{ eventId }}</small>
       </div>
@@ -97,7 +97,7 @@ onMounted(() => {
         <span class="badge" :class="statusBadgeClass">{{ $t(getStatusI18nKey(form.status)) }}</span>
         <Transition name="draft-toast">
           <span v-if="showDraftSaved" class="badge bg-success d-flex align-items-center gap-1">
-            <i class="bi bi-check2"/>{{ $t('organizer.event_form.draft_saved') }}
+            <i class="bi bi-check2"/>{{ $t('manage.event_form.draft_saved') }}
           </span>
         </Transition>
       </div>

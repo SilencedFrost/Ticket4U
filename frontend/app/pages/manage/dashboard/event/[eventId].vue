@@ -72,9 +72,9 @@ function fillColor(pct: number) {
     <!-- Not found -->
     <div v-if="!event" class="text-center py-5 text-reactive-secondary">
       <i class="bi bi-calendar-x fs-1 d-block mb-3 opacity-25"/>
-      <div class="fw-semibold">{{ $t('organizer.revenue.not_found') }}</div>
+      <div class="fw-semibold">{{ $t('manage.revenue.not_found') }}</div>
       <NuxtLink :to="localePath('/manage/dashboard/events')" class="btn btn-outline-secondary mt-4">
-        <i class="bi bi-arrow-left me-2"/>{{ $t('organizer.revenue.back') }}
+        <i class="bi bi-arrow-left me-2"/>{{ $t('manage.revenue.back') }}
       </NuxtLink>
     </div>
 
@@ -107,7 +107,7 @@ function fillColor(pct: number) {
         <div class="col-sm-6 col-xl">
           <div class="card shadow-sm p-4 h-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <small class="text-reactive-secondary">{{ $t('organizer.revenue.stats.total_revenue') }}</small>
+              <small class="text-reactive-secondary">{{ $t('manage.revenue.stats.total_revenue') }}</small>
               <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="background:#22c55e22">
                 <i class="bi bi-cash-stack" style="color:#22c55e"/>
               </div>
@@ -118,7 +118,7 @@ function fillColor(pct: number) {
         <div class="col-sm-6 col-xl">
           <div class="card shadow-sm p-4 h-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <small class="text-reactive-secondary">{{ $t('organizer.revenue.stats.tickets_sold') }}</small>
+              <small class="text-reactive-secondary">{{ $t('manage.revenue.stats.tickets_sold') }}</small>
               <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="background:#3b82f622">
                 <i class="bi bi-ticket-perforated" style="color:#3b82f6"/>
               </div>
@@ -130,7 +130,7 @@ function fillColor(pct: number) {
         <div class="col-sm-6 col-xl">
           <div class="card shadow-sm p-4 h-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <small class="text-reactive-secondary">{{ $t('organizer.revenue.stats.total_capacity') }}</small>
+              <small class="text-reactive-secondary">{{ $t('manage.revenue.stats.total_capacity') }}</small>
               <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="background:#f59e0b22">
                 <i class="bi bi-people" style="color:#f59e0b"/>
               </div>
@@ -141,7 +141,7 @@ function fillColor(pct: number) {
         <div class="col-sm-6 col-xl">
           <div class="card shadow-sm p-4 h-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <small class="text-reactive-secondary">{{ $t('organizer.revenue.stats.sold_rate') }}</small>
+              <small class="text-reactive-secondary">{{ $t('manage.revenue.stats.sold_rate') }}</small>
               <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="background:#ec489922">
                 <i class="bi bi-pie-chart" style="color:#ec4899"/>
               </div>
@@ -155,7 +155,7 @@ function fillColor(pct: number) {
         <div class="col-sm-6 col-xl">
           <div class="card shadow-sm p-4 h-100">
             <div class="d-flex align-items-center justify-content-between mb-3">
-              <small class="text-reactive-secondary">{{ $t('organizer.revenue.stats.checked_in') }}</small>
+              <small class="text-reactive-secondary">{{ $t('manage.revenue.stats.checked_in') }}</small>
               <div class="stat-icon rounded-circle d-flex align-items-center justify-content-center" style="background:#8b5cf622">
                 <i class="bi bi-qr-code-scan" style="color:#8b5cf6"/>
               </div>
@@ -166,19 +166,19 @@ function fillColor(pct: number) {
             <div v-if="['ONGOING','FINISHED'].includes(event.status)" class="progress mt-2" style="height:4px;">
               <div class="progress-bar bg-success" :style="{ width: checkedInRate + '%' }"/>
             </div>
-            <small v-if="['ONGOING','FINISHED'].includes(event.status)" class="text-reactive-secondary mt-1">{{ checkedInRate }}% {{ $t('organizer.revenue.stats.tickets_sold').toLowerCase() }}</small>
+            <small v-if="['ONGOING','FINISHED'].includes(event.status)" class="text-reactive-secondary mt-1">{{ checkedInRate }}% {{ $t('manage.revenue.stats.tickets_sold').toLowerCase() }}</small>
           </div>
         </div>
       </div>
 
       <!-- Per-session breakdown -->
-      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('organizer.revenue.sessions_title') }}</h5>
+      <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('manage.revenue.sessions_title') }}</h5>
 
       <div v-for="(session, idx) in event.sessions" :key="session.id" class="mb-4">
         <!-- Session header -->
         <div class="d-flex align-items-center gap-2 mb-2">
           <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
-            {{ $t('organizer.revenue.session') }} {{ idx + 1 }} — {{ session.name }}
+            {{ $t('manage.revenue.session') }} {{ idx + 1 }} — {{ session.name }}
           </span>
           <small class="text-reactive-secondary">
             {{ formatDate(session.startDate) }} {{ formatTime(session.startDate) }}
@@ -186,10 +186,10 @@ function fillColor(pct: number) {
             {{ formatDate(session.endDate) }} {{ formatTime(session.endDate) }}
           </small>
           <span class="ms-auto text-reactive-secondary small">
-            {{ $t('organizer.home.stats.revenue') }}:
+            {{ $t('manage.home.stats.revenue') }}:
             <span class="fw-semibold text-reactive-primary">{{ formatPrice(sessionRevenue(session)) }}</span>
             &nbsp;·&nbsp;
-            {{ $t('organizer.revenue.stats.tickets_sold') }}:
+            {{ $t('manage.revenue.stats.tickets_sold') }}:
             <span class="fw-semibold text-reactive-primary">{{ sessionSold(session).toLocaleString('vi-VN') }}</span>
           </span>
         </div>
@@ -197,19 +197,19 @@ function fillColor(pct: number) {
         <!-- Zone table -->
         <div class="card shadow-sm overflow-hidden">
           <div v-if="session.zones.length === 0" class="text-center py-4 text-reactive-secondary small">
-            {{ $t('organizer.revenue.no_zones') }}
+            {{ $t('manage.revenue.no_zones') }}
           </div>
           <div v-else class="table-responsive">
             <table class="table table-hover mb-0 revenue-table">
               <thead>
                 <tr>
-                  <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('organizer.revenue.zone_table.zone') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.revenue.zone_table.type') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.revenue.zone_table.price') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.revenue.zone_table.capacity') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold">{{ $t('organizer.revenue.zone_table.tickets') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold" style="min-width:120px">{{ $t('organizer.revenue.zone_table.sold') }}</th>
-                  <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('organizer.revenue.zone_table.revenue') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('manage.revenue.zone_table.zone') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.revenue.zone_table.type') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.revenue.zone_table.price') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.revenue.zone_table.capacity') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold">{{ $t('manage.revenue.zone_table.tickets') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold" style="min-width:120px">{{ $t('manage.revenue.zone_table.sold') }}</th>
+                  <th class="text-reactive-secondary small fw-semibold pe-4">{{ $t('manage.revenue.zone_table.revenue') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -224,7 +224,7 @@ function fillColor(pct: number) {
                     <span class="badge rounded-pill px-3 py-2"
                       :class="zone.isStanding ? 'bg-info bg-opacity-10 text-info' : 'bg-primary bg-opacity-10 text-primary'">
                       <i :class="zone.isStanding ? 'bi bi-person-standing me-1' : 'bi bi-grid me-1'"/>
-                      {{ zone.isStanding ? $t('organizer.revenue.type.standing') : $t('organizer.revenue.type.seated') }}
+                      {{ zone.isStanding ? $t('manage.revenue.type.standing') : $t('manage.revenue.type.seated') }}
                     </span>
                   </td>
                   <td class="py-3">

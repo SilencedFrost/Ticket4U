@@ -63,7 +63,7 @@
         >
           <i :class="['bi', sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left', 'fs-5', 'flex-shrink-0']" />
           <transition name="fade-text">
-            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">{{ $t('organizer.nav.collapse') }}</span>
+            <span v-if="!sidebarCollapsed" class="text-reactive-secondary">{{ $t('manage.nav.collapse') }}</span>
           </transition>
         </button>
         <!-- Close button (mobile only) -->
@@ -128,7 +128,7 @@
                 class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 text-danger border-0 bg-transparent w-100"
                 @click="handleLogout"
               >
-                <i class="bi bi-box-arrow-left" /><span>{{ $t('organizer.nav.logout') }}</span>
+                <i class="bi bi-box-arrow-left" /><span>{{ $t('manage.nav.logout') }}</span>
               </button>
             </div>
           </div>
@@ -180,9 +180,9 @@ const logoUrl = computed(() => profile.value?.logoUrl ?? profile.value?.logo_url
 
 // Nav items
 const navItems = computed(() => [
-  { to: localePath('/manage'),                  label: $t('organizer.nav.home'),   icon: 'bi-house'          },
-  { to: localePath('/manage/dashboard/events'), label: $t('organizer.nav.events'), icon: 'bi-calendar-event' },
-  { to: localePath('/manage/team'),             label: $t('organizer.nav.team'),   icon: 'bi-people'         },
+  { to: localePath('/manage'),                  label: $t('manage.nav.home'),   icon: 'bi-house'          },
+  { to: localePath('/manage/dashboard/events'), label: $t('manage.nav.events'), icon: 'bi-calendar-event' },
+  { to: localePath('/manage/team'),             label: $t('manage.nav.team'),   icon: 'bi-people'         },
 ])
 
 const isActive = (to: string) => {

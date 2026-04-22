@@ -54,16 +54,16 @@ function deleteZone(id: string) {
     <div class="card shadow-sm p-4 mb-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h5 class="fw-semibold text-reactive-primary mb-0">
-          <i class="bi bi-grid me-2 text-primary"/>{{ $t('organizer.event_form.step3.title') }}
+          <i class="bi bi-grid me-2 text-primary"/>{{ $t('manage.event_form.step3.title') }}
         </h5>
         <button class="btn btn-sm btn-primary" @click="openZoneModal(null)">
-          <i class="bi bi-plus-lg me-1"/>{{ $t('organizer.event_form.step3.add_zone') }}
+          <i class="bi bi-plus-lg me-1"/>{{ $t('manage.event_form.step3.add_zone') }}
         </button>
       </div>
 
       <div v-if="zones.length === 0" class="text-center py-5 text-reactive-secondary">
         <i class="bi bi-grid fs-1 d-block mb-3"/>
-        <p>{{ $t('organizer.event_form.step3.empty') }}</p>
+        <p>{{ $t('manage.event_form.step3.empty') }}</p>
       </div>
 
       <div v-else class="row g-3">
@@ -74,7 +74,7 @@ function deleteZone(id: string) {
                 <div class="fw-semibold text-reactive-primary">{{ zone.name }}</div>
                 <small class="text-reactive-secondary">
                   <i :class="zone.isStanding ? 'bi-people' : 'bi-chair'" class="bi me-1"/>
-                  {{ zone.isStanding ? $t('organizer.event_form.step3.standing') : $t('organizer.event_form.step3.seated') }}
+                  {{ zone.isStanding ? $t('manage.event_form.step3.standing') : $t('manage.event_form.step3.seated') }}
                 </small>
               </div>
               <div class="d-flex gap-1">
@@ -103,10 +103,10 @@ function deleteZone(id: string) {
 
     <div class="d-flex justify-content-between gap-2">
       <button class="btn btn-outline-secondary px-4" @click="$emit('back')">
-        <i class="bi bi-arrow-left me-1"/>{{ $t('organizer.event_form.back') }}
+        <i class="bi bi-arrow-left me-1"/>{{ $t('manage.event_form.back') }}
       </button>
       <button class="btn btn-primary px-4" @click="$emit('next')">
-        {{ $t('organizer.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
+        {{ $t('manage.event_form.save_next') }} <i class="bi bi-arrow-right ms-1"/>
       </button>
     </div>
 

@@ -108,24 +108,24 @@ onMounted(() => {
     <div class="modal-box card shadow p-4 rounded-3">
 
       <h5 class="text-reactive-primary fw-bold mb-4">
-        {{ zone?.id ? $t('organizer.event_form.step3.edit_zone') : $t('organizer.event_form.step3.add_zone') }}
+        {{ zone?.id ? $t('manage.event_form.step3.edit_zone') : $t('manage.event_form.step3.add_zone') }}
       </h5>
 
       <div class="row g-3">
 
         <!-- Name -->
         <div class="col-12">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.zone_name') }} *</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.zone_name') }} *</label>
           <input v-model="form.name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"/>
           <div class="invalid-feedback">{{ errors.name }}</div>
         </div>
 
         <!-- Type -->
         <div class="col-12">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.type') }}</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.type') }}</label>
           <select v-model="form.isStanding" class="form-select">
-            <option :value="false">{{ $t('organizer.event_form.step3.seated') }}</option>
-            <option :value="true">{{ $t('organizer.event_form.step3.standing') }}</option>
+            <option :value="false">{{ $t('manage.event_form.step3.seated') }}</option>
+            <option :value="true">{{ $t('manage.event_form.step3.standing') }}</option>
           </select>
         </div>
 
@@ -189,7 +189,7 @@ onMounted(() => {
         <!-- Standing: manual capacity -->
         <template v-else>
           <div class="col-12">
-            <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.capacity') }} *</label>
+            <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.capacity') }} *</label>
             <input v-model.number="form.capacity" type="number" min="1" class="form-control" :class="{ 'is-invalid': errors.capacity }"/>
             <div class="invalid-feedback">{{ errors.capacity }}</div>
           </div>
@@ -197,7 +197,7 @@ onMounted(() => {
 
         <!-- Price + Purchase limit -->
         <div class="col-md-6">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.price') }} *</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.price') }} *</label>
           <div class="input-group">
             <input v-model.number="form.price" type="number" min="0" class="form-control" :class="{ 'is-invalid': errors.price }"/>
             <span class="input-group-text text-reactive-secondary">₫</span>
@@ -205,27 +205,27 @@ onMounted(() => {
           <div class="invalid-feedback">{{ errors.price }}</div>
         </div>
         <div class="col-md-6">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.purchase_limit') }}</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.purchase_limit') }}</label>
           <input v-model.number="form.purchaseLimit" type="number" min="1" class="form-control"/>
         </div>
 
         <!-- Description bilingual -->
         <div class="col-12">
-          <label class="form-label small text-reactive-secondary mb-1">{{ $t('organizer.event_form.step3.description') }}</label>
+          <label class="form-label small text-reactive-secondary mb-1">{{ $t('manage.event_form.step3.description') }}</label>
           <ul class="nav nav-tabs mb-2 border-0">
             <li class="nav-item">
               <button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'vi' }" @click="descLang = 'vi'">
-                🇻🇳 {{ $t('organizer.event_form.step3.desc_vi') }}
+                🇻🇳 {{ $t('manage.event_form.step3.desc_vi') }}
               </button>
             </li>
             <li class="nav-item">
               <button type="button" class="nav-link px-3 py-1" :class="{ active: descLang === 'en' }" @click="descLang = 'en'">
-                🇺🇸 {{ $t('organizer.event_form.step3.desc_en') }}
+                🇺🇸 {{ $t('manage.event_form.step3.desc_en') }}
               </button>
             </li>
           </ul>
-          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control" :placeholder="$t('organizer.event_form.step3.desc_vi_placeholder')"/>
-          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control" :placeholder="$t('organizer.event_form.step3.desc_en_placeholder')"/>
+          <textarea v-if="descLang === 'vi'" v-model="form.descriptionVi" rows="2" class="form-control" :placeholder="$t('manage.event_form.step3.desc_vi_placeholder')"/>
+          <textarea v-else v-model="form.descriptionEn" rows="2" class="form-control" :placeholder="$t('manage.event_form.step3.desc_en_placeholder')"/>
         </div>
 
         <!-- Gift Image URL -->
@@ -244,9 +244,9 @@ onMounted(() => {
 
         <!-- Perks -->
         <div class="col-12">
-          <label class="form-label small text-reactive-secondary">{{ $t('organizer.event_form.step3.perks') }}</label>
+          <label class="form-label small text-reactive-secondary">{{ $t('manage.event_form.step3.perks') }}</label>
           <div class="d-flex gap-2 mb-2">
-            <input v-model="newPerk" type="text" class="form-control" :placeholder="$t('organizer.event_form.step3.perk_placeholder')" @keyup.enter="addPerk"/>
+            <input v-model="newPerk" type="text" class="form-control" :placeholder="$t('manage.event_form.step3.perk_placeholder')" @keyup.enter="addPerk"/>
             <button type="button" class="btn btn-outline-primary btn-sm" @click="addPerk"><i class="bi bi-plus-lg"/></button>
           </div>
           <div class="d-flex flex-wrap gap-1">

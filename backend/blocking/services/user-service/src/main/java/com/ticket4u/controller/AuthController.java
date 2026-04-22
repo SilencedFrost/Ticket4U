@@ -6,6 +6,7 @@ import com.ticket4u.dto.auth.internal.LogoutResult;
 import com.ticket4u.dto.auth.internal.RefreshResult;
 import com.ticket4u.exception.UnauthorizedException;
 import com.ticket4u.service.AuthService;
+import com.ticket4u.service.EmailChangeService;
 import com.ticket4u.service.EmailVerificationService;
 import com.ticket4u.service.PasswordResetService;
 import com.ticket4u.util.CookieExtractorUtil;
@@ -30,6 +31,7 @@ public class AuthController {
     private final AuthService authService;
     private final EmailVerificationService emailVerificationService;
     private final PasswordResetService passwordResetService;
+    private final EmailChangeService emailChangeService;
 
     /**
      * POST /api/v1/auth/refresh
@@ -132,5 +134,16 @@ public class AuthController {
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         passwordResetService.resetPassword(request.token(), request.password());
         return ResponseEntity.ok(Map.of("message", "auth.password_reset.success"));
+    }
+
+    /**
+     * GET /api/v1/auth/verify-email-change
+     * Confirm email change from the link sent to the new email address.
+     * Called when user clicks the verification link in their email.
+     */
+    @GetMapping("/verify-email-change")
+    public ResponseEntity<Void> verifyEmailChange(@RequestParam String token) {
+        emailChangeService.confirmEmailChange(token);
+        return ResponseEntity.ok().build();
     }
 }

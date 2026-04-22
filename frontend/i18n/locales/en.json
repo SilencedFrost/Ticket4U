@@ -50,7 +50,11 @@
       "registrationFailed": "Registration failed. Please check your information and try again",
       "validation": "Invalid data",
       "google_unavailable": "Google Sign-In is unavailable. Please use email instead.",
-      "account_not_verified": "Your account is not verified. Please check your email for the verification link."
+      "account_not_verified": "Your account is not verified. Please check your email for the verification link.",
+      "token": {
+        "invalid": "Invalid or already used email change link.",
+        "expired": "This email change link has expired. Please request a new one."
+      }
     },
     "session": {
       "invalid": "Invalid session"
@@ -82,6 +86,15 @@
       "token_invalid": "Invalid password reset link.",
       "error_title": "Reset failed",
       "request_again": "Request new link"
+    },
+    "verify_email_change": {
+      "page_title": "Verify email change",
+      "verifying": "Verifying your email change...",
+      "success_title": "Email changed successfully",
+      "success_description": "Your email address has been updated. You can continue managing your account settings.",
+      "go_to_settings": "Go to account settings",
+      "error_title": "Email change verification failed",
+      "try_again": "Try email change again"
     }
   },
   "common": {
@@ -89,7 +102,10 @@
     "email": "Email",
     "settings": "Settings",
     "ticket": "Ticket",
+    "events": "Events",
     "tickets": "Tickets",
+    "organizer": "Organizer",
+    "contact": "Contact us",
     "see": {
       "more": "See more",
       "less": "See less"
@@ -102,13 +118,15 @@
       "remove": "Remove",
       "reset": "Reset",
       "apply": "Apply",
-      "filter": "Filter"
+      "filter": "Filter",
+      "change_email": "Change Email",
+      "save": "Save",
+      "cancel": "Cancel"
     },
     "full_name": "Full name",
     "first_name": "First Name",
     "last_name": "Last Name",
     "phone": "Phone number",
-    "status": "Status",
     "price": "Price",
     "category": "Category",
     "currency": {
@@ -125,10 +143,10 @@
       "from_date": "From date",
       "to_date": "To date"
     },
-    "showing": "Showing",
-    "of": "of",
-    "close": "Close",
-    "cancel": "Cancel"
+    "status": {
+      "title": "Status",
+      "available": "available"
+    }
   },
   "permissions": {
     "location": {
@@ -139,6 +157,10 @@
   "brand": {
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
+  },
+  "search": {
+    "results_for": "Results for",
+    "no_results": "Result not found"
   },
   "placeholder": {
     "search": "Search events, artists...",
@@ -161,12 +183,6 @@
     }
   },
   "event_detail": {
-    "label": {
-      "price_from": "From",
-      "available": "available",
-      "organizer": "Organizer",
-      "sold_out": "Sold Out"
-    },
     "section": {
       "schedule": "Event Schedule",
       "about": "About the event",
@@ -174,12 +190,64 @@
       "related": "You May Also Like"
     }
   },
+  "select_ticket": {
+    "loading": "Loading event data...",
+    "retry": "Retry",
+    "header": {
+      "back": "Back",
+      "title": "Select Tickets",
+      "subtitle": "Click on a zone or seat to select"
+    },
+    "floor": {
+      "select": "Select Floor"
+    },
+    "legend": {
+      "available": "Available",
+      "selected": "Selected",
+      "unavailable": "Unavailable"
+    },
+    "no_layout": "No seating layout available for this event.",
+    "ticket_info": {
+      "title": "Ticket Information",
+      "available": "available",
+      "standing": "Standing",
+      "seated": "Seated",
+      "sold_out": "Sold Out",
+      "details": "Details",
+      "description": "Description",
+      "perks": "Includes"
+    },
+    "cart": {
+      "title": "Your Cart",
+      "empty": "Your cart is empty",
+      "empty_subtitle": "Select a zone or seat from the map to add tickets",
+      "total_tickets": "Total tickets",
+      "total_price": "Total"
+    },
+    "selection": {
+      "available": "available",
+      "quantity": "Quantity",
+      "total": "Total",
+      "add_to_cart": "Add to Cart",
+      "selected_seats": "Selected Seats",
+      "sold_out_message": "This zone is sold out."
+    },
+    "validation": {
+      "max_reached": "Maximum {max} tickets per person reached.",
+      "unlimited": "No purchase limit",
+      "max_per_account": "Max {max} per person"
+    },
+    "checkout": {
+      "button": "Proceed to Checkout"
+    }
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage account",
     "nav": {
       "personal_information": "Personal Information",
-      "security": "Password and Security"
+      "security": "Password and Security",
+      "preferences": "Preferences"
     },
     "personal_information": {
       "title": "Personal Information",
@@ -190,6 +258,15 @@
       },
       "basic_info": {
         "section_title": "Basic Information"
+      },
+      "change_email": {
+        "title": "Change Email",
+        "current_email": "Current Email",
+        "new_email": "New Email",
+        "current_password": "Current Password",
+        "messages": {
+          "request_sent_success": "Email change request sent successfully."
+        }
       }
     },
     "security": {
@@ -214,6 +291,118 @@
         },
         "unknown_device": "Unknown device"
       }
+    },
+    "preferences": {
+      "title": "Preferences",
+      "subtitle": "Customize your workspace environment.",
+      "appearance": {
+        "title": "Appearance",
+        "subtitle": "Customize how the application looks.",
+        "dark_mode": {
+          "title": "Dark Mode",
+          "subtitle": "Easy on the eyes"
+        },
+        "light_mode": {
+          "title": "Light Mode",
+          "subtitle": "High contrast clarity"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "subtitle": "Choose your preferred language.",
+        "options": {
+          "en": "English (United States)",
+          "vi": "Vietnamese"
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Manage your notification settings.",
+        "email": {
+          "title": "Email Notifications",
+          "subtitle": "Receive security alerts and system updates"
+        },
+        "marketing": {
+          "title": "Marketing Emails",
+          "subtitle": "New features and exclusive product news"
+        }
+      },
+      "actions": {
+        "discard": "Discard",
+        "save": "Save Changes"
+      }
+    }
+  },
+  "payment_mockup": {
+    "validation": {
+      "required_contact": "Please complete all required contact information",
+      "agree_policy": "Please agree to the organizer policy before payment"
+    },
+    "currency_suffix": "VND",
+    "event": {
+      "image_alt": "Event image",
+      "title": "Traditional Water Puppet Show",
+      "date": "14, 08/04",
+      "time": "18:30 - 19:15",
+      "address": "55B Nguyen Thi Minh Khai, Ben Thanh Ward, District 1, HCMC"
+    },
+    "receiver": {
+      "title": "Billing Information",
+      "subtitle": "Your invoice will be sent to the information below",
+      "full_name": "Full name",
+      "email": "Email",
+      "phone": "Phone number",
+      "optional": "(optional)",
+      "empty": "Not entered",
+      "note_line_1": "The invoice will be sent to the email above.",
+      "note_line_2": "Tickets are stored in",
+      "note_ticket_hub": "Your Tickets",
+      "note_line_3": "for the current account.",
+      "note_line_4": "At the gate, just present your electronic QR code."
+    },
+    "payment_method": {
+      "title": "Payment method",
+      "sepay_bank": "SePay - Bank transfer"
+    },
+    "timer": {
+      "title": "Ticket hold time remaining"
+    },
+    "policy": {
+      "title": "Organizer policy",
+      "content": "Purchased tickets are non-refundable, non-reschedulable, and cannot be modified under any circumstances."
+    },
+    "ticket_info": {
+      "title": "Ticket information ({count} tickets)",
+      "columns": {
+        "ticket_type": "TICKET TYPE",
+        "zone_name": "ZONE",
+        "seat_name": "SEAT",
+        "base_price": "BASE PRICE"
+      },
+      "promo_placeholder": "Promotion code",
+      "apply": "Apply"
+    },
+    "checkout": {
+      "total": "Total",
+      "agree_policy": "Agree to organizer policy",
+      "pay": "Pay"
+    },
+    "popup": {
+      "title": "Bank Transfer (SePay)",
+      "warning_line_1": "This account and QR are for this transaction only",
+      "warning_line_2": "Do not save or reuse this information",
+      "warning_line_3": "Order is confirmed only when you see successful status",
+      "qr_alt": "SePay QR",
+      "download_qr": "Download QR",
+      "bank": "Bank",
+      "cart_code": "Content",
+      "account_number": "Receiving account",
+      "receiver_name": "Receiver name",
+      "amount": "Amount",
+      "copy": "Copy",
+      "note_title": "Note:",
+      "note_line_1": "Please transfer the exact amount.",
+      "confirm_paid": "Confirm payment completed"
     }
   },
   "categories": {
@@ -247,6 +436,12 @@
     "politics": "Politics",
     "travel": "Travel",
     "virtual": "Virtual"
+  },
+  "homepage": {
+    "section": {
+      "popular": "Popular",
+      "near_you": "Near you"
+    }
   },
   "manage": {
     "nav": {

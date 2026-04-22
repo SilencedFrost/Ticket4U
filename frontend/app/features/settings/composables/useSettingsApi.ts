@@ -2,6 +2,7 @@ import type { FetchError } from 'ofetch';
 import type { ChangeInfo } from '../types/changeInfo';
 import type { ChangePassword } from '../types/changePassword';
 import type { Session } from '../types/session';
+import type { ChangeEmail } from '../types/changeEmail';
 
 type UseSettingsApiReturn = {
   fetchCurrentUser: () => Promise<UserSummary>;
@@ -9,6 +10,7 @@ type UseSettingsApiReturn = {
   changePassword: (payload: ChangePassword) => Promise<void>;
   fetchSessions: () => Promise<Session[]>;
   deleteSession: (displayId: string) => Promise<void>;
+  changeEmail: (payload: ChangeEmail) => Promise<void>;
   extractFieldErrors: (error: FetchError) => Record<string, string>;
   extractMessage: (error: FetchError) => string | null;
 };
@@ -41,6 +43,14 @@ export function useSettingsApi(): UseSettingsApiReturn {
 
   async function changePassword(payload: ChangePassword): Promise<void> {
     await $fetch(`${config.public.userServiceUrl}/users/password`, {
+      method: 'PATCH',
+      credentials: 'include',
+      body: payload,
+    });
+  }
+
+  async function changeEmail(payload: ChangeEmail): Promise<void> {
+    await $fetch(`${config.public.userServiceUrl}/users/email`, {
       method: 'PATCH',
       credentials: 'include',
       body: payload,
@@ -87,6 +97,7 @@ export function useSettingsApi(): UseSettingsApiReturn {
     fetchCurrentUser,
     updateCurrentUser,
     changePassword,
+    changeEmail,
     fetchSessions,
     deleteSession,
     extractFieldErrors,

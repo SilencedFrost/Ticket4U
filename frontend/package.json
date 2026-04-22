@@ -27,6 +27,7 @@
     "@tiptap/starter-kit": "^3.22.2",
     "@tiptap/vue-3": "^3.22.2",
     "@vueuse/core": "^14.2.1",
+    "@vueuse/gesture": "^2.0.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "eslint": "^9.39.4",

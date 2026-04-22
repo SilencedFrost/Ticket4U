@@ -7,7 +7,7 @@ import { useSettingsApi } from '../../composables/useSettingsApi';
 import AvatarUpload from './AvatarUpload.vue';
 import PersonalInfoForm from './PersonalInfoForm.vue';
 
-const { fetchCurrentUser, updateCurrentUser, extractFieldErrors, extractMessage } = useSettingsApi();
+const { fetchCurrentUser, updateCurrentUser, changeEmail, extractFieldErrors, extractMessage } = useSettingsApi();
 
 const FIELD_ERROR_KEYS: Array<keyof FieldErrors> = [
   'firstName',
@@ -16,12 +16,22 @@ const FIELD_ERROR_KEYS: Array<keyof FieldErrors> = [
   'phoneNumber',
 ];
 
+const EMAIL_FIELD_ERROR_KEYS = ['newEmail', 'password'] as const;
+
 const loading = ref(false);
 const loadingUser = ref(false);
 const genericError = ref('');
 const successMessage = ref('');
 const cachedUser = ref<UserSummary | null>(null);
 const fieldErrors = reactive<FieldErrors>({});
+const emailLoading = ref(false);
+const emailErrors = reactive<{
+  newEmail?: string;
+  password?: string;
+  generic?: string;
+}>({});
+
+const personalInfoFieldsRef = ref<{ closeEmailModal?: () => void } | null>(null);
 
 const formData = ref<ProfileForm>({
   firstName: '',
@@ -67,6 +77,12 @@ function resetFieldErrors() {
   for (const key of FIELD_ERROR_KEYS) {
     fieldErrors[key] = undefined;
   }
+}
+
+function resetEmailErrors() {
+  emailErrors.newEmail = undefined;
+  emailErrors.password = undefined;
+  emailErrors.generic = undefined;
 }
 
 function formatFullName(user: UserSummary): string {
@@ -204,6 +220,58 @@ async function saveInfo() {
   }
 }
 
+async function handleChangeEmail(payload: { newEmail: string; password: string }) {
+  if (emailLoading.value) {
+    return;
+  }
+
+  emailLoading.value = true;
+  successMessage.value = '';
+  resetEmailErrors();
+
+  try {
+    await changeEmail({
+      newEmail: payload.newEmail,
+      currentPassword: payload.password,
+    });
+
+    const updatedUser = await fetchCurrentUser();
+    cacheUserAndSyncForm(updatedUser);
+
+    personalInfoFieldsRef.value?.closeEmailModal?.();
+    successMessage.value = 'settings.personal_information.change_email.messages.request_sent_success';
+  } catch (err) {
+    successMessage.value = '';
+    const fetchError = err as FetchError;
+
+    if (isNetworkError(fetchError)) {
+      emailErrors.generic = 'auth.error.network';
+      return;
+    }
+
+    const apiErrors = extractFieldErrors(fetchError);
+    let hasFieldError = false;
+
+    for (const key of EMAIL_FIELD_ERROR_KEYS) {
+      if (apiErrors[key]) {
+        emailErrors[key] = apiErrors[key];
+        hasFieldError = true;
+      }
+    }
+
+    if (apiErrors.currentPassword) {
+      emailErrors.password = apiErrors.currentPassword;
+      hasFieldError = true;
+    }
+
+    if (!hasFieldError) {
+      emailErrors.generic = extractMessage(fetchError) ?? 'auth.error.unknown';
+    }
+  } finally {
+    emailLoading.value = false;
+  }
+}
+
 onMounted(() => {
   void loadCurrentUser();
 });
@@ -229,6 +297,7 @@ onMounted(() => {
 
       <div class="col-12 personal-info-form-col">
         <personal-info-form
+          ref="personalInfoFieldsRef"
           v-model="formData"
           :errors="fieldErrors"
           :loading="loading"
@@ -236,7 +305,10 @@ onMounted(() => {
           :generic-error="genericError"
           :success-message="successMessage"
           :has-changes="hasChanges"
+          :email-loading="emailLoading"
+          :email-errors="emailErrors"
           @submit="saveInfo"
+          @change-email="handleChangeEmail"
         />
       </div>
     </div>

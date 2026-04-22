@@ -11,4 +11,5 @@ public interface EventSemanticService {
     void storeEventVectors(List<UUID> ids, boolean override);
     Map<UUID,Float> findSimilarEvents(UUID id, Pageable pageable);
     List<UUID> search(String query, Pageable pageable);
+    List<UUID> search(String query, Pageable pageable, Float similarityThreshold);
 }

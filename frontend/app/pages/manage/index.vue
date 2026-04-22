@@ -44,7 +44,7 @@
       <h5 class="text-reactive-primary fw-semibold mb-3">{{ $t('manage.events.title') }}</h5>
       <div class="card shadow-sm overflow-hidden">
         <div class="table-responsive">
-          <table class="table table-hover mb-0 organizer-table">
+          <table class="table table-hover mb-0 manage-table">
             <thead>
             <tr>
               <th class="text-reactive-secondary small fw-semibold ps-4">{{ $t('manage.events.col.event') }}</th>
@@ -131,17 +131,17 @@ const stats = computed(() => {
 .stat-icon {
   width: 40px; height: 40px; font-size: 1.1rem;
 }
-.organizer-table { color: inherit; }
-.organizer-table thead tr {
+.manage-table { --bs-table-bg: transparent; color: inherit; }
+.manage-table thead tr {
   border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2);
 }
-.organizer-table tbody tr {
+.manage-table tbody tr {
   transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1);
 }
-.organizer-table tbody tr:last-child > * {
+.manage-table tbody tr:last-child > * {
   border-bottom-width: 0;
 }
-.organizer-table tbody tr:hover {
+.manage-table tbody tr:hover {
   background: rgba(var(--bs-primary-rgb), 0.04);
 }
 .event-thumb {

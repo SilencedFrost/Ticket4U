@@ -5,6 +5,7 @@ import ZoneModal from './ZoneModal.vue'
 
 const props = defineProps<{
   zones: Zone[]
+  readonly?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -17,6 +18,7 @@ const showModal   = ref(false)
 const editingZone = ref<Zone | null>(null)
 
 function openZoneModal(zone: Zone | null) {
+  if (props.readonly) return
   editingZone.value = zone
   showModal.value   = true
 }
@@ -51,12 +53,17 @@ function deleteZone(id: string) {
 
 <template>
   <div>
+    <div v-if="readonly" class="alert alert-warning d-flex align-items-start gap-2 mb-4">
+      <i class="bi bi-lock-fill flex-shrink-0 mt-1"/>
+      <span>{{ $t('manage.event_form.step3.readonly_warning') }}</span>
+    </div>
+
     <div class="card shadow-sm p-4 mb-4">
       <div class="d-flex align-items-center justify-content-between mb-4">
         <h5 class="fw-semibold text-reactive-primary mb-0">
           <i class="bi bi-grid me-2 text-primary"/>{{ $t('manage.event_form.step3.title') }}
         </h5>
-        <button class="btn btn-sm btn-primary" @click="openZoneModal(null)">
+        <button class="btn btn-sm btn-primary" :disabled="readonly" @click="openZoneModal(null)">
           <i class="bi bi-plus-lg me-1"/>{{ $t('manage.event_form.step3.add_zone') }}
         </button>
       </div>
@@ -78,10 +85,10 @@ function deleteZone(id: string) {
                 </small>
               </div>
               <div class="d-flex gap-1">
-                <button class="btn btn-sm btn-outline-primary" @click="openZoneModal(zone)">
+                <button class="btn btn-sm btn-outline-primary" :disabled="readonly" @click="openZoneModal(zone)">
                   <i class="bi bi-pencil"/>
                 </button>
-                <button class="btn btn-sm btn-outline-danger" @click="deleteZone(zone.id)">
+                <button class="btn btn-sm btn-outline-danger" :disabled="readonly" @click="deleteZone(zone.id)">
                   <i class="bi bi-trash"/>
                 </button>
               </div>

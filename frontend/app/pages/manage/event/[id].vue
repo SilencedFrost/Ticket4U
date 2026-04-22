@@ -23,6 +23,8 @@ const eventId = computed(() => {
   return id === 'new' ? null : id
 })
 const isNew = computed(() => !eventId.value)
+const LOCKED_STATUSES = ['SELLING', 'ONGOING', 'FINISHED'] as const
+const isLocked = computed(() => !isNew.value && LOCKED_STATUSES.includes(form.value.status as any))
 
 // Sessions loaded from event — zones live on sessions[0]
 const sessions = ref<Session[]>([])
@@ -140,6 +142,7 @@ onMounted(() => {
     <Step3Zones
       v-if="currentStep === 2"
       v-model:zones="zones"
+      :readonly="isLocked"
       @next="currentStep = 3"
       @back="currentStep = 1"
     />

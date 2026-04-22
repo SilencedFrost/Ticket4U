@@ -146,7 +146,10 @@
     "status": {
       "title": "Trạng thái",
       "available": "còn lại"
-    }
+    },
+    "showing": "Hiển thị",
+    "of": "trong số",
+    "cancel": "Hủy"
   },
   "permissions": {
     "location": {
@@ -588,7 +591,8 @@
         "address": "Địa điểm tổ chức",
         "address_placeholder": "VD: GEM Center, TP. Hồ Chí Minh",
         "banner_url": "URL ảnh banner",
-        "banner_placeholder": "https://..."
+        "banner_placeholder": "https://...",
+        "selling_warning": "Vé sẽ được mở bán ngay khi trạng thái này được lưu. Hãy đảm bảo tất cả khu vực vé và sơ đồ đã đúng trước khi lưu."
       },
       "step2": {
         "title": "Nội dung sự kiện",
@@ -622,7 +626,8 @@
         "desc_vi": "VI",
         "desc_en": "EN",
         "desc_vi_placeholder": "Mô tả khu vực bằng tiếng Việt...",
-        "desc_en_placeholder": "Mô tả khu vực bằng tiếng Anh..."
+        "desc_en_placeholder": "Mô tả khu vực bằng tiếng Anh...",
+        "readonly_warning": "Sự kiện này không còn ở trạng thái nháp. Không thể thêm, sửa hoặc xóa khu vực vé khi sự kiện đang hoạt động."
       },
       "step4": {
         "title": "Sơ đồ chỗ ngồi",
@@ -675,7 +680,16 @@
         "no_saved_layout": "Chưa có sơ đồ được lưu",
         "custom_layout": "Sơ đồ tuỳ chỉnh",
         "edit_layout": "Chỉnh sửa sơ đồ",
-        "delete_layout": "Xoá sơ đồ"
+        "delete_layout": "Xoá sơ đồ",
+        "readonly_warning": "Thay đổi sơ đồ bị khóa. Sự kiện này không còn ở trạng thái nháp.",
+        "editor_zone_props": "Thuộc tính khu vực",
+        "editor_floor_settings": "Cài đặt tầng",
+        "editor_floor_name": "Tên tầng",
+        "editor_seat_size": "Kích thước ghế",
+        "editor_link_zone": "Liên kết khu vé",
+        "editor_unlinked": "— Chưa liên kết —",
+        "editor_click_hint": "Nhấn vào khu vực để chỉnh sửa, hoặc kéo để di chuyển.",
+        "editor_delete_zone": "Xóa khu vực"
       }
     },
     "revenue": {

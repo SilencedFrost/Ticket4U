@@ -272,7 +272,7 @@ function fillColor(pct: number) {
 .event-banner { width: 72px; height: 48px; object-fit: cover; }
 .stat-icon    { width: 40px; height: 40px; font-size: 1.1rem; }
 
-.revenue-table { color: inherit; }
+.revenue-table { --bs-table-bg: transparent; color: inherit; }
 .revenue-table thead tr  { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
 .revenue-table tbody tr  { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
 .revenue-table tbody tr:last-child > * { border-bottom-width: 0; }

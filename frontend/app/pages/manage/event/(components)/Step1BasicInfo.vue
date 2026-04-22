@@ -82,6 +82,10 @@ function toggleCategory(id: number) {
             <option value="FINISHED">{{ $t('manage.events.status.finished') }}</option>
             <option value="CANCELLED">{{ $t('manage.events.status.cancelled') }}</option>
           </select>
+          <div v-if="form.status === 'SELLING'" class="alert alert-warning py-2 small mt-2 mb-0 d-flex align-items-start gap-2">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0 mt-1"/>
+            <span>{{ $t('manage.event_form.step1.selling_warning') }}</span>
+          </div>
         </div>
 
         <div class="col-12">

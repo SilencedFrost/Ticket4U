@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { mockVenues, getVenueZoneNames } from '../../mock.data'
 import LayoutPreview from './LayoutPreview.vue'
+import LayoutEditor  from './LayoutEditor.vue'
 import type { Zone } from '../../(types)/zone'
 import type { EventFormState } from '../../(types)/event'
 import type { VenueLayout, VenueLayoutZone, VenueLayoutFloor } from '../../(types)/venue'
@@ -59,8 +60,8 @@ function applyLayoutToMapping(layoutJson: string | null | undefined) {
   } catch { /* ignore malformed */ }
 }
 
-// Initialise from saved layout on mount
-onMounted(() => applyLayoutToMapping(form.value.layout))
+// Initialise layoutMode (and zoneMapping) whenever the layout prop changes
+watch(() => form.value.layout, applyLayoutToMapping, { immediate: true })
 
 // Reset mapping when venue changes (user picks a different venue)
 watch(() => form.value.venueId, (newId, oldId) => {
@@ -119,27 +120,27 @@ const customLayout = computed<VenueLayout | null>(() => {
   return null
 })
 
-/** true = showing editor canvas; false = showing read-only preview */
-const isEditingCustom = ref(false)
+const LOCKED_STATUSES = ['SELLING', 'ONGOING', 'FINISHED'] as const
+const isReadonly = computed(() => LOCKED_STATUSES.includes(props.form.status as any))
 
-// When entering custom mode, go straight to editor if no layout exists yet
-watch(layoutMode, (mode) => {
-  if (mode === 'custom') isEditingCustom.value = !customLayout.value
-})
 
 function deleteCustomLayout() {
   form.value = { ...form.value, layout: null }
-  isEditingCustom.value = true
 }
 
-function saveCustomLayout() {
-  // TODO: serialize canvas state → form.layout when the real editor is wired up
-  isEditingCustom.value = false
-}
+const customLayoutJson = computed({
+  get: () => form.value.layout,
+  set: (v: string | null) => { form.value = { ...form.value, layout: v } },
+})
 </script>
 
 <template>
   <div>
+    <div v-if="isReadonly" class="alert alert-warning d-flex align-items-start gap-2 mb-4">
+      <i class="bi bi-lock-fill flex-shrink-0 mt-1"/>
+      <span>{{ $t('manage.event_form.step4.readonly_warning') }}</span>
+    </div>
+
     <div v-if="zones.length === 0" class="alert alert-warning d-flex align-items-center gap-2 mb-4">
       <i class="bi bi-exclamation-triangle-fill"/>
       <span>{{ $t('manage.event_form.step4.no_zones_warning') }}</span>
@@ -155,6 +156,7 @@ function saveCustomLayout() {
         <button
           class="btn"
           :class="layoutMode === 'venue' ? 'btn-primary' : 'btn-outline-secondary'"
+          :disabled="isReadonly"
           @click="layoutMode = 'venue'"
         >
           <i class="bi bi-building me-2"/>{{ $t('manage.event_form.step4.venue_mode') }}
@@ -162,6 +164,7 @@ function saveCustomLayout() {
         <button
           class="btn"
           :class="layoutMode === 'custom' ? 'btn-primary' : 'btn-outline-secondary'"
+          :disabled="isReadonly"
           @click="layoutMode = 'custom'"
         >
           <i class="bi bi-pencil-square me-2"/>{{ $t('manage.event_form.step4.custom_mode') }}
@@ -175,7 +178,7 @@ function saveCustomLayout() {
           <label class="form-label small fw-semibold text-reactive-secondary">
             {{ $t('manage.event_form.step4.venue') }} <span class="text-danger">*</span>
           </label>
-          <select v-model="form.venueId" class="form-select">
+          <select v-model="form.venueId" class="form-select" :disabled="isReadonly">
             <option value="">— {{ $t('manage.event_form.step4.venue') }} —</option>
             <option v-for="v in mockVenues" :key="v.id" :value="v.id">{{ v.name }} — {{ v.addressLine }}</option>
           </select>
@@ -225,7 +228,7 @@ function saveCustomLayout() {
                   <span v-else class="text-reactive-secondary small fst-italic flex-shrink-0">{{ $t('manage.event_form.step4.decorative') }}</span>
                 </div>
                 <!-- Select (always visible so user can change) -->
-                <select v-model="zoneMapping[vz]" class="form-select form-select-sm mt-2">
+                <select v-model="zoneMapping[vz]" class="form-select form-select-sm mt-2" :disabled="isReadonly">
                   <option value="">— {{ $t('manage.event_form.step4.decorative') }} —</option>
                   <optgroup :label="$t('manage.event_form.step4.seated_zones')">
                     <option v-for="z in seatedZones" :key="z.id" :value="z.id">{{ z.name }}</option>
@@ -252,64 +255,25 @@ function saveCustomLayout() {
       <!-- ── CUSTOM MODE ── -->
       <div v-else>
 
-        <!-- ── VIEW: existing custom layout ── -->
-        <template v-if="customLayout && !isEditingCustom">
-          <div class="d-flex align-items-center gap-2 mb-3">
-            <span class="fw-semibold text-reactive-primary">
-              <i class="bi bi-grid-3x3 me-2 text-primary"/>{{ $t('manage.event_form.step4.custom_layout') }}
-            </span>
-            <div class="ms-auto d-flex gap-2">
-              <button class="btn btn-sm btn-outline-primary" @click="isEditingCustom = true">
-                <i class="bi bi-pencil me-1"/>{{ $t('manage.event_form.step4.edit_layout') }}
-              </button>
-              <button class="btn btn-sm btn-outline-danger" @click="deleteCustomLayout">
-                <i class="bi bi-trash me-1"/>{{ $t('manage.event_form.step4.delete_layout') }}
-              </button>
-            </div>
+        <!-- Read-only: show preview only -->
+        <template v-if="isReadonly">
+          <LayoutPreview v-if="customLayout" :layout="customLayout" />
+          <div v-else class="alert alert-warning py-2 small">
+            <i class="bi bi-exclamation-triangle me-1"/>{{ $t('manage.event_form.step4.no_venue') }}
           </div>
-          <LayoutPreview :layout="customLayout" />
         </template>
 
-        <!-- ── EDIT: canvas editor (placeholder until real editor is wired) ── -->
+        <!-- Editable: live editor -->
         <template v-else>
-          <div class="d-flex align-items-center gap-2 mb-3">
-            <button class="btn btn-sm btn-primary">Floor 1</button>
-            <button class="btn btn-sm btn-outline-primary">
-              <i class="bi bi-plus-lg me-1"/>{{ $t('manage.event_form.step4.add_floor') }}
+          <div v-if="customLayout" class="d-flex align-items-center gap-2 mb-3">
+            <span class="fw-semibold text-reactive-primary small">
+              <i class="bi bi-grid-3x3 me-2 text-primary"/>{{ $t('manage.event_form.step4.custom_layout') }}
+            </span>
+            <button class="btn btn-sm btn-outline-danger ms-auto" @click="deleteCustomLayout">
+              <i class="bi bi-trash me-1"/>{{ $t('manage.event_form.step4.delete_layout') }}
             </button>
           </div>
-
-          <div
-            class="canvas-placeholder bg-reactive-primary rounded position-relative overflow-hidden"
-            style="height:520px;"
-          >
-            <div class="position-absolute start-50 translate-middle-x bg-warning rounded d-flex align-items-center justify-content-center" style="top:20px;width:260px;height:44px;">
-              <small class="fw-bold text-dark">{{ $t('manage.event_form.step4.stage_screen') }}</small>
-            </div>
-            <div v-if="zones.length > 0" class="position-absolute bottom-0 start-0 end-0 p-3 d-flex gap-2 flex-wrap" style="background:rgba(0,0,0,0.35);">
-              <small class="text-white opacity-75 me-1 align-self-center">{{ $t('manage.event_form.step4.place_zone') }}</small>
-              <span v-for="zone in zones" :key="zone.id" class="badge zone-palette-badge">{{ zone.name }}</span>
-            </div>
-            <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events:none;">
-              <i class="bi bi-pencil-square fs-1 d-block mb-2 text-white opacity-25"/>
-              <small class="text-white opacity-50">{{ $t('manage.event_form.step4.hint') }}</small>
-            </div>
-          </div>
-
-          <!-- Editor action bar -->
-          <div class="d-flex align-items-center gap-2 mt-3 pt-3 border-top">
-            <small class="text-reactive-secondary">
-              <i class="bi bi-info-circle me-1"/>{{ $t('manage.event_form.step4.hint') }}
-            </small>
-            <div class="ms-auto d-flex gap-2">
-              <button v-if="customLayout" class="btn btn-sm btn-outline-secondary" @click="isEditingCustom = false">
-                <i class="bi bi-x-lg me-1"/>{{ $t('common.cancel') }}
-              </button>
-              <button class="btn btn-sm btn-primary" @click="saveCustomLayout">
-                <i class="bi bi-floppy me-1"/>{{ $t('manage.event_form.step4.save_layout') }}
-              </button>
-            </div>
-          </div>
+          <LayoutEditor v-model="customLayoutJson" :zones="zones" />
         </template>
 
       </div>
@@ -321,7 +285,7 @@ function saveCustomLayout() {
         <i class="bi bi-arrow-left me-1"/>{{ $t('manage.event_form.back') }}
       </button>
       <div class="d-flex gap-2">
-        <button class="btn btn-primary px-4" :disabled="saving" @click="$emit('save')">
+        <button class="btn btn-primary px-4" :disabled="saving || isReadonly" @click="$emit('save')">
           <span v-if="saving" class="spinner-border spinner-border-sm me-2"/>
           <i v-else class="bi bi-floppy me-2"/>{{ $t('manage.event_form.step4.save_layout') }}
         </button>
@@ -334,19 +298,6 @@ function saveCustomLayout() {
 </template>
 
 <style scoped>
-.layout-preview-placeholder {
-  border: 1px dashed rgba(var(--bs-secondary-rgb), 0.3);
-}
-.zone-palette-badge {
-  background: transparent;
-  border: 1px solid rgba(var(--bs-secondary-rgb), 0.4);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.8rem;
-  color: var(--bs-secondary);
-  cursor: default;
-}
-
 /* Zone link rows */
 .zone-link-row {
   border: 1px solid rgba(var(--bs-secondary-rgb), 0.2);

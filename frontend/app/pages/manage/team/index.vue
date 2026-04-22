@@ -331,7 +331,7 @@ function confirmRemoveMember() {
 
 <style scoped>
 .member-avatar { width: 40px; height: 40px; }
-.team-table { color: inherit; }
+.team-table { --bs-table-bg: transparent; color: inherit; }
 .team-table thead tr { border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.2); }
 .team-table tbody tr { transition: background 0.15s; border-bottom: 1px solid rgba(var(--bs-secondary-rgb), 0.1); }
 .team-table tbody tr:last-child > * { border-bottom-width: 0; }

@@ -146,7 +146,10 @@
     "status": {
       "title": "Status",
       "available": "available"
-    }
+    },
+    "showing": "Showing",
+    "of": "of",
+    "cancel": "Cancel"
   },
   "permissions": {
     "location": {
@@ -588,7 +591,8 @@
         "address": "Venue Address",
         "address_placeholder": "e.g. GEM Center, Ho Chi Minh City",
         "banner_url": "Banner Image URL",
-        "banner_placeholder": "https://..."
+        "banner_placeholder": "https://...",
+        "selling_warning": "Tickets will be immediately available for purchase once this status is set. Make sure all zones and layout are correct before saving."
       },
       "step2": {
         "title": "Event Content",
@@ -622,7 +626,8 @@
         "desc_vi": "VI",
         "desc_en": "EN",
         "desc_vi_placeholder": "Zone description in Vietnamese...",
-        "desc_en_placeholder": "Zone description in English..."
+        "desc_en_placeholder": "Zone description in English...",
+        "readonly_warning": "This event is no longer in draft. Adding, editing, or deleting ticket zones is locked while the event is active."
       },
       "step4": {
         "title": "Seating Layout",
@@ -675,7 +680,16 @@
         "no_saved_layout": "No saved layout available",
         "custom_layout": "Custom Layout",
         "edit_layout": "Edit Layout",
-        "delete_layout": "Delete Layout"
+        "delete_layout": "Delete Layout",
+        "readonly_warning": "Layout changes are locked. This event is no longer in draft status.",
+        "editor_zone_props": "Zone Properties",
+        "editor_floor_settings": "Floor Settings",
+        "editor_floor_name": "Floor Name",
+        "editor_seat_size": "Seat Size",
+        "editor_link_zone": "Link to Ticket Zone",
+        "editor_unlinked": "— Not linked —",
+        "editor_click_hint": "Click a zone to edit its properties, or drag to reposition.",
+        "editor_delete_zone": "Delete Zone"
       }
     },
     "revenue": {

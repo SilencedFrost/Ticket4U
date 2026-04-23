@@ -21,8 +21,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.ticket4u.event.constants.RelatedEvents.WEIGHTS.LOCATION_CUTOFF;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -89,7 +87,7 @@ public class EventDomainServiceImpl implements EventDomainService {
         );
 
         // Score calculation
-        float locationScore = transformScore(proximityToZero(distanceKm, LOCATION_CUTOFF), RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
+        float locationScore = transformScore(proximityToZero(distanceKm, RelatedEvents.WEIGHTS.LOCATION_CUTOFF), RelatedEvents.WEIGHTS.LOCATION_SIGMOID_BIAS, RelatedEvents.WEIGHTS.LOCATION_SIGMOID_WEIGHT, false);
         float dateScore = transformScore(proximityToZero(Math.abs(ChronoUnit.DAYS.between(originalEvent.startDate(), targetEvent.startDate())), RelatedEvents.WEIGHTS.DATE_CUTOFF), RelatedEvents.WEIGHTS.DATE_SIGMOID_BIAS, RelatedEvents.WEIGHTS.DATE_SIGMOID_WEIGHT, false);
         float suppressionWeight = 1;
 
@@ -150,7 +148,7 @@ public class EventDomainServiceImpl implements EventDomainService {
      */
     private double calculateDistance(BigDecimal lat1, BigDecimal lon1, BigDecimal lat2, BigDecimal lon2) {
         if (lat1 == null || lon1 == null || lat2 == null || lon2 == null) {
-            return LOCATION_CUTOFF;
+            return RelatedEvents.WEIGHTS.LOCATION_CUTOFF;
         }
 
         double l1 = lat1.doubleValue();
@@ -262,7 +260,7 @@ public class EventDomainServiceImpl implements EventDomainService {
      */
     @Override
     public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon) {
-        List<UUID> nearbyIds = eventRepository.findNearbyEventIds(lat, lon, LOCATION_CUTOFF);
+        List<UUID> nearbyIds = eventRepository.findNearbyEventIds(lat, lon, RelatedEvents.WEIGHTS.LOCATION_CUTOFF);
         if (nearbyIds.isEmpty()) return List.of();
 
         return eventRepository.findAllById(nearbyIds).stream()

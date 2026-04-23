@@ -1,7 +1,6 @@
 package com.ticket4u.core.repository;
 
 import com.ticket4u.core.entity.Event;
-import com.ticket4u.core.projection.EventCoordinateProjection;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,16 +80,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     """)
     @EntityGraph(value = "Event.withAllEntities")
     Page<Event> findUpcomingEventsByCategory(@Param("categoryId") Integer categoryId, Pageable pageable);
-
-    @Query("""
-    SELECT e.id as id,
-           COALESCE(e.latitude, v.latitude) as latitude,
-           COALESCE(e.longitude, v.longitude) as longitude
-    FROM Event e
-    LEFT JOIN e.venue v
-    WHERE e.status IN ('PREMIERE', 'SCHEDULED')
-    """)
-    List<EventCoordinateProjection> findAllPurchasableCoordinates();
 
     @Query("""
     SELECT e.id as id

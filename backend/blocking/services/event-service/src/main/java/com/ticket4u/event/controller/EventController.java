@@ -62,7 +62,6 @@ public class EventController {
      * @param latitude latitude of the user collected from GPS data
      * @return events within a specific distance, if no coordinates are provided, use IP coordinates
      */
-    // TODO: implement event suggestion based on location
     @GetMapping("/locational")
     public ResponseEntity<List<EventSummaryResponse>> getLocationalEvents(
             @RequestParam(required = false) BigDecimal longitude,

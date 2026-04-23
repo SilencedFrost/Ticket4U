@@ -52,7 +52,11 @@ function updateSize() {
   const h       = canvasContainer.value.clientHeight || CANVAS_H
   const wasZero = canvasSize.value.width === 0
   canvasSize.value = { width: w, height: h }
-  if (wasZero) { pan.value = centeredPan(w, h); scale.value = 1 }
+  if (wasZero) {
+    const fitScale = Math.min(w / CANVAS_W, h / CANVAS_H) * 0.9
+    scale.value = fitScale
+    pan.value   = { x: (w - CANVAS_W * fitScale) / 2, y: (h - CANVAS_H * fitScale) / 2 }
+  }
   nextTick(() => draw())
 }
 
@@ -69,8 +73,10 @@ onUnmounted(() => {
 function zoomIn()    { scale.value = Math.min(MAX_SCALE, scale.value + ZOOM_STEP); draw() }
 function zoomOut()   { scale.value = Math.max(MIN_SCALE, scale.value - ZOOM_STEP); draw() }
 function resetZoom() {
-  scale.value = 1
-  pan.value   = centeredPan(canvasSize.value.width, canvasSize.value.height)
+  const w     = canvasSize.value.width, h = canvasSize.value.height
+  const fitScale = Math.min(w / CANVAS_W, h / CANVAS_H) * 0.9
+  scale.value = fitScale
+  pan.value   = { x: (w - CANVAS_W * fitScale) / 2, y: (h - CANVAS_H * fitScale) / 2 }
   draw()
 }
 
@@ -217,7 +223,7 @@ function computeSeatRadius(zone: LayoutZone, seatSize: number): number {
   const cellW = (zoneW / (cols + 1)) * CANVAS_W * scale.value
   const cellH = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
   const maxR  = Math.min(cellW, cellH) / 2 * 0.7
-  return Math.min(Math.max(4, seatSize / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR)
+  return Math.min(Math.max(4, seatSize / 1.5 * scale.value), maxR)
 }
 
 function getSeatColor(unavailable: boolean, selected: boolean): string {
@@ -474,19 +480,18 @@ watch(() => props.cart, (newCart) => {
 <template>
   <div class="seating-map-wrapper h-100 d-flex flex-column">
 
-    <div class="p-3 bg-reactive-primary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm text-reactive-primary" @click="$emit('back')">
-          <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
-        </button>
-      </div>
-
-      <div class="text-center">
+    <div class="px-3 py-2 bg-reactive-primary flex-shrink-0 d-flex flex-wrap align-items-center">
+      <button class="btn btn-sm text-reactive-primary flex-shrink-0" @click="$emit('back')">
+        <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
+      </button>
+      <div class="flex-grow-1 text-center">
         <h6 class="text-primary mb-0">{{ $t('select_ticket.header.title') }}</h6>
-        <small class="text-reactive-secondary">{{ $t('select_ticket.header.subtitle') }}</small>
       </div>
-
-      <div class="d-flex gap-3 align-items-center">
+      <button class="btn btn-sm flex-shrink-0 d-md-none" style="visibility:hidden;" aria-hidden="true" tabindex="-1">
+        <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
+      </button>
+      <div class="w-100 d-md-none"/>
+      <div class="d-flex gap-3 justify-content-center flex-grow-1 flex-md-grow-0">
         <div class="d-flex align-items-center gap-1">
           <div class="legend-dot" style="background:#22c55e"/>
           <small class="text-reactive-secondary">{{ $t('select_ticket.legend.available') }}</small>

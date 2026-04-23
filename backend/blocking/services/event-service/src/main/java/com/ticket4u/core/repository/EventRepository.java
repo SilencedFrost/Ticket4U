@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -90,4 +91,27 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     WHERE e.status IN ('PREMIERE', 'SCHEDULED')
     """)
     List<EventCoordinateProjection> findAllPurchasableCoordinates();
+
+    @Query("""
+    SELECT e.id as id
+    FROM Event e
+    LEFT JOIN e.venue v
+    WHERE e.status IN ('PREMIERE', 'SCHEDULED')
+      AND (6371 * acos(
+        cos(radians(:lat)) * cos(radians(COALESCE(e.latitude, v.latitude))) *
+        cos(radians(COALESCE(e.longitude, v.longitude)) - radians(:lon)) +
+        sin(radians(:lat)) * sin(radians(COALESCE(e.latitude, v.latitude)))
+      )) <= :cutoff
+    ORDER BY (6371 * acos(
+        cos(radians(:lat)) * cos(radians(COALESCE(e.latitude, v.latitude))) *
+        cos(radians(COALESCE(e.longitude, v.longitude)) - radians(:lon)) +
+        sin(radians(:lat)) * sin(radians(COALESCE(e.latitude, v.latitude)))
+      )) ASC
+    LIMIT 50
+    """)
+    List<UUID> findNearbyEventIds(
+            @Param("lat") BigDecimal lat,
+            @Param("lon") BigDecimal lon,
+            @Param("cutoff") double cutoff
+    );
 }

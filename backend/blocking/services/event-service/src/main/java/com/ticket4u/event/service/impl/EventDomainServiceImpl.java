@@ -262,14 +262,8 @@ public class EventDomainServiceImpl implements EventDomainService {
      */
     @Override
     public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon) {
-        List<UUID> nearbyIds = eventRepository.findAllPurchasableCoordinates().stream()
-                .filter(e -> e.getLatitude() != null && e.getLongitude() != null)
-                .map(e -> Map.entry(e.getId(), calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
-                .filter(entry -> entry.getValue() <= LOCATION_CUTOFF)
-                .sorted(Map.Entry.comparingByValue())
-                .limit(50)
-                .map(Map.Entry::getKey)
-                .toList();
+        List<UUID> nearbyIds = eventRepository.findNearbyEventIds(lat, lon, LOCATION_CUTOFF);
+        if (nearbyIds.isEmpty()) return List.of();
 
         return eventRepository.findAllById(nearbyIds).stream()
                 .map(eventMapper::toSummaryDTO)

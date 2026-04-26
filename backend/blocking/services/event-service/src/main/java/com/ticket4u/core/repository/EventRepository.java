@@ -81,26 +81,18 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @EntityGraph(value = "Event.withAllEntities")
     Page<Event> findUpcomingEventsByCategory(@Param("categoryId") Integer categoryId, Pageable pageable);
 
+    @EntityGraph(value = "Event.withAllEntities")
     @Query("""
-    SELECT e.id as id
-    FROM Event e
-    LEFT JOIN e.venue v
-    WHERE e.status IN ('PREMIERE', 'SCHEDULED')
-      AND (6371 * acos(
-        cos(radians(:lat)) * cos(radians(COALESCE(e.latitude, v.latitude))) *
-        cos(radians(COALESCE(e.longitude, v.longitude)) - radians(:lon)) +
-        sin(radians(:lat)) * sin(radians(COALESCE(e.latitude, v.latitude)))
-      )) <= :cutoff
-    ORDER BY (6371 * acos(
-        cos(radians(:lat)) * cos(radians(COALESCE(e.latitude, v.latitude))) *
-        cos(radians(COALESCE(e.longitude, v.longitude)) - radians(:lon)) +
-        sin(radians(:lat)) * sin(radians(COALESCE(e.latitude, v.latitude)))
-      )) ASC
-    LIMIT 50
+        SELECT e FROM Event e
+        LEFT JOIN e.venue v
+        WHERE e.status IN ('PREMIERE', 'SCHEDULED')
+        AND COALESCE(e.latitude, v.latitude) BETWEEN :minLat AND :maxLat
+        AND COALESCE(e.longitude, v.longitude) BETWEEN :minLon AND :maxLon
     """)
-    List<UUID> findNearbyEventIds(
-            @Param("lat") BigDecimal lat,
-            @Param("lon") BigDecimal lon,
-            @Param("cutoff") double cutoff
+    List<Event> findEventsInArea(
+            @Param("minLat") BigDecimal minLat,
+            @Param("maxLat") BigDecimal maxLat,
+            @Param("minLon") BigDecimal minLon,
+            @Param("maxLon") BigDecimal maxLon
     );
 }

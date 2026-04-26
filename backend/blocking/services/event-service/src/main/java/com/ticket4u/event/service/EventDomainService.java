@@ -15,5 +15,5 @@ public interface EventDomainService {
     List<EventSummaryResponse> findUpcomingPurchasableEventsLimit(Integer limit);
     List<EventSummaryResponse> findRandomEvent(Integer limit, Integer samplingMultiplier);
     List<EventSummaryResponse> searchEvents(String query, Pageable pageable);
-    List<EventSummaryResponse> getNearbyEvents (BigDecimal lat, BigDecimal lon);
+    List<EventSummaryResponse> getNearbyEvents (BigDecimal lat, BigDecimal lon, int limit);
 }

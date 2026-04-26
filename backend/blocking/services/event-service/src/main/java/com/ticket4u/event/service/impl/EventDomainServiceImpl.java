@@ -259,12 +259,23 @@ public class EventDomainServiceImpl implements EventDomainService {
      * @return A list of events found within the nearby area
      */
     @Override
-    public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon) {
-        List<UUID> nearbyIds = eventRepository.findNearbyEventIds(lat, lon, RelatedEvents.WEIGHTS.LOCATION_CUTOFF);
-        if (nearbyIds.isEmpty()) return List.of();
+    public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon, int limit) {
+        double latDelta = RelatedEvents.WEIGHTS.LOCATION_CUTOFF / EARTH_RADIUS_KM * (180 / Math.PI);
+        double lonDelta = RelatedEvents.WEIGHTS.LOCATION_CUTOFF / (EARTH_RADIUS_KM * Math.cos(Math.toRadians(lat.doubleValue()))) * (180 / Math.PI);
 
-        return eventRepository.findAllById(nearbyIds).stream()
-                .map(eventMapper::toSummaryDTO)
+        List<Event> candidates = eventRepository.findEventsInArea(
+                lat.subtract(BigDecimal.valueOf(latDelta)),
+                lat.add(BigDecimal.valueOf(latDelta)),
+                lon.subtract(BigDecimal.valueOf(lonDelta)),
+                lon.add(BigDecimal.valueOf(lonDelta))
+        );
+
+        return candidates.stream()
+                .map(e -> Map.entry(e, calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
+                .filter(entry -> entry.getValue() <= RelatedEvents.WEIGHTS.LOCATION_CUTOFF)
+                .sorted(Map.Entry.comparingByValue())
+                .limit(limit)
+                .map(entry -> eventMapper.toSummaryDTO(entry.getKey()))
                 .toList();
     }
 }

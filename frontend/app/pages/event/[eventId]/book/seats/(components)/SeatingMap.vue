@@ -52,7 +52,11 @@ function updateSize() {
   const h       = canvasContainer.value.clientHeight || CANVAS_H
   const wasZero = canvasSize.value.width === 0
   canvasSize.value = { width: w, height: h }
-  if (wasZero) { pan.value = centeredPan(w, h); scale.value = 1 }
+  if (wasZero) {
+    const fitScale = Math.min(w / CANVAS_W, h / CANVAS_H) * 0.9
+    scale.value = fitScale
+    pan.value   = { x: (w - CANVAS_W * fitScale) / 2, y: (h - CANVAS_H * fitScale) / 2 }
+  }
   nextTick(() => draw())
 }
 
@@ -69,8 +73,10 @@ onUnmounted(() => {
 function zoomIn()    { scale.value = Math.min(MAX_SCALE, scale.value + ZOOM_STEP); draw() }
 function zoomOut()   { scale.value = Math.max(MIN_SCALE, scale.value - ZOOM_STEP); draw() }
 function resetZoom() {
-  scale.value = 1
-  pan.value   = centeredPan(canvasSize.value.width, canvasSize.value.height)
+  const w     = canvasSize.value.width, h = canvasSize.value.height
+  const fitScale = Math.min(w / CANVAS_W, h / CANVAS_H) * 0.9
+  scale.value = fitScale
+  pan.value   = { x: (w - CANVAS_W * fitScale) / 2, y: (h - CANVAS_H * fitScale) / 2 }
   draw()
 }
 
@@ -217,7 +223,7 @@ function computeSeatRadius(zone: LayoutZone, seatSize: number): number {
   const cellW = (zoneW / (cols + 1)) * CANVAS_W * scale.value
   const cellH = (zoneH / (rows.length + 1)) * CANVAS_H * scale.value
   const maxR  = Math.min(cellW, cellH) / 2 * 0.7
-  return Math.min(Math.max(4, seatSize / 2 * (canvasSize.value.width / CANVAS_W) * scale.value), maxR)
+  return Math.min(Math.max(4, seatSize / 1.5 * scale.value), maxR)
 }
 
 function getSeatColor(unavailable: boolean, selected: boolean): string {
@@ -339,7 +345,7 @@ const standingInCart = computed(() =>
 
 watch(standingInCart, (inCart) => {
   const remaining = maxStandingAllowed.value - inCart
-  if (remaining <= 0) standingQuantity.value = 0
+  if (remaining <= 0) standingQuantity.value = 1
   else if (standingQuantity.value > remaining) standingQuantity.value = remaining
 })
 
@@ -474,19 +480,18 @@ watch(() => props.cart, (newCart) => {
 <template>
   <div class="seating-map-wrapper h-100 d-flex flex-column">
 
-    <div class="p-3 bg-reactive-primary flex-shrink-0 d-flex align-items-center justify-content-between flex-wrap gap-2">
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm text-reactive-primary" @click="$emit('back')">
-          <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
-        </button>
-      </div>
-
-      <div class="text-center">
+    <div class="px-3 py-2 bg-reactive-primary flex-shrink-0 d-flex flex-wrap align-items-center">
+      <button class="btn btn-sm text-reactive-primary flex-shrink-0" @click="$emit('back')">
+        <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
+      </button>
+      <div class="flex-grow-1 text-center">
         <h6 class="text-primary mb-0">{{ $t('select_ticket.header.title') }}</h6>
-        <small class="text-reactive-secondary">{{ $t('select_ticket.header.subtitle') }}</small>
       </div>
-
-      <div class="d-flex gap-3 align-items-center">
+      <button class="btn btn-sm flex-shrink-0 d-md-none" style="visibility:hidden;" aria-hidden="true" tabindex="-1">
+        <i class="bi bi-arrow-left me-1"/>{{ $t('select_ticket.header.back') }}
+      </button>
+      <div class="w-100 d-md-none"/>
+      <div class="d-flex gap-3 justify-content-center flex-grow-1 flex-md-grow-0">
         <div class="d-flex align-items-center gap-1">
           <div class="legend-dot" style="background:#22c55e"/>
           <small class="text-reactive-secondary">{{ $t('select_ticket.legend.available') }}</small>
@@ -581,11 +586,11 @@ watch(() => props.cart, (newCart) => {
           <div class="col-md-6">
             <label class="form-label text-reactive-primary fw-semibold small">{{ $t('select_ticket.selection.quantity') }}</label>
             <div class="d-flex gap-2">
-              <button type="button" class="btn btn-outline-secondary" :disabled="standingQuantity <= 1" @click="standingQuantity = Math.max(1, standingQuantity - 1)"><i class="bi bi-dash"/></button>
+              <button type="button" class="btn btn-outline-secondary" :disabled="standingQuantity <= 0" @click="standingQuantity = Math.max(0, standingQuantity - 1)"><i class="bi bi-dash"/></button>
               <input
-                  v-model.number="standingQuantity" type="number" min="1" :max="maxStandingAllowed"
+                  v-model.number="standingQuantity" type="number" min="0" :max="maxStandingAllowed"
                   class="form-control text-center bg-reactive-primary text-reactive-primary border-0 fw-bold"
-                  @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 1 : v }"
+                  @input="(e) => { const v = parseInt((e.target as HTMLInputElement).value); standingQuantity = isNaN(v) ? 0 : v }"
               />
               <button type="button" class="btn btn-outline-secondary" :disabled="standingInCart + standingQuantity >= maxStandingAllowed" @click="standingQuantity = Math.min(maxStandingAllowed - standingInCart, standingQuantity + 1)"><i class="bi bi-plus"/></button>
             </div>
@@ -595,7 +600,7 @@ watch(() => props.cart, (newCart) => {
             <div class="text-primary fs-4 fw-bold">{{ formatPrice((getZoneTicket(selectedStandingZone)?.price ?? 0) * standingQuantity) }}</div>
           </div>
           <div class="col-12">
-            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || standingInCart >= maxStandingAllowed" @click="addStandingToCart">
+            <button class="btn btn-primary w-100 py-2 fw-semibold" :disabled="standingQuantity === 0 || standingInCart + standingQuantity > maxStandingAllowed" @click="addStandingToCart">
               <i class="bi bi-cart-plus me-2"/>{{ $t('select_ticket.selection.add_to_cart') }}
             </button>
           </div>

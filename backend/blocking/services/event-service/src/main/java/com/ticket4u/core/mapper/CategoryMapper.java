@@ -1,6 +1,6 @@
 package com.ticket4u.core.mapper;
 
-import com.ticket4u.core.dto.CategoryResponse;
+import com.ticket4u.core.dto.CategoryWithEventResponse;
 import com.ticket4u.core.dto.CategorySummaryResponse;
 import com.ticket4u.core.dto.EventSummaryResponse;
 import com.ticket4u.core.entity.Category;
@@ -19,10 +19,10 @@ public abstract class CategoryMapper {
     @Autowired
     protected EventMapper eventMapper;
 
-    public abstract CategoryResponse toDTO(Category category);
+    public abstract CategoryWithEventResponse toDTO(Category category);
 
     @Mapping(target = "events", source = "limitedEvents")
-    public abstract CategoryResponse toDTO(Category category, List<Event> limitedEvents);
+    public abstract CategoryWithEventResponse toDTO(Category category, List<Event> limitedEvents);
 
     public abstract CategorySummaryResponse toSummaryDTO(Category category);
 

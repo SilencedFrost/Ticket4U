@@ -39,7 +39,7 @@ function handleRemoveSeat(itemIndex: number, seatUuid: string) {
   nextTick(() => seatingMapRef.value?.syncCartSeats(cart.value));
 }
 
-const drawerOpen = ref(true);
+const drawerOpen = ref(false);
 const cartWidth = ref(420);
 
 onMounted(() => fetchTicketSelect(eventId, sessionId));

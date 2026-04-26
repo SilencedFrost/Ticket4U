@@ -249,6 +249,12 @@
       "security": "Password and Security",
       "preferences": "Preferences"
     },
+    "login_required": {
+      "title": "Login Required",
+      "message": "You need to be logged in to access this feature.",
+      "cancel": "Go Back",
+      "confirm": "Log In"
+    },
     "personal_information": {
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",

@@ -40,14 +40,22 @@ function resolveNoticeMessage(): string {
   return '';
 }
 
+function resolveRedirectPath(): string | null {
+  const raw = route.query.redirect;
+  const path = Array.isArray(raw) ? raw[0] : raw;
+  if (!path || !path.startsWith('/')) return null;
+  return path;
+}
+
 const noticeMessage = ref<string>(resolveNoticeMessage());
+const redirectAfterLogin = resolveRedirectPath();
 
 async function handleGoogleCredential(idToken: string) {
   loading.value = true;
   Object.assign(error, { identifier: '', password: '', generic: '' });
   try {
     await useUser.loginWithGoogle(idToken);
-    router.push(localePath('/'));
+    router.push(redirectAfterLogin ? localePath(redirectAfterLogin) : localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
     if (!fetchError.statusCode) {
@@ -64,11 +72,10 @@ async function login() {
   loading.value = true;
   noticeMessage.value = '';
   Object.assign(error, { identifier: '', password: '', generic: '' });
-  // TODO: Hỗ trợ query redirect để sau khi đăng nhập thành công,
-  // người dùng được quay về lại tab settings đã chọn thay vì luôn về trang chủ.
+  
   try {
     await useUser.login(formData.identifier, formData.password, formData.rememberMe);
-    router.push(localePath('/'));
+    router.push(redirectAfterLogin ? localePath(redirectAfterLogin) : localePath('/'));
   } catch (err) {
     const fetchError = err as FetchError;
 

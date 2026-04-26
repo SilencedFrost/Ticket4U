@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import LoginRequireModal from './LoginRequireModal.vue';
+
 const { isLoggedIn } = storeToRefs(useUserStore());
+const route = useRoute();
 
 type SettingsNavItem = {
   to: string;
@@ -8,11 +11,12 @@ type SettingsNavItem = {
   guestRestricted?: boolean;
 };
 
+//modal state
+const showLoginModal = ref(false);
+const pendingPath = ref('');
+
+
 const navItems = computed(() => {
-  // TODO: Không disable tab account/security cho khách. Khi người dùng bấm vào,
-  // hiển thị modal "Để sử dụng tính năng này bạn cần đăng nhập" với 2 nút
-  // "Quay lại" và "Đăng nhập"; nếu chọn "Đăng nhập" thì chuyển tới trang login
-  // và sau khi đăng nhập xong quay lại đúng tab đã chọn.
   const items: SettingsNavItem[] = [
     {
       to: '/settings/account',
@@ -38,6 +42,20 @@ const navItems = computed(() => {
     disabled: Boolean(item.guestRestricted && !isLoggedIn.value),
   }));
 });
+
+function handleRestrictedClick(path: string) {
+  pendingPath.value = path;
+  showLoginModal.value = true;
+}
+
+onMounted(() => {
+  const loginRequired = route.query.loginRequired;
+  if (loginRequired && typeof loginRequired === 'string') {
+    pendingPath.value = loginRequired;
+    showLoginModal.value = true;
+  }
+});
+
 </script>
 
 <template>
@@ -50,13 +68,14 @@ const navItems = computed(() => {
     <nav class="settings-nav-desktop__nav d-flex flex-column overflow-y-auto overflow-x-hidden h-100">
       <ul class="list-unstyled mb-0 d-flex flex-column gap-1">
         <li v-for="item in navItems" :key="item.to">
-          <button v-if="item.disabled" type="button" class="settings-nav__item is-disabled" disabled aria-disabled="true">
+          <button v-if="item.disabled" type="button" class="settings-nav__item" @click="handleRestrictedClick(item.to)">
             <span class="settings-nav__item-left d-inline-flex align-items-center">
               <i :class="[item.icon, 'text-reactive-secondary']"></i>
               <span>{{ $t(item.labelKey) }}</span>
             </span>
             <i class="bi bi-chevron-right text-reactive-secondary"></i>
           </button>
+
           <nuxt-link-locale v-else :to="item.to" class="settings-nav__item" exact-active-class="active">
             <span class="settings-nav__item-left d-inline-flex align-items-center">
               <i :class="[item.icon, 'text-reactive-secondary']"></i>
@@ -68,6 +87,12 @@ const navItems = computed(() => {
       </ul>
     </nav>
   </div>
+
+  <login-require-modal
+    :show="showLoginModal"
+    :target-path="pendingPath"
+    @close="showLoginModal = false"
+  />
 </template>
 
 <style scoped>
@@ -90,6 +115,10 @@ const navItems = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  border: 0;
+  text-align: left;
+  background-color: transparent;
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
@@ -115,16 +144,4 @@ const navItems = computed(() => {
   color: var(--bs-primary);
 }
 
-.settings-nav__item.is-disabled {
-  width: 100%;
-  border: 0;
-  text-align: left;
-  background-color: transparent;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.settings-nav__item.is-disabled:hover {
-  background-color: transparent;
-}
 </style>

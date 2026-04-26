@@ -3,15 +3,17 @@ import EventHeroCarousel from '~/features/event/components/layout/EventHeroCarou
 import EventSection from './layout/EventSection.vue';
 import EventGrid from '~/features/event/components/layout/EventGrid.vue';
 import { useEventApi } from '~/features/event/composables/useEventApi';
+import { useCategoryApi } from '~/features/event/composables/useCategoryApi';
 
 const localePath = useLocalePath();
 const { useFeaturedEvents } = useEventApi();
+const { useRecommendedCategories } = useCategoryApi();
 const { data: eventList } = useFeaturedEvents(15);
+const { data: recommendedCategories } = useRecommendedCategories(3);
 
 // TODO: add hero carousel displaying featured
 // TODO: add section displaying hot events
 // TODO: add section display events near user
-// TODO: add section displaying top 3 categories that the user have bought into
 // TODO: add section to display other events
 
 // TODO: dynamic sectioning (get from backend)
@@ -41,6 +43,14 @@ const handleEventClick = (eventId: string) => {
           :events="section.eventList"
           :title="$t(section.key)"
           :wrap-around="section.wrapAround"
+          @event-click="handleEventClick"
+        />
+      </template>
+      <template v-for="category in recommendedCategories" :key="category.name">
+        <event-section
+          :events="category.events"
+          :title="$t(category.name)"
+          :wrap-around="true"
           @event-click="handleEventClick"
         />
       </template>

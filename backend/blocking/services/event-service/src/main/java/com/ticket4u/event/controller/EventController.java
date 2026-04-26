@@ -60,6 +60,7 @@ public class EventController {
      * GET /api/v1/public/events/locational?longitude={longitude}&latitude={latitude}
      * @param longitude longitude of the user collected from GPS data
      * @param latitude latitude of the user collected from GPS data
+     * @param limit The maximum number of events to return, defaults to 50
      * @return events within a specific distance, if no coordinates are provided, use IP coordinates
      */
     @GetMapping("/locational")

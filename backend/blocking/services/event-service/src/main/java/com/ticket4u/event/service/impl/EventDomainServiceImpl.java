@@ -256,6 +256,7 @@ public class EventDomainServiceImpl implements EventDomainService {
      * Get a list of events near a specific location.
      * @param lat The latitude of the current location
      * @param lon The longitude of the current location
+     * @param limit The maximum number of events to return 
      * @return A list of events found within the nearby area
      */
     @Override

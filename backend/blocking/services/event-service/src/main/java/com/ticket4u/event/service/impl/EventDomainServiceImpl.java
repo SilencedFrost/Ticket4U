@@ -251,4 +251,32 @@ public class EventDomainServiceImpl implements EventDomainService {
                 .map(eventMapper::toSummaryDTO)
                 .toList();
     }
+
+    /**
+     * Get a list of events near a specific location.
+     * @param lat The latitude of the current location
+     * @param lon The longitude of the current location
+     * @param limit The maximum number of events to return 
+     * @return A list of events found within the nearby area
+     */
+    @Override
+    public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon, int limit) {
+        double latDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / EARTH_RADIUS_KM);
+        double lonDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / (EARTH_RADIUS_KM * Math.cos(Math.toRadians(lat.doubleValue()))));
+
+        List<Event> candidates = eventRepository.findAllPurchasableInArea(
+                lat.subtract(BigDecimal.valueOf(latDelta)),
+                lat.add(BigDecimal.valueOf(latDelta)),
+                lon.subtract(BigDecimal.valueOf(lonDelta)),
+                lon.add(BigDecimal.valueOf(lonDelta))
+        );
+
+        return candidates.stream()
+                .map(e -> Map.entry(e, calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
+                .filter(entry -> entry.getValue() <= RelatedEvents.WEIGHTS.LOCATION_CUTOFF)
+                .sorted(Map.Entry.comparingByValue())
+                .limit(limit)
+                .map(entry -> eventMapper.toSummaryDTO(entry.getKey()))
+                .toList();
+    }
 }

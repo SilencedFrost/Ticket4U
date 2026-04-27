@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,15 +60,16 @@ public class EventController {
      * GET /api/v1/public/events/locational?longitude={longitude}&latitude={latitude}
      * @param longitude longitude of the user collected from GPS data
      * @param latitude latitude of the user collected from GPS data
+     * @param limit The maximum number of events to return, defaults to 50
      * @return events within a specific distance, if no coordinates are provided, use IP coordinates
      */
-    // TODO: implement event suggestion based on location
     @GetMapping("/locational")
     public ResponseEntity<List<EventSummaryResponse>> getLocationalEvents(
-            @RequestParam(required = false) Double longitude,
-            @RequestParam(required = false) Double latitude
+            @RequestParam(required = false) BigDecimal longitude,
+            @RequestParam(required = false) BigDecimal latitude,
+            @RequestParam(defaultValue = "50") int limit
     ) {
-        return ResponseEntity.ok(eventDomainService.findRandomEvent(10, 5));
+        return ResponseEntity.ok(eventDomainService.getNearbyEvents(latitude, longitude, limit));
     }
 
     @GetMapping("/trending")

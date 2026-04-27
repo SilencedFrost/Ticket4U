@@ -1,4 +1,3 @@
-// TODO: refactor to features/organizer/
 import { ref } from 'vue'
 import { mockProfile } from '../mock.data'
 

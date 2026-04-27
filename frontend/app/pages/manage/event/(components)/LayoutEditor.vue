@@ -24,6 +24,8 @@ const PALETTE = [
 ]
 
 // ── Internal types ────────────────────────────────────────────
+interface ESeat { seat_id: string; seat_name?: string; status?: string }
+
 interface EZone {
   id:       string
   name:     string
@@ -32,6 +34,7 @@ interface EZone {
   linkedId: string   // matches TicketZone.id
   x1: number; y1: number   // top-left, normalized −1…1
   x2: number; y2: number   // bottom-right
+  seats:    ESeat[]
 }
 
 interface EFloor {
@@ -108,6 +111,7 @@ function deserialize(json: string | null | undefined) {
         y1: z.corner1?.y ?? -0.3,
         x2: z.corner3?.x ?? 0.3,
         y2: z.corner3?.y ?? 0.3,
+        seats:    (z.seats ?? []).map((s: any) => ({ seat_id: s.seat_id, seat_name: s.seat_name, status: s.status })).filter((s: ESeat) => s.seat_id),
       })),
     }))
     activeIdx.value = Math.min(activeIdx.value, floors.value.length - 1)
@@ -138,7 +142,7 @@ function serialize(): string {
         corner2:    { x: z.x2, y: z.y1 },
         corner3:    { x: z.x2, y: z.y2 },
         corner4:    { x: z.x1, y: z.y2 },
-        seats:      [],
+        seats:      z.seats ?? [],
       })),
     })),
   })
@@ -218,6 +222,7 @@ function addZone() {
     linkedId: '',
     x1: -0.35 + off, y1: -0.15 + off,
     x2:  0.35 + off, y2:  0.35 + off,
+    seats:    [],
   }
   floor.value.zones.push(z)
   selectedId.value = z.id
@@ -251,26 +256,46 @@ function switchFloor(i: number) {
   selectedId.value = null
 }
 
-// ── Seat dot preview for sitting zones ───────────────────────
-function seatDots(z: EZone, seatSize: number): Array<{ x: number; y: number }> {
-  const x1 = px(z.x1), y1 = py(z.y1), x2 = px(z.x2), y2 = py(z.y2)
-  const w = x2 - x1
-  const labelH = 22
-  const h = y2 - y1 - labelH
-  if (w <= 0 || h <= 0) return []
-  const step = Math.max(seatSize * 1.6, 12)
-  const cols = Math.max(1, Math.floor(w / step))
-  const rows = Math.max(1, Math.floor(h / step))
-  if (cols * rows > 200) return []
-  const cellW = w / cols
-  const cellH = h / rows
-  const out: Array<{ x: number; y: number }> = []
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      out.push({ x: x1 + (c + 0.5) * cellW, y: y1 + labelH + (r + 0.5) * cellH })
-    }
+// ── Seat rendering — matches SeatingMap logic exactly ────────
+
+/** Returns normalized (−1…1) grid positions for each seat_id, same algorithm as SeatingMap */
+function getSeatGridPositions(z: EZone): Map<string, { x: number; y: number }> {
+  const seats = z.seats
+  const map   = new Map<string, { x: number; y: number }>()
+  if (!seats.length) return map
+  const sorted = [...seats].sort((a, b) => {
+    const ra = a.seat_id.replace(/\d/g, ''), rb = b.seat_id.replace(/\d/g, '')
+    if (ra !== rb) return ra.localeCompare(rb)
+    return Number.parseInt(a.seat_id.replace(/\D/g, '') || '0') - Number.parseInt(b.seat_id.replace(/\D/g, '') || '0')
+  })
+  const minX = z.x1, maxX = z.x2, minY = z.y1, maxY = z.y2
+  const rows  = [...new Set(sorted.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+  const cols  = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+  const cellW = (maxX - minX) / (cols + 1)
+  const cellH = (maxY - minY) / (rows.length + 1)
+  for (const seat of sorted) {
+    const row = seat.seat_id.replace(/\d/g, '').toUpperCase()
+    const col = Number.parseInt(seat.seat_id.replace(/\D/g, '') || '1') - 1
+    const ri  = rows.indexOf(row)
+    map.set(seat.seat_id, {
+      x: minX + cellW * (col + 0.5) + cellW / 2,
+      y: minY + cellH * (ri  + 0.5) + cellH / 2,
+    })
   }
-  return out
+  return map
+}
+
+/** Seat circle radius in SVG px — mirrors SeatingMap's computeSeatRadius (no scale factor in SVG) */
+function computeSeatRadius(z: EZone, seatSize: number): number {
+  const seats  = z.seats
+  const zoneW  = px(z.x2) - px(z.x1)
+  const zoneH  = py(z.y2) - py(z.y1)
+  const rows   = [...new Set(seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+  const cols   = Math.max(...rows.map(r => seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+  const cellW  = zoneW / (cols + 1)
+  const cellH  = zoneH / (rows.length + 1)
+  const maxR   = Math.min(cellW, cellH) / 2 * 0.7
+  return Math.min(Math.max(4, seatSize / 1.5), maxR)
 }
 </script>
 
@@ -357,61 +382,57 @@ function seatDots(z: EZone, seatSize: number): Array<{ x: number; y: number }> {
 
             <!-- Zones -->
             <g v-for="z in floor.zones" :key="z.id">
-              <!-- Zone polygon — greyed/dashed when decorative (no linked ticket zone) -->
+              <!-- Zone polygon — same style as SeatingMap (color always, no dimming) -->
               <polygon
                 :points="`${px(z.x1)},${py(z.y1)} ${px(z.x2)},${py(z.y1)} ${px(z.x2)},${py(z.y2)} ${px(z.x1)},${py(z.y2)}`"
-                :fill="z.linkedId ? z.color + '44' : 'rgba(55,65,81,0.15)'"
-                :stroke="z.linkedId ? z.color : '#6b7280'"
-                :stroke-width="selectedId === z.id ? 2.5 : 1.5"
-                :stroke-dasharray="z.linkedId ? '' : '5,3'"
-                :opacity="z.linkedId ? 1 : 0.7"
+                :fill="z.color + '44'"
+                :stroke="z.color"
+                :stroke-width="selectedId === z.id ? 2.5 : 2"
                 style="cursor:move;"
                 @mousedown.prevent="startDrag($event, 'zone', z.id)"
                 @click.stop
               />
 
-              <!-- Seat dot grid (sitting zones only, matching SeatingMap preview) -->
-              <template v-if="z.type === 'sitting'">
+              <!-- Seat circles — only when sitting zone has actual seat data (matches SeatingMap drawZoneSeats) -->
+              <template v-if="z.type === 'sitting' && z.seats.length > 0">
                 <circle
-                  v-for="(dot, di) in seatDots(z, floor.seatSize)"
-                  :key="`d${di}`"
-                  :cx="dot.x" :cy="dot.y"
-                  :r="Math.max(3, floor.seatSize / 3)"
-                  :fill="z.linkedId ? z.color : '#6b7280'"
-                  opacity="0.6"
+                  v-for="[seatId, pos] in getSeatGridPositions(z)"
+                  :key="seatId"
+                  :cx="px(pos.x)" :cy="py(pos.y)"
+                  :r="computeSeatRadius(z, floor.seatSize)"
+                  fill="#22c55e"
                   style="pointer-events:none;"
                 />
               </template>
 
-              <!-- Zone name label — top of zone for sitting, center for standing -->
-              <text
-                :x="(px(z.x1) + px(z.x2)) / 2"
-                :y="z.type === 'sitting' ? py(z.y1) + 14 : (py(z.y1) + py(z.y2)) / 2 - (z.linkedId ? 8 : 0)"
-                text-anchor="middle" dominant-baseline="middle"
-                font-size="11" font-weight="600"
-                :fill="z.linkedId ? '#fff' : '#9ca3af'"
-                style="pointer-events:none; text-shadow: 0 1px 3px rgba(0,0,0,0.8);"
-              >{{ z.name }}</text>
-
-              <!-- [Standing] badge for linked standing zones -->
-              <text
-                v-if="z.type === 'standing' && z.linkedId"
-                :x="(px(z.x1) + px(z.x2)) / 2"
-                :y="(py(z.y1) + py(z.y2)) / 2 + 10"
-                text-anchor="middle" dominant-baseline="middle"
-                font-size="9" :fill="z.color + 'cc'"
-                style="pointer-events:none;"
-              >[ Standing ]</text>
-
-              <!-- [Decorative] badge for unlinked zones -->
-              <text
-                v-if="!z.linkedId"
-                :x="(px(z.x1) + px(z.x2)) / 2"
-                :y="z.type === 'sitting' ? py(z.y1) + 26 : (py(z.y1) + py(z.y2)) / 2 + 10"
-                text-anchor="middle" dominant-baseline="middle"
-                font-size="9" fill="#9ca3af"
-                style="pointer-events:none;"
-              >[ Decorative ]</text>
+              <!-- Zone label — shown when standing OR sitting with no seats (matches SeatingMap drawZone logic) -->
+              <template v-if="z.type === 'standing' || z.seats.length === 0">
+                <text
+                  :x="(px(z.x1) + px(z.x2)) / 2"
+                  :y="(py(z.y1) + py(z.y2)) / 2"
+                  text-anchor="middle" dominant-baseline="middle"
+                  font-size="12" font-weight="bold" fill="#fff"
+                  style="pointer-events:none; text-shadow: 0 1px 3px rgba(0,0,0,0.8);"
+                >{{ z.name }}</text>
+                <!-- [Standing] badge -->
+                <text
+                  v-if="z.type === 'standing'"
+                  :x="(px(z.x1) + px(z.x2)) / 2"
+                  :y="(py(z.y1) + py(z.y2)) / 2 + 18"
+                  text-anchor="middle" dominant-baseline="middle"
+                  font-size="10" :fill="z.color + 'cc'"
+                  style="pointer-events:none;"
+                >[ Standing ]</text>
+                <!-- [Decorative] badge — editor-only indicator for unlinked zones -->
+                <text
+                  v-if="!z.linkedId"
+                  :x="(px(z.x1) + px(z.x2)) / 2"
+                  :y="z.type === 'standing' ? (py(z.y1) + py(z.y2)) / 2 + 32 : (py(z.y1) + py(z.y2)) / 2 + 18"
+                  text-anchor="middle" dominant-baseline="middle"
+                  font-size="10" :fill="z.color + 'aa'"
+                  style="pointer-events:none;"
+                >[ Decorative ]</text>
+              </template>
 
               <!-- Corner resize handles (selected zone only) -->
               <template v-if="selectedId === z.id">

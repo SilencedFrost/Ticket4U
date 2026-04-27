@@ -1,4 +1,3 @@
-// TODO: refactor to features/organizer/
 import { ref } from 'vue'
 import { mockEvents } from '../mock.data'
 import type { EventFormState, EventContentState, EventStatus } from '../(types)/event'

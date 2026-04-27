@@ -89,7 +89,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         AND COALESCE(e.latitude, v.latitude) BETWEEN :minLat AND :maxLat
         AND COALESCE(e.longitude, v.longitude) BETWEEN :minLon AND :maxLon
     """)
-    List<Event> findEventsInArea(
+    List<Event> findAllPurchasableInArea(
             @Param("minLat") BigDecimal minLat,
             @Param("maxLat") BigDecimal maxLat,
             @Param("minLon") BigDecimal minLon,

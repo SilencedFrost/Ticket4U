@@ -261,10 +261,10 @@ public class EventDomainServiceImpl implements EventDomainService {
      */
     @Override
     public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon, int limit) {
-        double latDelta = RelatedEvents.WEIGHTS.LOCATION_CUTOFF / EARTH_RADIUS_KM * (180 / Math.PI);
-        double lonDelta = RelatedEvents.WEIGHTS.LOCATION_CUTOFF / (EARTH_RADIUS_KM * Math.cos(Math.toRadians(lat.doubleValue()))) * (180 / Math.PI);
+        double latDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / EARTH_RADIUS_KM);
+        double lonDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / (EARTH_RADIUS_KM * Math.cos(Math.toRadians(lat.doubleValue()))));
 
-        List<Event> candidates = eventRepository.findEventsInArea(
+        List<Event> candidates = eventRepository.findAllPurchasableInArea(
                 lat.subtract(BigDecimal.valueOf(latDelta)),
                 lat.add(BigDecimal.valueOf(latDelta)),
                 lon.subtract(BigDecimal.valueOf(lonDelta)),

@@ -252,6 +252,12 @@
       "security": "Mật khẩu và bảo mật",
       "preferences": "Tùy chọn"
     },
+    "login_required": {
+      "title": "Yêu cầu đăng nhập",
+      "message": "Bạn cần đăng nhập để sử dụng tính năng này.",
+      "cancel": "Quay lại",
+      "confirm": "Đăng nhập"
+    },
     "personal_information": {
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",

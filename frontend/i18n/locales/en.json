@@ -101,6 +101,7 @@
     "birthday": "Date of birth",
     "email": "Email",
     "settings": "Settings",
+    "close": "Close",
     "ticket": "Ticket",
     "events": "Events",
     "tickets": "Tickets",
@@ -473,6 +474,7 @@
         "tickets_sold": "Tickets Sold",
         "revenue": "Total Revenue",
         "rating": "Avg. Rating",
+        "active_events": "Active Events",
         "upcoming": "{n} upcoming",
         "this_month": "This month",
         "from_reviews": "From {n} reviews"
@@ -695,7 +697,9 @@
         "editor_link_zone": "Link to Ticket Zone",
         "editor_unlinked": "— Not linked —",
         "editor_click_hint": "Click a zone to edit its properties, or drag to reposition.",
-        "editor_delete_zone": "Delete Zone"
+        "editor_delete_zone": "Delete Zone",
+        "type_from_link": "Determined by linked ticket zone",
+        "seats_generated": "seats generated"
       }
     },
     "revenue": {

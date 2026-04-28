@@ -101,6 +101,7 @@
     "birthday": "Ngày sinh",
     "email": "Email",
     "settings": "Cài đặt",
+    "close": "Đóng",
     "ticket": "Vé",
     "events": "Sự kiện",
     "tickets": "Vé",
@@ -473,6 +474,7 @@
         "tickets_sold": "Vé đã bán",
         "revenue": "Doanh thu",
         "rating": "Đánh giá TB",
+        "active_events": "Sự kiện hoạt động",
         "upcoming": "{n} sắp diễn ra",
         "this_month": "Tháng này",
         "from_reviews": "Từ {n} đánh giá"
@@ -695,7 +697,9 @@
         "editor_link_zone": "Liên kết khu vé",
         "editor_unlinked": "— Chưa liên kết —",
         "editor_click_hint": "Nhấn vào khu vực để chỉnh sửa, hoặc kéo để di chuyển.",
-        "editor_delete_zone": "Xóa khu vực"
+        "editor_delete_zone": "Xóa khu vực",
+        "type_from_link": "Xác định bởi khu vé liên kết",
+        "seats_generated": "ghế đã tạo"
       }
     },
     "revenue": {

@@ -32,7 +32,13 @@
               <div class="fw-bold text-reactive-primary text-truncate" style="max-width: 140px">
                 {{ profile?.name ?? 'Organizer' }}
               </div>
-              <small class="text-reactive-secondary">Organizer Admin</small>
+              <div v-if="profile?.rating" class="d-flex align-items-center gap-1 mt-1">
+                <i class="bi bi-star-fill text-warning" style="font-size:0.65rem"/>
+                <small class="text-reactive-secondary">{{ profile.rating.toFixed(1) }}</small>
+              </div>
+              <small v-if="profile?.description" class="text-reactive-secondary d-block text-truncate mt-1" style="max-width:140px; font-size:0.7rem;">
+                {{ profile.description }}
+              </small>
             </div>
           </transition>
         </div>
@@ -112,7 +118,7 @@
         <div ref="accountRef" class="position-relative">
           <button class="topbar-btn d-flex align-items-center gap-2" @click.stop="toggleMenu('account')">
             <i class="bi bi-person-circle" style="font-size: 1.25rem" />
-            <span class="small d-none d-md-inline text-reactive-secondary">{{ profile?.name ?? '' }}</span>
+            <span class="small d-none d-md-inline text-reactive-secondary">{{ userStore.user.username }}</span>
           </button>
           <div v-if="openMenu === 'account'" class="position-absolute end-0 top-100 mt-2 z-3">
             <div class="card border overflow-hidden" style="min-width: 160px">
@@ -154,7 +160,7 @@ const { nextTheme, toggleTheme } = useTheme()
 const localePath = useLocalePath()
 const route = useRoute()
 const router = useRouter()
-const useUser = useUserStore()
+const userStore = useUserStore()
 
 const sidebarCollapsed = ref(false)
 const mobileOpen       = ref(false)
@@ -174,9 +180,12 @@ function toggleMenu(key: string) {
 
 // Profile
 const { profile, fetchProfile, reset } = useOrganizerProfile()
-onMounted(fetchProfile)
+onMounted(async () => {
+  if (!userStore.isLoggedIn) await userStore.refresh()
+  await fetchProfile()
+})
 
-const logoUrl = computed(() => profile.value?.logoUrl ?? profile.value?.logo_url ?? null)
+const logoUrl = computed(() => profile.value?.logoUrl ?? null)
 
 // Nav items
 const navItems = computed(() => [
@@ -186,17 +195,17 @@ const navItems = computed(() => [
 ])
 
 const isActive = (to: string) => {
-  const path      = route.path
-  const cleanPath = path.replace(/^\/(en|vi)/, '')
-  const cleanTo   = to.replace(/^\/(en|vi)/, '')
+  const prefix    = `/${locale.value}`
+  const cleanPath = route.path.startsWith(prefix) ? route.path.slice(prefix.length) : route.path
+  const cleanTo   = to.startsWith(prefix)         ? to.slice(prefix.length)         : to
   if (cleanTo === '/manage') return cleanPath === '/manage' || cleanPath === '/manage/'
   return cleanPath.startsWith(cleanTo)
 }
 
 // Logout
 const handleLogout = async () => {
+  await userStore.logout()
   reset()
-  await useUser.logout()
   router.push(localePath('/auth/login'))
 }
 </script>

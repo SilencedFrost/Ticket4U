@@ -29,11 +29,10 @@ interface ESeat { seat_id: string; seat_name?: string; status?: string }
 interface EZone {
   id:       string
   name:     string
-  type:     'sitting' | 'standing'
   color:    string
-  linkedId: string   // matches TicketZone.id
-  x1: number; y1: number   // top-left, normalized −1…1
-  x2: number; y2: number   // bottom-right
+  linkedId: string   // matches TicketZone.id  ('' = decorative)
+  x1: number; y1: number
+  x2: number; y2: number
   seats:    ESeat[]
 }
 
@@ -54,6 +53,40 @@ const selectedId = ref<string | null>(null)
 const selected   = computed(() =>
   selectedId.value ? (floor.value?.zones.find(z => z.id === selectedId.value) ?? null) : null
 )
+
+// ── Zone type — derived from linked TicketZone, never stored on EZone ──
+function zoneType(z: EZone): 'sitting' | 'standing' | 'decorative' {
+  if (!z.linkedId) return 'decorative'
+  const tz = props.zones.find(t => t.id === z.linkedId)
+  if (!tz) return 'decorative'
+  return tz.isStanding ? 'standing' : 'sitting'
+}
+
+// ── Seat generation from linked TicketZone capacity ──────────
+function generateSeats(tz: TicketZone): ESeat[] {
+  if (tz.isStanding) return []
+  const capacity = tz.capacity ?? 0
+  const rows = (tz.gridRows ?? 0) > 0 ? tz.gridRows! : Math.ceil(Math.sqrt(capacity))
+  const cols = (tz.gridCols ?? 0) > 0 ? tz.gridCols! : Math.ceil(capacity / Math.max(1, rows))
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const out: ESeat[] = []
+  for (let r = 0; r < rows && out.length < capacity; r++) {
+    const rowLabel = r < 26 ? alpha[r]! : `${alpha[Math.floor(r / 26) - 1]}${alpha[r % 26]}`
+    for (let c = 0; c < cols && out.length < capacity; c++) {
+      const id = `${rowLabel}${c + 1}`
+      out.push({ seat_id: id, seat_name: id })
+    }
+  }
+  return out
+}
+
+// Auto-regenerate seats whenever selected zone's linkedId changes
+watch(() => selected.value?.linkedId, (newId) => {
+  if (_loading || !selected.value) return
+  const tz = props.zones.find(t => t.id === newId)
+  selected.value.seats = tz && !tz.isStanding ? generateSeats(tz) : []
+  commit()
+})
 
 // ── Coordinate helpers ────────────────────────────────────────
 const svgRef = ref<SVGSVGElement | null>(null)
@@ -83,7 +116,7 @@ let _loading = false
 function deserialize(json: string | null | undefined) {
   _loading = true
   if (!json) {
-    floors.value   = [mkFloor('Floor 1', 0)]
+    floors.value    = [mkFloor('Floor 1', 0)]
     activeIdx.value = 0
     _loading = false
     return
@@ -91,7 +124,7 @@ function deserialize(json: string | null | undefined) {
   try {
     const p = JSON.parse(json)
     if (!p.floors?.length) {
-      floors.value   = [mkFloor('Floor 1', 0)]
+      floors.value    = [mkFloor('Floor 1', 0)]
       activeIdx.value = 0
       _loading = false
       return
@@ -104,19 +137,20 @@ function deserialize(json: string | null | undefined) {
       zones:    ((f.zones ?? []) as any[]).map((z: any) => ({
         id:       z.zone_id ?? `z-${Math.random().toString(36).slice(2)}`,
         name:     z.zone_name ?? 'Zone',
-        type:     z.zone_type ?? 'standing',
         color:    z.color ?? '#6366f1',
         linkedId: z.zone_id ?? '',
         x1: z.corner1?.x ?? -0.3,
         y1: z.corner1?.y ?? -0.3,
-        x2: z.corner3?.x ?? 0.3,
-        y2: z.corner3?.y ?? 0.3,
-        seats:    (z.seats ?? []).map((s: any) => ({ seat_id: s.seat_id, seat_name: s.seat_name, status: s.status })).filter((s: ESeat) => s.seat_id),
+        x2: z.corner3?.x ??  0.3,
+        y2: z.corner3?.y ??  0.3,
+        seats: (z.seats ?? [])
+          .map((s: any) => ({ seat_id: s.seat_id, seat_name: s.seat_name, status: s.status }))
+          .filter((s: ESeat) => s.seat_id),
       })),
     }))
     activeIdx.value = Math.min(activeIdx.value, floors.value.length - 1)
   } catch {
-    floors.value   = [mkFloor('Floor 1', 0)]
+    floors.value    = [mkFloor('Floor 1', 0)]
     activeIdx.value = 0
   }
   _loading = false
@@ -133,7 +167,7 @@ function serialize(): string {
       zones: f.zones.map(z => ({
         zone_id:    z.linkedId || z.id,
         zone_name:  z.name,
-        zone_type:  z.type,
+        zone_type:  zoneType(z),
         accessible: true,
         shape_type: 'rect',
         color:      z.color,
@@ -217,7 +251,6 @@ function addZone() {
   const z: EZone = {
     id:       `zone-${Date.now()}`,
     name:     `Zone ${n}`,
-    type:     'standing',
     color:    PALETTE[n % PALETTE.length]!,
     linkedId: '',
     x1: -0.35 + off, y1: -0.15 + off,
@@ -256,9 +289,7 @@ function switchFloor(i: number) {
   selectedId.value = null
 }
 
-// ── Seat rendering — matches SeatingMap logic exactly ────────
-
-/** Returns normalized (−1…1) grid positions for each seat_id, same algorithm as SeatingMap */
+// ── Seat rendering — matches SeatingMap logic exactly ─────────
 function getSeatGridPositions(z: EZone): Map<string, { x: number; y: number }> {
   const seats = z.seats
   const map   = new Map<string, { x: number; y: number }>()
@@ -268,33 +299,32 @@ function getSeatGridPositions(z: EZone): Map<string, { x: number; y: number }> {
     if (ra !== rb) return ra.localeCompare(rb)
     return Number.parseInt(a.seat_id.replace(/\D/g, '') || '0') - Number.parseInt(b.seat_id.replace(/\D/g, '') || '0')
   })
-  const minX = z.x1, maxX = z.x2, minY = z.y1, maxY = z.y2
-  const rows  = [...new Set(sorted.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
-  const cols  = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
-  const cellW = (maxX - minX) / (cols + 1)
-  const cellH = (maxY - minY) / (rows.length + 1)
+  const rows = [...new Set(sorted.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+  const cols = Math.max(...rows.map(r => sorted.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+  const cellW = (z.x2 - z.x1) / (cols + 1)
+  const cellH = (z.y2 - z.y1) / (rows.length + 1)
   for (const seat of sorted) {
     const row = seat.seat_id.replace(/\d/g, '').toUpperCase()
     const col = Number.parseInt(seat.seat_id.replace(/\D/g, '') || '1') - 1
     const ri  = rows.indexOf(row)
     map.set(seat.seat_id, {
-      x: minX + cellW * (col + 0.5) + cellW / 2,
-      y: minY + cellH * (ri  + 0.5) + cellH / 2,
+      x: z.x1 + cellW * (col + 1),
+      y: z.y1 + cellH * (ri  + 1),
     })
   }
   return map
 }
 
-/** Seat circle radius in SVG px — mirrors SeatingMap's computeSeatRadius (no scale factor in SVG) */
 function computeSeatRadius(z: EZone, seatSize: number): number {
-  const seats  = z.seats
-  const zoneW  = px(z.x2) - px(z.x1)
-  const zoneH  = py(z.y2) - py(z.y1)
-  const rows   = [...new Set(seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
-  const cols   = Math.max(...rows.map(r => seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
-  const cellW  = zoneW / (cols + 1)
-  const cellH  = zoneH / (rows.length + 1)
-  const maxR   = Math.min(cellW, cellH) / 2 * 0.7
+  const seats = z.seats
+  if (!seats.length) return 6
+  const zoneW = px(z.x2) - px(z.x1)
+  const zoneH = py(z.y2) - py(z.y1)
+  const rows  = [...new Set(seats.map(s => s.seat_id.replace(/\d/g, '').toUpperCase()))].sort()
+  const cols  = Math.max(...rows.map(r => seats.filter(s => s.seat_id.replace(/\d/g, '').toUpperCase() === r).length))
+  const cellW = zoneW / (cols + 1)
+  const cellH = zoneH / (rows.length + 1)
+  const maxR  = Math.min(cellW, cellH) / 2 * 0.72
   return Math.min(Math.max(4, seatSize / 1.5), maxR)
 }
 </script>
@@ -382,7 +412,8 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
 
             <!-- Zones -->
             <g v-for="z in floor.zones" :key="z.id">
-              <!-- Zone polygon — same style as SeatingMap (color always, no dimming) -->
+
+              <!-- Zone fill -->
               <polygon
                 :points="`${px(z.x1)},${py(z.y1)} ${px(z.x2)},${py(z.y1)} ${px(z.x2)},${py(z.y2)} ${px(z.x1)},${py(z.y2)}`"
                 :fill="z.color + '44'"
@@ -393,20 +424,29 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
                 @click.stop
               />
 
-              <!-- Seat circles — only when sitting zone has actual seat data (matches SeatingMap drawZoneSeats) -->
-              <template v-if="z.type === 'sitting' && z.seats.length > 0">
-                <circle
+              <!-- Seated: individual seat circles with ID labels -->
+              <template v-if="zoneType(z) === 'sitting' && z.seats.length > 0">
+                <g
                   v-for="[seatId, pos] in getSeatGridPositions(z)"
                   :key="seatId"
-                  :cx="px(pos.x)" :cy="py(pos.y)"
-                  :r="computeSeatRadius(z, floor.seatSize)"
-                  fill="#22c55e"
                   style="pointer-events:none;"
-                />
+                >
+                  <circle
+                    :cx="px(pos.x)" :cy="py(pos.y)"
+                    :r="computeSeatRadius(z, floor.seatSize)"
+                    fill="#22c55e"
+                  />
+                  <text
+                    :x="px(pos.x)" :y="py(pos.y)"
+                    text-anchor="middle" dominant-baseline="middle"
+                    :font-size="Math.max(5, computeSeatRadius(z, floor.seatSize) * 0.75)"
+                    fill="#fff" font-weight="600"
+                  >{{ seatId }}</text>
+                </g>
               </template>
 
-              <!-- Zone label — shown when standing OR sitting with no seats (matches SeatingMap drawZone logic) -->
-              <template v-if="z.type === 'standing' || z.seats.length === 0">
+              <!-- Standing / decorative / seated-with-no-seats: show name label -->
+              <template v-if="zoneType(z) !== 'sitting' || z.seats.length === 0">
                 <text
                   :x="(px(z.x1) + px(z.x2)) / 2"
                   :y="(py(z.y1) + py(z.y2)) / 2"
@@ -414,20 +454,18 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
                   font-size="12" font-weight="bold" fill="#fff"
                   style="pointer-events:none; text-shadow: 0 1px 3px rgba(0,0,0,0.8);"
                 >{{ z.name }}</text>
-                <!-- [Standing] badge -->
                 <text
-                  v-if="z.type === 'standing'"
+                  v-if="zoneType(z) === 'standing'"
                   :x="(px(z.x1) + px(z.x2)) / 2"
                   :y="(py(z.y1) + py(z.y2)) / 2 + 18"
                   text-anchor="middle" dominant-baseline="middle"
                   font-size="10" :fill="z.color + 'cc'"
                   style="pointer-events:none;"
                 >[ Standing ]</text>
-                <!-- [Decorative] badge — editor-only indicator for unlinked zones -->
                 <text
-                  v-if="!z.linkedId"
+                  v-if="zoneType(z) === 'decorative'"
                   :x="(px(z.x1) + px(z.x2)) / 2"
-                  :y="z.type === 'standing' ? (py(z.y1) + py(z.y2)) / 2 + 32 : (py(z.y1) + py(z.y2)) / 2 + 18"
+                  :y="(py(z.y1) + py(z.y2)) / 2 + 18"
                   text-anchor="middle" dominant-baseline="middle"
                   font-size="10" :fill="z.color + 'aa'"
                   style="pointer-events:none;"
@@ -441,8 +479,8 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
                 <circle :cx="px(z.x1)" :cy="py(z.y2)" r="7" fill="#fff" stroke="#3b82f6" stroke-width="2" style="cursor:sw-resize;" @mousedown.prevent="startDrag($event, 'bl', z.id)" @click.stop/>
                 <circle :cx="px(z.x2)" :cy="py(z.y2)" r="7" fill="#fff" stroke="#3b82f6" stroke-width="2" style="cursor:se-resize;" @mousedown.prevent="startDrag($event, 'br', z.id)" @click.stop/>
               </template>
-            </g>
 
+            </g>
           </g>
         </svg>
       </div>
@@ -450,7 +488,7 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
       <!-- Sidebar -->
       <div class="editor-sidebar flex-shrink-0" style="width: 220px;">
 
-        <!-- Zone properties (zone selected) -->
+        <!-- Zone properties -->
         <div v-if="selected" class="card shadow-sm p-3">
           <div class="fw-semibold text-reactive-primary small mb-3">
             <i class="bi bi-sliders me-1 text-primary"/>{{ $t('manage.event_form.step4.editor_zone_props') }}
@@ -461,12 +499,15 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
             <input v-model="selected.name" type="text" class="form-control form-control-sm" @input="commit"/>
           </div>
 
+          <!-- Zone type: read-only, derived from linked ticket zone -->
           <div class="mb-2">
             <label class="form-label small text-reactive-secondary mb-1">{{ $t('manage.event_form.step3.type') }}</label>
-            <select v-model="selected.type" class="form-select form-select-sm" @change="commit">
-              <option value="standing">{{ $t('manage.event_form.step3.standing') }}</option>
-              <option value="sitting">{{ $t('manage.event_form.step3.seated') }}</option>
-            </select>
+            <div class="mt-1">
+              <span v-if="zoneType(selected) === 'sitting'"    class="badge bg-primary">Seated</span>
+              <span v-else-if="zoneType(selected) === 'standing'"  class="badge bg-warning text-dark">Standing</span>
+              <span v-else class="badge bg-secondary">Decorative</span>
+              <small class="d-block text-reactive-secondary mt-1" style="font-size:0.7rem;">{{ $t('manage.event_form.step4.type_from_link') }}</small>
+            </div>
           </div>
 
           <div class="mb-2">
@@ -492,6 +533,9 @@ function computeSeatRadius(z: EZone, seatSize: number): number {
               <option value="">{{ $t('manage.event_form.step4.editor_unlinked') }}</option>
               <option v-for="z in zones" :key="z.id" :value="z.id">{{ z.name }}</option>
             </select>
+            <small v-if="zoneType(selected) === 'sitting' && selected.seats.length > 0" class="text-reactive-secondary mt-1 d-block" style="font-size:0.7rem;">
+              {{ selected.seats.length }} {{ $t('manage.event_form.step4.seats_generated') }}
+            </small>
           </div>
 
           <button class="btn btn-sm btn-outline-danger w-100" @click="deleteSelected">

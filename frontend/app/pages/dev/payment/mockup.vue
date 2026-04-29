@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { usePhoneValidation } from '~/composables/usePhoneValidation';
 import { useSettingsApi } from '~/features/settings/composables/useSettingsApi';
+import { useCheckoutStore } from '~/stores/checkoutStore';
 
 const { formatPrice } = useFormatter();
 const { isEmailFormatValid } = useEmailValidation();
 const { isPhoneFormatValid } = usePhoneValidation();
 const { fetchCurrentUser } = useSettingsApi();
+const checkoutStore = useCheckoutStore();
 
 const fullName = ref('');
 const email = ref('');
 const phone = ref('');
 const promoCode = ref('');
 const agreedPolicy = ref(false);
-const total = 100000;
-const transferContent = 'T4UCODE';
 const transferContentMaxLength = 20;
 const showSepayPopup = ref(false);
 const editingField = ref<'name' | 'email' | 'phone' | null>(null);
@@ -30,7 +30,7 @@ type MockSelectedTicket = {
   requires_phone?: boolean;
 };
 
-const tickets = ref<MockSelectedTicket[]>([
+const mockTickets = ref<MockSelectedTicket[]>([
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C10', base_price: 25000 },
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C11', base_price: 25000 },
   { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C12', base_price: 25000 },
@@ -43,6 +43,37 @@ const tickets = ref<MockSelectedTicket[]>([
   },
 ]);
 
+const tickets = computed<MockSelectedTicket[]>(() => {
+  const session = checkoutStore.checkoutSession;
+
+  if (!session) {
+    return mockTickets.value;
+  }
+
+  return session.cart.flatMap((item) => {
+    if (item.seats?.length) {
+      return item.seats.map((seat) => ({
+        ticket_type: item.isStanding ? 'STANDING' : 'SEAT',
+        zone_name: seat.zoneName,
+        seat_name: seat.seatName,
+        base_price: seat.price,
+        requires_phone: false,
+      }));
+    }
+
+    return Array.from({ length: item.quantity }, (_, index) => ({
+      ticket_type: item.isStanding ? 'STANDING' : 'SEAT',
+      zone_name: item.name,
+      seat_name: `${item.name}-${index + 1}`,
+      base_price: item.price,
+      requires_phone: false,
+    }));
+  });
+});
+
+const total = computed(() => checkoutStore.checkoutSession?.totalPrice ?? 100000);
+const transferContent = computed(() => checkoutStore.checkoutSession?.orderId ?? 'T4UCODE');
+
 const isPhoneRequired = computed(() =>
   tickets.value.some((ticket) => ticket.requires_phone === true),
 );
@@ -50,11 +81,11 @@ const isPhoneRequired = computed(() =>
 const minuteBox = '00';
 const secondBox = '00';
 const transferContentPreview = computed(() => {
-  if (transferContent.length <= transferContentMaxLength) {
-    return transferContent;
+  if (transferContent.value.length <= transferContentMaxLength) {
+    return transferContent.value;
   }
 
-  return `${transferContent.slice(0, transferContentMaxLength - 3)}...`;
+  return `${transferContent.value.slice(0, transferContentMaxLength - 3)}...`;
 });
 
 const fullNameErrorKey = computed(() =>
@@ -195,6 +226,7 @@ async function prefillReceiverInfo() {
 }
 
 onMounted(() => {
+  checkoutStore.restoreCheckoutSession();
   window.addEventListener('keydown', handleEscape);
 
   window.addEventListener('resize', syncTopPanelsHeight);
@@ -236,12 +268,30 @@ onBeforeUnmount(() => {
                 :alt="$t('payment_mockup.event.image_alt')"
               />
               <div class="event-meta">
-                <h1 class="event-title">{{ $t('payment_mockup.event.title') }}</h1>
+                <h1 class="event-title">
+                  {{
+                    checkoutStore.checkoutSession?.event.title ?? $t('payment_mockup.event.title')
+                  }}
+                </h1>
                 <div class="event-subline">
-                  <span><i class="bi bi-calendar3"></i> {{ $t('payment_mockup.event.date') }}</span>
-                  <span><i class="bi bi-clock"></i> {{ $t('payment_mockup.event.time') }}</span>
+                  <span
+                    ><i class="bi bi-calendar3"></i>
+                    {{
+                      checkoutStore.checkoutSession?.event.date ?? $t('payment_mockup.event.date')
+                    }}</span
+                  >
+                  <span
+                    ><i class="bi bi-clock"></i>
+                    {{
+                      checkoutStore.checkoutSession?.event.time ?? $t('payment_mockup.event.time')
+                    }}</span
+                  >
                 </div>
-                <p class="event-address">{{ $t('payment_mockup.event.address') }}</p>
+                <p class="event-address">
+                  {{
+                    checkoutStore.checkoutSession?.event.venue ?? $t('payment_mockup.event.address')
+                  }}
+                </p>
               </div>
             </article>
 

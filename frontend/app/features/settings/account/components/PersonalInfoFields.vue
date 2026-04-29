@@ -2,6 +2,7 @@
 import type { FieldErrors } from '../../types/fieldErrors';
 import type { ProfileForm } from '../../types/profileForm';
 import ChangeEmailModal from './ChangeEmailModal.vue';
+import { usePasswordValidation } from '~/composables/usePasswordValidation';
 
 const model = defineModel<ProfileForm>({ required: true });
 
@@ -9,7 +10,7 @@ const model = defineModel<ProfileForm>({ required: true });
 // TODO: add proper validation for old password field
 // TODO: add [i] that when user hovers mouse over or click "blank fields are unsaved"
 // TODO: allow nullable phone number
-withDefaults(
+const props = withDefaults(
   defineProps<{
     errors?: FieldErrors;
     disabled?: boolean;
@@ -31,6 +32,15 @@ const emit = defineEmits<{
   (e: 'change-email', payload: { newEmail: string; password: string }): void;
 }>();
 
+const { validatePasswordValue } = usePasswordValidation();
+const loadPasswordError = ref<string | undefined>(undefined);
+
+const mergedEmailErrors = computed(() => ({
+  newEmail: props.emailErrors?.newEmail,
+  password: loadPasswordError.value ?? props.emailErrors?.password,
+  generic: props.emailErrors?.generic,
+}));
+
 function updateField(field: keyof ProfileForm, value: string) {
   model.value = {
     ...model.value,
@@ -51,6 +61,16 @@ function closeEmailModal() {
 
 defineExpose({ closeEmailModal });
 
+function handleChangeEmailSubmit(payload: { newEmail: string; password: string }) {
+  const formatErrors = validatePasswordValue(payload.password);
+  if (formatErrors.length > 0) {
+    loadPasswordError.value = formatErrors[0];
+    return;
+  }
+
+  loadPasswordError.value = undefined;
+  emit('change-email', payload);
+}
 </script>
 
 <template>
@@ -144,8 +164,8 @@ defineExpose({ closeEmailModal });
       ref="emailModalRef"
       :current-email="model.email"
       :loading="emailLoading"
-      :errors="emailErrors"
-      @submit="emit('change-email', $event)"
+      :errors="mergedEmailErrors"
+      @submit="handleChangeEmailSubmit"
     />
   </div>
 </template>

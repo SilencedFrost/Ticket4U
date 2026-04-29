@@ -112,6 +112,7 @@ defineExpose({ closeEmailModal });
         type="date"
         class="form-control"
         :class="{ 'is-invalid': !!errors.birthday }"
+        :max="new Date().toISOString().split('T')[0]"
         :disabled="disabled"
         @input="updateField('birthday', ($event.target as HTMLInputElement).value)"
       />

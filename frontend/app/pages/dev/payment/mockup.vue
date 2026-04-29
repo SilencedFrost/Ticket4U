@@ -1,45 +1,112 @@
 <script setup lang="ts">
+import { usePhoneValidation } from '~/composables/usePhoneValidation';
+import { useSettingsApi } from '~/features/settings/composables/useSettingsApi';
+
+const { formatPrice } = useFormatter();
+const { isEmailFormatValid } = useEmailValidation();
+const { isPhoneFormatValid } = usePhoneValidation();
+const { fetchCurrentUser } = useSettingsApi();
+
 const fullName = ref('');
 const email = ref('');
 const phone = ref('');
 const promoCode = ref('');
 const agreedPolicy = ref(false);
-const secondsLeft = ref(567);
-const total = 1050000;
+const total = 100000;
+const transferContent = 'T4UCODE';
+const transferContentMaxLength = 20;
 const showSepayPopup = ref(false);
 const editingField = ref<'name' | 'email' | 'phone' | null>(null);
 const shouldCloseOnPointerUp = ref(false);
+const eventPanelRef = ref<HTMLElement | null>(null);
+const holdPanelHeight = ref<number | null>(null);
+let eventPanelResizeObserver: ResizeObserver | null = null;
 
-const tickets = ref([
-  { type: 'GA', zone: '-', row: 'C', seat: '10' },
-  { type: 'GA', zone: '-', row: 'C', seat: '11' },
-  { type: 'GA', zone: '-', row: 'C', seat: '12' },
-  { type: 'GA', zone: '-', row: 'C', seat: '13' },
+type MockSelectedTicket = {
+  ticket_type: string;
+  zone_name: string;
+  seat_name: string;
+  base_price: number;
+  requires_phone?: boolean;
+};
+
+const tickets = ref<MockSelectedTicket[]>([
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C10', base_price: 25000 },
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C11', base_price: 25000 },
+  { ticket_type: 'GA', zone_name: 'Standard', seat_name: 'C12', base_price: 25000 },
+  {
+    ticket_type: 'VIP',
+    zone_name: 'Premium',
+    seat_name: 'A03',
+    base_price: 25000,
+    requires_phone: false,
+  },
 ]);
 
-const countdownLabel = computed(() => {
-  const safe = Math.max(0, secondsLeft.value);
-  const m = Math.floor(safe / 60)
-    .toString()
-    .padStart(2, '0');
-  const s = (safe % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
+const isPhoneRequired = computed(() =>
+  tickets.value.some((ticket) => ticket.requires_phone === true),
+);
+
+const minuteBox = '00';
+const secondBox = '00';
+const transferContentPreview = computed(() => {
+  if (transferContent.length <= transferContentMaxLength) {
+    return transferContent;
+  }
+
+  return `${transferContent.slice(0, transferContentMaxLength - 3)}...`;
 });
 
-const minuteBox = computed(() => countdownLabel.value.split(':')[0] ?? '00');
-const secondBox = computed(() => countdownLabel.value.split(':')[1] ?? '00');
+const fullNameErrorKey = computed(() =>
+  fullName.value.trim().length === 0 ? 'auth.error.blank.full_name' : '',
+);
+
+const emailErrorKey = computed(() => {
+  const value = email.value.trim();
+  if (!value) {
+    return 'auth.error.blank.email';
+  }
+
+  return isEmailFormatValid(value) ? '' : 'auth.error.format.email';
+});
+
+const phoneErrorKey = computed(() => {
+  const value = phone.value.trim();
+  if (!value) {
+    return isPhoneRequired.value ? 'auth.error.blank.phone' : '';
+  }
+
+  return isPhoneFormatValid(value) ? '' : 'auth.error.format.phone';
+});
 
 const canPay = computed(() => {
-  const hasContact =
-    fullName.value.trim().length > 0 &&
-    email.value.trim().length > 0 &&
-    phone.value.trim().length > 0;
-  return hasContact && agreedPolicy.value;
+  const hasValidContact = !fullNameErrorKey.value && !emailErrorKey.value && !phoneErrorKey.value;
+  return hasValidContact && agreedPolicy.value;
 });
 
-const errorHint = computed(() => (canPay.value ? '' : 'Vui lòng điền đầy đủ thông tin bắt buộc'));
+const errorHintKey = computed(() => {
+  if (canPay.value) {
+    return '';
+  }
 
-let countdownTimer: ReturnType<typeof setInterval> | null = null;
+  if (fullNameErrorKey.value) {
+    return fullNameErrorKey.value;
+  }
+
+  if (emailErrorKey.value) {
+    return emailErrorKey.value;
+  }
+
+  if (phoneErrorKey.value) {
+    return phoneErrorKey.value;
+  }
+
+  return 'payment_mockup.validation.agree_policy';
+});
+
+const holdPanelStyle = computed(() => {
+  return holdPanelHeight.value ? { minHeight: `${holdPanelHeight.value}px` } : null;
+});
 
 function toggleEditing(field: 'name' | 'email' | 'phone') {
   editingField.value = editingField.value === field ? null : field;
@@ -62,6 +129,18 @@ function confirmPaid() {
   showSepayPopup.value = false;
 }
 
+async function copyValue(value: string) {
+  if (!import.meta.client || !navigator.clipboard) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch {
+    return;
+  }
+}
+
 function handleOverlayPointerDown(event: PointerEvent) {
   shouldCloseOnPointerUp.value = event.target === event.currentTarget;
 }
@@ -79,18 +158,66 @@ function handleEscape(event: KeyboardEvent) {
   }
 }
 
-onMounted(() => {
-  countdownTimer = setInterval(() => {
-    if (secondsLeft.value <= 0) return;
-    secondsLeft.value -= 1;
-  }, 1000);
+function syncTopPanelsHeight() {
+  if (!import.meta.client || !eventPanelRef.value) {
+    return;
+  }
 
+  if (!window.matchMedia('(min-width: 992px)').matches) {
+    holdPanelHeight.value = null;
+    return;
+  }
+
+  holdPanelHeight.value = Math.ceil(eventPanelRef.value.getBoundingClientRect().height);
+}
+
+function buildFullNameFromUser(user: UserSummary): string {
+  const parts = [user.lastName, user.firstName]
+    .map((part) => part?.trim() ?? '')
+    .filter((part) => part.length > 0);
+
+  if (parts.length > 0) {
+    return parts.join(' ');
+  }
+
+  return user.username?.trim() ?? '';
+}
+
+async function prefillReceiverInfo() {
+  try {
+    const user = await fetchCurrentUser();
+    fullName.value = buildFullNameFromUser(user);
+    email.value = user.email?.trim() ?? '';
+    phone.value = user.phoneNumber?.trim() ?? '';
+  } catch {
+    return;
+  }
+}
+
+onMounted(() => {
   window.addEventListener('keydown', handleEscape);
+
+  window.addEventListener('resize', syncTopPanelsHeight);
+
+  if (import.meta.client && 'ResizeObserver' in window && eventPanelRef.value) {
+    eventPanelResizeObserver = new ResizeObserver(() => {
+      syncTopPanelsHeight();
+    });
+    eventPanelResizeObserver.observe(eventPanelRef.value);
+  }
+
+  syncTopPanelsHeight();
+  void prefillReceiverInfo();
 });
 
 onBeforeUnmount(() => {
-  if (countdownTimer) clearInterval(countdownTimer);
   window.removeEventListener('keydown', handleEscape);
+  window.removeEventListener('resize', syncTopPanelsHeight);
+
+  if (eventPanelResizeObserver) {
+    eventPanelResizeObserver.disconnect();
+    eventPanelResizeObserver = null;
+  }
 });
 </script>
 
@@ -102,31 +229,33 @@ onBeforeUnmount(() => {
       <div class="payment-shell">
         <main class="payment-main">
           <section class="left-col">
-            <article class="panel event-panel">
+            <article ref="eventPanelRef" class="card payment-card event-panel">
               <img
                 class="event-thumb"
                 src="https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop"
-                alt="Ảnh sự kiện"
+                :alt="$t('payment_mockup.event.image_alt')"
               />
               <div class="event-meta">
-                <h1 class="event-title">Múa rối nước truyền thống</h1>
+                <h1 class="event-title">{{ $t('payment_mockup.event.title') }}</h1>
                 <div class="event-subline">
-                  <span><i class="bi bi-calendar3"></i> 14, 08/04</span>
-                  <span><i class="bi bi-clock"></i> 18:30 - 19:15</span>
+                  <span><i class="bi bi-calendar3"></i> {{ $t('payment_mockup.event.date') }}</span>
+                  <span><i class="bi bi-clock"></i> {{ $t('payment_mockup.event.time') }}</span>
                 </div>
-                <p class="event-address">55B Nguyễn Thị Minh Khai, P. Bến Thành, Q.1, TP.HCM</p>
+                <p class="event-address">{{ $t('payment_mockup.event.address') }}</p>
               </div>
             </article>
 
-            <article class="panel receiver-panel">
-              <h2 class="panel-title">Thông tin nhận hóa đơn</h2>
-              <p class="panel-subtitle">Hóa đơn của bạn sẽ được gửi tới thông tin bên dưới</p>
+            <article class="card payment-card receiver-panel">
+              <h2 class="panel-title">{{ $t('payment_mockup.receiver.title') }}</h2>
+              <p class="panel-subtitle">{{ $t('payment_mockup.receiver.subtitle') }}</p>
               <hr class="panel-divider" />
 
               <div class="receiver-row">
                 <i class="bi bi-person"></i>
                 <div class="receiver-col">
-                  <span class="receiver-label">Họ và tên <b>*</b></span>
+                  <span class="receiver-label"
+                    >{{ $t('payment_mockup.receiver.full_name') }} <b>*</b></span
+                  >
                   <input
                     v-if="editingField === 'name'"
                     v-model="fullName"
@@ -135,9 +264,14 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ fullName || 'Chưa nhập' }}</strong>
+                  <strong v-else>{{ fullName || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="fullNameErrorKey" class="receiver-error">{{ $t(fullNameErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('name')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('name')"
+                >
                   <i :class="editingField === 'name' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -145,7 +279,9 @@ onBeforeUnmount(() => {
               <div class="receiver-row">
                 <i class="bi bi-envelope"></i>
                 <div class="receiver-col">
-                  <span class="receiver-label">Email <b>*</b></span>
+                  <span class="receiver-label"
+                    >{{ $t('payment_mockup.receiver.email') }} <b>*</b></span
+                  >
                   <input
                     v-if="editingField === 'email'"
                     v-model="email"
@@ -154,9 +290,14 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ email || 'Chưa nhập' }}</strong>
+                  <strong v-else>{{ email || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="emailErrorKey" class="receiver-error">{{ $t(emailErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('email')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('email')"
+                >
                   <i :class="editingField === 'email' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -164,7 +305,13 @@ onBeforeUnmount(() => {
               <div class="receiver-row">
                 <i class="bi bi-telephone"></i>
                 <div class="receiver-col">
-                  <span class="receiver-label">Số điện thoại <b>*</b></span>
+                  <span class="receiver-label"
+                    >{{ $t('payment_mockup.receiver.phone') }}
+                    <b v-if="isPhoneRequired">*</b>
+                    <em v-else class="receiver-optional">{{
+                      $t('payment_mockup.receiver.optional')
+                    }}</em></span
+                  >
                   <input
                     v-if="editingField === 'phone'"
                     v-model="phone"
@@ -173,9 +320,14 @@ onBeforeUnmount(() => {
                     @blur="finishEditing"
                     @keyup.enter="finishEditing"
                   />
-                  <strong v-else>{{ phone || 'Chưa nhập' }}</strong>
+                  <strong v-else>{{ phone || $t('payment_mockup.receiver.empty') }}</strong>
+                  <p v-if="phoneErrorKey" class="receiver-error">{{ $t(phoneErrorKey) }}</p>
                 </div>
-                <button type="button" class="icon-button" @click="toggleEditing('phone')">
+                <button
+                  type="button"
+                  class="icon-button d-inline-flex align-items-center justify-content-center"
+                  @click="toggleEditing('phone')"
+                >
                   <i :class="editingField === 'phone' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>
               </div>
@@ -184,24 +336,29 @@ onBeforeUnmount(() => {
 
               <p class="ticket-note">
                 <i class="bi bi-qr-code"></i>
-                Hóa đơn sẽ được gửi đến email ở trên.<br />
-                Vé được lưu trong mục <strong>Vé của bạn</strong> của tài khoản hiện tại.<br />
-                Khi vào cổng, chỉ cần xuất trình mã QR điện tử.
+                {{ $t('payment_mockup.receiver.note_line_1') }}<br />
+                {{ $t('payment_mockup.receiver.note_line_2') }}
+                <strong>{{ $t('payment_mockup.receiver.note_ticket_hub') }}</strong>
+                {{ $t('payment_mockup.receiver.note_line_3') }}<br />
+                {{ $t('payment_mockup.receiver.note_line_4') }}
               </p>
             </article>
 
-            <article class="panel method-panel">
-              <h2 class="panel-title">Phương thức thanh toán</h2>
-              <div class="method-single">
+            <article class="card payment-card method-panel">
+              <h2 class="panel-title">{{ $t('payment_mockup.payment_method.title') }}</h2>
+              <div class="method-single d-inline-flex align-items-center gap-2 align-self-start">
                 <i class="bi bi-bank"></i>
-                SePay - Chuyển khoản ngân hàng
+                {{ $t('payment_mockup.payment_method.sepay_bank') }}
               </div>
             </article>
           </section>
 
           <section class="right-col">
-            <article class="panel hold-panel">
-              <h2 class="panel-title center">Thời gian giữ vé còn</h2>
+            <article
+              class="card payment-card hold-panel d-flex flex-column align-items-center"
+              :style="holdPanelStyle"
+            >
+              <h2 class="panel-title center">{{ $t('payment_mockup.timer.title') }}</h2>
               <div class="time-boxes">
                 <div class="time-cell">{{ minuteBox }}</div>
                 <span class="time-dot">:</span>
@@ -209,30 +366,30 @@ onBeforeUnmount(() => {
               </div>
             </article>
 
-            <article class="panel policy-panel">
-              <h2 class="panel-title">Chính sách ban tổ chức</h2>
+            <article class="card payment-card policy-panel">
+              <h2 class="panel-title">{{ $t('payment_mockup.policy.title') }}</h2>
               <p class="policy-text">
-                Vé đã mua sẽ không được hoàn trả, đổi ngày hay chỉnh sửa dưới bất kỳ trường hợp nào.
+                {{ $t('payment_mockup.policy.content') }}
               </p>
             </article>
 
-            <article class="panel order-panel">
-              <h2 class="panel-title">Thông tin vé ({{ tickets.length }} vé)</h2>
+            <article class="card payment-card order-panel">
+              <h2 class="panel-title">
+                {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
+              </h2>
 
+              <div class="ticket-header">
+                <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
+              </div>
               <div class="ticket-scroll">
                 <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
-                  <div>
-                    <small>LOẠI VÉ</small><strong>{{ ticket.type }}</strong>
-                  </div>
-                  <div>
-                    <small>KHU</small><strong>{{ ticket.zone }}</strong>
-                  </div>
-                  <div>
-                    <small>HÀNG</small><strong>{{ ticket.row }}</strong>
-                  </div>
-                  <div>
-                    <small>GHẾ</small><strong>{{ ticket.seat }}</strong>
-                  </div>
+                  <div class="ticket-cell">{{ ticket.ticket_type }}</div>
+                  <div class="ticket-cell">{{ ticket.zone_name }}</div>
+                  <div class="ticket-cell">{{ ticket.seat_name }}</div>
+                  <div class="ticket-cell">{{ formatPrice(ticket.base_price, 'VND') }}</div>
                 </div>
               </div>
 
@@ -241,38 +398,32 @@ onBeforeUnmount(() => {
                   v-model="promoCode"
                   type="text"
                   class="promo-input"
-                  placeholder="Mã khuyến mại"
+                  :placeholder="$t('payment_mockup.ticket_info.promo_placeholder')"
                 />
-                <button class="promo-btn" type="button">Áp dụng</button>
+                <button class="promo-btn" type="button">
+                  {{ $t('payment_mockup.ticket_info.apply') }}
+                </button>
               </div>
 
-              <div class="total-line">
-                <strong>Tổng tiền</strong>
-                <strong class="total-amount">{{ total.toLocaleString('vi-VN') }} đ</strong>
+              <div class="total-line d-flex justify-content-between align-items-baseline">
+                <strong>{{ $t('payment_mockup.checkout.total') }}</strong>
+                <strong class="total-amount">{{ formatPrice(total, 'VND') }}</strong>
               </div>
 
-              <label class="policy-check">
+              <label class="policy-check d-inline-flex align-items-center gap-2">
                 <input v-model="agreedPolicy" type="checkbox" />
-                Đồng ý với chính sách của ban tổ chức
+                {{ $t('payment_mockup.checkout.agree_policy') }}
               </label>
 
               <button class="pay-btn" type="button" :disabled="!canPay" @click="openPaymentPopup">
-                Thanh toán
+                {{ $t('payment_mockup.checkout.pay') }}
               </button>
 
-              <p v-if="errorHint" class="error-line">{{ errorHint }}</p>
+              <p v-if="errorHintKey" class="error-line">{{ $t(errorHintKey) }}</p>
             </article>
           </section>
         </main>
       </div>
-    </div>
-
-    <div class="mobile-paybar d-lg-none">
-      <div>
-        <small>Tổng tiền</small>
-        <strong>{{ total.toLocaleString('vi-VN') }} đ</strong>
-      </div>
-      <button type="button" :disabled="!canPay" @click="openPaymentPopup">Thanh toán</button>
     </div>
 
     <div
@@ -285,70 +436,145 @@ onBeforeUnmount(() => {
       @pointerup="handleOverlayPointerUp"
     >
       <div class="sepay-modal">
-        <div class="sepay-header">
-          <div class="sepay-header-left">
+        <div class="sepay-header d-flex justify-content-between align-items-center">
+          <div class="sepay-header-left d-flex align-items-center gap-2">
             <i class="bi bi-bank"></i>
-            <strong id="sepay-title">Chuyển khoản ngân hàng (SePay)</strong>
+            <strong id="sepay-title">{{ $t('payment_mockup.popup.title') }}</strong>
           </div>
-          <button type="button" class="close-btn" @click="closePaymentPopup">
+          <button
+            type="button"
+            class="close-btn d-inline-flex align-items-center justify-content-center"
+            @click="closePaymentPopup"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
 
         <div class="sepay-timer">
-          <span>Thời gian giữ vé còn</span>
-          <div class="time-boxes compact">
-            <div class="time-cell">{{ minuteBox }}</div>
-            <span class="time-dot">:</span>
-            <div class="time-cell">{{ secondBox }}</div>
-          </div>
-        </div>
-
-        <div class="sepay-warning">
-          <i class="bi bi-exclamation-triangle"></i>
-          <div>
-            <p>Tài khoản và QR chỉ dùng cho giao dịch này</p>
-            <p>Không lưu hoặc sử dụng lại thông tin này</p>
-            <p>Đơn hàng chỉ được xác nhận khi bạn thấy trạng thái thành công</p>
-          </div>
-        </div>
-
-        <div class="sepay-info-wrap">
-          <div class="qr-wrap">
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=SEPAY-963012001541042-1050000"
-              alt="QR SePay"
-            />
-            <button type="button" class="download-qr-btn">
-              <i class="bi bi-download"></i>
-              Tải mã QR
-            </button>
-          </div>
-
-          <div class="bank-info">
-            <div class="info-row"><span>Ngân hàng</span><strong>BIDV</strong></div>
-            <div class="info-row"><span>Mã giỏ hàng</span><strong>#44190</strong></div>
-            <div class="info-row">
-              <span>STK nhận tiền</span><strong class="text-primary">963012001541042</strong>
-            </div>
-            <div class="info-row"><span>Tên người nhận</span><strong>FLIP VN</strong></div>
-            <div class="info-row">
-              <span>Số tiền</span
-              ><strong class="text-primary">{{ total.toLocaleString('vi-VN') }} đ</strong>
+          <div class="sepay-timer-main">
+            <span>{{ $t('payment_mockup.timer.title') }}</span>
+            <div class="time-boxes compact">
+              <div class="time-cell">{{ minuteBox }}</div>
+              <span class="time-dot">:</span>
+              <div class="time-cell">{{ secondBox }}</div>
             </div>
           </div>
+          <button
+            type="button"
+            class="timer-close-btn d-lg-none d-inline-flex align-items-center justify-content-center"
+            @click="closePaymentPopup"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
 
-        <div class="sepay-note">
-          <strong>Lưu ý:</strong>
-          <ul>
-            <li>Vui lòng chuyển chính xác số tiền.</li>
-          </ul>
+        <div class="sepay-body">
+          <div class="sepay-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <div>
+              <p>{{ $t('payment_mockup.popup.warning_line_1') }}</p>
+              <p>{{ $t('payment_mockup.popup.warning_line_2') }}</p>
+              <p>{{ $t('payment_mockup.popup.warning_line_3') }}</p>
+            </div>
+          </div>
+
+          <div class="sepay-info-wrap">
+            <div class="qr-wrap">
+              <div class="qr-placeholder" :aria-label="$t('payment_mockup.popup.qr_alt')">
+                <i class="bi bi-qr-code"></i>
+                <span>QR Placeholder</span>
+              </div>
+            </div>
+
+            <div class="bank-info">
+              <div class="info-row">
+                <span>{{ $t('payment_mockup.popup.bank') }}</span>
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
+                  <strong>BIDV</strong>
+                  <button
+                    type="button"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
+                    :aria-label="$t('payment_mockup.popup.copy')"
+                    @click="copyValue('BIDV')"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-row">
+                <span>{{ $t('payment_mockup.popup.cart_code') }}</span>
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
+                  <strong class="content-preview" :title="transferContent">{{
+                    transferContentPreview
+                  }}</strong>
+                  <button
+                    type="button"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
+                    :aria-label="$t('payment_mockup.popup.copy')"
+                    @click="copyValue(transferContent)"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-row">
+                <span>{{ $t('payment_mockup.popup.account_number') }}</span>
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
+                  <strong class="text-primary">123</strong>
+                  <button
+                    type="button"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
+                    :aria-label="$t('payment_mockup.popup.copy')"
+                    @click="copyValue('123')"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-row">
+                <span>{{ $t('payment_mockup.popup.receiver_name') }}</span>
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
+                  <strong>ticket4u</strong>
+                  <button
+                    type="button"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
+                    :aria-label="$t('payment_mockup.popup.copy')"
+                    @click="copyValue('ticket4u')"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="info-row">
+                <span>{{ $t('payment_mockup.popup.amount') }}</span>
+                <div class="info-row-end d-inline-flex align-items-center gap-2">
+                  <strong class="text-primary">{{ formatPrice(total, 'VND') }}</strong>
+                  <button
+                    type="button"
+                    class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
+                    :aria-label="$t('payment_mockup.popup.copy')"
+                    @click="copyValue(formatPrice(total, 'VND'))"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sepay-note">
+            <strong>{{ $t('payment_mockup.popup.note_title') }}</strong>
+            <ul>
+              <li>{{ $t('payment_mockup.popup.note_line_1') }}</li>
+            </ul>
+          </div>
         </div>
 
-        <button type="button" class="confirm-paid-btn" @click="confirmPaid">
-          Xác nhận đã thanh toán
-        </button>
+        <div class="sepay-footer">
+          <button type="button" class="confirm-paid-btn" @click="confirmPaid">
+            {{ $t('payment_mockup.popup.confirm_paid') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -363,7 +589,7 @@ onBeforeUnmount(() => {
   background:
     radial-gradient(76% 40% at 50% -8%, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0) 70%),
     linear-gradient(180deg, #111111 0%, #0b0b0b 100%);
-  padding-bottom: 84px;
+  padding-bottom: 16px;
 }
 
 .surface-glow {
@@ -411,12 +637,13 @@ onBeforeUnmount(() => {
   grid-template-rows: auto auto auto;
 }
 
-.panel {
-  background: rgba(17, 17, 17, 0.96);
+.payment-card {
+  background: rgba(17, 17, 17, 0.96) !important;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   padding: 14px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: none;
 }
 
 .panel-title {
@@ -443,6 +670,7 @@ onBeforeUnmount(() => {
 
 .event-panel {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 12px;
 }
@@ -526,6 +754,20 @@ onBeforeUnmount(() => {
   word-break: break-word;
 }
 
+.receiver-error {
+  margin: 2px 0 0;
+  color: #ff5b64;
+  font-size: 0.82rem;
+  line-height: 1.3;
+}
+
+.receiver-optional {
+  font-style: normal;
+  margin-left: 4px;
+  color: #9aa7c8;
+  font-size: 0.82rem;
+}
+
 .inline-edit-input {
   width: min(320px, 100%);
   height: 36px;
@@ -541,9 +783,6 @@ onBeforeUnmount(() => {
   border: 0;
   background: transparent;
   color: #d9dfef;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 26px;
   height: 26px;
 }
@@ -566,19 +805,9 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(139, 149, 176, 0.36);
   background: rgba(255, 255, 255, 0.05);
   color: #ecf0ff;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   padding: 10px 12px;
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.hold-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
 }
 
 .time-boxes {
@@ -615,40 +844,82 @@ onBeforeUnmount(() => {
   line-height: 1.45;
 }
 
+@media (min-width: 992px) {
+  .policy-panel {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .policy-panel .panel-title {
+    margin-bottom: 6px;
+  }
+}
+
 .order-panel {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  overflow: visible;
+  display: block;
 }
 
 .ticket-scroll {
-  max-height: 164px;
+  max-height: 146px;
   overflow-y: auto;
   padding-right: 6px;
   scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(204, 215, 242, 0.82) rgba(255, 255, 255, 0.12);
+}
+
+.ticket-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.ticket-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb {
+  background: rgba(204, 215, 242, 0.82);
+  border-radius: 999px;
+  border: 2px solid rgba(17, 17, 17, 0.96);
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb:active {
+  background: rgba(232, 239, 255, 0.96);
 }
 
 .ticket-row {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
-  min-height: 52px;
+  min-height: 46px;
   align-items: center;
   padding: 6px 0;
   border-bottom: 1px solid rgba(122, 132, 165, 0.2);
 }
 
-.ticket-row small {
+.ticket-header {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px 6px 8px 0;
+  border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+  background: rgba(17, 17, 17, 0.96);
+}
+
+.ticket-header small {
   color: #98a2bf;
   font-size: 0.8rem;
   display: block;
 }
 
-.ticket-row strong {
-  display: block;
+.ticket-cell {
   color: #f7f8ff;
   font-size: 1.05rem;
   line-height: 1.2;
+  font-weight: 600;
 }
 
 .promo-wrap {
@@ -681,9 +952,6 @@ onBeforeUnmount(() => {
 
 .total-line {
   margin-top: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
   color: #f9fbff;
   font-size: 1rem;
 }
@@ -695,9 +963,6 @@ onBeforeUnmount(() => {
 
 .policy-check {
   margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   color: #edf1ff;
   font-size: 0.9rem;
 }
@@ -713,8 +978,8 @@ onBeforeUnmount(() => {
   height: 44px;
   border: 0;
   border-radius: 10px;
-  background: #d0d2d6;
-  color: #2f333b;
+  background: #ffffff;
+  color: #111111;
   font-weight: 700;
   font-size: 1rem;
 }
@@ -727,39 +992,6 @@ onBeforeUnmount(() => {
   margin: 8px 0 0;
   color: #ff5b64;
   font-size: 0.9rem;
-}
-
-.mobile-paybar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 30;
-  background: #111111;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 10px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mobile-paybar small {
-  display: block;
-  color: #9ba6c4;
-}
-
-.mobile-paybar strong {
-  color: #f8fbff;
-}
-
-.mobile-paybar button {
-  border: 0;
-  border-radius: 9px;
-  background: #d7d9dd;
-  color: #222831;
-  font-weight: 700;
-  padding: 9px 13px;
-  font-size: 0.95rem;
 }
 
 .sepay-overlay {
@@ -776,26 +1008,22 @@ onBeforeUnmount(() => {
 .sepay-modal {
   width: min(760px, 100%);
   max-height: min(94dvh, 920px);
-  overflow: auto;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 14px;
   background: #111111;
   color: #f6f8ff;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .sepay-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 14px 18px;
   border-bottom: 1px solid rgba(122, 132, 165, 0.3);
 }
 
 .sepay-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-size: 1.1rem;
 }
 
@@ -810,7 +1038,7 @@ onBeforeUnmount(() => {
 
 .sepay-timer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
   padding: 14px;
@@ -818,6 +1046,31 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid rgba(122, 132, 165, 0.3);
   font-size: 1rem;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.sepay-timer-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.timer-close-btn {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f7f9ff;
+  flex-shrink: 0;
+}
+
+.sepay-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .time-boxes.compact .time-cell {
@@ -857,6 +1110,24 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(122, 132, 165, 0.3);
   border-radius: 12px;
   padding: 10px;
+}
+
+.qr-placeholder {
+  min-height: 230px;
+  border-radius: 8px;
+  border: 1px dashed rgba(122, 132, 165, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #cfd7ec;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.qr-placeholder i {
+  font-size: 2rem;
 }
 
 .qr-wrap img {
@@ -907,8 +1178,25 @@ onBeforeUnmount(() => {
   color: #f8fbff;
 }
 
+.content-preview {
+  display: inline-block;
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .info-row .text-primary {
   color: rgb(var(--bs-primary-rgb)) !important;
+}
+
+.copy-icon-btn {
+  border: 0;
+  background: transparent;
+  color: #d9dfef;
+  width: 24px;
+  height: 24px;
+  padding: 0;
 }
 
 .sepay-note {
@@ -921,16 +1209,131 @@ onBeforeUnmount(() => {
   padding-left: 20px;
 }
 
+.sepay-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(122, 132, 165, 0.3);
+  padding: 10px 12px 12px;
+}
+
 .confirm-paid-btn {
-  margin: 12px 18px 18px;
-  width: calc(100% - 36px);
+  margin: 0;
+  width: 100%;
   height: 48px;
   border: 0;
   border-radius: 10px;
-  background: #d7d9dd;
-  color: #1f2530;
+  background: #ffffff;
+  color: #111111;
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+[data-bs-theme='light'] .flip-payment-page {
+  background:
+    radial-gradient(76% 40% at 50% -8%, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, #f7f9ff 0%, #eef2fb 100%);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-card,
+[data-bs-theme='light'] .flip-payment-page .sepay-modal {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(122, 132, 165, 0.24);
+  box-shadow: 0 10px 24px rgba(23, 32, 59, 0.08);
+}
+
+[data-bs-theme='light'] .flip-payment-page .panel-title,
+[data-bs-theme='light'] .flip-payment-page .event-title,
+[data-bs-theme='light'] .flip-payment-page .receiver-col strong,
+[data-bs-theme='light'] .flip-payment-page .method-single,
+[data-bs-theme='light'] .flip-payment-page .policy-text,
+[data-bs-theme='light'] .flip-payment-page .ticket-cell,
+[data-bs-theme='light'] .flip-payment-page .total-line,
+[data-bs-theme='light'] .flip-payment-page .policy-check,
+[data-bs-theme='light'] .flip-payment-page .sepay-header-left,
+[data-bs-theme='light'] .flip-payment-page .info-row strong,
+[data-bs-theme='light'] .flip-payment-page .time-dot,
+[data-bs-theme='light'] .flip-payment-page .sepay-note {
+  color: #1f2a40;
+}
+
+[data-bs-theme='light'] .flip-payment-page .panel-subtitle,
+[data-bs-theme='light'] .flip-payment-page .event-subline,
+[data-bs-theme='light'] .flip-payment-page .event-address,
+[data-bs-theme='light'] .flip-payment-page .receiver-label,
+[data-bs-theme='light'] .flip-payment-page .ticket-header small,
+[data-bs-theme='light'] .flip-payment-page .info-row span {
+  color: #4f5b77;
+}
+
+[data-bs-theme='light'] .flip-payment-page .inline-edit-input,
+[data-bs-theme='light'] .flip-payment-page .promo-input,
+[data-bs-theme='light'] .flip-payment-page .promo-btn,
+[data-bs-theme='light'] .flip-payment-page .method-single,
+[data-bs-theme='light'] .flip-payment-page .time-cell,
+[data-bs-theme='light'] .flip-payment-page .qr-wrap,
+[data-bs-theme='light'] .flip-payment-page .bank-info,
+[data-bs-theme='light'] .flip-payment-page .download-qr-btn,
+[data-bs-theme='light'] .flip-payment-page .close-btn,
+[data-bs-theme='light'] .flip-payment-page .timer-close-btn {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(122, 132, 165, 0.3);
+  color: #29334b;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-note,
+[data-bs-theme='light'] .flip-payment-page .ticket-note i,
+[data-bs-theme='light'] .flip-payment-page .receiver-row > i,
+[data-bs-theme='light'] .flip-payment-page .icon-button,
+[data-bs-theme='light'] .flip-payment-page .copy-icon-btn {
+  color: #516186;
+}
+
+[data-bs-theme='light'] .flip-payment-page .receiver-optional {
+  color: #5a6d94;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-header {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll {
+  scrollbar-color: rgba(64, 83, 126, 0.62) rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-track {
+  background: rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb {
+  background: rgba(64, 83, 126, 0.62);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb:active {
+  background: rgba(45, 64, 108, 0.74);
+}
+
+[data-bs-theme='light'] .flip-payment-page .pay-btn,
+[data-bs-theme='light'] .flip-payment-page .confirm-paid-btn {
+  background: rgb(var(--bs-primary-rgb));
+  color: #111111;
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-overlay {
+  background: rgba(41, 52, 83, 0.45);
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-footer {
+  background: rgba(246, 250, 255, 0.98);
+  border-top-color: rgba(122, 132, 165, 0.35);
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-timer {
+  background: rgba(231, 238, 255, 0.8);
+  border-bottom-color: rgba(122, 132, 165, 0.3);
+  color: #1f2b44;
 }
 
 @media (max-width: 991.98px) {
@@ -951,7 +1354,7 @@ onBeforeUnmount(() => {
     overflow: visible;
   }
 
-  .panel {
+  .payment-card {
     padding: 12px;
     border-radius: 12px;
   }
@@ -995,7 +1398,7 @@ onBeforeUnmount(() => {
     font-size: 1rem;
   }
 
-  .ticket-row strong {
+  .ticket-cell {
     font-size: 0.95rem;
   }
 
@@ -1022,22 +1425,33 @@ onBeforeUnmount(() => {
     height: 42px;
   }
 
+  .sepay-overlay {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
   .sepay-modal {
-    max-height: 95dvh;
+    width: 100dvw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border-width: 0;
   }
 
   .sepay-header {
-    padding: 12px;
-  }
-
-  .sepay-header-left {
-    font-size: 1rem;
+    display: none;
   }
 
   .sepay-timer {
     font-size: 0.95rem;
-    flex-direction: column;
+    flex-direction: row;
     gap: 8px;
+    padding: max(10px, env(safe-area-inset-top)) 12px 10px;
+  }
+
+  .sepay-timer-main {
+    min-width: 0;
   }
 
   .sepay-warning {
@@ -1055,9 +1469,11 @@ onBeforeUnmount(() => {
     font-size: 0.9rem;
   }
 
+  .sepay-footer {
+    padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+  }
+
   .confirm-paid-btn {
-    margin: 8px 12px 12px;
-    width: calc(100% - 24px);
     height: 44px;
     font-size: 1rem;
   }
@@ -1066,7 +1482,8 @@ onBeforeUnmount(() => {
 @media (hover: hover) {
   .icon-button:hover,
   .close-btn:hover,
-  .download-qr-btn:hover {
+  .download-qr-btn:hover,
+  .copy-icon-btn:hover {
     opacity: 0.9;
   }
 

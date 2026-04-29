@@ -1,7 +1,7 @@
 # Database Configuration
 spring:
   datasource:
-    url: ${DB_USER_URL:jdbc:postgresql://localhost:5432/Ticket4U-Event}
+    url: ${DB_URL_USER:jdbc:postgresql://ticket4u-db-event:5432/Ticket4U-Event}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -34,7 +34,7 @@ application:
       allowed-origins: ${FRONTEND_URL}
   services:
     user: ${USER_SERVICE_URL:https://localhost:8080}
-    embedding: ${EMBEDDING_SERVICE_URL:http://localhost:8084/internal/embed}
+    embedding: ${EMBEDDING_SERVICE_URL:http://host.docker.internal:8084/internal/embed}
 
 # Logging
 logging:

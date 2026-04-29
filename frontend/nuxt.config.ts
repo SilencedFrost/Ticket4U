@@ -16,6 +16,14 @@ export default defineNuxtConfig({
     },
   },
 
+  $development: {
+    hooks: {
+      'nitro:build:before'(_nitro) {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      },
+    },
+  },
+
   i18n: {
     locales: [
       { code: 'en', name: 'English', file: 'en.json' },
@@ -34,6 +42,12 @@ export default defineNuxtConfig({
           quietDeps: true,
         },
       },
+    },
+    optimizeDeps: {
+      include: [
+        '@vueuse/core',
+        '@vueuse/gesture',
+      ]
     },
   },
 

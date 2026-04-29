@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,4 +80,19 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     """)
     @EntityGraph(value = "Event.withAllEntities")
     Page<Event> findUpcomingEventsByCategory(@Param("categoryId") Integer categoryId, Pageable pageable);
+
+    @EntityGraph(value = "Event.withAllEntities")
+    @Query("""
+        SELECT e FROM Event e
+        LEFT JOIN e.venue v
+        WHERE e.status IN ('PREMIERE', 'SCHEDULED')
+        AND COALESCE(e.latitude, v.latitude) BETWEEN :minLat AND :maxLat
+        AND COALESCE(e.longitude, v.longitude) BETWEEN :minLon AND :maxLon
+    """)
+    List<Event> findAllPurchasableInArea(
+            @Param("minLat") BigDecimal minLat,
+            @Param("maxLat") BigDecimal maxLat,
+            @Param("minLon") BigDecimal minLon,
+            @Param("maxLon") BigDecimal maxLon
+    );
 }

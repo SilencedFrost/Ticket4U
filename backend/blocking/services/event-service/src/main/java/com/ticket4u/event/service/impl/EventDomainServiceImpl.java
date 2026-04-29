@@ -55,7 +55,6 @@ public class EventDomainServiceImpl implements EventDomainService {
         // Resolve semantic service failure
         List<EventResponse> candidateEvents;
         if (!semanticMap.isEmpty()) {
-            log.info("Semantic map acquired: {}", semanticMap.toString());
             candidateEvents = filterPurchasable(eventRepository.findAllById(semanticMap.keySet())).stream().map(eventMapper::toDTO).toList();
         } else {
             log.info("Semantic search empty. Falling back to all purchasable events matching category for ranking.");
@@ -235,7 +234,7 @@ public class EventDomainServiceImpl implements EventDomainService {
     @Override
     public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
         // Get sorted IDs from AI service
-        List<UUID> eventIds = eventSemanticService.search(query, pageable);
+        List<UUID> eventIds = eventSemanticService.search(query, pageable, 0.05f);
         if (eventIds.isEmpty()) return List.of();
 
         // Fetch event data from the database
@@ -250,6 +249,34 @@ public class EventDomainServiceImpl implements EventDomainService {
                 .map(lookupMap::get)
                 .filter(Objects::nonNull)
                 .map(eventMapper::toSummaryDTO)
+                .toList();
+    }
+
+    /**
+     * Get a list of events near a specific location.
+     * @param lat The latitude of the current location
+     * @param lon The longitude of the current location
+     * @param limit The maximum number of events to return 
+     * @return A list of events found within the nearby area
+     */
+    @Override
+    public List<EventSummaryResponse> getNearbyEvents(BigDecimal lat, BigDecimal lon, int limit) {
+        double latDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / EARTH_RADIUS_KM);
+        double lonDelta = Math.toDegrees(RelatedEvents.WEIGHTS.LOCATION_CUTOFF / (EARTH_RADIUS_KM * Math.cos(Math.toRadians(lat.doubleValue()))));
+
+        List<Event> candidates = eventRepository.findAllPurchasableInArea(
+                lat.subtract(BigDecimal.valueOf(latDelta)),
+                lat.add(BigDecimal.valueOf(latDelta)),
+                lon.subtract(BigDecimal.valueOf(lonDelta)),
+                lon.add(BigDecimal.valueOf(lonDelta))
+        );
+
+        return candidates.stream()
+                .map(e -> Map.entry(e, calculateDistance(lat, lon, e.getLatitude(), e.getLongitude())))
+                .filter(entry -> entry.getValue() <= RelatedEvents.WEIGHTS.LOCATION_CUTOFF)
+                .sorted(Map.Entry.comparingByValue())
+                .limit(limit)
+                .map(entry -> eventMapper.toSummaryDTO(entry.getKey()))
                 .toList();
     }
 }

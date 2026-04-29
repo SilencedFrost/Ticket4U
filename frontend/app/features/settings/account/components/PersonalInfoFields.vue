@@ -143,14 +143,16 @@ function handleChangeEmailSubmit(payload: { newEmail: string; password: string }
 
     <!-- Số điện thoại -->
     <div class="col-lg-6">
-      <label for="phone" class="form-label">{{ $t('common.phone') }}</label>
+      <label for="phone" class="form-label">
+        {{ $t('common.phone') }}
+         <span class="text-reactive-secondary fw-normal small ms-1">{{ $t('common.optional') }}</span>
+      </label>
       <input
         id="phone"
         type="tel"
         class="form-control"
         :class="{ 'is-invalid': !!errors.phoneNumber }"
         :value="model.phoneNumber"
-        pattern="0[35789][0-9]{8}"
         maxlength="10"
         :disabled="disabled"
         @input="updateField('phoneNumber', ($event.target as HTMLInputElement).value)"

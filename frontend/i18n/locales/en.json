@@ -295,7 +295,9 @@
         "columns": {
           "last_access": "Last Access"
         },
-        "unknown_device": "Unknown device"
+        "unknown_device": "Unknown device",
+        "current_device": "This device",
+        "cannot_remove_current": "Cannot remove current session"
       }
     },
     "preferences": {

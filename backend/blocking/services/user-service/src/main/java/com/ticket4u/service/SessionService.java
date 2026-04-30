@@ -100,8 +100,10 @@ public class SessionService {
      * Lấy tất cả session đang hoạt động của user.
      */
     @Transactional(readOnly = true)
-    public List<SessionResponse> getSessionsByUserId(UUID userId) {
-        return sessionRepository.findAllByUserId(userId).stream().map(sessionMapper::toDTO).toList();
+    public List<SessionResponse> getSessionsByUserId(UUID userId, String currentSessionHash) {
+        return sessionRepository.findAllByUserId(userId).stream()
+                .map(session -> sessionMapper.toDTO(session, isCurrentSession(session, currentSessionHash)))
+                .toList();
     }
 
     /**
@@ -148,6 +150,10 @@ public class SessionService {
         } else {
             return session.getExpiresAt();
         }
+    }
+
+    private boolean isCurrentSession(Session session, String currentSessionHash) {
+        return currentSessionHash != null && session.getSessionHash().equals(currentSessionHash);
     }
 }
 

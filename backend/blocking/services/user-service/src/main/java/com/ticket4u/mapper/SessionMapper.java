@@ -18,6 +18,12 @@ import java.util.List;
 public interface SessionMapper {
 
     @Mapping(target = "displayId", source = "id", qualifiedByName = "toHashId")
+    @Mapping(target = "isCurrent", ignore = true)
     SessionResponse toDTO(Session session);
+
+    default SessionResponse toDTO(Session session, boolean isCurrent){
+        SessionResponse base = toDTO(session);
+        return new SessionResponse(base.displayId(), base.userAgent(), base.updatedAt(), isCurrent);
+    }
 
 }

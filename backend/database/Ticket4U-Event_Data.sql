@@ -55,24 +55,35 @@ INSERT INTO public.venues (id, name,           address_line,                    
 --TODO: update organizers and status
 --Basic info
 INSERT INTO public.events(id, organizer_id, status, name, banner_url, created_at) VALUES
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'           , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                         , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'    , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG'                          , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine'       , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo'                   , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden'             , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON'                                  , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics', '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị'                             , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO'               , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision'               , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands'               , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'   , '{}'::jsonb, now()),
-(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                , '{}'::jsonb, now());
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'V-Glow: The Cyber-Heritage Night'                  , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'The Echo of An Nam'                                , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'           , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CỔ NGHỆ KIÊU HÙNG'                                 , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NEO-LUMINANCE: The Echo of Indochine'              , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Sắc Lam: The Indigo Echo'                          , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'CRYSTAL REALM: The Neon Garden'                    , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'SẮT & SON'                                         , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Techno-Sorcery: The Zenith of AI & Robotics'       , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vũ Trụ Cận Thị'                                    , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'THE DREAMCATCHER ARCHIPELAGO'                      , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'KAIZEN: The Art of Precision'                      , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LUVIA: The Echo of Highlands'                      , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Scent of the Soul: The Echoes of Vietnam'          , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Âm Sắc Việt - THE RESONANCE'                       , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'LẠC HỒNG FUTURE-BEATS 2026'                        , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'  , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'       , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'                  , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Global Harmony Fest: The Heritage of Partnerships' , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'L’Écho de Soie (The Echo of Silk)'                 , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN'                , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Bóng Đêm Đô Thị: The Echoes of 1920'               , '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP', '{}'::jsonb, now()),
+(uuidv7(), '019bb098-c487-7bdb-9082-f51c9e8a9bb2', 'PREMIERE', 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)'       , '{}'::jsonb, now());	
+
 
 --Urls
-
+--TODO: insert pictures for 10 new events
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381970/vglow-wide_t6cooz.png", "square": "https://cdn.ticket4u.uk/v1775381967/vglow-sqre_nmypgq.png", "tall": "https://cdn.ticket4u.uk/v1775381974/vglow-tall_wgekmk.png"}'::jsonb WHERE name = 'V-Glow: The Cyber-Heritage Night';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775381964/aecho-wide_cdgl6u.png", "square": "https://cdn.ticket4u.uk/v1775381950/aecho-sqre_efweqg.png", "tall": "https://cdn.ticket4u.uk/v1775381948/aecho-tall_xkm5ic.png"}'::jsonb WHERE name = 'The Echo of An Nam';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775382276/beats-wide_kq6cve.png", "square": "https://cdn.ticket4u.uk/v1775382269/beats-sqre_kf8szt.png", "tall": "https://cdn.ticket4u.uk/v1775382271/beats-tall_nzkxux.png"}'::jsonb WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
@@ -88,6 +99,16 @@ UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v177538
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775384450/luvia-wide_gyizyq.png", "square": "https://cdn.ticket4u.uk/v1775384446/luvia-sqre_lqtogb.png", "tall": "https://cdn.ticket4u.uk/v1775384451/luvia-tall_dzcyjo.png"}'::jsonb WHERE name = 'LUVIA: The Echo of Highlands';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390582/echov-wide_paluak.png", "square": "https://cdn.ticket4u.uk/v1775390593/echov-sqre_huj7ep.png", "tall": "https://cdn.ticket4u.uk/v1775390592/echov-tall_tyfbot.png"}'::jsonb WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
 UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1775390591/reson-wide_aossid.png", "square": "https://cdn.ticket4u.uk/v1775390583/reson-sqre_igosvf.png", "tall": "https://cdn.ticket4u.uk/v1775390583/reson-tall_segvto.png"}'::jsonb WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777659123/lacho_wide_gu4wgz.png", "square": "https://cdn.ticket4u.uk/v1777659116/lacho_sqre_tn9sad.png", "tall": "https://cdn.ticket4u.uk/v1777659119/lacho_tall_tcatuk.png"}'::jsonb WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777659311/disan_wide_ocnsp2.png", "square": "https://cdn.ticket4u.uk/v1777659310/disan_sqre_kuzhpe.png", "tall": "https://cdn.ticket4u.uk/v1777659311/disan_tall_qo06sp.png"}'::jsonb WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777660226/spect_wide_oqvkl1.png", "square": "https://cdn.ticket4u.uk/v1777660225/spect_sqre_thfdzq.png", "tall": "https://cdn.ticket4u.uk/v1777660226/spect_tall_tbqsvk.png"}'::jsonb WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777660535/roots_wide_ua494v.png", "square": "https://cdn.ticket4u.uk/v1777660534/roots_sqre_z02cir.png", "tall": "https://cdn.ticket4u.uk/v1777660532/roots_tall_xnmqsv.png"}'::jsonb WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777660891/globa_wide_thoa0i.png", "square": "https://cdn.ticket4u.uk/v1777660890/globa_sqre_stgdzk.png", "tall": "https://cdn.ticket4u.uk/v1777660888/globa_tall_sv5xfe.png"}'::jsonb WHERE name = 'Global Harmony Fest: The Heritage of Partnerships';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777661357/lecho_wide_p2ttrl.png", "square": "https://cdn.ticket4u.uk/v1777661358/lecho_sqre_um76bg.png", "tall": "https://cdn.ticket4u.uk/v1777661353/lecho_tall_bcwa4u.png"}'::jsonb WHERE name = 'L’Écho de Soie (The Echo of Silk)';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777303212/guoml_wide_fatqce.png", "square": "https://cdn.ticket4u.uk/v1777303211/guoml_sqre_dxerly.png", "tall": "https://cdn.ticket4u.uk/v1777303214/guoml_tall_t8n0yf.png"}'::jsonb WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777302885/citye_wide_qsjvaz.png", "square": "https://cdn.ticket4u.uk/v1777302884/citye_sqre_ljzs6o.png", "tall": "https://cdn.ticket4u.uk/v1777302884/citye_tall_sxslut.png"}'::jsonb WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777302671/echoa_wide_pqkxo7.png", "square": "https://cdn.ticket4u.uk/v1777302671/echoa_sqre_biuzwp.png", "tall": "https://cdn.ticket4u.uk/v1777302671/echoa_tall_elotcq.png"}'::jsonb WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP';
+UPDATE public.events SET banner_url = '{"wide": "https://cdn.ticket4u.uk/v1777302261/moonp-wide_avkgtg.png", "square": "https://cdn.ticket4u.uk/v1777302260/moonp-sqre_ijgmq3.png", "tall": "https://cdn.ticket4u.uk/v1777302262/moonp-tall_l0lybv.png"}'::jsonb WHERE name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)';
 
 -- Descriptions
 
@@ -166,6 +187,55 @@ about_vi = 'Khám phá sức mạnh của tiếng Việt thông qua âm nhạc t
 about_en = 'Experience the power of the Vietnamese language through music at Âm Sắc Việt - THE RESONANCE. An interactive, multi-sensory concert where the line between performer and audience fades through linguistic challenges, melodic improvisation, and cutting-edge light shows in the heart of Saigon.' 
 where name = 'Âm Sắc Việt - THE RESONANCE';
 
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm sự kết hợp đỉnh cao giữa di sản Việt và nhạc Pop tương lai tại "Lạc Hồng Future-Beats 2026" ngay giữa lòng Sài Gòn. Với sự góp mặt của các biểu tượng V-Pop và DJ quốc tế, lễ hội ngoài trời này mang đến nghệ thuật thực tế ảo AR, các màn trình diễn dân gian đương đại và không gian "Cyber-Folklore" đầy bùng nổ.', 
+about_en = 'Experience the ultimate fusion of Vietnamese heritage and futuristic pop at "Lạc Hồng Future-Beats 2026" in the heart of Saigon. Featuring top V-Pop icons and international DJs, this outdoor festival offers immersive AR art, traditional folk-fusion performances, and a high-energy "Cyber-Folklore" atmosphere.' 
+where name = 'LẠC HỒNG FUTURE-BEATS 2026';
+
+UPDATE public.events SET 
+about_vi = 'Khám phá nét đẹp cổ điển tại "Di Sản Trong Sương" - lễ hội nghệ thuật ngoài trời đẳng cấp tại Dinh I Bảo Đại, Đà Lạt. Sự kiện tôn vinh các giá trị nghệ thuật truyền thống, âm nhạc thính phòng và phong cách sống tinh tế trong không gian sương mờ ảo diệu.', 
+about_en = 'Experience timeless elegance at "The Misty Heritage Festival" - a high-end outdoor artistic festival held at the historic King Bao Dai Palace I in Da Lat. Celebrate traditional arts, chamber music, and a refined lifestyle amidst the magical, misty landscapes of the highlands.' 
+where name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL';
+
+UPDATE public.events SET 
+about_vi = 'Splash & Spectrum 2026 là lễ hội mùa hè ngoài trời hàng đầu tại Công viên Biển Đông, Đà Nẵng. Kết hợp giữa sự kịch tính của trận chiến bóng nước khổng lồ và sự rực rỡ của cuộc chiến sơn neon, sự kiện quy tụ dàn sao V-Pop hàng đầu, âm nhạc EDM bùng nổ và các khu vực giải nhiệt công nghệ cao. Hãy sẵn sàng cho một "Trận Thủy Chiến" có một không hai bên bờ biển miền Trung.', 
+about_en = 'Splash & Spectrum 2026 is Vietnam’s premier outdoor summer festival at Da Nang''s East Sea Park. Combining the adrenaline of a massive water balloon battle with the vibrant chaos of a neon paint fight, this event features top V-Pop artists, immersive DJ sets, and high-tech cooling zones. Join thousands of fans for the ultimate "Thủy Chiến" (Water Battle) experience by the coast.' 
+where name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến';
+
+UPDATE public.events SET 
+about_vi = 'Lễ hội Nguồn Rực Rỡ 2026 là không gian nghệ thuật ngoài trời tôn vinh cội nguồn Việt Nam. Diễn ra tại Hồ Bán Nguyệt, sự kiện kết hợp giữa di sản truyền thống và văn hóa hiện đại qua các triển lãm công nghệ, hành trình ẩm thực và đêm nhạc quy tụ những nghệ sĩ hàng đầu.', 
+about_en = 'The Radiant Roots Festival 2026 is an immersive outdoor celebration of the Vietnamese lineage. Located at the iconic Crescent Lake, the event fuses traditional heritage with modern pop culture, featuring high-tech art installations, culinary journeys, and a star-studded musical lineup.' 
+where name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS';
+
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm đỉnh cao của tình hữu nghị quốc tế tại Global Harmony Fest 2026. Giữa không gian mờ ảo của đỉnh Bà Nà, lễ hội ngoài trời này tôn vinh mối quan hệ hợp tác bền chặt giữa Việt Nam với Đức, Hoa Kỳ và các quốc gia khác. Hãy cùng tham gia ngày hội giao thoa văn hóa, những câu chuyện lịch sử được kể bằng công nghệ và đêm nhạc đẳng cấp thế giới dưới bầu trời sao.', 
+about_en = 'Experience the pinnacle of international friendship at the Global Harmony Fest 2026. Set against the misty mountains of Ba Na Hills, this outdoor festival celebrates Vietnam''s enduring partnerships with Germany, the USA, and beyond. Join us for a day of cultural fusion, historic storytelling through technology, and a world-class concert under the stars.' 
+where name = 'Global Harmony Fest: The Heritage of Partnerships';
+
+UPDATE public.events SET 
+about_vi = '"L’Écho de Soie" (Tiếng Vọng Tơ Lụa) là một đêm nhạc kịch nghệ thuật kết hợp giữa Opera cổ điển và âm hưởng thính phòng Việt Nam. Diễn ra tại Nhà Hát Thành Phố, sự kiện độc bản này tái hiện những câu chuyện dân gian qua lăng kính giao hưởng châu Âu, mang đến một trải nghiệm "Di sản mới" dành riêng cho giới mộ điệu thượng lưu.',
+about_en = '"L’Écho de Soie" (Echo of Silk) is a high-concept theatrical concert merging classical opera with Vietnamese chamber music. Hosted at the historic Saigon Opera House, this exclusive event reimagines traditional Vietnamese storytelling through the lens of European classical orchestration, creating a "New Heritage" experience for the modern elite.'
+where name = 'L’Écho de Soie (The Echo of Silk)';
+
+UPDATE public.events SET 
+about_vi = 'Trải nghiệm sự kết hợp đột phá giữa nghệ thuật sân khấu truyền thống và công nghệ trình chiếu 3D mapping đẳng cấp thế giới. "VŨ KHÚC HỒ GƯƠM" tái hiện truyền thuyết Hồ Hoàn Kiếm qua một hành trình đa giác quan đầy mê hoặc tại Nhà Hát Lớn Hà Nội.',
+about_en = 'Experience a groundbreaking fusion of traditional Vietnamese theater and world-class 3D mapping technology. "VŨ KHÚC HỒ GƯƠM" reimagines the legendary tale of the Returned Sword through an immersive sensory journey at the iconic Hanoi Opera House.'
+where name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN';
+
+UPDATE public.events SET 
+about_vi = '"Bóng Đêm Đô Thị" là một buổi trình diễn kịch nghệ độc lập đầy mê hoặc trong không gian công nghiệp kín đáo tại Sài Gòn. Kết hợp giữa múa đương đại, kịch nói và âm thanh thực nghiệm, sự kiện khai thác sự giao thoa giữa những câu chuyện dân gian Đông Dương thập niên 1920 và những nỗi lo âu đô thị hiện đại. Một trải nghiệm nghệ thuật cận cảnh, nơi ranh giới giữa khán giả và diễn viên hoàn toàn xóa nhòa.',
+about_en = '"Bóng Đêm Đô Thị" is an immersive indie theatrical performance set in a hidden industrial space in Saigon. Combining contemporary dance, spoken word, and experimental soundscapes, this event explores the intersection of 1920s Indochine folklore and modern urban anxieties. Experience a haunting, close-quarters performance where the boundary between audience and actor vanishes.'
+where name = 'Bóng Đêm Đô Thị: The Echoes of 1920';
+
+UPDATE public.events SET 
+about_vi = 'Một trải nghiệm sân khấu độc lập đắm chìm, kết hợp nghệ thuật vẽ mặt nạ Tuồng truyền thống với âm thanh điện tử thực nghiệm và múa đương đại. Hành trình độc bản đi sâu vào tiềm thức của những câu chuyện dân gian Việt Nam.',
+about_en = 'An immersive indie theatrical experience blending traditional Vietnamese "Tuồng" mask-making with experimental electronic soundscapes and contemporary dance. A one-night-only journey into the subconscious of Vietnam''s folklore.'
+where name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP';
+
+UPDATE public.events SET 
+about_vi = '“Vọng Nguyệt Dạ Hành” là một hành trình kịch nghệ tương tác xuyên không gian, đưa khán giả lạc bước vào những góc khuất của một dinh thự cổ tại Sài Gòn. Không có rào cản sân khấu, bạn sẽ đi theo các nhân vật để khám phá những bí mật về di sản, tình yêu và những bóng ma ký ức dưới ánh trăng.',
+about_en = '“The Moonlit Promenade” is an immersive theatrical journey through space, leading the audience into the hidden corners of an ancient Saigon mansion. With no stage barriers, you will follow the characters to uncover secrets of heritage, love, and the ghosts of memory under the moonlight.'
+where name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)';
 
 -- Terms and Conditions
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực. Trang phục tự do.'
@@ -233,89 +303,250 @@ UPDATE public.events SET policy_refund='Không hoàn tiền sau khi mua vé.'   
 
 
 --4. Table: event_categories
+-- V-Glow: The Cyber-Heritage Night
+-- concert, festival, nightlife, dance, outdoor, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
-UNION ALL SELECT id, 0 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+SELECT id, 0  FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
 UNION ALL SELECT id, 20 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
-UNION ALL SELECT id, 22 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'V-Glow: The Cyber-Heritage Night';
 
+-- The Echo of An Nam
+-- concert, festival, nightlife, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'The Echo of An Nam'
+SELECT id, 0  FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'The Echo of An Nam'
 UNION ALL SELECT id, 20 FROM public.events WHERE name = 'The Echo of An Nam'
-UNION ALL SELECT id, 23 FROM public.events WHERE name = 'The Echo of An Nam'
-UNION ALL SELECT id, 10 FROM public.events WHERE name = 'The Echo of An Nam';
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'The Echo of An Nam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'The Echo of An Nam';
 
+-- SÀI GÒN NEON BEATS: THE CYBER-FEST 2026
+-- concert, festival, nightlife, dance, outdoor, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+SELECT id, 0  FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
 UNION ALL SELECT id, 22 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026'
-UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'SÀI GÒN NEON BEATS: THE CYBER-FEST 2026';
 
+-- CỔ NGHỆ KIÊU HÙNG
+-- concert, festival, outdoor, cultural, fashion, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 20 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
-UNION ALL SELECT id, 23 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+SELECT id, 0  FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
 UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG'
-UNION ALL SELECT id, 24 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'CỔ NGHỆ KIÊU HÙNG';
 
+-- NEO-LUMINANCE: The Echo of Indochine
+-- concert, festival, nightlife, dance, outdoor, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+SELECT id, 0  FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
 UNION ALL SELECT id, 10 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
 UNION ALL SELECT id, 22 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine'
-UNION ALL SELECT id, 20 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'NEO-LUMINANCE: The Echo of Indochine';
 
+-- Sắc Lam: The Indigo Echo
+-- exhibition, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 23 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
-UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
-UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
+SELECT id, 9  FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Sắc Lam: The Indigo Echo';
 
+-- CRYSTAL REALM: The Neon Garden
+-- festival, nightlife, outdoor, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
-UNION ALL SELECT id, 16 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
-UNION ALL SELECT id, 21 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
-UNION ALL SELECT id, 17 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
+SELECT id, 1  FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'CRYSTAL REALM: The Neon Garden';
 
+-- SẮT & SON
+-- concert, festival, nightlife, outdoor, cultural
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 0 FROM public.events WHERE name = 'SẮT & SON'
-UNION ALL SELECT id, 1 FROM public.events WHERE name = 'SẮT & SON'
-UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SẮT & SON';
+SELECT id, 0  FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'SẮT & SON'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'SẮT & SON';
 
+-- Techno-Sorcery: The Zenith of AI & Robotics
+-- festival, nightlife, exhibition, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 22 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
-UNION ALL SELECT id, 9 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
-UNION ALL SELECT id, 5 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
-UNION ALL SELECT id, 25 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
+SELECT id, 1  FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 9  FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Techno-Sorcery: The Zenith of AI & Robotics';
 
+-- Vũ Trụ Cận Thị
+-- concert, nightlife, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 0 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
-UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
-UNION ALL SELECT id, 15 FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
+SELECT id, 0  FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Vũ Trụ Cận Thị'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Vũ Trụ Cận Thị';
 
+-- THE DREAMCATCHER ARCHIPELAGO
+-- concert, festival, nightlife, outdoor, cultural, art, family
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 1 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
-UNION ALL SELECT id, 23 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+SELECT id, 0  FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
 UNION ALL SELECT id, 19 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
-UNION ALL SELECT id, 20 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'THE DREAMCATCHER ARCHIPELAGO';
 
+-- KAIZEN: The Art of Precision
+-- food, drinks, cultural, art
 INSERT INTO public.event_categories (event_id, category_id)
 SELECT id, 12 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
+UNION ALL SELECT id, 13 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
 UNION ALL SELECT id, 20 FROM public.events WHERE name = 'KAIZEN: The Art of Precision'
 UNION ALL SELECT id, 23 FROM public.events WHERE name = 'KAIZEN: The Art of Precision';
 
+-- LUVIA: The Echo of Highlands
+-- concert, outdoor, wellness, cultural, art, travel
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 0 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+SELECT id, 0  FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
 UNION ALL SELECT id, 11 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
 UNION ALL SELECT id, 17 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands'
 UNION ALL SELECT id, 28 FROM public.events WHERE name = 'LUVIA: The Echo of Highlands';
 
+-- Scent of the Soul: The Echoes of Vietnam
+-- concert, nightlife, wellness, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 0 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+SELECT id, 0  FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 11 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
 UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
-UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
-UNION ALL SELECT id, 11 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Scent of the Soul: The Echoes of Vietnam';
 
+-- Âm Sắc Việt - THE RESONANCE
+-- concert, nightlife, cultural, tech, art
 INSERT INTO public.event_categories (event_id, category_id)
-SELECT id, 0 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+SELECT id, 0  FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
 UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
-UNION ALL SELECT id, 24 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Âm Sắc Việt - THE RESONANCE';
+
+
+-- LẠC HỒNG FUTURE-BEATS 2026
+-- concert, festival, nightlife, dance, outdoor, cultural, tech, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0  FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'LẠC HỒNG FUTURE-BEATS 2026';
+
+-- DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL
+-- concert, festival, exhibition, outdoor, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0  FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'
+UNION ALL SELECT id, 9  FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL';
+
+-- Splash & Spectrum 2026 / Sắc Màu Thủy Chiến
+-- concert, festival, sports, nightlife, dance, outdoor, family
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 1  FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 0  FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 4  FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến'
+UNION ALL SELECT id, 19 FROM public.events WHERE name = 'Splash & Spectrum 2026 / Sắc Màu Thủy Chiến';
+
+-- NGUỒN RỰC RỠ | THE RADIANT ROOTS
+-- concert, festival, exhibition, food, outdoor, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0  FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 9  FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 12 FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'NGUỒN RỰC RỠ | THE RADIANT ROOTS';
+
+-- Global Harmony Fest: The Heritage of Partnerships
+-- concert, festival, exhibition, outdoor, cultural, tech, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0  FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 1  FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 9  FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 17 FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Global Harmony Fest: The Heritage of Partnerships';
+
+-- L’Écho de Soie (The Echo of Silk)
+-- concert, theater, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 0  FROM public.events WHERE name = 'L’Écho de Soie (The Echo of Silk)'
+UNION ALL SELECT id, 2  FROM public.events WHERE name = 'L’Écho de Soie (The Echo of Silk)'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'L’Écho de Soie (The Echo of Silk)'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'L’Écho de Soie (The Echo of Silk)';
+
+-- VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN
+-- theater, exhibition, cultural, art, tech
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 2  FROM public.events WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN'
+UNION ALL SELECT id, 9  FROM public.events WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN'
+UNION ALL SELECT id, 22 FROM public.events WHERE name = 'VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN';
+
+-- Bóng Đêm Đô Thị: The Echoes of 1920
+-- theater, nightlife, dance, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 2  FROM public.events WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Bóng Đêm Đô Thị: The Echoes of 1920';
+
+-- ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP
+-- theater, nightlife, dance, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 2  FROM public.events WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP'
+UNION ALL SELECT id, 14 FROM public.events WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP';
+
+-- Vọng Nguyệt Dạ Hành (The Moonlit Promenade)
+-- theater, nightlife, cultural, art
+INSERT INTO public.event_categories (event_id, category_id)
+SELECT id, 2  FROM public.events WHERE name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)'
+UNION ALL SELECT id, 10 FROM public.events WHERE name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)'
+UNION ALL SELECT id, 20 FROM public.events WHERE name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)'
+UNION ALL SELECT id, 23 FROM public.events WHERE name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)';
 
 --5. Table: Event Sessions
 

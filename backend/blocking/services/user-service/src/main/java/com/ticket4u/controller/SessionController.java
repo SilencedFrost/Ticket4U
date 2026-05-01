@@ -7,6 +7,7 @@ import com.ticket4u.service.SessionService;
 import com.ticket4u.util.AuthPrincipalUtil;
 import com.ticket4u.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -41,12 +42,11 @@ public class SessionController {
     ) {
         UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
 
-        //xác định current session bằng cách hash rt cookie
-        String currentSessionHash = Optional.ofNullable(request.getCookies())
+        String refreshToken = Optional.ofNullable(request.getCookies())
                 .flatMap(cookies -> cookieUtil.getCookie(cookies, TokenConstants.REFRESH_TOKEN.getCookieKey()))
-                .map(DigestUtils::sha256Hex)
                 .orElse(null);
-        return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId, currentSessionHash));
+
+        return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId, refreshToken));
     }
 
     /**

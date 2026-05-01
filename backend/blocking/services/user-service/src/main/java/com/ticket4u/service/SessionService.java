@@ -100,7 +100,8 @@ public class SessionService {
      * Lấy tất cả session đang hoạt động của user.
      */
     @Transactional(readOnly = true)
-    public List<SessionResponse> getSessionsByUserId(UUID userId, String currentSessionHash) {
+    public List<SessionResponse> getSessionsByUserId(UUID userId, String refreshToken) {
+        String currentSessionHash = refreshToken != null ? DigestUtils.sha256Hex(refreshToken) : null;
         return sessionRepository.findAllByUserId(userId).stream()
                 .map(session -> sessionMapper.toDTO(session, isCurrentSession(session, currentSessionHash)))
                 .toList();

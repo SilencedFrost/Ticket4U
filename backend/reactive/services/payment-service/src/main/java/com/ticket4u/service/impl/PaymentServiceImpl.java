@@ -27,12 +27,15 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public SepayPaymentResponse createSepayPayment(CreateSepayPaymentRequest request) {
         UUID orderId = request.orderId();
-        log.debug("Processing SePay payment. orderId={}, hasCreateOrder={}", orderId, request.createOrder() != null);
+        String userId = request.userId();
+        log.debug("Processing SePay payment. orderId={}, hasCreateOrder={}, userId={}", orderId,
+                request.createOrder() != null, userId);
 
         if (orderId == null && request.createOrder() != null) {
-            log.debug("No orderId provided. Creating order from cart for email={}", request.createOrder().email());
-            orderId = paymentOrderService.createOrderFromCart(request.createOrder());
-            log.debug("Created internal order from cart. orderId={}", orderId);
+            log.debug("No orderId provided. Creating order from cart for email={}, userId={}",
+                    request.createOrder().email(), userId);
+            orderId = paymentOrderService.createOrderFromCart(request.createOrder(), userId);
+            log.debug("Created internal order from cart. orderId={}, userId={}", orderId, userId);
         }
 
         log.debug("Fetching payment snapshot for orderId={}", orderId);

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
 
 public record CartOrderRequest(
+        String userId,
         @NotBlank String email,
         @NotBlank String currency,
         @NotBlank String eventId,

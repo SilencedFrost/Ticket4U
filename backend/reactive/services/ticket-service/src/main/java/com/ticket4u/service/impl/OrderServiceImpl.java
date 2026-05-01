@@ -86,9 +86,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponse createOrderFromCartForSystem(CreateCartOrderRequest request) {
-        UUID systemUserId = UUID.fromString(internalApiProperties.getSystemUserId());
-        log.debug("Creating cart order for system user. systemUserId={}, email={}", systemUserId, request.email());
-        return createOrderFromCart(systemUserId, request);
+        UUID userId;
+        if (request.userId() != null && !request.userId().isBlank()) {
+            userId = UUID.fromString(request.userId());
+            log.debug("Creating cart order for provided user. userId={}, email={}", userId, request.email());
+        } else {
+            userId = UUID.fromString(internalApiProperties.getSystemUserId());
+            log.debug("Creating cart order for system user. systemUserId={}, email={}", userId, request.email());
+        }
+        return createOrderFromCart(userId, request);
     }
 
     @Override

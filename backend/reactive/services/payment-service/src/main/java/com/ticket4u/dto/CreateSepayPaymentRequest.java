@@ -4,5 +4,6 @@ import java.util.UUID;
 
 public record CreateSepayPaymentRequest(
         UUID orderId,
+        String userId,
         CartOrderRequest createOrder) {
 }

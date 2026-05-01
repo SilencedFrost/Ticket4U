@@ -39,7 +39,14 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
     }
 
     @Override
-    public UUID createOrderFromCart(com.ticket4u.dto.CartOrderRequest request) {
+    public UUID createOrderFromCart(com.ticket4u.dto.CartOrderRequest request, String userId) {
+        request = new com.ticket4u.dto.CartOrderRequest(
+                userId,
+                request.email(),
+                request.currency(),
+                request.eventId(),
+                request.eventName(),
+                request.tickets());
         var orderResponse = ticketOrderClient.createOrderFromCartInternal(request);
         return orderResponse.id();
     }

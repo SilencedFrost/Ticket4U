@@ -2,12 +2,14 @@
 import { usePhoneValidation } from '~/composables/usePhoneValidation';
 import { useSettingsApi } from '~/features/settings/composables/useSettingsApi';
 import { useCheckoutStore } from '~/stores/checkoutStore';
+import { useUserStore } from '~/stores/userStore';
 
 const { formatPrice } = useFormatter();
 const { isEmailFormatValid } = useEmailValidation();
 const { isPhoneFormatValid } = usePhoneValidation();
 const { fetchCurrentUser } = useSettingsApi();
 const checkoutStore = useCheckoutStore();
+const userStore = useUserStore();
 
 const fullName = ref('');
 const email = ref('');
@@ -236,13 +238,21 @@ function finishEditing() {
 async function openPaymentPopup() {
   if (!canPay.value) return;
 
+  // Require login before payment
+  if (!userStore.isLoggedIn) {
+    sepayError.value = 'Vui lòng đăng nhập trước khi thanh toán.';
+    return;
+  }
+
   paymentSuccessHandled.value = false;
   sepayError.value = '';
   sepayLoading.value = true;
 
   try {
     const orderId = checkoutStore.checkoutSession?.orderId;
-    const body: Record<string, unknown> = {};
+    const body: Record<string, unknown> = {
+      userId: userStore.user.id,
+    };
 
     if (orderId) {
       // Use existing order

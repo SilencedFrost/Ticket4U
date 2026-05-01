@@ -10,5 +10,5 @@ public interface PaymentOrderService {
 
     void confirmOrderPaid(UUID orderId, String gateway, String transactionId, String referenceCode);
 
-    UUID createOrderFromCart(CartOrderRequest request);
+    UUID createOrderFromCart(CartOrderRequest request, String userId);
 }

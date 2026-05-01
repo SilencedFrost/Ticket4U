@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryWithEventResponse> findRecommendedCategories(UUID userId, Integer limit) {
         int sanitizedLimit = limit == null ? 3 : limit;
 
-        List<Integer> categoryIds = categoryRepository.findAllCategoryIds();
+        List<Integer> categoryIds = categoryRepository.findAllPopulatedCategoryIds();
         if(categoryIds.isEmpty()) return List.of();
 
         Collections.shuffle(categoryIds, secureRandom);

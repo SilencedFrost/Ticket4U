@@ -2,6 +2,7 @@ package com.ticket4u.service.impl;
 
 import com.ticket4u.config.PaymentProperties;
 import com.ticket4u.dto.CreateSepayPaymentRequest;
+import com.ticket4u.dto.CartOrderRequest;
 import com.ticket4u.dto.OrderPaymentSnapshotResponse;
 import com.ticket4u.dto.PaymentStatusResponse;
 import com.ticket4u.dto.SepayPaymentResponse;
@@ -9,12 +10,14 @@ import com.ticket4u.service.PaymentOrderService;
 import com.ticket4u.service.PaymentService;
 import com.ticket4u.util.SepayQrUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentOrderService paymentOrderService;
@@ -23,10 +26,28 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public SepayPaymentResponse createSepayPayment(CreateSepayPaymentRequest request) {
-        OrderPaymentSnapshotResponse snapshot = paymentOrderService.getOrderPaymentSnapshot(request.orderId());
+        UUID orderId = request.orderId();
+        log.debug("Processing SePay payment. orderId={}, hasCreateOrder={}", orderId, request.createOrder() != null);
 
-        String orderCode = buildOrderCode(request.orderId());
+        if (orderId == null && request.createOrder() != null) {
+            log.debug("No orderId provided. Creating order from cart for email={}", request.createOrder().email());
+            orderId = paymentOrderService.createOrderFromCart(request.createOrder());
+            log.debug("Created internal order from cart. orderId={}", orderId);
+        }
+
+        log.debug("Fetching payment snapshot for orderId={}", orderId);
+        OrderPaymentSnapshotResponse snapshot = paymentOrderService.getOrderPaymentSnapshot(orderId);
+        log.debug(
+                "Fetched payment snapshot. orderId={}, totalAmount={}, currency={}, paymentStatus={}, orderStatus={}, transactionId={}",
+                snapshot.orderId(), snapshot.totalAmount(), snapshot.currency(), snapshot.paymentStatus(),
+                snapshot.orderStatus(), snapshot.transactionId());
+
+        String orderCode = buildOrderCode(orderId);
+        log.debug("Building SePay QR. orderId={}, orderCode={}", orderId, orderCode);
         SepayQrUtil.SepayQrDetails sepayQrDetails = sepayQrUtil.build(snapshot.totalAmount(), orderCode);
+
+        log.debug("Built SePay QR successfully. orderId={}, bankCode={}, accountNumber={}, template={}",
+                orderId, sepayQrDetails.bankCode(), sepayQrDetails.accountNumber(), sepayQrDetails.template());
 
         return new SepayPaymentResponse(
                 snapshot.orderId(),

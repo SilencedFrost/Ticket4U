@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "application.internal")
 public class InternalApiProperties {
     private String apiKey;
+    private String systemUserId;
 }

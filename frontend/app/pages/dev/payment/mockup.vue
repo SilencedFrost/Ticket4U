@@ -16,6 +16,92 @@ const promoCode = ref('');
 const agreedPolicy = ref(false);
 const transferContentMaxLength = 20;
 const showSepayPopup = ref(false);
+const config = useRuntimeConfig();
+
+interface SepayPaymentResponse {
+  orderId: string;
+  orderCode?: string;
+  amount: number;
+  currency: 'VND' | 'USD';
+  bankCode?: string;
+  accountNumber?: string;
+  accountName?: string;
+  qrTemplate?: string;
+  qrUrl?: string;
+  paymentStatus?: string;
+  orderStatus?: string;
+  transactionId?: string | null;
+}
+
+const sepay = ref<SepayPaymentResponse | null>(null);
+const sepayLoading = ref(false);
+const sepayError = ref('');
+const paymentSuccessHandled = ref(false);
+
+const pollRate = ref<number>(3000);
+const autoPoll = ref<boolean>(true);
+let sepayInterval: NodeJS.Timeout | null = null;
+
+const clearSepayPolling = () => {
+  if (sepayInterval) {
+    clearInterval(sepayInterval);
+    sepayInterval = null;
+  }
+};
+
+const fetchSepayStatus = async (showLoading = false) => {
+  if (!sepay?.value?.orderId || paymentSuccessHandled.value) return;
+  try {
+    if (showLoading) sepayLoading.value = true;
+    const status = await $fetch<Partial<SepayPaymentResponse>>(
+      `${config.public.paymentServiceUrl}/public/payments/orders/${sepay.value.orderId}/status`,
+    );
+    // merge known fields
+    sepay.value = { ...sepay.value, ...status };
+    sepayError.value = '';
+
+    if (status.paymentStatus === 'PAID' && status.orderStatus === 'CONFIRMED') {
+      await redirectToPaymentSuccess();
+    }
+  } catch (e) {
+    sepayError.value = 'Unable to fetch payment status.';
+  } finally {
+    if (showLoading && !paymentSuccessHandled.value) {
+      sepayLoading.value = false;
+    }
+  }
+};
+
+const setupSepayPolling = () => {
+  clearSepayPolling();
+  if (!autoPoll.value || !sepay?.value?.orderId || paymentSuccessHandled.value) return;
+  sepayInterval = setInterval(() => {
+    void fetchSepayStatus(false);
+  }, pollRate.value);
+};
+
+const redirectToPaymentSuccess = async () => {
+  if (paymentSuccessHandled.value || !sepay.value) {
+    return;
+  }
+
+  paymentSuccessHandled.value = true;
+  clearSepayPolling();
+  showSepayPopup.value = false;
+  sepayLoading.value = false;
+
+  await navigateTo({
+    path: '/payment/success',
+    query: {
+      orderId: sepay.value.orderId,
+      transactionId: sepay.value.transactionId ?? undefined,
+      amount: String(sepay.value.amount),
+      currency: sepay.value.currency,
+      orderCode: sepay.value.orderCode ?? undefined,
+    },
+  });
+};
+
 const editingField = ref<'name' | 'email' | 'phone' | null>(null);
 const shouldCloseOnPointerUp = ref(false);
 const eventPanelRef = ref<HTMLElement | null>(null);
@@ -147,13 +233,90 @@ function finishEditing() {
   editingField.value = null;
 }
 
-function openPaymentPopup() {
+async function openPaymentPopup() {
   if (!canPay.value) return;
-  showSepayPopup.value = true;
+
+  paymentSuccessHandled.value = false;
+  sepayError.value = '';
+  sepayLoading.value = true;
+
+  try {
+    const orderId = checkoutStore.checkoutSession?.orderId;
+    const body: Record<string, unknown> = {};
+
+    if (orderId) {
+      // Use existing order
+      body.orderId = orderId;
+    } else if (checkoutStore.checkoutSession) {
+      // Create new order from cart
+      const session = checkoutStore.checkoutSession;
+      const cartTickets: Array<Record<string, unknown>> = [];
+
+      // Flatten cart items to individual ticket requests
+      session.cart.forEach((item) => {
+        if (item.seats?.length) {
+          // If seats are selected, use seat-level info
+          item.seats.forEach((seat) => {
+            cartTickets.push({
+              zoneId: item.zoneId,
+              zoneName: seat.zoneName,
+              ticketType: item.isStanding ? 'STANDING' : 'SEAT',
+              seatId: seat.seatUuid,
+              seatName: seat.seatName,
+              basePrice: seat.price,
+            });
+          });
+        } else {
+          // General admission tickets
+          for (let i = 0; i < item.quantity; i++) {
+            cartTickets.push({
+              zoneId: item.zoneId,
+              zoneName: item.name,
+              ticketType: item.isStanding ? 'STANDING' : 'SEAT',
+              seatId: globalThis.crypto.randomUUID(),
+              seatName: `${item.name}-${i + 1}`,
+              basePrice: item.price,
+            });
+          }
+        }
+      });
+
+      body.createOrder = {
+        email: email.value,
+        currency: 'VND',
+        eventId: session.eventId,
+        eventName: session.event.title,
+        tickets: cartTickets,
+      };
+    } else {
+      throw new Error('No order ID or checkout session available');
+    }
+
+    sepay.value = await $fetch<SepayPaymentResponse>(
+      `${config.public.paymentServiceUrl}/public/payments/sepay`,
+      {
+        method: 'POST',
+        body,
+      },
+    );
+
+    // show modal only when we have a valid response
+    showSepayPopup.value = true;
+    // fetch initial status and start polling
+    await fetchSepayStatus(true);
+    setupSepayPolling();
+  } catch (err) {
+    sepayError.value = 'Unable to create SePay payment. Please try again.';
+    sepay.value = null;
+  } finally {
+    sepayLoading.value = false;
+  }
 }
 
 function closePaymentPopup() {
   showSepayPopup.value = false;
+  clearSepayPolling();
+  paymentSuccessHandled.value = false;
 }
 
 function confirmPaid() {
@@ -245,6 +408,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleEscape);
   window.removeEventListener('resize', syncTopPanelsHeight);
+
+  clearSepayPolling();
 
   if (eventPanelResizeObserver) {
     eventPanelResizeObserver.disconnect();
@@ -519,6 +684,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="sepay-body">
+          <div v-if="sepayError" class="alert alert-danger">{{ sepayError }}</div>
           <div class="sepay-warning">
             <i class="bi bi-exclamation-triangle"></i>
             <div>
@@ -530,7 +696,19 @@ onBeforeUnmount(() => {
 
           <div class="sepay-info-wrap">
             <div class="qr-wrap">
-              <div class="qr-placeholder" :aria-label="$t('payment_mockup.popup.qr_alt')">
+              <div v-if="sepayLoading" class="qr-placeholder" aria-live="polite">
+                <div class="spinner-border" role="status" aria-hidden="true"></div>
+              </div>
+
+              <div v-else-if="sepay && sepay.qrUrl" class="qr-placeholder">
+                <img
+                  :src="sepay.qrUrl"
+                  :alt="$t('payment_mockup.popup.qr_alt')"
+                  class="img-fluid"
+                />
+              </div>
+
+              <div v-else class="qr-placeholder" :aria-label="$t('payment_mockup.popup.qr_alt')">
                 <i class="bi bi-qr-code"></i>
                 <span>QR Placeholder</span>
               </div>
@@ -540,12 +718,12 @@ onBeforeUnmount(() => {
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.bank') }}</span>
                 <div class="info-row-end d-inline-flex align-items-center gap-2">
-                  <strong>BIDV</strong>
+                  <strong>{{ sepay?.bankCode ?? 'N/A' }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
-                    @click="copyValue('BIDV')"
+                    @click="copyValue(sepay?.bankCode ?? '')"
                   >
                     <i class="bi bi-copy"></i>
                   </button>
@@ -554,14 +732,19 @@ onBeforeUnmount(() => {
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.cart_code') }}</span>
                 <div class="info-row-end d-inline-flex align-items-center gap-2">
-                  <strong class="content-preview" :title="transferContent">{{
-                    transferContentPreview
+                  <strong class="content-preview" :title="sepay?.orderCode ?? transferContent">{{
+                    (sepay?.orderCode ?? transferContent).length > transferContentMaxLength
+                      ? (sepay?.orderCode ?? transferContent).slice(
+                          0,
+                          transferContentMaxLength - 3,
+                        ) + '...'
+                      : (sepay?.orderCode ?? transferContent)
                   }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
-                    @click="copyValue(transferContent)"
+                    @click="copyValue(sepay?.orderCode ?? transferContent)"
                   >
                     <i class="bi bi-copy"></i>
                   </button>
@@ -570,12 +753,12 @@ onBeforeUnmount(() => {
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.account_number') }}</span>
                 <div class="info-row-end d-inline-flex align-items-center gap-2">
-                  <strong class="text-primary">123</strong>
+                  <strong class="text-primary">{{ sepay?.accountNumber ?? 'N/A' }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
-                    @click="copyValue('123')"
+                    @click="copyValue(sepay?.accountNumber ?? '')"
                   >
                     <i class="bi bi-copy"></i>
                   </button>
@@ -584,12 +767,12 @@ onBeforeUnmount(() => {
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.receiver_name') }}</span>
                 <div class="info-row-end d-inline-flex align-items-center gap-2">
-                  <strong>ticket4u</strong>
+                  <strong>{{ sepay?.accountName ?? 'N/A' }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
-                    @click="copyValue('ticket4u')"
+                    @click="copyValue(sepay?.accountName ?? '')"
                   >
                     <i class="bi bi-copy"></i>
                   </button>
@@ -598,12 +781,20 @@ onBeforeUnmount(() => {
               <div class="info-row">
                 <span>{{ $t('payment_mockup.popup.amount') }}</span>
                 <div class="info-row-end d-inline-flex align-items-center gap-2">
-                  <strong class="text-primary">{{ formatPrice(total, 'VND') }}</strong>
+                  <strong class="text-primary">{{
+                    sepay ? formatPrice(sepay.amount, sepay.currency) : formatPrice(total, 'VND')
+                  }}</strong>
                   <button
                     type="button"
                     class="copy-icon-btn d-inline-flex align-items-center justify-content-center"
                     :aria-label="$t('payment_mockup.popup.copy')"
-                    @click="copyValue(formatPrice(total, 'VND'))"
+                    @click="
+                      copyValue(
+                        sepay
+                          ? formatPrice(sepay.amount, sepay.currency)
+                          : formatPrice(total, 'VND'),
+                      )
+                    "
                   >
                     <i class="bi bi-copy"></i>
                   </button>
@@ -621,8 +812,13 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="sepay-footer">
-          <button type="button" class="confirm-paid-btn" @click="confirmPaid">
-            {{ $t('payment_mockup.popup.confirm_paid') }}
+          <button
+            type="button"
+            class="confirm-paid-btn"
+            @click="confirmPaid"
+            :disabled="sepayLoading"
+          >
+            {{ sepayLoading ? 'Please wait...' : $t('payment_mockup.popup.confirm_paid') }}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ package com.ticket4u.service.impl;
 
 import com.ticket4u.dto.OrderPaymentConfirmationRequest;
 import com.ticket4u.dto.OrderPaymentSnapshotResponse;
+import com.ticket4u.dto.CreateSepayPaymentRequest;
 import com.ticket4u.service.PaymentOrderService;
 import com.ticket4u.service.TicketOrderClient;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,11 @@ public class PaymentOrderServiceImpl implements PaymentOrderService {
                         transactionId,
                         OffsetDateTime.now(),
                         referenceCode));
+    }
+
+    @Override
+    public UUID createOrderFromCart(com.ticket4u.dto.CartOrderRequest request) {
+        var orderResponse = ticketOrderClient.createOrderFromCartInternal(request);
+        return orderResponse.id();
     }
 }

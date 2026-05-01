@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
@@ -35,4 +35,5 @@ application:
 
 logging:
   level:
-    root: INFO
+    root: WARN
+    com.ticket4u: DEBUG

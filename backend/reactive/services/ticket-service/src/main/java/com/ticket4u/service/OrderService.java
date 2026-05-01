@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface OrderService {
     OrderResponse createOrderFromCart(UUID userId, CreateCartOrderRequest request);
 
+    OrderResponse createOrderFromCartForSystem(CreateCartOrderRequest request);
+
     OrderResponse findOrderOfUserById(UUID userId, UUID orderId);
 
     List<TicketResponse> getTicketsByOrderId(UUID userId, UUID orderId);

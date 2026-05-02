@@ -7,17 +7,12 @@ import com.ticket4u.service.SessionService;
 import com.ticket4u.util.AuthPrincipalUtil;
 import com.ticket4u.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.DigestException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -42,8 +37,8 @@ public class SessionController {
     ) {
         UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
 
-        String refreshToken = Optional.ofNullable(request.getCookies())
-                .flatMap(cookies -> cookieUtil.getCookie(cookies, TokenConstants.REFRESH_TOKEN.getCookieKey()))
+        String refreshToken = cookieUtil
+                .getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey())
                 .orElse(null);
 
         return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId, refreshToken));

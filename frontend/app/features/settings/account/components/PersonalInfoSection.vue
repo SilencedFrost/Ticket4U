@@ -17,6 +17,7 @@ const FIELD_ERROR_KEYS: Array<keyof FieldErrors> = [
 ];
 
 const EMAIL_FIELD_ERROR_KEYS = ['newEmail', 'password'] as const;
+const BIRTHDAY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 const loading = ref(false);
 const loadingUser = ref(false);
@@ -66,6 +67,24 @@ function syncFormDataFromUser(user: UserSummary) {
   const nextValue = createProfileFormFromUser(user);
   formData.value = nextValue;
   initialSnapshot.value = { ...nextValue };
+}
+
+function validateForm(): boolean {
+  resetFieldErrors();
+  let valid = true;
+
+  const birthday = formData.value.birthday.trim();
+  if (birthday.length > 0) {
+    if (!BIRTHDAY_REGEX.test(birthday)) {
+      fieldErrors.birthday = 'settings.personal_information.errors.birthday.invalid';
+      valid = false;
+    } else if (new Date(birthday) > new Date()) {
+      fieldErrors.birthday = 'settings.personal_information.errors.birthday.future';
+      valid = false;
+    }
+  }
+
+  return valid;
 }
 
 function cacheUserAndSyncForm(user: UserSummary) {
@@ -206,6 +225,8 @@ async function saveInfo() {
   if (!hasChanges.value || loading.value) {
     return;
   }
+
+  if (!validateForm()) return;
 
   beginSaveInfo();
   const payload = buildChangeInfoPayload();

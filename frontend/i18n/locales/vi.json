@@ -146,7 +146,8 @@
     "status": {
       "title": "Trạng thái",
       "available": "còn lại"
-    }
+    },
+    "optional": "(không bắt buộc)"
   },
   "permissions": {
     "location": {
@@ -259,6 +260,7 @@
       "title": "Thông tin cá nhân",
       "subtitle": "Cập nhật hồ sơ của bạn để có trải nghiệm đặt vé mượt mà hơn.",
       "member_since": "Thành viên từ",
+      "blank_fields_hint": "Ô trống sẽ không được lưu",
       "messages": {
         "update_success": "Cập nhật thông tin cá nhân thành công."
       },
@@ -272,6 +274,12 @@
         "current_password": "Mật khẩu hiện tại",
         "messages": {
           "request_sent_success": "Yêu cầu đổi email đã được gửi thành công."
+        }
+      },
+      "errors": {
+        "birthday": {
+          "future": "Ngày sinh không thể là trong tương lai",
+          "invalid": "Ngày sinh không hợp lệ"
         }
       }
     },

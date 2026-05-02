@@ -100,7 +100,7 @@ defineExpose({ open, close });
     <div class="modal-dialog modal-dialog-centered">
       <!-- TODO: Thêm class "bg-reactive-secondary" — modal-content dùng màu nền Bootstrap mặc định.
       Dùng bg-reactive-secondary cho đồng nhất với card/panel. -->
-      <div class="modal-content">
+      <div class="modal-content bg-reactive-secondary">
 
         <div class="modal-header">
           <h5 id="changeEmailModalLabel" class="modal-title">
@@ -116,13 +116,13 @@ defineExpose({ open, close });
 
           <div class="mb-3">
             <!-- TODO: Thêm class "text-reactive-primary" vào label — hiện đang dùng màu text mặc định Bootstrap -->
-            <label class="form-label">{{ $t('settings.personal_information.change_email.current_email') }}</label>
+            <label class="form-label text-reactive-primary">{{ $t('settings.personal_information.change_email.current_email') }}</label>
             <input type="email" class="form-control" :value="currentEmail" readonly />
           </div>
 
           <div class="mb-3">
             <!-- TODO: Thêm class "text-reactive-primary" vào label -->
-            <label for="new-email" class="form-label">
+            <label for="new-email" class="form-label text-reactive-primary">
               {{ $t('settings.personal_information.change_email.new_email') }}
             </label>
             <input
@@ -141,7 +141,7 @@ defineExpose({ open, close });
 
           <div class="mb-1">
             <!-- TODO: Thêm class "text-reactive-primary" vào label -->
-            <label for="confirm-password" class="form-label">
+            <label for="confirm-password" class="form-label text-reactive-primary">
               {{ $t('settings.personal_information.change_email.current_password') }}
             </label>
             <input
@@ -161,7 +161,7 @@ defineExpose({ open, close });
 
         <div class="modal-footer">
           <!-- TODO: Đổi "btn-secondary" → "btn-reactive-gray" — btn-secondary dùng màu cứng của Bootstrap. -->
-          <button type="button" class="btn btn-secondary" :disabled="loading" @click="close">
+          <button type="button" class="btn btn-reactive-gray" :disabled="loading" @click="close">
             {{ $t('common.action.cancel') }}
           </button>
           <button

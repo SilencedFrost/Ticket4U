@@ -107,7 +107,7 @@ const redirectToPaymentSuccess = async () => {
   });
 };
 
-const editingField = ref<'name' | 'email' | 'phone' | null>(null);
+const editingField = ref<'phone' | null>(null);
 const shouldCloseOnPointerUp = ref(false);
 const eventPanelRef = ref<HTMLElement | null>(null);
 const holdPanelHeight = ref<number | null>(null);
@@ -231,10 +231,6 @@ const errorHintKey = computed(() => {
 const holdPanelStyle = computed(() => {
   return holdPanelHeight.value ? { minHeight: `${holdPanelHeight.value}px` } : null;
 });
-
-function toggleEditing(field: 'name' | 'email' | 'phone') {
-  editingField.value = editingField.value === field ? null : field;
-}
 
 function finishEditing() {
   editingField.value = null;
@@ -490,24 +486,9 @@ onBeforeUnmount(() => {
                   <span class="receiver-label"
                     >{{ $t('payment_mockup.receiver.full_name') }} <b>*</b></span
                   >
-                  <input
-                    v-if="editingField === 'name'"
-                    v-model="fullName"
-                    class="inline-edit-input"
-                    type="text"
-                    @blur="finishEditing"
-                    @keyup.enter="finishEditing"
-                  />
-                  <strong v-else>{{ fullName || $t('payment_mockup.receiver.empty') }}</strong>
-                  <p v-if="fullNameErrorKey" class="receiver-error">{{ $t(fullNameErrorKey) }}</p>
+                  <strong>{{ fullName || $t('payment_mockup.receiver.empty') }}</strong>
                 </div>
-                <button
-                  type="button"
-                  class="icon-button d-inline-flex align-items-center justify-content-center"
-                  @click="toggleEditing('name')"
-                >
-                  <i :class="editingField === 'name' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
-                </button>
+                <div></div>
               </div>
 
               <div class="receiver-row">
@@ -516,24 +497,9 @@ onBeforeUnmount(() => {
                   <span class="receiver-label"
                     >{{ $t('payment_mockup.receiver.email') }} <b>*</b></span
                   >
-                  <input
-                    v-if="editingField === 'email'"
-                    v-model="email"
-                    class="inline-edit-input"
-                    type="email"
-                    @blur="finishEditing"
-                    @keyup.enter="finishEditing"
-                  />
-                  <strong v-else>{{ email || $t('payment_mockup.receiver.empty') }}</strong>
-                  <p v-if="emailErrorKey" class="receiver-error">{{ $t(emailErrorKey) }}</p>
+                  <strong>{{ email || $t('payment_mockup.receiver.empty') }}</strong>
                 </div>
-                <button
-                  type="button"
-                  class="icon-button d-inline-flex align-items-center justify-content-center"
-                  @click="toggleEditing('email')"
-                >
-                  <i :class="editingField === 'email' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
-                </button>
+                <div></div>
               </div>
 
               <div class="receiver-row">
@@ -560,7 +526,7 @@ onBeforeUnmount(() => {
                 <button
                   type="button"
                   class="icon-button d-inline-flex align-items-center justify-content-center"
-                  @click="toggleEditing('phone')"
+                  @click="editingField = editingField === 'phone' ? null : 'phone'"
                 >
                   <i :class="editingField === 'phone' ? 'bi bi-check-lg' : 'bi bi-pencil'"></i>
                 </button>

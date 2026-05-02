@@ -1,73 +1,199 @@
 <template>
-  <footer class="bg-reactive-dark text-white py-5">
+  <footer class="bg-reactive-dark text-white pt-5 pb-4">
     <div class="container-lg">
-      <div class="row g-4">
-        <div class="col-12 col-md-3">
-          <div class="mb-2">
-            <img src="/logo-primary.png" alt="Ticket4U" class="mb-3" style="max-height: 70px" />
-          </div>
-
-          <div class="d-flex flex-column">
-            <h6 class="text-uppercase fw-bold mb-3 small">{{ $t('common.follow_us') }}</h6>
-            <div class="d-flex gap-2">
+      <div class="row g-5">
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-4 text-uppercase fw-bold">
+            <span class="d-inline-block pb-3 border-bottom border-3 border-primary">
+              {{ $t('common.events') }}
+            </span>
+          </h6>
+          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+            <li>
               <a
                 href="#"
-                class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-                aria-label="Facebook"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
               >
-                <i class="bi bi-facebook"></i>
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.all_events') }}</span>
               </a>
+            </li>
+            <li>
               <a
                 href="#"
-                class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-                aria-label="YouTube"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
               >
-                <i class="bi bi-youtube"></i>
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.popular_events') }}</span>
               </a>
+            </li>
+            <li>
               <a
                 href="#"
-                class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 40px; height: 40px"
-                aria-label="Instagram"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
               >
-                <i class="bi bi-instagram"></i>
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.upcoming_events') }}</span>
               </a>
-            </div>
-          </div>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.nearby_events') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.free_events') }}</span>
+              </a>
+            </li>
+          </ul>
         </div>
 
-        <div class="col-12 col-md-6">
-          <div class="mb-4">
-            <h5 class="fw-bold mb-3">{{ $t('common.about_us') }}</h5>
-            <p class="text-reactive-secondary small lh-base">
-              {{ $t('brand.description') }}
-            </p>
-          </div>
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-4 text-uppercase fw-bold">
+            <span class="d-inline-block pb-3 border-bottom border-3 border-primary">
+              {{ $t('common.about_us') }}
+            </span>
+          </h6>
+          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.our_story') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.team') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.careers') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.press_media') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.contact_us') }}</span>
+              </a>
+            </li>
+          </ul>
         </div>
 
-        <div class="col-12 col-md-3">
-          <div class="mb-4">
-            <h5 class="fw-bold mb-3">{{ $t('common.contact') }}</h5>
-            <div class="mb-3">
-              <p class="text-reactive-secondary mb-1 small">{{ $t('common.phone') }}:</p>
-              <p class="text-white fw-bold mb-0 small">0912345678</p>
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-4 text-uppercase fw-bold">
+            <span class="d-inline-block pb-3 border-bottom border-3 border-primary">
+              {{ $t('footer.partners') }}
+            </span>
+          </h6>
+          <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.become_partner') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.sponsorship') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.partner_directory') }}</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="text-clickable user-select-auto text-decoration-none d-inline-flex align-items-center gap-2"
+              >
+                <span aria-hidden="true">•</span>
+                <span>{{ $t('footer.menu.partner_login') }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-4 text-uppercase fw-bold">
+            <span class="d-inline-block pb-3 border-bottom border-3 border-primary">
+              {{ $t('common.contact') }}
+            </span>
+          </h6>
+
+          <div class="mb-3">
+            <div class="small text-uppercase fw-bold text-reactive-secondary mb-1">
+              {{ $t('footer.labels.phone') }}
             </div>
-            <div>
-              <p class="text-reactive-secondary mb-1 small">{{ $t('common.email') }}:</p>
-              <p class="text-white fw-bold mb-0 small">support@ticket4u.com</p>
+            <div class="fw-bold">0912 345 678</div>
+          </div>
+          <div>
+            <div class="small text-uppercase fw-bold text-reactive-secondary mb-1">
+              {{ $t('footer.labels.email') }}
             </div>
+            <a
+              href="mailto:supportagent@gmail.com"
+              class="link-primary text-decoration-none fw-bold"
+            >
+              supportagent@gmail.com
+            </a>
           </div>
         </div>
       </div>
 
-      <hr class="my-4 text-white-50" />
+      <hr class="text-white-50 opacity-25" />
 
-      <div class="row">
-        <div class="col-12 text-center">
-          <p class="text-reactive-secondary mb-0 small">{{ $t('brand.copyright') }}</p>
-        </div>
+      <div class="d-flex justify-content-end gap-4">
+        <a href="#" class="text-clickable user-select-auto text-decoration-none">
+          {{ $t('footer.links.privacy_policy') }}
+        </a>
+        <a href="#" class="text-clickable user-select-auto text-decoration-none">
+          {{ $t('footer.links.terms_of_use') }}
+        </a>
       </div>
     </div>
   </footer>

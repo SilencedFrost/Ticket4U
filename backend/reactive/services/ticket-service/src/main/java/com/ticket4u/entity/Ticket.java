@@ -23,7 +23,7 @@ public class Ticket {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", unique = true)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Column(nullable = false)

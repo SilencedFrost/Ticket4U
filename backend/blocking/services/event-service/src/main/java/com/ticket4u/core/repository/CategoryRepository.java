@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    @Query("SELECT c.id FROM Category c")
-    List<Integer> findAllCategoryIds();
+    @Query("SELECT c.id FROM Category c WHERE SIZE(c.events) >= 4")
+    List<Integer> findAllPopulatedCategoryIds();
 }

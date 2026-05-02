@@ -147,7 +147,8 @@
     "status": {
       "title": "Status",
       "available": "available"
-    }
+    },
+    "optional": "(optional)"
   },
   "permissions": {
     "location": {
@@ -282,6 +283,7 @@
       "title": "Personal Information",
       "subtitle": "Update your profile for a smoother booking experience.",
       "member_since": "Member since",
+      "blank_fields_hint": "Blank fields will not be saved",
       "messages": {
         "update_success": "Profile updated successfully."
       },
@@ -295,6 +297,12 @@
         "current_password": "Current Password",
         "messages": {
           "request_sent_success": "Email change request sent successfully."
+        }
+      },
+      "errors": {
+        "birthday": {
+          "future": "Date of birth cannot be in the future",
+          "invalid": "Invalid date of birth"
         }
       }
     },

@@ -113,6 +113,27 @@ const eventPanelRef = ref<HTMLElement | null>(null);
 const holdPanelHeight = ref<number | null>(null);
 let eventPanelResizeObserver: ResizeObserver | null = null;
 
+watch(
+  () => checkoutStore.checkoutSession,
+  () => {
+    nextTick(() => {
+      syncTopPanelsHeight();
+
+      if (
+        import.meta.client &&
+        'ResizeObserver' in window &&
+        eventPanelRef.value &&
+        !eventPanelResizeObserver
+      ) {
+        eventPanelResizeObserver = new ResizeObserver(() => {
+          syncTopPanelsHeight();
+        });
+        eventPanelResizeObserver.observe(eventPanelRef.value);
+      }
+    });
+  },
+);
+
 type SelectedTicket = {
   ticket_type: string;
   zone_name: string;
@@ -405,15 +426,7 @@ async function prefillReceiverInfo() {
 onMounted(() => {
   checkoutStore.restoreCheckoutSession();
   window.addEventListener('keydown', handleEscape);
-
   window.addEventListener('resize', syncTopPanelsHeight);
-
-  if (import.meta.client && 'ResizeObserver' in window && eventPanelRef.value) {
-    eventPanelResizeObserver = new ResizeObserver(() => {
-      syncTopPanelsHeight();
-    });
-    eventPanelResizeObserver.observe(eventPanelRef.value);
-  }
 
   syncTopPanelsHeight();
   void prefillReceiverInfo();
@@ -441,39 +454,32 @@ onBeforeUnmount(() => {
       <div class="payment-shell">
         <main class="payment-main">
           <section class="left-col">
-            <article ref="eventPanelRef" class="card payment-card event-panel">
+            <article
+              v-if="checkoutStore.checkoutSession"
+              ref="eventPanelRef"
+              class="card payment-card event-panel"
+            >
               <img
                 class="event-thumb"
-                :src="
-                  eventThumbnailUrl ||
-                  'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop'
-                "
+                :src="eventThumbnailUrl"
                 :alt="$t('payment_mockup.event.image_alt')"
               />
               <div class="event-meta">
                 <h1 class="event-title">
-                  {{
-                    checkoutStore.checkoutSession?.event.title ?? $t('payment_mockup.event.title')
-                  }}
+                  {{ checkoutStore.checkoutSession.event.title }}
                 </h1>
                 <div class="event-subline">
                   <span
                     ><i class="bi bi-calendar3"></i>
-                    {{
-                      checkoutStore.checkoutSession?.event.date ?? $t('payment_mockup.event.date')
-                    }}</span
+                    {{ checkoutStore.checkoutSession.event.date }}</span
                   >
                   <span
                     ><i class="bi bi-clock"></i>
-                    {{
-                      checkoutStore.checkoutSession?.event.time ?? $t('payment_mockup.event.time')
-                    }}</span
+                    {{ checkoutStore.checkoutSession.event.time }}</span
                   >
                 </div>
                 <p class="event-address">
-                  {{
-                    checkoutStore.checkoutSession?.event.venue ?? $t('payment_mockup.event.address')
-                  }}
+                  {{ checkoutStore.checkoutSession.event.venue }}
                 </p>
               </div>
             </article>

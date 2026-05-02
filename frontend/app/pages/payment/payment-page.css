@@ -759,6 +759,25 @@
     background: rgba(88, 106, 146, 0.18);
 }
 
+[data-bs-theme='light'] .flip-payment-page .sepay-footer {
+    background: #f7f9ff;
+    border-top-color: rgba(122, 132, 165, 0.3);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-bar {
+    color: #1f2a40;
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(122, 132, 165, 0.3);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-copy strong {
+    color: #1f2a40;
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-copy span {
+    color: #4f5b77;
+}
+
 [data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb {
     background: rgba(64, 83, 126, 0.62);
     border: 2px solid rgba(255, 255, 255, 0.95);

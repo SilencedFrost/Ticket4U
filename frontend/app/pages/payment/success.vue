@@ -1,7 +1,17 @@
 <script setup lang="ts">
+definePageMeta({
+  path: '/event/:eventId/book/success',
+  alias: ['/checkout/payment/success', '/payment/success'],
+});
+
 const route = useRoute();
 const checkoutStore = useCheckoutStore();
 const { formatPrice } = useFormatter();
+
+const eventId = computed(() => String(route.params.eventId ?? '').trim());
+const checkoutPath = computed(() =>
+  eventId.value ? `/event/${eventId.value}/book/checkout` : '/payment',
+);
 
 const orderId = computed(() => String(route.query.orderId ?? ''));
 const transactionId = computed(() => String(route.query.transactionId ?? ''));
@@ -40,7 +50,7 @@ onMounted(() => {
           <span>Order ID</span>
           <strong>{{ orderId || 'N/A' }}</strong>
         </div>
-        <div class="info-row" v-if="orderCode">
+        <div v-if="orderCode" class="info-row">
           <span>Order Code</span>
           <strong>{{ orderCode }}</strong>
         </div>
@@ -56,7 +66,7 @@ onMounted(() => {
 
       <div class="action-row d-flex flex-column flex-sm-row gap-2 justify-content-center mt-4">
         <NuxtLink class="btn btn-light fw-semibold" to="/">Về trang chủ</NuxtLink>
-        <NuxtLink class="btn btn-outline-light fw-semibold" to="/payment"
+        <NuxtLink class="btn btn-outline-light fw-semibold" :to="checkoutPath"
           >Tạo thanh toán mới</NuxtLink
         >
       </div>

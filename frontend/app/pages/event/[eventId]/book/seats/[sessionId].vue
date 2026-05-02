@@ -82,7 +82,7 @@ function proceedToCheckout() {
     totalTickets: totalTickets.value,
   });
 
-  navigateTo({ path: '/payment' });
+  navigateTo({ path: `/event/${eventId}/book/checkout` });
 }
 
 function startResize(e: MouseEvent) {

@@ -12,6 +12,12 @@ const { isPhoneFormatValid } = usePhoneValidation();
 const { fetchCurrentUser } = useSettingsApi();
 const checkoutStore = useCheckoutStore();
 const userStore = useUserStore();
+const route = useRoute();
+
+definePageMeta({
+  path: '/event/:eventId/book/checkout',
+  alias: ['/checkout/payment', '/payment'],
+});
 
 const fullName = ref('');
 const email = ref('');
@@ -85,6 +91,15 @@ const setupSepayPolling = () => {
   }, pollRate.value);
 };
 
+const currentEventId = computed(() => {
+  const sessionEventId = checkoutStore.checkoutSession?.eventId?.trim();
+  if (sessionEventId) {
+    return sessionEventId;
+  }
+
+  return String(route.params.eventId ?? '').trim();
+});
+
 const redirectToPaymentSuccess = async () => {
   if (paymentSuccessHandled.value || !sepay.value) {
     return;
@@ -95,8 +110,12 @@ const redirectToPaymentSuccess = async () => {
   showSepayPopup.value = false;
   sepayLoading.value = false;
 
+  const successPath = currentEventId.value
+    ? `/event/${currentEventId.value}/book/success`
+    : '/payment/success';
+
   await navigateTo({
-    path: '/payment/success',
+    path: successPath,
     query: {
       orderId: sepay.value.orderId,
       transactionId: sepay.value.transactionId ?? undefined,

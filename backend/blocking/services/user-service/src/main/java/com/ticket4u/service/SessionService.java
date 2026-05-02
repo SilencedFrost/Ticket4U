@@ -35,7 +35,6 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 
     private final SessionMapper sessionMapper;
-    private final HashUtil hashUtil;
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Boolean persistent) {

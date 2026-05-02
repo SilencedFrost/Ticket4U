@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-type CheckoutEvent = {
+export type CheckoutEvent = {
   id: string;
   title: string;
   date: string;
@@ -13,7 +13,7 @@ type CheckoutEvent = {
   };
 };
 
-type CheckoutCartItem = {
+export type CheckoutCartItem = {
   zoneId: string;
   name: string;
   quantity: number;
@@ -30,7 +30,7 @@ type CheckoutCartItem = {
   }>;
 };
 
-type CheckoutSession = {
+export type CheckoutSession = {
   eventId: string;
   sessionId: string;
   event: CheckoutEvent;

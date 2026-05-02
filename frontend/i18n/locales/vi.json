@@ -347,6 +347,27 @@
       }
     }
   },
+  "payment": {
+    "success": {
+      "title": "Giao dịch của bạn đã được xác nhận",
+      "subtitle": "Hệ thống đã ghi nhận trạng thái PAID và hoàn tất xác nhận đơn hàng.",
+      "order_id": "Order ID",
+      "order_code": "Order Code",
+      "transaction_id": "Transaction ID",
+      "amount": "Số tiền",
+      "event": "Sự kiện",
+      "venue": "Địa điểm",
+      "tickets": "Tổng vé",
+      "ticket_list_title": "Danh sách vé đã mua",
+      "ticket_list_subtitle": "Hiển thị toàn bộ vé trong đơn hiện tại.",
+      "table_ticket": "Vé",
+      "table_zone": "Khu vực",
+      "table_type": "Loại",
+      "table_price": "Giá",
+      "no_tickets_error": "Chưa lấy được danh sách vé từ phiên thanh toán hiện tại. Nếu bạn vừa thanh toán xong, hãy quay lại từ luồng checkout hoặc kiểm tra lại session checkout trong trình duyệt.",
+      "home_button": "Về trang chủ"
+    }
+  },
   "payment_mockup": {
     "validation": {
       "required_contact": "Vui lòng điền đầy đủ thông tin bắt buộc",

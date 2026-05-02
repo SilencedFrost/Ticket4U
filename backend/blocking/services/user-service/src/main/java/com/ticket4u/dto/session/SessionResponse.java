@@ -5,5 +5,6 @@ import java.time.OffsetDateTime;
 public record SessionResponse(
         String displayId,
         String userAgent,
-        OffsetDateTime updatedAt
+        OffsetDateTime updatedAt,
+        boolean isCurrent
 ) {}

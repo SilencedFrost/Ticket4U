@@ -35,7 +35,6 @@ public class SessionService {
     private final SessionRepository sessionRepository;
 
     private final SessionMapper sessionMapper;
-    private final HashUtil hashUtil;
 
     @Transactional
     public void createSession(UUID userId, String userAgent, String sessionToken, Boolean persistent) {
@@ -100,8 +99,11 @@ public class SessionService {
      * Lấy tất cả session đang hoạt động của user.
      */
     @Transactional(readOnly = true)
-    public List<SessionResponse> getSessionsByUserId(UUID userId) {
-        return sessionRepository.findAllByUserId(userId).stream().map(sessionMapper::toDTO).toList();
+    public List<SessionResponse> getSessionsByUserId(UUID userId, String refreshToken) {
+        String currentSessionHash = refreshToken != null ? DigestUtils.sha256Hex(refreshToken) : null;
+        return sessionRepository.findAllByUserId(userId).stream()
+                .map(session -> sessionMapper.toDTO(session, isCurrentSession(session, currentSessionHash)))
+                .toList();
     }
 
     /**
@@ -148,6 +150,10 @@ public class SessionService {
         } else {
             return session.getExpiresAt();
         }
+    }
+
+    private boolean isCurrentSession(Session session, String currentSessionHash) {
+        return currentSessionHash != null && session.getSessionHash().equals(currentSessionHash);
     }
 }
 

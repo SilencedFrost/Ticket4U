@@ -1,15 +1,17 @@
 package com.ticket4u.controller;
 
+import com.ticket4u.constant.TokenConstants;
 import com.ticket4u.dto.session.SessionResponse;
 import com.ticket4u.entity.CustomUserDetails;
 import com.ticket4u.service.SessionService;
 import com.ticket4u.util.AuthPrincipalUtil;
+import com.ticket4u.util.CookieUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 @Slf4j
 public class SessionController {
     private final SessionService sessionService;
+    private final CookieUtil cookieUtil;
 
     /**
      * GET /api/v1/sessions
@@ -29,10 +32,16 @@ public class SessionController {
      */
     @GetMapping
     public ResponseEntity<List<SessionResponse>> getCurrentUserSessions(
-            @AuthenticationPrincipal CustomUserDetails principal
+            @AuthenticationPrincipal CustomUserDetails principal,
+            HttpServletRequest request
     ) {
         UUID currentUserId = AuthPrincipalUtil.extractUserIdOrThrow(principal);
-        return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId));
+
+        String refreshToken = cookieUtil
+                .getCookie(request.getCookies(), TokenConstants.REFRESH_TOKEN.getCookieKey())
+                .orElse(null);
+
+        return ResponseEntity.ok(sessionService.getSessionsByUserId(currentUserId, refreshToken));
     }
 
     /**

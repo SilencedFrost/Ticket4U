@@ -635,16 +635,52 @@
     padding: 10px 12px 12px;
 }
 
-.confirm-paid-btn {
-    margin: 0;
+.payment-pending-bar {
+    min-height: 48px;
     width: 100%;
-    height: 48px;
-    border: 0;
     border-radius: 10px;
-    background: #ffffff;
-    color: #111111;
-    font-weight: 700;
-    font-size: 1.1rem;
+    border: 1px solid rgba(122, 132, 165, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: #f6f8ff;
+}
+
+.payment-pending-spinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-top-color: rgb(var(--bs-warning-rgb));
+    border-right-color: rgb(var(--bs-warning-rgb));
+    flex-shrink: 0;
+    animation: payment-pending-spin 0.9s linear infinite;
+}
+
+.payment-pending-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.payment-pending-copy strong {
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.payment-pending-copy span {
+    font-size: 0.85rem;
+    color: #cfd6ea;
+    line-height: 1.2;
+}
+
+@keyframes payment-pending-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 [data-bs-theme='light'] .flip-payment-page {
@@ -857,7 +893,7 @@
     }
 
     .sepay-header {
-        display: none;
+        display: none !important;
     }
 
     .sepay-timer {
@@ -865,10 +901,18 @@
         flex-direction: row;
         gap: 8px;
         padding: max(10px, env(safe-area-inset-top)) 12px 10px;
+        border-top: 1px solid rgba(122, 132, 165, 0.22);
+        background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(10, 10, 10, 0.94) 100%);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
     }
 
     .sepay-timer-main {
         min-width: 0;
+    }
+
+    .sepay-timer-main>span {
+        font-size: 0.98rem;
+        line-height: 1.2;
     }
 
     .sepay-warning {
@@ -890,9 +934,23 @@
         padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
     }
 
-    .confirm-paid-btn {
-        height: 44px;
-        font-size: 1rem;
+    .payment-pending-bar {
+        min-height: 44px;
+        padding: 9px 10px;
+    }
+
+    .payment-pending-spinner {
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+    }
+
+    .payment-pending-copy strong {
+        font-size: 0.95rem;
+    }
+
+    .payment-pending-copy span {
+        font-size: 0.8rem;
     }
 }
 
@@ -905,8 +963,7 @@
         opacity: 0.9;
     }
 
-    .pay-btn:hover:enabled,
-    .confirm-paid-btn:hover {
+    .pay-btn:hover:enabled {
         filter: brightness(0.98);
     }
 }

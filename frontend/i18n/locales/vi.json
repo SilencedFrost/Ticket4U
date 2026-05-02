@@ -416,7 +416,9 @@
       "copy": "Sao chép",
       "note_title": "Lưu ý:",
       "note_line_1": "Vui lòng chuyển chính xác số tiền.",
-      "confirm_paid": "Xác nhận đã thanh toán"
+      "confirm_paid": "Xác nhận đã thanh toán",
+      "pending_title": "Đang kiểm tra giao dịch",
+      "pending_subtitle": "Hệ thống sẽ tự chuyển sang thanh toán thành công khi webhook xác nhận."
     }
   },
   "categories": {

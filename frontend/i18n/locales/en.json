@@ -416,7 +416,9 @@
       "copy": "Copy",
       "note_title": "Note:",
       "note_line_1": "Please transfer the exact amount.",
-      "confirm_paid": "Confirm payment completed"
+      "confirm_paid": "Confirm payment completed",
+      "pending_title": "Checking transaction",
+      "pending_subtitle": "The system will automatically switch to payment success once the webhook confirms it."
     }
   },
   "categories": {

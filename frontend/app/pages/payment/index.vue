@@ -333,10 +333,6 @@ function closePaymentPopup() {
   paymentSuccessHandled.value = false;
 }
 
-function confirmPaid() {
-  showSepayPopup.value = false;
-}
-
 async function copyValue(value: string) {
   if (!import.meta.client || !navigator.clipboard) {
     return;
@@ -797,14 +793,13 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="sepay-footer">
-          <button
-            type="button"
-            class="confirm-paid-btn"
-            :disabled="sepayLoading"
-            @click="confirmPaid"
-          >
-            {{ sepayLoading ? 'Please wait...' : $t('payment_mockup.popup.confirm_paid') }}
-          </button>
+          <div class="payment-pending-bar" role="status" aria-live="polite">
+            <span class="payment-pending-spinner" aria-hidden="true"></span>
+            <div class="payment-pending-copy">
+              <strong>{{ $t('payment_mockup.popup.pending_title') }}</strong>
+              <span>{{ $t('payment_mockup.popup.pending_subtitle') }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,11 @@ type CheckoutEvent = {
   date: string;
   time: string;
   venue: string;
+  bannerUrl?: {
+    wide: string;
+    square: string;
+    tall: string;
+  };
 };
 
 type CheckoutCartItem = {

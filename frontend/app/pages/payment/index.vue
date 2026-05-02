@@ -181,6 +181,10 @@ const clearCountdownInterval = () => {
   }
 };
 
+const eventThumbnailUrl = computed(() => {
+  return checkoutStore.checkoutSession?.event.bannerUrl?.square || '';
+});
+
 const fullNameErrorKey = computed(() =>
   fullName.value.trim().length === 0 ? 'auth.error.blank.full_name' : '',
 );
@@ -440,7 +444,10 @@ onBeforeUnmount(() => {
             <article ref="eventPanelRef" class="card payment-card event-panel">
               <img
                 class="event-thumb"
-                src="https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop"
+                :src="
+                  eventThumbnailUrl ||
+                  'https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=280&h=180&fit=crop'
+                "
                 :alt="$t('payment_mockup.event.image_alt')"
               />
               <div class="event-meta">

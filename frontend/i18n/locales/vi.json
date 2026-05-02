@@ -106,7 +106,6 @@
     "tickets": "Vé",
     "organizer": "Ban tổ chức",
     "contact": "Liên hệ",
-    "follow_us": "Theo dõi chúng tôi",
     "about_us": "Về chúng tôi",
     "see": {
       "more": "Xem thêm",
@@ -158,9 +157,29 @@
   },
   "brand": {
     "name": "Ticket4U",
-    "motto": "Nền tảng bán vé ưu tiên khách hàng",
-    "description": "Ticket4U là nền tảng tối ưu cho việc tìm kiếm và đặt vé sự kiện. Từ hòa nhạc đến hội thảo, chúng tôi mang đến những trải nghiệm tốt nhất trong tầm tay bạn. Hãy tham gia cùng hàng ngàn tín đồ sự kiện hôm nay.",
-    "copyright": "© 2026 Ticket4U. Bản quyền thuộc về Ticket4U."
+    "motto": "Nền tảng bán vé ưu tiên khách hàng"
+  },
+  "footer": {
+    "partners": "Đối tác",
+    "menu": {
+      "all_events": "Tất cả sự kiện",
+      "popular_events": "Sự kiện nổi bật",
+      "upcoming_events": "Sự kiện sắp diễn ra",
+      "nearby_events": "Sự kiện gần bạn",
+      "free_events": "Sự kiện miễn phí",
+      "our_story": "Câu chuyện",
+      "team": "Đội ngũ",
+      "careers": "Tuyển dụng",
+      "press_media": "Báo chí & Truyền thông",
+      "become_partner": "Trở thành đối tác",
+      "sponsorship": "Tài trợ",
+      "partner_directory": "Danh bạ đối tác",
+      "partner_login": "Đăng nhập đối tác"
+    },
+    "links": {
+      "privacy_policy": "Chính sách bảo mật",
+      "terms_of_use": "Điều khoản sử dụng"
+    }
   },
   "search": {
     "results_for": "Kết quả cho",

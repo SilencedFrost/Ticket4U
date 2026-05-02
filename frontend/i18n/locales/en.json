@@ -106,7 +106,6 @@
     "tickets": "Tickets",
     "organizer": "Organizer",
     "contact": "Contact us",
-    "follow_us": "Follow Us",
     "about_us": "About Us",
     "see": {
       "more": "See more",
@@ -158,9 +157,29 @@
   },
   "brand": {
     "name": "Ticket4U",
-    "motto": "Customer-first ticketing platform",
-    "description": "Ticket4U is your ultimate platform for discovering and booking events. From concerts to conferences, we bring you the best experiences at your fingertips. Join thousands of event enthusiasts today.",
-    "copyright": "© 2026 Ticket4U. All rights reserved."
+    "motto": "Customer-first ticketing platform"
+  },
+  "footer": {
+    "partners": "Partners",
+    "menu": {
+      "all_events": "All Events",
+      "popular_events": "Popular Events",
+      "upcoming_events": "Upcoming Events",
+      "nearby_events": "Nearby Events",
+      "free_events": "Free Events",
+      "our_story": "Our Story",
+      "team": "Team",
+      "careers": "Careers",
+      "press_media": "Press & Media",
+      "become_partner": "Become a Partner",
+      "sponsorship": "Sponsorship",
+      "partner_directory": "Partner Directory",
+      "partner_login": "Partner Login"
+    },
+    "links": {
+      "privacy_policy": "Privacy Policy",
+      "terms_of_use": "Terms of Use"
+    }
   },
   "search": {
     "results_for": "Results for",

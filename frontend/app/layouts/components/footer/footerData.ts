@@ -21,9 +21,9 @@ type FooterContactSection = {
 export type FooterSection = FooterLinksSection | FooterContactSection;
 
 export const FOOTER_CONTACT = {
-  phoneLabelKey: 'footer.labels.phone',
+  phoneLabelKey: 'common.phone',
   phoneText: '0912 345 678',
-  emailLabelKey: 'footer.labels.email',
+  emailLabelKey: 'common.email',
   email: 'supportagent@gmail.com',
 } as const;
 

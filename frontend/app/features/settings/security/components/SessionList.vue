@@ -86,11 +86,12 @@ onMounted(() => {
           'border-bottom border-secondary-subtle border-opacity-25': index < sessions.length - 1,
         }"
       >
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 d-flex flex-column align-items-start gap-1">
           <code class="text-primary fw-bold">
             #{{ session.displayId.toUpperCase() }}
           </code>
           <!-- TODO: hiển thị badge "Thiết bị này" nếu session.isCurrent === true -->
+
         </div>
 
         <div class="flex-fill">
@@ -107,12 +108,21 @@ onMounted(() => {
             {{ $t('settings.security.sessions.columns.last_access') }}:
             {{ $d(new Date(session.updatedAt), 'short') }}
           </div>
+
+          <span
+            v-if="session.isCurrent"
+            class="badge bg-primary text-dark small">
+              {{ $t('settings.security.sessions.current_device') }}
+          </span>
+
         </div>
         <div>
           <button
             type="button"
             class="btn btn-link p-0 text-decoration-underline small text-clickable"
-            :disabled="deletingIds.has(session.displayId)"
+            :class="session.isCurrent ? 'text-reactive-secondary pe-none' : 'text-clickable'"
+            :disabled="deletingIds.has(session.displayId) || session.isCurrent"
+            :title="session.isCurrent ? $t('settings.security.sessions.cannot_remove_current') : undefined"
             @click="removeSession(session.displayId)"
           >
             {{ $t('common.action.remove') }}

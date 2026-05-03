@@ -303,7 +303,9 @@
         "columns": {
           "last_access": "Lần truy cập cuối"
         },
-        "unknown_device": "Thiết bị không xác định"
+        "unknown_device": "Thiết bị không xác định",
+        "current_device": "Thiết bị này",
+        "cannot_remove_current": "Không thể xóa phiên hiện tại"
       }
     },
     "preferences": {

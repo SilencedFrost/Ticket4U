@@ -3,6 +3,7 @@ package com.ticket4u.mapper;
 import com.ticket4u.dto.session.SessionResponse;
 import com.ticket4u.entity.Session;
 import com.ticket4u.util.HashUtil;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -18,6 +19,7 @@ import java.util.List;
 public interface SessionMapper {
 
     @Mapping(target = "displayId", source = "id", qualifiedByName = "toHashId")
-    SessionResponse toDTO(Session session);
+    @Mapping(target = "isCurrent", expression = "java(isCurrent)")
+    SessionResponse toDTO(Session session, @Context boolean isCurrent);
 
 }

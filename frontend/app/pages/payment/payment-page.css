@@ -211,27 +211,29 @@
     line-height: 1.45;
 }
 
-.ticket-note i {
-    margin-right: 6px;
-    color: #aeb7cf;
+.ticket-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    min-height: 46px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.2);
 }
 
-.method-single {
-    min-height: 42px;
-    border-radius: 10px;
-    border: 1px solid rgba(139, 149, 176, 0.36);
-    background: rgba(255, 255, 255, 0.05);
-    color: #ecf0ff;
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    font-weight: 600;
+.ticket-header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    padding: 4px 6px 8px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+    background: rgba(17, 17, 17, 0.96);
 }
 
-.time-boxes {
-    display: flex;
+/* display: flex;
     align-items: center;
     gap: 6px;
-}
+} */
 
 .time-cell {
     width: 42px;
@@ -309,7 +311,7 @@
 
 .ticket-row {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
     gap: 8px;
     min-height: 46px;
     align-items: center;
@@ -319,7 +321,7 @@
 
 .ticket-header {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
     gap: 8px;
     padding: 4px 6px 8px 0;
     border-bottom: 1px solid rgba(122, 132, 165, 0.28);
@@ -337,6 +339,19 @@
     font-size: 1.05rem;
     line-height: 1.2;
     font-weight: 600;
+}
+
+/* Prevent the right-most column from wrapping and keep prices aligned */
+.ticket-cell:last-child {
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Ensure header's right column matches alignment */
+.ticket-header small:last-child {
+    white-space: nowrap;
+    text-align: right;
+    display: block;
 }
 
 .promo-wrap {

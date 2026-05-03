@@ -357,7 +357,6 @@ async function openPaymentPopup() {
 
     // show modal only when we have a valid response
     showSepayPopup.value = true;
-    startCountdown();
     // fetch initial status and start polling
     await fetchSepayStatus(true);
     setupSepayPolling();
@@ -373,7 +372,6 @@ async function openPaymentPopup() {
 function closePaymentPopup() {
   showSepayPopup.value = false;
   clearSepayPolling();
-  clearCountdownInterval();
   paymentSuccessHandled.value = false;
 }
 
@@ -449,6 +447,8 @@ onMounted(() => {
 
   syncTopPanelsHeight();
   void prefillReceiverInfo();
+  // Start the mock countdown immediately when the page loads
+  startCountdown();
 });
 
 onBeforeUnmount(() => {
@@ -500,6 +500,76 @@ onBeforeUnmount(() => {
                 <p class="event-address">
                   {{ checkoutStore.checkoutSession.event.venue }}
                 </p>
+              </div>
+            </article>
+
+            <article class="card payment-card order-panel">
+              <h2 class="panel-title">
+                {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
+              </h2>
+
+              <div class="ticket-header">
+                <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
+                <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
+              </div>
+              <div class="ticket-scroll">
+                <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
+                  <div class="ticket-cell">{{ ticket.ticket_type }}</div>
+                  <div class="ticket-cell">{{ ticket.zone_name }}</div>
+                  <div class="ticket-cell">{{ ticket.seat_name }}</div>
+                  <div class="ticket-cell">{{ formatPrice(ticket.base_price, 'VND') }}</div>
+                </div>
+              </div>
+
+              <div class="promo-wrap">
+                <input
+                  v-model="promoCode"
+                  type="text"
+                  class="promo-input"
+                  :placeholder="$t('payment_mockup.ticket_info.promo_placeholder')"
+                />
+                <button class="promo-btn" type="button">
+                  {{ $t('payment_mockup.ticket_info.apply') }}
+                </button>
+              </div>
+
+              <div class="total-line d-flex justify-content-between align-items-baseline">
+                <strong>{{ $t('payment_mockup.checkout.total') }}</strong>
+                <strong class="total-amount">{{ formatPrice(total, 'VND') }}</strong>
+              </div>
+
+              <label class="policy-check d-inline-flex align-items-center gap-2">
+                <input v-model="agreedPolicy" type="checkbox" />
+                {{ $t('payment_mockup.checkout.agree_policy') }}
+              </label>
+
+              <button class="pay-btn" type="button" :disabled="!canPay" @click="openPaymentPopup">
+                {{ $t('payment_mockup.checkout.pay') }}
+              </button>
+
+              <p v-if="errorHintKey" class="error-line">{{ $t(errorHintKey) }}</p>
+            </article>
+
+            <article class="card payment-card policy-panel">
+              <h2 class="panel-title">{{ $t('payment_mockup.policy.title') }}</h2>
+              <p class="policy-text">
+                {{ $t('payment_mockup.policy.content') }}
+              </p>
+            </article>
+          </section>
+
+          <section class="right-col">
+            <article
+              class="card payment-card hold-panel d-flex flex-column align-items-center"
+              :style="holdPanelStyle"
+            >
+              <h2 class="panel-title center">Ticket hold time remaining</h2>
+              <div class="time-boxes">
+                <div class="time-cell">{{ minuteBox }}</div>
+                <span class="time-dot">:</span>
+                <div class="time-cell">{{ secondBox }}</div>
               </div>
             </article>
 
@@ -580,76 +650,6 @@ onBeforeUnmount(() => {
               </div>
             </article>
           </section>
-
-          <section class="right-col">
-            <article
-              class="card payment-card hold-panel d-flex flex-column align-items-center"
-              :style="holdPanelStyle"
-            >
-              <h2 class="panel-title center">{{ $t('payment_mockup.timer.title') }}</h2>
-              <div class="time-boxes">
-                <div class="time-cell">{{ minuteBox }}</div>
-                <span class="time-dot">:</span>
-                <div class="time-cell">{{ secondBox }}</div>
-              </div>
-            </article>
-
-            <article class="card payment-card policy-panel">
-              <h2 class="panel-title">{{ $t('payment_mockup.policy.title') }}</h2>
-              <p class="policy-text">
-                {{ $t('payment_mockup.policy.content') }}
-              </p>
-            </article>
-
-            <article class="card payment-card order-panel">
-              <h2 class="panel-title">
-                {{ $t('payment_mockup.ticket_info.title', { count: tickets.length }) }}
-              </h2>
-
-              <div class="ticket-header">
-                <small>{{ $t('payment_mockup.ticket_info.columns.ticket_type') }}</small>
-                <small>{{ $t('payment_mockup.ticket_info.columns.zone_name') }}</small>
-                <small>{{ $t('payment_mockup.ticket_info.columns.seat_name') }}</small>
-                <small>{{ $t('payment_mockup.ticket_info.columns.base_price') }}</small>
-              </div>
-              <div class="ticket-scroll">
-                <div v-for="(ticket, index) in tickets" :key="index" class="ticket-row">
-                  <div class="ticket-cell">{{ ticket.ticket_type }}</div>
-                  <div class="ticket-cell">{{ ticket.zone_name }}</div>
-                  <div class="ticket-cell">{{ ticket.seat_name }}</div>
-                  <div class="ticket-cell">{{ formatPrice(ticket.base_price, 'VND') }}</div>
-                </div>
-              </div>
-
-              <div class="promo-wrap">
-                <input
-                  v-model="promoCode"
-                  type="text"
-                  class="promo-input"
-                  :placeholder="$t('payment_mockup.ticket_info.promo_placeholder')"
-                />
-                <button class="promo-btn" type="button">
-                  {{ $t('payment_mockup.ticket_info.apply') }}
-                </button>
-              </div>
-
-              <div class="total-line d-flex justify-content-between align-items-baseline">
-                <strong>{{ $t('payment_mockup.checkout.total') }}</strong>
-                <strong class="total-amount">{{ formatPrice(total, 'VND') }}</strong>
-              </div>
-
-              <label class="policy-check d-inline-flex align-items-center gap-2">
-                <input v-model="agreedPolicy" type="checkbox" />
-                {{ $t('payment_mockup.checkout.agree_policy') }}
-              </label>
-
-              <button class="pay-btn" type="button" :disabled="!canPay" @click="openPaymentPopup">
-                {{ $t('payment_mockup.checkout.pay') }}
-              </button>
-
-              <p v-if="errorHintKey" class="error-line">{{ $t(errorHintKey) }}</p>
-            </article>
-          </section>
         </main>
       </div>
     </div>
@@ -680,7 +680,7 @@ onBeforeUnmount(() => {
 
         <div class="sepay-timer">
           <div class="sepay-timer-main">
-            <span>{{ $t('payment_mockup.timer.title') }}</span>
+            <span>Ticket hold time remaining</span>
             <div class="time-boxes compact">
               <div class="time-cell">{{ minuteBox }}</div>
               <span class="time-dot">:</span>

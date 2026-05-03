@@ -106,6 +106,7 @@
     "tickets": "Tickets",
     "organizer": "Organizer",
     "contact": "Contact us",
+    "about_us": "About Us",
     "see": {
       "more": "See more",
       "less": "See less"
@@ -158,6 +159,28 @@
   "brand": {
     "name": "Ticket4U",
     "motto": "Customer-first ticketing platform"
+  },
+  "footer": {
+    "partners": "Partners",
+    "menu": {
+      "all_events": "All Events",
+      "popular_events": "Popular Events",
+      "upcoming_events": "Upcoming Events",
+      "nearby_events": "Nearby Events",
+      "free_events": "Free Events",
+      "our_story": "Our Story",
+      "team": "Team",
+      "careers": "Careers",
+      "press_media": "Press & Media",
+      "become_partner": "Become a Partner",
+      "sponsorship": "Sponsorship",
+      "partner_directory": "Partner Directory",
+      "partner_login": "Partner Login"
+    },
+    "links": {
+      "privacy_policy": "Privacy Policy",
+      "terms_of_use": "Terms of Use"
+    }
   },
   "search": {
     "results_for": "Results for",
@@ -310,7 +333,7 @@
     },
     "preferences": {
       "title": "Preferences",
-      "subtitle": "Customize your workspace environment.",  
+      "subtitle": "Customize your workspace environment.",
       "appearance": {
         "title": "Appearance",
         "subtitle": "Customize how the application looks.",

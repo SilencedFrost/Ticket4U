@@ -90,13 +90,14 @@ onClickOutside(menuContainer, () => {
         <!-- Function buttons -->
         <div class="d-flex align-items-center ms-auto">
           <!-- Ticket button -->
-          <div
+          <nuxt-link-locale
             v-if="useUser.isLoggedIn === true"
-            class="d-flex text-clickable pe-2 border-end border-2"
+            :to="'/tickets'"
+            class="d-flex text-clickable pe-2 border-end border-2 text-decoration-none text-reactive-primary"
           >
             <i class="bi bi-ticket" />
             <span class="d-none d-sm-flex ms-2">{{ $t('common.tickets') }}</span>
-          </div>
+          </nuxt-link-locale>
           <!-- Language switching -->
           <div class="d-none d-md-flex ms-2 pe-2 border-end border-2 position-relative">
             <div class="d-flex flex-column">

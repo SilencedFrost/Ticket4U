@@ -221,12 +221,6 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
-
-              <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
-                <NuxtLink class="btn btn-primary fw-semibold" to="/">{{
-                  $t('payment.success.home_button')
-                }}</NuxtLink>
-              </div>
             </div>
           </div>
         </div>

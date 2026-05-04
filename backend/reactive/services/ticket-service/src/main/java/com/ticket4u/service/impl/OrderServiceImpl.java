@@ -9,6 +9,7 @@ import com.ticket4u.dto.TicketResponse;
 import com.ticket4u.entity.Order;
 import com.ticket4u.entity.Ticket;
 import com.ticket4u.exception.OrderNotFoundException;
+import com.ticket4u.exception.SeatAlreadyBookedException;
 import com.ticket4u.mapper.OrderMapper;
 import com.ticket4u.mapper.TicketMapper;
 import com.ticket4u.repository.OrderRepository;
@@ -43,6 +44,22 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createOrderFromCart(UUID userId, CreateCartOrderRequest request) {
         log.debug("Creating cart order. userId={}, email={}, ticketCount={}", userId, request.email(),
                 request.tickets().size());
+
+        UUID eventId = parseRequiredUuid(request.eventId(), "eventId");
+
+        // Validate seat availability before creating order
+        for (CreateCartOrderTicketRequest ticketRequest : request.tickets()) {
+            UUID seatId = resolveSeatId(ticketRequest.seatId(), ticketRequest.seatName(), ticketRequest.zoneId());
+
+            // Check if seat already has an ACTIVE ticket
+            if (ticketRepository.findActiveTicketBySeatId(eventId, seatId).isPresent()) {
+                throw new SeatAlreadyBookedException(ticketRequest.seatName());
+            }
+
+            log.debug("Seat validation passed. eventId={}, seatId={}, seatName={}",
+                    eventId, seatId, ticketRequest.seatName());
+        }
+
         OffsetDateTime now = OffsetDateTime.now();
 
         Order order = new Order();
@@ -63,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
         for (CreateCartOrderTicketRequest ticketRequest : request.tickets()) {
             Ticket ticket = new Ticket();
             ticket.setOrder(savedOrder);
-            ticket.setEventId(parseRequiredUuid(request.eventId(), "eventId"));
+            ticket.setEventId(eventId);
             ticket.setEventName(request.eventName().trim());
             ticket.setSeatId(resolveSeatId(ticketRequest.seatId(), ticketRequest.seatName(), ticketRequest.zoneId()));
             ticket.setSeatName(ticketRequest.seatName().trim());
@@ -116,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public InternalOrderPaymentSnapshotResponse confirmPayment(UUID orderId,
             InternalOrderPaymentConfirmationRequest request) {
         Order order = findOrder(orderId);
@@ -131,7 +149,13 @@ public class OrderServiceImpl implements OrderService {
         order.setPurchasedAt(request.paidAt());
         order.setUpdatedAt(OffsetDateTime.now());
 
-        return toPaymentSnapshot(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+
+        // Update all tickets status to ACTIVE when payment is confirmed
+        ticketRepository.updateStatusByOrderId(orderId, "ACTIVE");
+        log.debug("Updated ticket status to ACTIVE for orderId={}", orderId);
+
+        return toPaymentSnapshot(savedOrder);
     }
 
     private Order findOrder(UUID orderId) {

@@ -2,6 +2,7 @@
 import EventHeroCarousel from '~/features/event/components/layout/EventHeroCarousel.vue';
 import EventSection from './layout/EventSection.vue';
 import EventGrid from '~/features/event/components/layout/EventGrid.vue';
+import LocationPermissionPopup from '~/components/LocationPermissionPopup.vue';
 import { useEventApi } from '~/features/event/composables/useEventApi';
 import { useCategoryApi } from '~/features/event/composables/useCategoryApi';
 
@@ -26,9 +27,16 @@ const sectionList = computed(() => {
 const handleEventClick = (eventId: string) => {
   navigateTo(localePath(`/event/${eventId}`));
 };
+
+onMounted(async () => {
+  if (import.meta.client) {
+    await useLocation().initializeLocation();
+  }
+});
 </script>
 
 <template>
+  <location-permission-popup />
   <div id="homepage-container" class="d-flex flex-column" style="gap: 0.5rem">
     <div id="hero" class=""><!-- Todo: add hero --></div>
     <div id="event-display" class="container-xl">

@@ -22,8 +22,8 @@ const handleDeny = () => {
       aria-labelledby="location-modal-title"
       @click.self="handleDeny"
     >
-      <div class="modal-dialog modal-dialog-centered shadow-sm">
-        <div class="modal-content border-0 rounded-4 overflow-hidden w-75 mx-auto">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden w-75 mx-auto shadow-sm">
           <div class="ratio ratio-16x9">
             <shimmer-img :src="'https://cdn.ticket4u.uk/image/upload/city-map_cqjpt1.jpg'" />
           </div>

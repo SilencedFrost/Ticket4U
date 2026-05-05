@@ -65,7 +65,7 @@ watch(
           @event-click="handleEventClick"
         />
       </template>
-      <template v-if="locationalEvents">
+      <template v-if="locationalEvents && locationalEvents.length > 0">
         <event-section
           :events="locationalEvents"
           :title="$t('homepage.section.near_you')"

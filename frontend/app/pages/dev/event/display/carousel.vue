@@ -5,6 +5,7 @@ import EventCarousel from '~/features/event/components/layout/EventCarousel.vue'
 const config = useRuntimeConfig();
 const eventList = ref<EventSummary[]>([]);
 const width = ref<number>(100);
+const logger = useLogger();
 
 async function getFeaturedEvents() {
   try {
@@ -12,7 +13,7 @@ async function getFeaturedEvents() {
       method: 'GET',
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     eventList.value = [];
   }
 }

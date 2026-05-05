@@ -1,3 +1,4 @@
+// TODO: Add null fallback if possible
 export default defineI18nConfig(() => ({
   legacy: false,
   locale: 'en',

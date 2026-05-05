@@ -4,6 +4,7 @@ import EventHeroCarousel from '~/features/event/components/layout/EventHeroCarou
 
 const config = useRuntimeConfig();
 const eventList = ref<EventSummary[]>([]);
+const logger = useLogger();
 
 async function getFeaturedEvents() {
   try {
@@ -11,7 +12,7 @@ async function getFeaturedEvents() {
       method: 'GET',
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     eventList.value = [];
   }
 }

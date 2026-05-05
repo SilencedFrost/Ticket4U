@@ -479,7 +479,8 @@
   "homepage": {
     "section": {
       "popular": "Popular",
-      "near_you": "Near you"
+      "near_you": "Near you",
+      "other": "Other events"
     }
   }
 }

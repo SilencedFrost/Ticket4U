@@ -32,9 +32,7 @@ const handleEventClick = (eventId: string) => {
 };
 
 onMounted(async () => {
-  if (import.meta.client) {
-    await initializeLocation();
-  }
+  await initializeLocation();
 });
 
 watch(
@@ -65,7 +63,7 @@ watch(
           @event-click="handleEventClick"
         />
       </template>
-      <template v-if="locationalEvents && locationalEvents.length > 0">
+      <template v-if="locationalEvents.length > 0">
         <event-section
           :events="locationalEvents"
           :title="$t('homepage.section.near_you')"
@@ -82,7 +80,7 @@ watch(
         />
       </template>
       <hr />
-      <h3 class="fw-bold mb-3">Other events</h3>
+      <h3 class="fw-bold mb-3">{{ $t('homepage.section.other') }}</h3>
       <event-grid :events="eventList.slice(9, 15)" @event-click="handleEventClick" />
     </div>
   </div>

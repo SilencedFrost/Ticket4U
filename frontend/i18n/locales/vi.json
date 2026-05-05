@@ -479,7 +479,8 @@
   "homepage": {
     "section": {
       "popular": "Phổ biến",
-      "near_you": "Gần bạn"
+      "near_you": "Gần bạn",
+      "other": "Sự kiện khác"
     }
   }
 }

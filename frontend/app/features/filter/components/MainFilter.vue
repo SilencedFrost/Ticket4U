@@ -22,6 +22,7 @@ const panelStyle: Record<string, string> = {
 
 const config = useRuntimeConfig();
 const { t, te } = useI18n();
+const logger = useLogger();
 
 const categoryList = ref<CategorySummary[]>([]);
 
@@ -124,7 +125,7 @@ async function getCategories() {
       method: 'GET',
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     categoryList.value = [];
   }
 }

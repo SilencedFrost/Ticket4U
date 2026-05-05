@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="T">
 import { useSwipe } from '@vueuse/core';
 
+// TODO: handle edge cases where carousel only has 1-2 elements
+
 interface ChevronConfig {
   height?: number;
   offset?: number;

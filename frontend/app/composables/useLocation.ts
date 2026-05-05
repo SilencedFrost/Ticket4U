@@ -15,6 +15,7 @@ const PERMISSION_MAX_AGE: Record<Exclude<LocationPermissionStatus, null>, number
 
 export function useLocation() {
   const isInitialized = useState<boolean>('location-initialized', () => false);
+  const logger = useLogger();
 
   const permissionCookie = useCookie<LocationPermissionStatus>(GEOLOCATION_PERMISSION_COOKIE_KEY, {
     path: '/',
@@ -26,8 +27,8 @@ export function useLocation() {
     () => permissionCookie.value ?? null,
   );
 
-  const latitude = ref<number | null>(null);
-  const longitude = ref<number | null>(null);
+  const latitude = useState<number | null>('location-latitude', () => null);
+  const longitude = useState<number | null>('location-longitude', () => null);
 
   const updatePermission = (status: LocationPermissionStatus) => {
     if (!import.meta.client) return;
@@ -50,8 +51,8 @@ export function useLocation() {
         (position) => {
           latitude.value = position.coords.latitude;
           longitude.value = position.coords.longitude;
-          console.log('Longitude:', longitude.value);
-          console.log('Latitude:', latitude.value);
+          logger.log('Longitude:', longitude.value);
+          logger.log('Latitude:', latitude.value);
           updatePermission('allowed');
           resolve('allowed');
         },
@@ -98,7 +99,7 @@ export function useLocation() {
         permissionStatus.value = null;
       }
     } catch (error) {
-      console.warn('Permissions API check skipped:', error);
+      logger.warn('Permissions API check skipped:', error);
       if (permissionCookie.value === null) {
         permissionStatus.value = null;
       }

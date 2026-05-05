@@ -5,6 +5,7 @@ import EventGrid from '@/features/event/components/layout/EventGrid.vue';
 const route = useRoute();
 const config = useRuntimeConfig();
 const localePath = useLocalePath();
+const logger = useLogger();
 
 const { data: eventList } = await useFetch<EventSummary[]>(
   () => `/public/events/${route.params.id}/related`,
@@ -13,7 +14,7 @@ const { data: eventList } = await useFetch<EventSummary[]>(
     key: `related-events-${route.params.id}`,
     default: () => [],
     onResponseError({ error }) {
-      console.error('Error loading related events:', error);
+      logger.error('Error loading related events:', error);
     },
   },
 );

@@ -4,7 +4,24 @@ import type { HttpMethod } from '~/types/http-method';
 
 export const useEventApi = () => {
   const config = useRuntimeConfig();
+  const logger = useLogger();
   const api = config.public.eventServiceUrl;
+
+  async function getEvent(
+    url: string,
+    query: UseFetchOptions<EventSummary[]>['query'],
+    method: HttpMethod = 'GET',
+  ): Promise<EventSummary[]> {
+    try {
+      return await $fetch(`${api}/public/events${url ? '/' + url : ''}`, {
+        query,
+        method,
+      });
+    } catch (e) {
+      logger.error(e);
+    }
+    return [];
+  }
 
   function useEvent(
     url: string,
@@ -24,5 +41,13 @@ export const useEventApi = () => {
     return useEvent('featured', `events-featured-${limit}`, { limit });
   }
 
-  return { useFeaturedEvents };
+  async function getLocationEvents(
+    longitude: number | null,
+    latitude: number | null,
+  ): Promise<EventSummary[]> {
+    if (longitude && latitude) return await getEvent('locational', { longitude, latitude }, 'GET');
+    return [];
+  }
+
+  return { useFeaturedEvents, getLocationEvents };
 };

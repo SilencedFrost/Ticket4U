@@ -3,6 +3,7 @@ import EventGrid from '~/features/event/components/layout/EventGrid.vue';
 import type { EventSummary } from '~/features/event/types/Event';
 
 const config = useRuntimeConfig();
+const logger = useLogger();
 
 const eventList = ref<EventSummary[]>([]);
 
@@ -12,7 +13,7 @@ async function getFeaturedEvents() {
       method: 'GET',
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     eventList.value = [];
   }
 }

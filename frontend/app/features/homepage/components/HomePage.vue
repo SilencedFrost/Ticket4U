@@ -5,12 +5,13 @@ import EventGrid from '~/features/event/components/layout/EventGrid.vue';
 import LocationPermissionPopup from '~/components/LocationPermissionPopup.vue';
 import { useEventApi } from '~/features/event/composables/useEventApi';
 import { useCategoryApi } from '~/features/event/composables/useCategoryApi';
+import type { EventSummary } from '~/features/event/types/Event';
 
 const localePath = useLocalePath();
-const { useFeaturedEvents } = useEventApi();
-const { useRecommendedCategories } = useCategoryApi();
+const { useFeaturedEvents, getLocationEvents } = useEventApi();
 const { data: eventList } = useFeaturedEvents(15);
-const { data: recommendedCategories } = useRecommendedCategories(3);
+const { data: recommendedCategories } = useCategoryApi().useRecommendedCategories(3);
+const { longitude, latitude, initializeLocation } = useLocation();
 
 // TODO: add hero carousel displaying featured
 // TODO: add section displaying hot events
@@ -24,15 +25,25 @@ const sectionList = computed(() => {
   ];
 });
 
+const locationalEvents = ref<EventSummary[]>([]);
+
 const handleEventClick = (eventId: string) => {
   navigateTo(localePath(`/event/${eventId}`));
 };
 
 onMounted(async () => {
   if (import.meta.client) {
-    await useLocation().initializeLocation();
+    await initializeLocation();
   }
 });
+
+watch(
+  [longitude, latitude],
+  async ([lon, lat]) => {
+    locationalEvents.value = await getLocationEvents(lon, lat);
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -51,6 +62,14 @@ onMounted(async () => {
           :events="section.eventList"
           :title="$t(section.key)"
           :wrap-around="section.wrapAround"
+          @event-click="handleEventClick"
+        />
+      </template>
+      <template v-if="locationalEvents">
+        <event-section
+          :events="locationalEvents"
+          :title="$t('homepage.section.near_you')"
+          :wrap-around="true"
           @event-click="handleEventClick"
         />
       </template>

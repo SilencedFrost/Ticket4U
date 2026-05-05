@@ -65,8 +65,8 @@ public class EventController {
      */
     @GetMapping("/locational")
     public ResponseEntity<List<EventSummaryResponse>> getLocationalEvents(
-            @RequestParam(required = false) BigDecimal longitude,
-            @RequestParam(required = false) BigDecimal latitude,
+            @RequestParam BigDecimal longitude,
+            @RequestParam BigDecimal latitude,
             @RequestParam(defaultValue = "50") int limit
     ) {
         return ResponseEntity.ok(eventDomainService.getNearbyEvents(latitude, longitude, limit));

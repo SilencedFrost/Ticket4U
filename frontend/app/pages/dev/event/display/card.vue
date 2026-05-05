@@ -6,6 +6,7 @@ const config = useRuntimeConfig();
 
 const eventList = ref<EventSummary[]>([]);
 const colCount = ref<number>(1);
+const logger = useLogger();
 
 async function getFeaturedEvents() {
   try {
@@ -13,7 +14,7 @@ async function getFeaturedEvents() {
       method: 'GET',
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     eventList.value = [];
   }
 }

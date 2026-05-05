@@ -237,6 +237,41 @@ about_vi = '“Vọng Nguyệt Dạ Hành” là một hành trình kịch ngh�
 about_en = '“The Moonlit Promenade” is an immersive theatrical journey through space, leading the audience into the hidden corners of an ancient Saigon mansion. With no stage barriers, you will follow the characters to uncover secrets of heritage, love, and the ghosts of memory under the moonlight.'
 where name = 'Vọng Nguyệt Dạ Hành (The Moonlit Promenade)';
 
+-- Venue mapping
+
+UPDATE public.events e
+SET venue_id = v.id
+FROM (
+    VALUES
+        ('V-Glow: The Cyber-Heritage Night',                    'GEM Center'),
+        ('The Echo of An Nam',                                  'Nhà Hát Bến Thành'),
+        ('SÀI GÒN NEON BEATS: THE CYBER-FEST 2026',            'Gigamall Thủ Đức'),
+        ('CỔ NGHỆ KIÊU HÙNG',                                  'Sân Lễ Hội Đền Vua Đinh - Vua Lê'),
+        ('NEO-LUMINANCE: The Echo of Indochine',                'CIS Arena'),
+        ('Sắc Lam: The Indigo Echo',                            'Tinh Tế Cafe'),
+        ('CRYSTAL REALM: The Neon Garden',                      'Mây in The Nest'),
+        ('SẮT & SON',                                           'Dreamplex Điện Biên Phủ'),
+        ('Techno-Sorcery: The Zenith of AI & Robotics',        'GEM Center'),
+        ('Vũ Trụ Cận Thị',                                      'Gigamall Thủ Đức'),
+        ('THE DREAMCATCHER ARCHIPELAGO',                        'Công viên Yên Sở'),
+        ('KAIZEN: The Art of Precision',                        'CIS Arena'),
+        ('LUVIA: The Echo of Highlands',                        'Mây in The Nest'),
+        ('Scent of the Soul: The Echoes of Vietnam',            'Nhà Hát Bến Thành'),
+        ('Âm Sắc Việt - THE RESONANCE',                        'Tinh Tế Cafe'),
+        ('LẠC HỒNG FUTURE-BEATS 2026',                         'Khu đô thị Vạn Phúc'),
+        ('DI SẢN TRONG SƯƠNG | THE MISTY HERITAGE FESTIVAL',   'Sân Lễ Hội Đền Vua Đinh - Vua Lê'),
+        ('Splash & Spectrum 2026 / Sắc Màu Thủy Chiến',        'Công viên Yên Sở'),
+        ('NGUỒN RỰC RỠ | THE RADIANT ROOTS',                   'Khu đô thị Vạn Phúc'),
+        ('Global Harmony Fest: The Heritage of Partnerships',   'GEM Center'),
+        ('L''Écho de Soie (The Echo of Silk)',                  'Nhà Hát Bến Thành'),
+        ('VŨ KHÚC HỒ GƯƠM: THE LEGEND REBORN',                 'Công viên Yên Sở'),
+        ('Bóng Đêm Đô Thị: The Echoes of 1920',                'Dreamplex Điện Biên Phủ'),
+        ('ECHOES OF THE ANCIENT FUTURE | VANG VỌNG TIỀN KIẾP', 'CIS Arena'),
+        ('Vọng Nguyệt Dạ Hành (The Moonlit Promenade)',         'Mây in The Nest')
+) AS mapping(event_name, venue_name)
+JOIN public.venues v ON v.name = mapping.venue_name
+WHERE e.name = mapping.event_name;
+
 -- Terms and Conditions
 UPDATE public.events SET terms_and_conditions='Cấm trẻ em dưới 16 tuổi. Không mang chất cấm, vũ khí vào khu vực. Trang phục tự do.'
 WHERE name='V-Glow: The Cyber-Heritage Night';
@@ -299,8 +334,6 @@ UPDATE public.events SET policy_refund='Không hoàn tiền sau khi xác nhận 
 UPDATE public.events SET policy_refund='Không hoàn tiền sau khi mua vé.'                      WHERE name='LUVIA: The Echo of Highlands';
 UPDATE public.events SET policy_refund='Hoàn tiền 50% nếu hủy trước 5 ngày.'                  WHERE name='Scent of the Soul: The Echoes of Vietnam';
 UPDATE public.events SET policy_refund='Không hoàn tiền sau khi mua vé.'                      WHERE name='Âm Sắc Việt - THE RESONANCE';
-
-
 
 --4. Table: event_categories
 -- V-Glow: The Cyber-Heritage Night

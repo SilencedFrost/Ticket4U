@@ -31,7 +31,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
     private static final String COLLECTION = "events";
     // Self reference note: adding price data did not help with semantic retrieval
     private static final String PASSAGE_TEXT = "%s is an event in the %s categories%s on %s. %s";
-    private static final float SIMILARITY_THRESHOLD = 0.3f;
+    private static final float SIMILARITY_THRESHOLD = 0.125f;
 
     private String createPassage(EventResponse event) {
         String about = buildAboutPart(event.aboutEn(), event.aboutVi());
@@ -43,7 +43,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
                 event.categories().stream().map(CategorySummaryResponse::name).collect(Collectors.joining(", ")),
                 locationPart,
                 // TODO: add a helper to resolve date to weekday or weekend
-                event.startDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")),
+                event.startDate() != null ? event.startDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) : "an undefined date",
                 about
         );
     }
@@ -117,6 +117,7 @@ public class EventSemanticServiceImpl implements EventSemanticService {
             return;
         }
 
+        // TODO: add bulk support
         // Build passage map: UUID -> passage text
         Map<Object, String> passageMap = toProcess.stream()
                 .collect(Collectors.toMap(

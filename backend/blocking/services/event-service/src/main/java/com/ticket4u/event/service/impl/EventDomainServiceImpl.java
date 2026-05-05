@@ -234,7 +234,7 @@ public class EventDomainServiceImpl implements EventDomainService {
     @Override
     public List<EventSummaryResponse> searchEvents(String query, Pageable pageable) {
         // Get sorted IDs from AI service
-        List<UUID> eventIds = eventSemanticService.search(query, pageable, 0.05f);
+        List<UUID> eventIds = eventSemanticService.search(query, pageable);
         if (eventIds.isEmpty()) return List.of();
 
         // Fetch event data from the database

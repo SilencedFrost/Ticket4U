@@ -57,6 +57,8 @@ export default defineNuxtConfig({
       userHealthUrl: 'https://localhost:8080/health',
       ticketServiceUrl: 'https://localhost:8081/api/v1',
       ticketHealthUrl: 'https://localhost:8081/health',
+      paymentServiceUrl: 'https://localhost:8085/api/v1',
+      paymentHealthUrl: 'https://localhost:8085/health',
       eventServiceUrl: 'https://localhost:8083/api/v1',
       eventHealthUrl: 'https://localhost:8083/health',
       googleClientId: '',

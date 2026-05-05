@@ -372,6 +372,27 @@
       }
     }
   },
+  "payment": {
+    "success": {
+      "title": "Your transaction has been confirmed",
+      "subtitle": "The system has recorded the PAID status and completed the order confirmation.",
+      "order_id": "Order ID",
+      "order_code": "Order Code",
+      "transaction_id": "Transaction ID",
+      "amount": "Amount",
+      "event": "Event",
+      "venue": "Venue",
+      "tickets": "Total Tickets",
+      "ticket_list_title": "Purchased Tickets",
+      "ticket_list_subtitle": "All tickets from your current order.",
+      "table_ticket": "Ticket",
+      "table_zone": "Zone",
+      "table_type": "Type",
+      "table_price": "Price",
+      "no_tickets_error": "Could not retrieve ticket list from current payment session. If you just completed payment, go back to the checkout flow or verify your browser's checkout session.",
+      "home_button": "Home"
+    }
+  },
   "payment_mockup": {
     "validation": {
       "required_contact": "Please complete all required contact information",
@@ -441,7 +462,9 @@
       "copy": "Copy",
       "note_title": "Note:",
       "note_line_1": "Please transfer the exact amount.",
-      "confirm_paid": "Confirm payment completed"
+      "confirm_paid": "Confirm payment completed",
+      "pending_title": "Checking transaction",
+      "pending_subtitle": "The system will automatically switch to payment success once the webhook confirms it."
     }
   },
   "categories": {

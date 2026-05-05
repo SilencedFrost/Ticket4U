@@ -35,7 +35,8 @@ public class LayoutServiceImpl implements LayoutService {
     @Transactional(readOnly = true)
     public LayoutResponse getLayout(UUID sessionId) {
 
-        EventSession session = sessionRepository.findById(sessionId).orElseThrow(() -> new EventSessionNotFoundException(sessionId));
+        EventSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new EventSessionNotFoundException(sessionId));
 
         String layoutJson = resolveLayout(session.getEvent());
         List<ZoneResponse> zones = session.getZones().stream().map(zoneMapper::toDTO).toList();
@@ -52,8 +53,8 @@ public class LayoutServiceImpl implements LayoutService {
                     Map<String, String> zoneLinks = new HashMap<>();
                     JsonNode linksNode = node.path("zoneLinks");
                     if (linksNode.isObject()) {
-                        linksNode.properties().forEach(entry ->
-                                zoneLinks.put(entry.getKey(), entry.getValue().asText()));
+                        linksNode.properties()
+                                .forEach(entry -> zoneLinks.put(entry.getKey(), entry.getValue().asText()));
                     }
                     if (event.getVenue() != null && event.getVenue().getLayout() != null) {
                         List<Zone> sessionZones = event.getSessions().stream()
@@ -76,12 +77,14 @@ public class LayoutServiceImpl implements LayoutService {
     }
 
     private String injectZoneIds(String venueLayout, Map<String, String> zoneLinks,
-                                 List<Zone> sessionZones) {
-        if (zoneLinks.isEmpty()) return venueLayout;
+            List<Zone> sessionZones) {
+        if (zoneLinks.isEmpty())
+            return venueLayout;
         try {
             JsonNode root = objectMapper.readTree(venueLayout);
             Map<String, Zone> zoneById = new HashMap<>();
-            for (Zone z : sessionZones) zoneById.put(z.getId().toString(), z);
+            for (Zone z : sessionZones)
+                zoneById.put(z.getId().toString(), z);
             if (root.has("floors") && root.path("floors").isArray()) {
                 for (JsonNode floor : root.path("floors"))
                     injectZoneIdsIntoFloor(floor, zoneLinks, zoneById);
@@ -96,12 +99,14 @@ public class LayoutServiceImpl implements LayoutService {
     }
 
     private void injectZoneIdsIntoFloor(JsonNode floorNode, Map<String, String> zoneLinks,
-                                        Map<String, Zone> zoneById) {
+            Map<String, Zone> zoneById) {
         JsonNode zonesNode = floorNode.path("zones");
-        if (!zonesNode.isArray()) return;
+        if (!zonesNode.isArray())
+            return;
         for (JsonNode zone : zonesNode) {
             String zoneName = zone.path("zone_name").asText(null);
-            if (zoneName == null || !zoneLinks.containsKey(zoneName)) continue;
+            if (zoneName == null || !zoneLinks.containsKey(zoneName))
+                continue;
             String zoneId = zoneLinks.get(zoneName);
             ((ObjectNode) zone).put("zone_id", zoneId);
             Zone actual = zoneById.get(zoneId);

@@ -1,0 +1,1003 @@
+.flip-payment-page {
+    --page-pad: 12px;
+    --global-nav-offset: 72px;
+    min-height: 100dvh;
+    position: relative;
+    background:
+        radial-gradient(76% 40% at 50% -8%, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0) 70%),
+        linear-gradient(180deg, #111111 0%, #0b0b0b 100%);
+    padding-bottom: 16px;
+}
+
+.surface-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(55% 30% at 50% 0, rgba(var(--bs-primary-rgb), 0.18), transparent 74%);
+    pointer-events: none;
+}
+
+.shell-wrap {
+    position: relative;
+    z-index: 1;
+}
+
+.payment-shell {
+    max-width: 1020px;
+    height: calc(100dvh - var(--global-nav-offset));
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: var(--page-pad);
+}
+
+.payment-main {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1.35fr 0.95fr;
+    gap: 12px;
+    align-content: start;
+}
+
+.left-col,
+.right-col {
+    min-height: 0;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+.left-col {
+    grid-template-rows: auto auto auto;
+}
+
+.right-col {
+    grid-template-rows: auto auto auto;
+}
+
+.payment-card {
+    background: rgba(17, 17, 17, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: none;
+}
+
+.panel-title {
+    font-size: 1.25rem;
+    margin: 0 0 8px;
+    color: #f8f9ff;
+    font-weight: 700;
+}
+
+.panel-title.center {
+    text-align: center;
+}
+
+.panel-subtitle {
+    margin: 0;
+    color: #96a0ba;
+    font-size: 0.95rem;
+}
+
+.panel-divider {
+    border-color: rgba(122, 132, 165, 0.34);
+    margin: 10px 0;
+}
+
+.event-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.event-thumb {
+    width: 118px;
+    height: 78px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.event-meta {
+    min-width: 0;
+}
+
+.event-title {
+    margin: 0 0 6px;
+    color: #f4f7ff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.event-subline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #d3daf0;
+    font-size: 0.9rem;
+}
+
+.event-subline span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.event-address {
+    margin: 5px 0 0;
+    color: #a7b0c7;
+    font-size: 0.9rem;
+}
+
+.receiver-panel {
+    overflow: hidden;
+}
+
+.receiver-row {
+    display: grid;
+    grid-template-columns: 20px 1fr 26px;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 8px;
+}
+
+.receiver-row>i {
+    color: #aeb7cf;
+    padding-top: 3px;
+}
+
+.receiver-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.receiver-label {
+    color: #ced6ed;
+    font-size: 0.9rem;
+}
+
+.receiver-label b {
+    color: #ef5e66;
+}
+
+.receiver-col strong {
+    font-size: 1rem;
+    line-height: 1.3;
+    color: #f5f7ff;
+    word-break: break-word;
+}
+
+.receiver-error {
+    margin: 2px 0 0;
+    color: #ff5b64;
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+.receiver-optional {
+    font-style: normal;
+    margin-left: 4px;
+    color: #9aa7c8;
+    font-size: 0.82rem;
+}
+
+.inline-edit-input {
+    width: min(320px, 100%);
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(139, 148, 171, 0.42);
+    background: rgba(255, 255, 255, 0.04);
+    color: #e8edf9;
+    font-size: 1rem;
+    padding: 0 10px;
+}
+
+.icon-button {
+    border: 0;
+    background: transparent;
+    color: #d9dfef;
+    width: 26px;
+    height: 26px;
+}
+
+.ticket-note {
+    margin: 2px 0 0;
+    color: #dbe1f2;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.ticket-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    min-height: 46px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.2);
+}
+
+.ticket-header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    padding: 4px 6px 8px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+    background: rgba(17, 17, 17, 0.96);
+}
+
+/* display: flex;
+    align-items: center;
+    gap: 6px;
+} */
+
+.time-cell {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(150, 159, 186, 0.34);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f8fbff;
+}
+
+.time-dot {
+    color: #f3f5ff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transform: translateY(-2px);
+}
+
+.policy-text {
+    margin: 0;
+    color: #f0f4ff;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+@media (min-width: 992px) {
+    .policy-panel {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .policy-panel .panel-title {
+        margin-bottom: 6px;
+    }
+}
+
+.order-panel {
+    overflow: visible;
+    display: block;
+}
+
+.ticket-scroll {
+    max-height: 146px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-gutter: stable;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(204, 215, 242, 0.82) rgba(255, 255, 255, 0.12);
+}
+
+.ticket-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.ticket-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb {
+    background: rgba(204, 215, 242, 0.82);
+    border-radius: 999px;
+    border: 2px solid rgba(17, 17, 17, 0.96);
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb:active {
+    background: rgba(232, 239, 255, 0.96);
+}
+
+.ticket-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    min-height: 46px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.2);
+}
+
+.ticket-header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(140px, 1fr);
+    gap: 8px;
+    padding: 4px 6px 8px 0;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.28);
+    background: rgba(17, 17, 17, 0.96);
+}
+
+.ticket-header small {
+    color: #98a2bf;
+    font-size: 0.8rem;
+    display: block;
+}
+
+.ticket-cell {
+    color: #f7f8ff;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+/* Prevent the right-most column from wrapping and keep prices aligned */
+.ticket-cell:last-child {
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Ensure header's right column matches alignment */
+.ticket-header small:last-child {
+    white-space: nowrap;
+    text-align: right;
+    display: block;
+}
+
+.promo-wrap {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+
+.promo-input {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 148, 171, 0.42);
+    background: rgba(255, 255, 255, 0.02);
+    color: #e8edf9;
+    padding: 0 12px;
+    font-size: 1rem;
+}
+
+.promo-btn {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 148, 171, 0.42);
+    background: rgba(255, 255, 255, 0.07);
+    color: #cfd6ea;
+    padding: 0 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.total-line {
+    margin-top: 12px;
+    color: #f9fbff;
+    font-size: 1rem;
+}
+
+.total-amount {
+    font-size: 1.35rem;
+    line-height: 1.1;
+}
+
+.policy-check {
+    margin-top: 8px;
+    color: #edf1ff;
+    font-size: 0.9rem;
+}
+
+.policy-check input {
+    width: 16px;
+    height: 16px;
+}
+
+.pay-btn {
+    margin-top: 10px;
+    width: 100%;
+    height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111111;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.pay-btn:disabled {
+    opacity: 0.72;
+}
+
+.error-line {
+    margin: 8px 0 0;
+    color: #ff5b64;
+    font-size: 0.9rem;
+}
+
+.sepay-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.62);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+}
+
+.sepay-modal {
+    width: min(760px, 100%);
+    max-height: min(94dvh, 920px);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 14px;
+    background: #111111;
+    color: #f6f8ff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sepay-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.3);
+}
+
+.sepay-header-left {
+    font-size: 1.1rem;
+}
+
+.close-btn {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #f7f9ff;
+}
+
+.sepay-timer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.3);
+    font-size: 1rem;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.sepay-timer-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.timer-close-btn {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #f7f9ff;
+    flex-shrink: 0;
+}
+
+.sepay-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.time-boxes.compact .time-cell {
+    width: 40px;
+    height: 40px;
+    font-size: 1.05rem;
+}
+
+.sepay-warning {
+    margin: 14px 18px;
+    border-radius: 10px;
+    background: #f2df76;
+    color: #3f3100;
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    font-size: 1rem;
+}
+
+.sepay-warning i {
+    font-size: 1.15rem;
+    margin-top: 2px;
+}
+
+.sepay-warning p {
+    margin: 0;
+}
+
+.sepay-info-wrap {
+    padding: 8px 18px 0;
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 12px;
+}
+
+.qr-wrap {
+    border: 1px solid rgba(122, 132, 165, 0.3);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.qr-placeholder {
+    min-height: 230px;
+    border-radius: 8px;
+    border: 1px dashed rgba(122, 132, 165, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #cfd7ec;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.qr-placeholder i {
+    font-size: 2rem;
+}
+
+.qr-wrap img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: block;
+}
+
+.download-qr-btn {
+    width: 100%;
+    margin-top: 8px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(122, 132, 165, 0.3);
+    background: transparent;
+    color: #edf2ff;
+    font-size: 1rem;
+}
+
+.bank-info {
+    border: 1px solid rgba(122, 132, 165, 0.3);
+    border-radius: 12px;
+    padding: 8px 14px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+}
+
+.info-row {
+    min-height: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(122, 132, 165, 0.2);
+    gap: 12px;
+}
+
+.info-row:last-child {
+    border-bottom: 0;
+}
+
+.info-row span {
+    font-size: 1.05rem;
+    color: #d9dfef;
+}
+
+.info-row strong {
+    font-size: 1.05rem;
+    color: #f8fbff;
+}
+
+.content-preview {
+    display: inline-block;
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.info-row .text-primary {
+    color: rgb(var(--bs-primary-rgb)) !important;
+}
+
+.copy-icon-btn {
+    border: 0;
+    background: transparent;
+    color: #d9dfef;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+}
+
+.sepay-note {
+    margin: 14px 18px 0;
+    font-size: 1rem;
+}
+
+.sepay-note ul {
+    margin: 6px 0 0;
+    padding-left: 20px;
+}
+
+.sepay-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(122, 132, 165, 0.3);
+    padding: 10px 12px 12px;
+}
+
+.payment-pending-bar {
+    min-height: 48px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(122, 132, 165, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: #f6f8ff;
+}
+
+.payment-pending-spinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    border-top-color: rgb(var(--bs-warning-rgb));
+    border-right-color: rgb(var(--bs-warning-rgb));
+    flex-shrink: 0;
+    animation: payment-pending-spin 0.9s linear infinite;
+}
+
+.payment-pending-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.payment-pending-copy strong {
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.payment-pending-copy span {
+    font-size: 0.85rem;
+    color: #cfd6ea;
+    line-height: 1.2;
+}
+
+@keyframes payment-pending-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+[data-bs-theme='light'] .flip-payment-page {
+    background:
+        radial-gradient(76% 40% at 50% -8%, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%),
+        linear-gradient(180deg, #f7f9ff 0%, #eef2fb 100%);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-card,
+[data-bs-theme='light'] .flip-payment-page .sepay-modal {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(122, 132, 165, 0.24);
+    box-shadow: 0 10px 24px rgba(23, 32, 59, 0.08);
+}
+
+[data-bs-theme='light'] .flip-payment-page .panel-title,
+[data-bs-theme='light'] .flip-payment-page .event-title,
+[data-bs-theme='light'] .flip-payment-page .receiver-col strong,
+[data-bs-theme='light'] .flip-payment-page .method-single,
+[data-bs-theme='light'] .flip-payment-page .policy-text,
+[data-bs-theme='light'] .flip-payment-page .ticket-cell,
+[data-bs-theme='light'] .flip-payment-page .total-line,
+[data-bs-theme='light'] .flip-payment-page .policy-check,
+[data-bs-theme='light'] .flip-payment-page .sepay-header-left,
+[data-bs-theme='light'] .flip-payment-page .info-row strong,
+[data-bs-theme='light'] .flip-payment-page .time-dot,
+[data-bs-theme='light'] .flip-payment-page .sepay-note {
+    color: #1f2a40;
+}
+
+[data-bs-theme='light'] .flip-payment-page .panel-subtitle,
+[data-bs-theme='light'] .flip-payment-page .event-subline,
+[data-bs-theme='light'] .flip-payment-page .event-address,
+[data-bs-theme='light'] .flip-payment-page .receiver-label,
+[data-bs-theme='light'] .flip-payment-page .ticket-header small,
+[data-bs-theme='light'] .flip-payment-page .info-row span {
+    color: #4f5b77;
+}
+
+[data-bs-theme='light'] .flip-payment-page .inline-edit-input,
+[data-bs-theme='light'] .flip-payment-page .promo-input,
+[data-bs-theme='light'] .flip-payment-page .promo-btn,
+[data-bs-theme='light'] .flip-payment-page .method-single,
+[data-bs-theme='light'] .flip-payment-page .time-cell,
+[data-bs-theme='light'] .flip-payment-page .qr-wrap,
+[data-bs-theme='light'] .flip-payment-page .bank-info,
+[data-bs-theme='light'] .flip-payment-page .download-qr-btn,
+[data-bs-theme='light'] .flip-payment-page .close-btn,
+[data-bs-theme='light'] .flip-payment-page .timer-close-btn {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(122, 132, 165, 0.3);
+    color: #29334b;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-note,
+[data-bs-theme='light'] .flip-payment-page .ticket-note i,
+[data-bs-theme='light'] .flip-payment-page .receiver-row>i,
+[data-bs-theme='light'] .flip-payment-page .icon-button,
+[data-bs-theme='light'] .flip-payment-page .copy-icon-btn {
+    color: #516186;
+}
+
+[data-bs-theme='light'] .flip-payment-page .receiver-optional {
+    color: #5a6d94;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-header {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll {
+    scrollbar-color: rgba(64, 83, 126, 0.62) rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-track {
+    background: rgba(88, 106, 146, 0.18);
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-footer {
+    background: #f7f9ff;
+    border-top-color: rgba(122, 132, 165, 0.3);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-bar {
+    color: #1f2a40;
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(122, 132, 165, 0.3);
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-copy strong {
+    color: #1f2a40;
+}
+
+[data-bs-theme='light'] .flip-payment-page .payment-pending-copy span {
+    color: #4f5b77;
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb {
+    background: rgba(64, 83, 126, 0.62);
+    border: 2px solid rgba(255, 255, 255, 0.95);
+}
+
+[data-bs-theme='light'] .flip-payment-page .ticket-scroll::-webkit-scrollbar-thumb:active {
+    background: rgba(45, 64, 108, 0.74);
+}
+
+[data-bs-theme='light'] .flip-payment-page .pay-btn,
+[data-bs-theme='light'] .flip-payment-page .confirm-paid-btn {
+    background: rgb(var(--bs-primary-rgb));
+    color: #111111;
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-overlay {
+    background: rgba(41, 52, 83, 0.45);
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-footer {
+    background: rgba(246, 250, 255, 0.98);
+    border-top-color: rgba(122, 132, 165, 0.35);
+}
+
+[data-bs-theme='light'] .flip-payment-page .sepay-timer {
+    background: rgba(231, 238, 255, 0.8);
+    border-bottom-color: rgba(122, 132, 165, 0.3);
+    color: #1f2b44;
+}
+
+@media (max-width: 991.98px) {
+    .payment-shell {
+        height: auto;
+        min-height: calc(100dvh - var(--global-nav-offset));
+        padding: 10px;
+    }
+
+    .payment-main {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .left-col,
+    .right-col {
+        grid-template-rows: auto;
+        overflow: visible;
+    }
+
+    .payment-card {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .panel-title {
+        font-size: 1.1rem;
+    }
+
+    .event-panel {
+        align-items: flex-start;
+    }
+
+    .event-thumb {
+        width: 88px;
+        height: 68px;
+    }
+
+    .event-title {
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .event-subline,
+    .event-address,
+    .panel-subtitle,
+    .policy-text,
+    .ticket-note,
+    .receiver-label,
+    .policy-check,
+    .error-line,
+    .promo-btn {
+        font-size: 0.875rem;
+    }
+
+    .receiver-col strong {
+        font-size: 0.95rem;
+    }
+
+    .inline-edit-input,
+    .promo-input {
+        font-size: 1rem;
+    }
+
+    .ticket-cell {
+        font-size: 0.95rem;
+    }
+
+    .time-cell {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .time-dot {
+        font-size: 1.1rem;
+    }
+
+    .total-line {
+        font-size: 0.95rem;
+    }
+
+    .total-amount {
+        font-size: 1.2rem;
+    }
+
+    .pay-btn {
+        font-size: 0.95rem;
+        height: 42px;
+    }
+
+    .sepay-overlay {
+        padding: 0;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+
+    .sepay-modal {
+        width: 100dvw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border-width: 0;
+    }
+
+    .sepay-header {
+        display: none !important;
+    }
+
+    .sepay-timer {
+        font-size: 0.95rem;
+        flex-direction: row;
+        gap: 8px;
+        padding: max(10px, env(safe-area-inset-top)) 12px 10px;
+        border-top: 1px solid rgba(122, 132, 165, 0.22);
+        background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(10, 10, 10, 0.94) 100%);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+    }
+
+    .sepay-timer-main {
+        min-width: 0;
+    }
+
+    .sepay-timer-main>span {
+        font-size: 0.98rem;
+        line-height: 1.2;
+    }
+
+    .sepay-warning {
+        margin: 12px;
+        font-size: 0.9rem;
+    }
+
+    .sepay-info-wrap {
+        padding: 0 12px;
+        grid-template-columns: 1fr;
+    }
+
+    .sepay-note {
+        margin: 12px;
+        font-size: 0.9rem;
+    }
+
+    .sepay-footer {
+        padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .payment-pending-bar {
+        min-height: 44px;
+        padding: 9px 10px;
+    }
+
+    .payment-pending-spinner {
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+    }
+
+    .payment-pending-copy strong {
+        font-size: 0.95rem;
+    }
+
+    .payment-pending-copy span {
+        font-size: 0.8rem;
+    }
+}
+
+@media (hover: hover) {
+
+    .icon-button:hover,
+    .close-btn:hover,
+    .download-qr-btn:hover,
+    .copy-icon-btn:hover {
+        opacity: 0.9;
+    }
+
+    .pay-btn:hover:enabled {
+        filter: brightness(0.98);
+    }
+}

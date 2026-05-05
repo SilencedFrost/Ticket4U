@@ -22,10 +22,14 @@ application:
     # CORS
     cors:
       allowed-origins: ${FRONTEND_URL}
+  internal:
+    api-key: ${TICKET_INTERNAL_API_KEY:ticket-internal-dev-key}
+    system-user-id: ${TICKET_SYSTEM_USER_ID:00000000-0000-0000-0000-000000000000}
   services:
     user: ${USER_SERVICE_URL:https://localhost:8080}
 
 # Logging
 logging:
   level:
-    root: INFO
+    root: WARN
+    com.ticket4u.service.impl: DEBUG

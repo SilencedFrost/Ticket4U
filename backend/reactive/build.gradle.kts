@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
     id("java")
     id("org.springframework.boot") version "4.0.0" apply false
@@ -49,7 +51,7 @@ subprojects {
         // Binding for MapStruct and Lombok
         annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
-        // Spring configuration processor - can be last
+        // Spring configuration processor
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
         // Testing
@@ -77,14 +79,18 @@ subprojects {
         options.compilerArgs.add("-parameters")
     }
 
-    tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    tasks.named<BootRun>("bootRun") {
         val profile = project.findProperty("profile")?.toString() ?: "dev"
 
         sourceResources(sourceSets["main"])
         systemProperty("spring.profiles.active", profile)
     }
+}
 
-    tasks.register("runTicket") {
-        dependsOn(":services:ticket-service:bootRun")
-    }
+tasks.register("runTicket") {
+    dependsOn(":services:ticket-service:bootRun")
+}
+
+tasks.register("runPayment") {
+    dependsOn(":services:payment-service:bootRun")
 }

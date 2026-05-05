@@ -6,10 +6,12 @@ import SeatingMap from './(components)/SeatingMap.vue';
 import EventInfo from './(components)/EventInfo.vue';
 import CartSummary from './(components)/CartSummary.vue';
 import type { SelectedSeat } from './(types)/ticket';
+import { useCheckoutStore } from '~/stores/checkoutStore';
 
 const route = useRoute();
 const eventId = route.params.eventId as string;
 const sessionId = route.params.sessionId as string;
+const checkoutStore = useCheckoutStore();
 
 const seatingMapRef = ref();
 
@@ -64,9 +66,23 @@ function handleBack() {
   navigateTo('/');
 }
 
-// TODO: change route to official checkout page
 function proceedToCheckout() {
-  if (cart.value.length > 0) navigateTo({ path: '/payment/mockup' });
+  if (!event.value || cart.value.length === 0) {
+    return;
+  }
+
+  const checkoutCart = JSON.parse(JSON.stringify(cart.value)) as typeof cart.value;
+
+  checkoutStore.setCheckoutSession({
+    eventId,
+    sessionId,
+    event: event.value,
+    cart: checkoutCart,
+    totalPrice: totalPrice.value,
+    totalTickets: totalTickets.value,
+  });
+
+  navigateTo({ path: `/event/${eventId}/book/checkout` });
 }
 
 function startResize(e: MouseEvent) {

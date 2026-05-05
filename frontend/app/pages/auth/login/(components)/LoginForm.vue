@@ -41,7 +41,7 @@ function resolveNoticeMessage(): string {
 }
 
 function resolveRedirectPath(): string | null {
-  const raw = route.query.redirect;
+  const raw = route.query.redirect ?? route.query.loginRequired;
   const path = Array.isArray(raw) ? raw[0] : raw;
   if (!path || !path.startsWith('/')) return null;
   return path;
@@ -72,7 +72,7 @@ async function login() {
   loading.value = true;
   noticeMessage.value = '';
   Object.assign(error, { identifier: '', password: '', generic: '' });
-  
+
   try {
     await useUser.login(formData.identifier, formData.password, formData.rememberMe);
     router.push(redirectAfterLogin ? localePath(redirectAfterLogin) : localePath('/'));

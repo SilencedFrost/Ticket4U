@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/health/jwk/user").authenticated()
-                        .requestMatchers("/api/*/public/**", "/health/**").permitAll()
+                        .requestMatchers("/api/*/public/**", "/api/*/internal/**", "/health/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

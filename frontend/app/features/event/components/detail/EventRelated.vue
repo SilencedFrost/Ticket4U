@@ -12,8 +12,12 @@ const { data: eventList } = await useFetch<EventSummary[]>(
     baseURL: config.public.eventServiceUrl,
     key: `related-events-${route.params.id}`,
     default: () => [],
-    onResponseError({ error }) {
-      console.error('Error loading related events:', error);
+    onResponseError({ response }) {
+      if (response?.status === 403) {
+        return;
+      }
+
+      console.error('Error loading related events:', response?.statusText ?? 'unknown error');
     },
   },
 );

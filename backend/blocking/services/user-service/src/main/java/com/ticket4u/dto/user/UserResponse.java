@@ -1,0 +1,20 @@
+package com.ticket4u.dto.user;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+public record UserResponse(
+        UUID id,
+        String email,
+        String role,
+        Integer roleId,
+        String username,
+        String firstName,
+        String lastName,
+        LocalDate birthday,
+        String phoneNumber,
+        OffsetDateTime updatedAt,
+        OffsetDateTime createdAt
+) {
+}

@@ -1,0 +1,53 @@
+# Database Configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Ticket4U-User
+    username: <<Username>>
+    password: <<Password>>
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
+  # Enable DevTools
+  devtools:
+    restart:
+      enabled: true
+      poll-interval: 2s
+      quiet-period: 1s
+    livereload:
+      enabled: true
+      port: 35729
+
+# OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: <<Client ID>>
+            client-secret: <<Client Secret>>
+            scope: openid,profile,email
+
+# Port
+server:
+  port: 8080
+  ssl:
+    enabled: true
+    certificate: classpath:keys/localhost+2.pem
+    certificate-private-key: classpath:keys/localhost+2-key.pem
+
+application:
+  security:
+    # JWT
+    jwt:
+      private-key-path: classpath:keys/ec-private.pem
+      public-key-path: classpath:keys/ec-public.pem
+
+# CORS
+    cors:
+      allowed-origins: https://localhost:3000
+
+logging:
+  level:
+    root: INFO

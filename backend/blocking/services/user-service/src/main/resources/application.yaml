@@ -1,0 +1,55 @@
+# Database Configuration
+spring:
+  datasource:
+    url: ${DB_URL_USER:jdbc:postgresql://ticket4u-db-user:5432/Ticket4U-User}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 20
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid,profile,email
+
+# Port
+server:
+  port: ${SERVER_PORT:8080}
+
+application:
+  service:
+    mail:
+      url: ${MAIL_SERVICE_URL:http://localhost:8082}
+      api-key: ${USER_MAIL_API_KEY}
+  verification:
+    token-expiry-hours: 24
+    reset-token-expiry-hours: 1
+    frontend-base-url: ${FRONTEND_URL:https://localhost:3000}
+  security:
+    # JWT
+    jwt:
+      private-key-path: ${JWT_SECRET:file:/keys/ec-private.pem}
+      public-key-path: ${JWT_PUB:file:/keys/ec-public.pem}
+      key-id: auth-key-es256
+      issuer: ticket4u
+    # CORS
+    cors:
+      allowed-origins: ${FRONTEND_URL:https://ticketforyou.vercel.app}
+
+# Logging
+logging:
+  level:
+    root: ${LOGGING_LEVEL:WARN}

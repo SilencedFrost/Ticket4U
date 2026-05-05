@@ -1,0 +1,49 @@
+# Database Configuration
+spring:
+  datasource:
+    url: ${DB_URL_USER:jdbc:postgresql://ticket4u-db-event:5432/Ticket4U-Event}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA/Hibernate Configuration
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+        type:
+          json_format_mapper: com.ticket4u.config.HibernateJackson3FormatMapper
+
+# Port
+server:
+  port: ${SERVER_PORT:8083}
+
+# Qdrant Configuration
+qdrant:
+  host: ${QDRANT_HOST:localhost}
+  port: ${QDRANT_PORT:6334}
+  api-key: ${QDRANT_API_KEY:}
+  timeout-seconds: ${QDRANT_TIMEOUT:5}
+
+application:
+  security:
+    # CORS
+    cors:
+      allowed-origins: ${FRONTEND_URL}
+  services:
+    user: ${USER_SERVICE_URL:https://localhost:8080}
+    embedding: ${EMBEDDING_SERVICE_URL:http://host.docker.internal:8084/internal/embed}
+
+# Logging
+logging:
+  level:
+    root: INFO
+#
+#  resilience4j.ratelimiter:
+#    instances:
+#      homePageLimiter: # Đây là tên của instance
+#        limitForPeriod: 60              # Số request tối đa
+#        limitRefreshPeriod: 1m          # Trong khoảng thời gian bao lâu (1 phút)
+#        timeoutDuration: 0s             # Thời gian chờ nếu đã hết lượt (0 là từ chối ngay)

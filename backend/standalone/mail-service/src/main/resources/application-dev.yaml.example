@@ -1,0 +1,25 @@
+# Development Configuration
+
+# Custom mail settings
+mail:
+  resend:
+    api-key:
+  from: noreply-dev@ticket4u.uk
+  from-name: Ticket4U-Dev
+
+# API Keys
+security:
+  api-keys:
+    -
+    -
+    -
+
+# Logging
+logging:
+  level:
+    root: INFO
+
+# Rate Limiting
+rate-limit:
+  requests-per-minute: 60
+  requests-per-hour: 500

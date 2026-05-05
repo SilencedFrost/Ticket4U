@@ -1,0 +1,108 @@
+@use 'bootstrap/scss/functions' as bs;
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: #08c7f7,
+  $danger: #b82d2d,
+  $font-family-base: (
+    'Open Sans',
+    sans-serif,
+  )
+);
+@use 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Colors for light theme
+:root {
+  --bg-primary-light: #fcfcfc;
+  --bg-primary-dark: #111111;
+  --bg-secondary-light: #ececec;
+  --bg-secondary-dark: #1a1a1a;
+  --text-primary-light: #111111;
+  --text-primary-dark: #fcfcfc;
+  --text-secondary-light: #6e6e6e;
+  --text-secondary-dark: #979797;
+
+  // Reactive vars (reference static vars)
+  --bg-reactive-primary: var(--bg-primary-light);
+  --bg-reactive-secondary: var(--bg-secondary-light);
+  --bg-reactive-gray: #c7c7c7;
+  --bg-reactive-gray-hover: #{bs.shade-color(#c7c7c7, 10%)};
+  --bg-reactive-gray-active: #{bs.shade-color(#c7c7c7, 20%)};
+  --bg-reactive-dark: #252525;
+  --text-reactive-primary: var(--text-primary-light);
+  --text-reactive-secondary: var(--text-secondary-light);
+  --bs-primary-rgb: 7, 179, 223;
+}
+
+[data-bs-theme='dark'] {
+  --bg-reactive-primary: var(--bg-primary-dark);
+  --bg-reactive-secondary: var(--bg-secondary-dark);
+  --bg-reactive-gray: #5e5e5e;
+  --bg-reactive-gray-hover: #{bs.shade-color(#5e5e5e, 10%)};
+  --bg-reactive-gray-active: #{bs.shade-color(#5e5e5e, 20%)};
+  --bg-reactive-dark: #181818;
+  --text-reactive-primary: var(--text-primary-dark);
+  --text-reactive-secondary: var(--text-secondary-dark);
+}
+// Base background color, changes based on theme
+.bg-reactive-primary {
+  background-color: var(--bg-reactive-primary);
+}
+
+// Secondary background color, for cards, tables, etc..
+.bg-reactive-secondary {
+  background-color: var(--bg-reactive-secondary);
+}
+
+// Reactive to look like light gray on both modes
+.bg-reactive-gray {
+  background-color: var(--bg-reactive-gray);
+}
+
+.bg-reactive-dark {
+  background-color: var(--bg-reactive-dark);
+}
+
+// Reactive to look like light gray on both modes
+.btn-reactive-gray {
+  --bs-btn-bg: var(--bg-reactive-gray);
+  --bs-btn-hover-bg: var(--bg-reactive-gray-hover);
+  --bs-btn-active-bg: var(--bg-reactive-gray-active);
+  --bs-btn-color: var(--text-reactive-primary);
+}
+
+// Main text color, white in dark mode, black in light mode
+.text-reactive-primary {
+  color: var(--text-reactive-primary) !important;
+}
+
+// Reactive secondary text, to look gray in both modes
+.text-reactive-secondary {
+  color: var(--text-reactive-secondary);
+}
+
+.card {
+  border: none;
+  background-color: var(--bg-reactive-primary);
+}
+
+.card-border {
+  border-radius: 0.375rem;
+  border: 2px solid rgba(var(--bs-secondary-rgb), 0.2);
+}
+
+[data-bs-theme='dark'] .card {
+  background-color: var(--bg-reactive-secondary);
+}
+
+.card-info {
+  background-color: rgba(var(--bs-primary-rgb), 0.2);
+  color: var(--text-reactive-primary);
+}
+
+[data-bs-theme='dark'] .card-info {
+  background-color: rgba(var(--bs-primary-rgb), 0.3);
+}
+
+.form-control {
+  background-color: var(--bg-reactive-primary);
+  color: var(--text-reactive-primary);
+}
